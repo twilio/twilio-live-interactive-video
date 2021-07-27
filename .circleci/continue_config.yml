@@ -20,5 +20,8 @@ workflows:
       or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.web-app-updated >>]
     jobs:
       - node/test:
-          version: '15.1'
           app-dir: 'apps/web'
+  build-and-test-backend:
+    when: << pipeline.parameters.backend-updated >>
+    jobs:
+      - node/test:
