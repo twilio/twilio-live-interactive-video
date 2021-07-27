@@ -2,3 +2,4 @@
 node_modules/
 .twilio-functions
 .twiliodeployinfo
+assets/
