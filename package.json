@@ -4,8 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
     "test": "true",
     "deploy": "bin/deploy.js"
+=======
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "pushd composer && npm run build && popd && pushd apps/web && npm run build && popd && ln -sf ../composer/build ./assets/composer && ln -sf ../apps/web/build ./assets/app && twilio-run deploy"
+>>>>>>> d6ba4ec95310e261cdcc82d6349bbc61b8e778c6
   },
   "repository": {
     "type": "git",
