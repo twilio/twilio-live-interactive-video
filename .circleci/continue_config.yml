@@ -24,4 +24,4 @@ workflows:
   build-and-test-backend:
     when: << pipeline.parameters.backend-updated >>
     jobs:
-      - node/test:
+      - node/test
