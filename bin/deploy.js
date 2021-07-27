@@ -31,7 +31,7 @@ new Promise((resolve, reject) => {
         const twilioRunOutputRegex = RegExp('domain\\s+(?<domain>.*)', 'm')
         const match = stdout.match(twilioRunOutputRegex)
         if (match.groups.domain) {
-          const appUrl = `https://${match.groups.domain}/index.html`
+          const appUrl = `https://${match.groups.domain.trim()}/index.html`
           console.log(`App: ${appUrl}`)
           resolve()
         } else {
