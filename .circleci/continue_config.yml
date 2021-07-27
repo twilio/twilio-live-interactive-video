@@ -21,6 +21,12 @@ workflows:
     jobs:
       - node/test:
           app-dir: 'apps/web'
+  build-and-test-composer:
+    when:
+      or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.composer-updated >>]
+    jobs:
+      - node/test:
+          app-dir: 'composer'
   build-and-test-backend:
     when: << pipeline.parameters.backend-updated >>
     jobs:
