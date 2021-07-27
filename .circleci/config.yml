@@ -1,14 +1,15 @@
-# This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
-
+setup: true
 orbs:
-  node: circleci/node@4.1
-
+  path-filtering: circleci/path-filtering@0.0.2
 workflows:
-  sample:
+  always-run:
     jobs:
-      - node/test:
-          version: '15.1'
-          # This is the node version to use for the `cimg/node` tag
-          # Relevant tags can be found on the CircleCI Developer Hub
-          # https://circleci.com/developer/images/image/cimg/node
+      - path-filtering/filter:
+          name: check-updated-files
+          mapping: |
+            functions/.* backend-updated true
+            apps/web/.* web-app-updated true
+            composer/.* composer-updated true
+          base-revision: main 
+          config-path: .circleci/continue_config.yml
