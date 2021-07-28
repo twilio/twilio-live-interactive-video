@@ -1,0 +1,15 @@
+version: 2.1
+setup: true
+orbs:
+  path-filtering: circleci/path-filtering@0.0.2
+workflows:
+  always-run:
+    jobs:
+      - path-filtering/filter:
+          name: check-updated-files
+          mapping: |
+            functions/.* backend-updated true
+            apps/web/.* web-app-updated true
+            composer/.* composer-updated true
+          base-revision: main 
+          config-path: .circleci/continue_config.yml

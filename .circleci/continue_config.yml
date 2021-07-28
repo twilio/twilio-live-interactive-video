@@ -1,0 +1,33 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@4.1
+
+parameters:
+  backend-updated:
+    type: boolean
+    default: false
+  web-app-updated:
+    type: boolean
+    default: false
+  composer-updated:
+    type: boolean
+    default: false
+
+workflows:
+  build-and-test-web-app:
+    when:
+      or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.web-app-updated >>]
+    jobs:
+      - node/test:
+          app-dir: 'apps/web'
+  build-and-test-composer:
+    when:
+      or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.composer-updated >>]
+    jobs:
+      - node/test:
+          app-dir: 'composer'
+  build-and-test-backend:
+    when: << pipeline.parameters.backend-updated >>
+    jobs:
+      - node/test
