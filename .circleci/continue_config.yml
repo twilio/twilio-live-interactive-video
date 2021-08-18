@@ -46,11 +46,7 @@ workflows:
     when:
       or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.ios-app-updated >>]
     jobs:
-      - build-and-test-ios-app:
-          filters:     
-            branches:
-              ignore:
-                - main
+      - build-and-test-ios-app
   build-and-test-composer:
     when:
       or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.composer-updated >>]
