@@ -6,7 +6,7 @@ assets/
 
 # iOS
 xcuserdata/
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots/**/*.png
-fastlane/test_output
+apps/ios/LiveVideo/fastlane/report.xml
+apps/ios/LiveVideo/fastlane/Preview.html
+apps/ios/LiveVideo/fastlane/screenshots/**/*.png
+apps/ios/LiveVideo/fastlane/test_output
