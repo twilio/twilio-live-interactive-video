@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   node: circleci/node@4.1
+  ruby: circleci/ruby@1.1.4
 
 parameters:
   backend-updated:
@@ -10,9 +11,29 @@ parameters:
   web-app-updated:
     type: boolean
     default: false
+  ios-app-updated:
+    type: boolean
+    default: false
   composer-updated:
     type: boolean
     default: false
+
+executors:
+  macos_executor:
+    macos:
+      xcode: "12.5.1"
+
+jobs:
+  build-and-test-ios-app:
+    executor: macos_executor
+    steps:
+      - checkout
+      - ruby/install-deps
+      - run:
+          name: Build and test
+          command: |
+            cd "apps/ios/LiveVideo"
+            bundle exec fastlane tests
 
 workflows:
   build-and-test-web-app:
@@ -21,6 +42,15 @@ workflows:
     jobs:
       - node/test:
           app-dir: 'apps/web'
+  build-and-test-ios-app:
+    when:
+      or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.ios-app-updated >>]
+    jobs:
+      - build-and-test-ios-app:
+          filters:     
+            branches:
+              ignore:
+                - main
   build-and-test-composer:
     when:
       or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.composer-updated >>]
