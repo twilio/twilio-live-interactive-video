@@ -3,16 +3,29 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC4AA65926D0133600E677D5 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA65826D0133600E677D5 /* Color.swift */; };
+		DC4AA66026D047DD00E677D5 /* FormTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA65F26D047DD00E677D5 /* FormTextFieldStyle.swift */; };
+		DC4AA66226D0493E00E677D5 /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA66126D0493E00E677D5 /* PrimaryButtonStyle.swift */; };
+		DC4AA66526D1456100E677D5 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA66426D1456100E677D5 /* AuthManager.swift */; };
+		DC4AA66826D175A600E677D5 /* SwiftyUserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = DC4AA66726D175A600E677D5 /* SwiftyUserDefaults */; };
 		DC5F453926CC061A009C5C79 /* LiveVideoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */; };
-		DC5F453B26CC061A009C5C79 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453A26CC061A009C5C79 /* ContentView.swift */; };
+		DC5F453B26CC061A009C5C79 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453A26CC061A009C5C79 /* HomeView.swift */; };
 		DC5F453D26CC061F009C5C79 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC5F453C26CC061F009C5C79 /* Assets.xcassets */; };
 		DC5F454026CC061F009C5C79 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC5F453F26CC061F009C5C79 /* Preview Assets.xcassets */; };
 		DC5F454B26CC061F009C5C79 /* LiveVideoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F454A26CC061F009C5C79 /* LiveVideoTests.swift */; };
 		DC5F455626CC061F009C5C79 /* LiveVideoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F455526CC061F009C5C79 /* LiveVideoUITests.swift */; };
+		DC5F458326CDBA0B009C5C79 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F458226CDBA0B009C5C79 /* SignInView.swift */; };
+		DC5F458626CEA6CE009C5C79 /* InAppSettingsKit in Frameworks */ = {isa = PBXBuildFile; productRef = DC5F458526CEA6CE009C5C79 /* InAppSettingsKit */; };
+		DC5F458826CEA7CB009C5C79 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F458726CEA7CB009C5C79 /* SettingsView.swift */; };
+		DC5F458A26CEB413009C5C79 /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DC5F458926CEB413009C5C79 /* InAppSettings.bundle */; };
+		DC5F458D26CEBCC9009C5C79 /* TwilioVideo in Frameworks */ = {isa = PBXBuildFile; productRef = DC5F458C26CEBCC9009C5C79 /* TwilioVideo */; };
+		DC5F458F26CEBEC8009C5C79 /* AppInfoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F458E26CEBEC8009C5C79 /* AppInfoStore.swift */; };
+		DC5F459426CEC1FF009C5C79 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F459326CEC1FF009C5C79 /* UserDefaultsManager.swift */; };
+		DC5F459626CEC247009C5C79 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F459526CEC246009C5C79 /* UserDefaultsKeys.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,9 +46,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DC4AA65826D0133600E677D5 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		DC4AA65F26D047DD00E677D5 /* FormTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormTextFieldStyle.swift; sourceTree = "<group>"; };
+		DC4AA66126D0493E00E677D5 /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
+		DC4AA66426D1456100E677D5 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		DC5F453526CC061A009C5C79 /* LiveVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoApp.swift; sourceTree = "<group>"; };
-		DC5F453A26CC061A009C5C79 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		DC5F453A26CC061A009C5C79 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		DC5F453C26CC061F009C5C79 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DC5F453F26CC061F009C5C79 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		DC5F454126CC061F009C5C79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -45,6 +62,12 @@
 		DC5F455126CC061F009C5C79 /* LiveVideoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LiveVideoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC5F455526CC061F009C5C79 /* LiveVideoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoUITests.swift; sourceTree = "<group>"; };
 		DC5F455726CC061F009C5C79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DC5F458226CDBA0B009C5C79 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		DC5F458726CEA7CB009C5C79 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		DC5F458926CEB413009C5C79 /* InAppSettings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InAppSettings.bundle; sourceTree = "<group>"; };
+		DC5F458E26CEBEC8009C5C79 /* AppInfoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoStore.swift; sourceTree = "<group>"; };
+		DC5F459326CEC1FF009C5C79 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
+		DC5F459526CEC246009C5C79 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +75,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC5F458D26CEBCC9009C5C79 /* TwilioVideo in Frameworks */,
+				DC4AA66826D175A600E677D5 /* SwiftyUserDefaults in Frameworks */,
+				DC5F458626CEA6CE009C5C79 /* InAppSettingsKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +98,94 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DC4AA65226D0118200E677D5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DC4AA65E26D03E0600E677D5 /* Home */,
+				DC4AA65C26D03DDF00E677D5 /* Settings */,
+				DC4AA65D26D03DF100E677D5 /* SignIn */,
+				DC4AA65726D0127900E677D5 /* Style */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		DC4AA65326D011C900E677D5 /* Launch */ = {
+			isa = PBXGroup;
+			children = (
+				DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */,
+			);
+			path = Launch;
+			sourceTree = "<group>";
+		};
+		DC4AA65426D011F900E677D5 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				DC4AA65526D0125900E677D5 /* AppInfo */,
+				DC4AA66326D1454A00E677D5 /* Auth */,
+				DC4AA65626D0126A00E677D5 /* UserDefaults */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		DC4AA65526D0125900E677D5 /* AppInfo */ = {
+			isa = PBXGroup;
+			children = (
+				DC5F458E26CEBEC8009C5C79 /* AppInfoStore.swift */,
+			);
+			path = AppInfo;
+			sourceTree = "<group>";
+		};
+		DC4AA65626D0126A00E677D5 /* UserDefaults */ = {
+			isa = PBXGroup;
+			children = (
+				DC5F459526CEC246009C5C79 /* UserDefaultsKeys.swift */,
+				DC5F459326CEC1FF009C5C79 /* UserDefaultsManager.swift */,
+			);
+			path = UserDefaults;
+			sourceTree = "<group>";
+		};
+		DC4AA65726D0127900E677D5 /* Style */ = {
+			isa = PBXGroup;
+			children = (
+				DC4AA65826D0133600E677D5 /* Color.swift */,
+				DC4AA65F26D047DD00E677D5 /* FormTextFieldStyle.swift */,
+				DC4AA66126D0493E00E677D5 /* PrimaryButtonStyle.swift */,
+			);
+			path = Style;
+			sourceTree = "<group>";
+		};
+		DC4AA65C26D03DDF00E677D5 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				DC5F458726CEA7CB009C5C79 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		DC4AA65D26D03DF100E677D5 /* SignIn */ = {
+			isa = PBXGroup;
+			children = (
+				DC5F458226CDBA0B009C5C79 /* SignInView.swift */,
+			);
+			path = SignIn;
+			sourceTree = "<group>";
+		};
+		DC4AA65E26D03E0600E677D5 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				DC5F453A26CC061A009C5C79 /* HomeView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		DC4AA66326D1454A00E677D5 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				DC4AA66426D1456100E677D5 /* AuthManager.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
 		DC5F452C26CC061A009C5C79 = {
 			isa = PBXGroup;
 			children = (
@@ -95,8 +209,10 @@
 		DC5F453726CC061A009C5C79 /* LiveVideo */ = {
 			isa = PBXGroup;
 			children = (
-				DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */,
-				DC5F453A26CC061A009C5C79 /* ContentView.swift */,
+				DC4AA65326D011C900E677D5 /* Launch */,
+				DC4AA65426D011F900E677D5 /* Managers */,
+				DC4AA65226D0118200E677D5 /* Views */,
+				DC5F458926CEB413009C5C79 /* InAppSettings.bundle */,
 				DC5F453C26CC061F009C5C79 /* Assets.xcassets */,
 				DC5F454126CC061F009C5C79 /* Info.plist */,
 				DC5F453E26CC061F009C5C79 /* Preview Content */,
@@ -146,6 +262,11 @@
 			dependencies = (
 			);
 			name = LiveVideo;
+			packageProductDependencies = (
+				DC5F458526CEA6CE009C5C79 /* InAppSettingsKit */,
+				DC5F458C26CEBCC9009C5C79 /* TwilioVideo */,
+				DC4AA66726D175A600E677D5 /* SwiftyUserDefaults */,
+			);
 			productName = LiveVideo;
 			productReference = DC5F453526CC061A009C5C79 /* LiveVideo.app */;
 			productType = "com.apple.product-type.application";
@@ -217,6 +338,11 @@
 				Base,
 			);
 			mainGroup = DC5F452C26CC061A009C5C79;
+			packageReferences = (
+				DC5F458426CEA6CE009C5C79 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */,
+				DC5F458B26CEBCC8009C5C79 /* XCRemoteSwiftPackageReference "twilio-video-ios" */,
+				DC4AA66626D175A600E677D5 /* XCRemoteSwiftPackageReference "SwiftyUserDefaults" */,
+			);
 			productRefGroup = DC5F453626CC061A009C5C79 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -234,6 +360,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC5F454026CC061F009C5C79 /* Preview Assets.xcassets in Resources */,
+				DC5F458A26CEB413009C5C79 /* InAppSettings.bundle in Resources */,
 				DC5F453D26CC061F009C5C79 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -259,8 +386,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DC5F453B26CC061A009C5C79 /* ContentView.swift in Sources */,
+				DC5F458326CDBA0B009C5C79 /* SignInView.swift in Sources */,
+				DC4AA66526D1456100E677D5 /* AuthManager.swift in Sources */,
+				DC4AA66226D0493E00E677D5 /* PrimaryButtonStyle.swift in Sources */,
+				DC5F459626CEC247009C5C79 /* UserDefaultsKeys.swift in Sources */,
+				DC5F458826CEA7CB009C5C79 /* SettingsView.swift in Sources */,
+				DC5F459426CEC1FF009C5C79 /* UserDefaultsManager.swift in Sources */,
+				DC5F458F26CEBEC8009C5C79 /* AppInfoStore.swift in Sources */,
+				DC4AA65926D0133600E677D5 /* Color.swift in Sources */,
+				DC5F453B26CC061A009C5C79 /* HomeView.swift in Sources */,
 				DC5F453926CC061A009C5C79 /* LiveVideoApp.swift in Sources */,
+				DC4AA66026D047DD00E677D5 /* FormTextFieldStyle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,6 +563,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.LiveVideo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -449,6 +586,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.LiveVideo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -580,6 +718,51 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DC4AA66626D175A600E677D5 /* XCRemoteSwiftPackageReference "SwiftyUserDefaults" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunshinejr/SwiftyUserDefaults";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.3.0;
+			};
+		};
+		DC5F458426CEA6CE009C5C79 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/futuretap/InAppSettingsKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.3.3;
+			};
+		};
+		DC5F458B26CEBCC8009C5C79 /* XCRemoteSwiftPackageReference "twilio-video-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twilio/twilio-video-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DC4AA66726D175A600E677D5 /* SwiftyUserDefaults */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC4AA66626D175A600E677D5 /* XCRemoteSwiftPackageReference "SwiftyUserDefaults" */;
+			productName = SwiftyUserDefaults;
+		};
+		DC5F458526CEA6CE009C5C79 /* InAppSettingsKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC5F458426CEA6CE009C5C79 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */;
+			productName = InAppSettingsKit;
+		};
+		DC5F458C26CEBCC9009C5C79 /* TwilioVideo */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC5F458B26CEBCC8009C5C79 /* XCRemoteSwiftPackageReference "twilio-video-ios" */;
+			productName = TwilioVideo;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DC5F452D26CC061A009C5C79 /* Project object */;
 }

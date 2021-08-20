@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PreferenceSpecifiers</key>
+    <array>
+        <dict>
+            <key>Type</key>
+            <string>PSGroupSpecifier</string>
+        </dict>
+        <dict>
+            <key>Type</key>
+            <string>PSTitleValueSpecifier</string>
+            <key>Title</key>
+            <string>App Version</string>
+            <key>Key</key>
+            <string>AppVersion</string>
+            <key>DefaultValue</key>
+            <string></string>
+        </dict>
+        <dict>
+            <key>Type</key>
+            <string>PSTitleValueSpecifier</string>
+            <key>Title</key>
+            <string>Video SDK Version</string>
+            <key>Key</key>
+            <string>VideoSDKVersion</string>
+            <key>DefaultValue</key>
+            <string></string>
+        </dict>
+        <dict>
+            <key>Type</key>
+            <string>PSGroupSpecifier</string>
+        </dict>
+        <dict>
+            <key>Type</key>
+            <string>IASKButtonSpecifier</string>
+            <key>Title</key>
+            <string>Sign Out</string>
+            <key>Key</key>
+            <string>SignOut</string>
+        </dict>
+    </array>
+</dict>
+</plist>

@@ -6,9 +6,12 @@ import SwiftUI
 
 @main
 struct LiveVideoApp: App {
+    @StateObject private var authManager = AuthManager()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
+                .environmentObject(authManager)
         }
     }
 }

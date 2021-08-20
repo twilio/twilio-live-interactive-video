@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "InAppSettingsKit",
+        "repositoryURL": "https://github.com/futuretap/InAppSettingsKit",
+        "state": {
+          "branch": null,
+          "revision": "297bc0fc1625df7117b75b3e238bf9a401ec1e24",
+          "version": "3.3.3"
+        }
+      },
+      {
+        "package": "SwiftyUserDefaults",
+        "repositoryURL": "https://github.com/sunshinejr/SwiftyUserDefaults",
+        "state": {
+          "branch": null,
+          "revision": "f66bcd04088582c8fbb5cb8554d577e303bae396",
+          "version": "5.3.0"
+        }
+      },
+      {
+        "package": "TwilioVideo",
+        "repositoryURL": "https://github.com/twilio/twilio-video-ios",
+        "state": {
+          "branch": null,
+          "revision": "6d503871c3028484649b6da429d463c9d003270e",
+          "version": "4.4.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
