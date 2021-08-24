@@ -116,7 +116,7 @@ module.exports.handler = async (context, event, callback) => {
         mediaComposer = await axiosClient('MediaComposers', {
           method: 'post',
           data: querystring.stringify({
-            WebAppUrl: `${context.MEDIA_COMPOSER_URL}`, //?token=${mediaComposerToken.toJwt()}`,
+            WebAppUrl: `${context.MEDIA_COMPOSER_URL}?token=${mediaComposerToken.toJwt()}`,
             Outputs: livePlayerStreamer.data.sid,
             Video: true,
           }),

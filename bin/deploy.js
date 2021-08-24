@@ -27,6 +27,10 @@ const exec = promisify(require('child_process').exec);
     fse.mkdirSync(appAssetsDir);
     fse.copySync(appBuildDir, appAssetsDir);
 
+    // Add root asset for web app
+    fse.mkdirSync(`${appAssetsDir}/assets`);
+    fse.copySync(`${appBuildDir}/index.html`, `${appAssetsDir}/assets/index.html`);
+
     /**
      * Copy the functions common files to the assets directory for twilio-run to deploy
      */
