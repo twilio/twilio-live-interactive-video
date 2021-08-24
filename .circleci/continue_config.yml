@@ -10,9 +10,6 @@ parameters:
   web-app-updated:
     type: boolean
     default: false
-  composer-updated:
-    type: boolean
-    default: false
 
 workflows:
   build-and-test-web-app:
@@ -22,12 +19,6 @@ workflows:
       - node/run:
           npm-run: test:ci
           app-dir: 'apps/web'
-  build-and-test-composer:
-    when:
-      or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.composer-updated >>]
-    jobs:
-      - node/test:
-          app-dir: 'composer'
   build-and-test-backend:
     when: << pipeline.parameters.backend-updated >>
     jobs:
