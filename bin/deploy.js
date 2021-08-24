@@ -44,7 +44,7 @@ const exec = promisify(require('child_process').exec);
     const twilioRunOutputRegex = RegExp('domain\\s+(?<domain>.*)', 'm');
     const match = stdout.match(twilioRunOutputRegex);
     if (match.groups && match.groups.domain) {
-      const appUrl = `https://${match.groups.domain.trim()}/index.html`;
+      const appUrl = `https://${match.groups.domain.trim()}`;
       cli.action.stop('done');
       console.log(`App: ${appUrl}`);
     } else {

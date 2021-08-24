@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "postinstall": "npm install --prod --prefix apps/web",
     "test": "true",
     "deploy": "bin/deploy.js"
   },
