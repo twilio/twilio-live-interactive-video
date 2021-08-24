@@ -19,7 +19,8 @@ workflows:
     when:
       or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.web-app-updated >>]
     jobs:
-      - node/test:
+      - node/run:
+          npm-run: test:ci
           app-dir: 'apps/web'
   build-and-test-composer:
     when:
