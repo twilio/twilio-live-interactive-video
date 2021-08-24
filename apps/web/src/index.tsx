@@ -14,6 +14,7 @@ import theme from './theme';
 import './types';
 import { ChatProvider } from './components/ChatProvider';
 import { VideoProvider } from './components/VideoProvider';
+import Player from './components/Player/Player';
 import useConnectionOptions from './utils/useConnectionOptions/useConnectionOptions';
 import UnsupportedBrowserWarning from './components/UnsupportedBrowserWarning/UnsupportedBrowserWarning';
 
@@ -49,6 +50,9 @@ ReactDOM.render(
             </PrivateRoute>
             <PrivateRoute path="/room/:URLRoomName">
               <VideoApp />
+            </PrivateRoute>
+            <PrivateRoute path="/player/:URLRoomName">
+              <Player />
             </PrivateRoute>
             <Route path="/login">
               <LoginPage />
