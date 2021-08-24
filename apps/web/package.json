@@ -8,6 +8,7 @@
     "@material-ui/icons": "^4.11.2",
     "@twilio-labs/plugin-rtc": "^0.8.2",
     "@twilio/conversations": "^1.2.3",
+    "@twilio/player-sdk": "file:twilio-player-sdk-1.0.0-preview.9.tgz",
     "@twilio/video-processors": "^1.0.1",
     "@types/d3-timer": "^1.0.9",
     "@types/dotenv": "^8.2.0",
@@ -73,7 +74,9 @@
     ]
   },
   "scripts": {
-    "postinstall": "rimraf public/virtualbackground && copyfiles -f node_modules/@twilio/video-processors/dist/build/* public/virtualbackground",
+    "install:video-processors": "rimraf public/virtualbackground && copyfiles -f node_modules/@twilio/video-processors/dist/build/* public/virtualbackground",
+    "install:player": "rimraf public/player && copyfiles -f node_modules/@twilio/player-sdk/dist/build/* public/player",
+    "postinstall": "concurrently npm:install:player npm:install:video-processors",
     "start": "concurrently npm:server npm:dev",
     "dev": "react-scripts start",
     "build": "node ./scripts/build.js",

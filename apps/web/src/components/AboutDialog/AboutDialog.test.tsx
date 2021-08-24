@@ -2,13 +2,18 @@ import React from 'react';
 import AboutDialog from './AboutDialog';
 import { render } from '@testing-library/react';
 import { useAppState } from '../../state';
+import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
 jest.mock('twilio-video', () => ({ version: '1.2', isSupported: true }));
 jest.mock('../../../package.json', () => ({ version: '1.3' }));
 jest.mock('../../state');
+jest.mock('../../hooks/useVideoContext/useVideoContext');
 
 const mockUseAppState = useAppState as jest.Mock<any>;
+const mockUseVideoContext = useVideoContext as jest.Mock<any>;
+
 mockUseAppState.mockImplementation(() => ({ roomType: undefined }));
+mockUseVideoContext.mockImplementation(() => ({}));
 
 describe('the AboutDialog component', () => {
   it('should display Video.isSupported', () => {
