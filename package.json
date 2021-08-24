@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/twilio/twilio-live-interactive-video/issues"
   },
-  "homepage": "https://github.com/twilio/twilio-live-interactive-video#readme"
+  "homepage": "https://github.com/twilio/twilio-live-interactive-video#readme",
+  "devDependencies": {
+    "cli-ux": "^5.6.3"
+  }
 }
