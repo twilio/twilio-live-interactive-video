@@ -9,33 +9,24 @@ struct SignInView: View {
     @State private var name = ""
 
     var body: some View {
-        ZStack {
-            Color.formBackground.ignoresSafeArea()
-            VStack {
-                HStack {
-                    Text("Welcome to Twilio Live Events!")
-                        .font(.title2)
-                        .bold()
-                    Spacer()
-                }
-                .padding(.top, 30)
-
-                TextField("Full name", text: $name)
-                    .textFieldStyle(FormTextFieldStyle())
-                    .padding(.top, 30)
-                    .autocapitalization(.words)
-                    .disableAutocorrection(true)
-
-                Button("Continue") {
-                    authManager.signIn(userIdentity: name)
-                }
-                .buttonStyle(PrimaryButtonStyle(isEnabled: !name.isEmpty))
-                .padding(.top, 30)
-                .disabled(name.isEmpty)
-
+        FormStack {
+            HStack {
+                Text("Welcome to Twilio Live Events!")
+                    .font(.title2)
+                    .bold()
                 Spacer()
             }
-            .padding(40)
+
+            TextField("Full name", text: $name)
+                .textFieldStyle(FormTextFieldStyle())
+                .autocapitalization(.words)
+                .disableAutocorrection(true)
+
+            Button("Continue") {
+                authManager.signIn(userIdentity: name)
+            }
+            .buttonStyle(PrimaryButtonStyle(isEnabled: !name.isEmpty))
+            .disabled(name.isEmpty)
         }
     }
 }

@@ -7,10 +7,11 @@ import SwiftUI
 import UIKit
 
 struct SettingsView: UIViewControllerRepresentable {
-    @Binding var shouldShowSettings: Bool
-    @EnvironmentObject var authManager: AuthManager
+    @Environment(\.presentationMode) var presentationMode
+    @Binding var signOut: Bool
 
     func makeUIViewController(context: Context) -> UINavigationController {
+        signOut = false
         UserDefaultsManager().sync()
 
         let settingsViewController = IASKAppSettingsViewController()
@@ -38,7 +39,7 @@ struct SettingsView: UIViewControllerRepresentable {
         }
         
         func settingsViewControllerDidEnd(_ settingsViewController: IASKAppSettingsViewController) {
-            settingsView.shouldShowSettings = false
+            settingsView.presentationMode.wrappedValue.dismiss()
         }
         
         func settingsViewController(
@@ -49,12 +50,8 @@ struct SettingsView: UIViewControllerRepresentable {
             case "SignOut":
                 let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                 let signOutAction = UIAlertAction(title: "Sign Out", style: .destructive) { _ in
-                    self.settingsView.shouldShowSettings = false
-                    
-                    // Without async the screen transitions to hide settings and show sign in were not animated
-                    DispatchQueue.main.async {
-                        self.settingsView.authManager.signOut()
-                    }
+                    self.settingsView.signOut = true
+                    self.settingsView.presentationMode.wrappedValue.dismiss()
                 }
                 let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
                 [signOutAction, cancelAction].forEach { alertController.addAction($0) }
