@@ -26,6 +26,7 @@
 		DC5F458F26CEBEC8009C5C79 /* AppInfoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F458E26CEBEC8009C5C79 /* AppInfoStore.swift */; };
 		DC5F459426CEC1FF009C5C79 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F459326CEC1FF009C5C79 /* UserDefaultsManager.swift */; };
 		DC5F459626CEC247009C5C79 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F459526CEC246009C5C79 /* UserDefaultsKeys.swift */; };
+		DCC48F7126D805C300EE49EF /* TwilioPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = DCC48F7026D805C300EE49EF /* TwilioPlayer */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC5F458D26CEBCC9009C5C79 /* TwilioVideo in Frameworks */,
+				DCC48F7126D805C300EE49EF /* TwilioPlayer in Frameworks */,
 				DC4AA66826D175A600E677D5 /* SwiftyUserDefaults in Frameworks */,
 				DC5F458626CEA6CE009C5C79 /* InAppSettingsKit in Frameworks */,
 			);
@@ -266,6 +268,7 @@
 				DC5F458526CEA6CE009C5C79 /* InAppSettingsKit */,
 				DC5F458C26CEBCC9009C5C79 /* TwilioVideo */,
 				DC4AA66726D175A600E677D5 /* SwiftyUserDefaults */,
+				DCC48F7026D805C300EE49EF /* TwilioPlayer */,
 			);
 			productName = LiveVideo;
 			productReference = DC5F453526CC061A009C5C79 /* LiveVideo.app */;
@@ -342,6 +345,7 @@
 				DC5F458426CEA6CE009C5C79 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */,
 				DC5F458B26CEBCC8009C5C79 /* XCRemoteSwiftPackageReference "twilio-video-ios" */,
 				DC4AA66626D175A600E677D5 /* XCRemoteSwiftPackageReference "SwiftyUserDefaults" */,
+				DCC48F6F26D805C300EE49EF /* XCRemoteSwiftPackageReference "twilio-player-ios-internal-package" */,
 			);
 			productRefGroup = DC5F453626CC061A009C5C79 /* Products */;
 			projectDirPath = "";
@@ -744,6 +748,14 @@
 				minimumVersion = 4.4.0;
 			};
 		};
+		DCC48F6F26D805C300EE49EF /* XCRemoteSwiftPackageReference "twilio-player-ios-internal-package" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:twilio/twilio-player-ios-internal-package.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = "1.0.0-rc33";
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -761,6 +773,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DC5F458B26CEBCC8009C5C79 /* XCRemoteSwiftPackageReference "twilio-video-ios" */;
 			productName = TwilioVideo;
+		};
+		DCC48F7026D805C300EE49EF /* TwilioPlayer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DCC48F6F26D805C300EE49EF /* XCRemoteSwiftPackageReference "twilio-player-ios-internal-package" */;
+			productName = TwilioPlayer;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -20,6 +20,15 @@
         }
       },
       {
+        "package": "TwilioPlayer",
+        "repositoryURL": "git@github.com:twilio/twilio-player-ios-internal-package.git",
+        "state": {
+          "branch": null,
+          "revision": "a239b2fa15391931b29033773d44901cf60bee6c",
+          "version": "1.0.0-rc33"
+        }
+      },
+      {
         "package": "TwilioVideo",
         "repositoryURL": "https://github.com/twilio/twilio-video-ios",
         "state": {
