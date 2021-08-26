@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@4.1
+  node: circleci/node@4.7.0
   ruby: circleci/ruby@1.1.4
 
 parameters:
@@ -12,9 +12,6 @@ parameters:
     type: boolean
     default: false
   ios-app-updated:
-    type: boolean
-    default: false
-  composer-updated:
     type: boolean
     default: false
 
@@ -40,19 +37,14 @@ workflows:
     when:
       or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.web-app-updated >>]
     jobs:
-      - node/test:
+      - node/run:
+          npm-run: test:ci
           app-dir: 'apps/web'
   build-and-test-ios-app:
     when:
       or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.ios-app-updated >>]
     jobs:
       - build-and-test-ios-app
-  build-and-test-composer:
-    when:
-      or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.composer-updated >>]
-    jobs:
-      - node/test:
-          app-dir: 'composer'
   build-and-test-backend:
     when: << pipeline.parameters.backend-updated >>
     jobs:
