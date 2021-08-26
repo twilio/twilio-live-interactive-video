@@ -3,3 +3,14 @@ node_modules/
 .twilio-functions
 .twiliodeployinfo
 assets/
+
+# iOS
+xcuserdata/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+.build/
+apps/ios/LiveVideo/fastlane/Preview.html
+apps/ios/LiveVideo/fastlane/screenshots/**/*.png
+apps/ios/LiveVideo/fastlane/test_output
