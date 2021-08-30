@@ -26,6 +26,13 @@ jobs:
     steps:
       - checkout
       - ruby/install-deps
+      - run: 
+          name: Configure Artifactory so private dependencies can be downloaded
+          command: |
+            chmod 600 .circleci/.netrc
+            cp .circleci/.netrc ~/.netrc
+            sed -i '' "s/ARTIFACTORY_USERNAME/${ARTIFACTORY_USERNAME}/g" ~/.netrc
+            sed -i '' "s/ARTIFACTORY_API_KEY/${ARTIFACTORY_API_KEY}/g" ~/.netrc
       - run:
           name: Build and test
           command: |
