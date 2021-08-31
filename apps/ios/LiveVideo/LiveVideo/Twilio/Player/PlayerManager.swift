@@ -22,7 +22,7 @@ class PlayerManager: NSObject {
     
     func connect() {
         if player != nil {
-            play()
+            play() // The player should be paused so start playing again
         } else {
             player = Player.connect(accessToken: accessToken, delegate: self)
         }
