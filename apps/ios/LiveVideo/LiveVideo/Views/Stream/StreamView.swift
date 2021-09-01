@@ -9,67 +9,55 @@ struct StreamView: View {
     @Environment(\.presentationMode) var presentationMode
     @Binding var config: StreamConfig!
     
-    init(config: Binding<StreamConfig?>) {
-        self._config = config
-        UIToolbar.appearance().barTintColor = UIColor(named: "FormBackgroundColor")
-        UIToolbar.appearance().setShadowImage(UIImage(), forToolbarPosition: .any)
-    }
-    
     var body: some View {
-        NavigationView {
+        GeometryReader { geometry in
             ZStack {
                 Color.videoGridBackground.ignoresSafeArea()
-                VStack(spacing: 6) {
+                VStack(spacing: 0) {
+                    VStack(spacing: 0) {
+                        HStack {
+                            LiveBadge()
+                            Spacer()
+                            Text("Room name")
+                                .foregroundColor(.white)
+                                .font(.system(size: 16))
+                        }
+                        .padding(6)
+                        SwiftUIPlayerView(player: $streamManager.player)
+//                        Color.purple
+                    }
+                    .padding(.leading, geometry.safeAreaInsets.leading)
+                    .padding(.trailing, geometry.safeAreaInsets.trailing)
                     HStack {
-                        ZStack {
-                            HStack(spacing: 4) {
-                                Image(systemName: "dot.radiowaves.left.and.right")
+                        Spacer()
+                        Button(action: {
+                            presentationMode.wrappedValue.dismiss()
+                        }) {
+                            VStack(spacing: 4) {
+                                Image(systemName: "arrow.left.circle.fill")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(height: 12)
-                                Text("Live")
-                                    .font(.system(size: 13))
+                                    .foregroundColor(.destructive)
+                                    .frame(width: 24, height: 24, alignment: .bottom)
+                                Text("Leave")
+                                    .font(.system(size: 10))
                             }
-                            .padding([.top, .bottom], 4)
-                            .padding([.leading, .trailing], 8)
+                            .padding(.top, 7)
+                            .frame(minWidth: 50)
+                            .foregroundColor(.videoToolbarText)
                         }
-                        .foregroundColor(.black)
-                        .background(Color.liveBadgeBackground)
-                        .cornerRadius(2)
                         Spacer()
-                        Text("Room name")
-                            .foregroundColor(.white)
-                            .font(.system(size: 16))
                     }
-                    SwiftUIPlayerView(player: $streamManager.player)
-//                    Color.purple
+                    .background(Color.formBackground)
+                    Color.formBackground
+                        .frame(height: geometry.safeAreaInsets.bottom)
                 }
-                .padding(6)
+                .edgesIgnoringSafeArea([.bottom, .horizontal])
             }
-            .navigationBarHidden(true)
-            .toolbar {
-                ToolbarItemGroup(placement: .bottomBar) {
-                    Spacer()
-                    Button(action: {
-                        print("Edit button was tapped")
-                    }) {
-                        VStack(spacing: 4) {
-                            Image(systemName: "arrow.left.circle.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(.destructive)
-                                .frame(width: 24, height: 24, alignment: .bottom)
-                            Text("Leave")
-                                .font(.system(size: 10))
-                        }
-                    }
-                    .foregroundColor(.videoToolbarText)
-                    Spacer()
-                }
-            }
-            .onAppear {
-                streamManager.connect(config: config)
-            }
+        }
+        .onAppear {
+            streamManager.connect(config: config)
+        }
 //            .alert(isPresented: $streamManager.showError) {
 //                if let error = streamManager.error as? LiveVideoError, error.isStreamEndedByHostError {
 //                    return Alert(
@@ -85,7 +73,6 @@ struct StreamView: View {
 //                    }
 //                }
 //            }
-        }
     }
 }
 
