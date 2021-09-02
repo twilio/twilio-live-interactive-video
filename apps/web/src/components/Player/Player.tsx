@@ -48,9 +48,6 @@ export default function Player() {
         .then(player => {
           player.attach(videoElRef.current!);
           player.play();
-          player.on(TwilioPlayer.Event.TimedMetadataReceived, metadata =>
-            console.log('Received timed metadata: ', metadata)
-          );
         });
     }
   }, [URLRoomName]);
