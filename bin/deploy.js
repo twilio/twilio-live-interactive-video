@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+require('dotenv').config();
 const { cli } = require('cli-ux');
 const fse = require('fs-extra');
 const appAssetsDir = 'assets';
