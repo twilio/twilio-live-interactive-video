@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "Alamofire",
+        "repositoryURL": "https://github.com/Alamofire/Alamofire",
+        "state": {
+          "branch": null,
+          "revision": "f96b619bcb2383b43d898402283924b80e2c4bae",
+          "version": "5.4.3"
+        }
+      },
+      {
         "package": "InAppSettingsKit",
         "repositoryURL": "https://github.com/futuretap/InAppSettingsKit",
         "state": {
@@ -17,6 +26,15 @@
           "branch": null,
           "revision": "f66bcd04088582c8fbb5cb8554d577e303bae396",
           "version": "5.3.0"
+        }
+      },
+      {
+        "package": "TwilioPlayer",
+        "repositoryURL": "git@github.com:twilio/twilio-player-ios-internal-package.git",
+        "state": {
+          "branch": null,
+          "revision": "a239b2fa15391931b29033773d44901cf60bee6c",
+          "version": "1.0.0-rc33"
         }
       },
       {

@@ -6,6 +6,7 @@ import SwiftyUserDefaults
 
 extension DefaultsKeys {
     var appVersion: DefaultsKey<String> { .init("AppVersion", defaultValue: "") }
+    var playerSDKVersion: DefaultsKey<String> { .init("PlayerSDKVersion", defaultValue: "") }
     var userIdentity: DefaultsKey<String> { .init("UserIdentity", defaultValue: "") }
     var videoSDKVersion: DefaultsKey<String> { .init("VideoSDKVersion", defaultValue: "") }
 }
