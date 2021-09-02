@@ -63,7 +63,7 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  let room, livePlayerStreamer, mediaProcessor, streamDocument, conversation;
+  let room, playerStreamer, mediaProcessor, streamDocument, conversation;
   let roomCreated = false;
 
   if (create_room) {
@@ -98,8 +98,8 @@ module.exports.handler = async (context, event, callback) => {
     // If we created a room in the previous step, then we should create a new stream as well.
     if (roomCreated) {
       try {
-        // Create livePlayerStreamer
-        livePlayerStreamer = await axiosClient('PlayerStreamers', {
+        // Create playerStreamer
+        playerStreamer = await axiosClient('PlayerStreamers', {
           method: 'post',
           data: 'Video=true',
         });
@@ -108,10 +108,10 @@ module.exports.handler = async (context, event, callback) => {
         mediaProcessor = await axiosClient('MediaProcessors', {
           method: 'post',
           data: querystring.stringify({
-            Extension: context.MEDIA_EXTENSION_URL,
+            Extension: context.MEDIA_EXTENSION,
             ExtensionContext: JSON.stringify({
               room: { name: room.sid },
-              outputs: [livePlayerStreamer.data.sid],
+              outputs: [playerStreamer.data.sid],
             }),
           }),
         });
@@ -119,8 +119,8 @@ module.exports.handler = async (context, event, callback) => {
         console.log(
           'created stream: ',
           JSON.stringify({
-            stream_url: livePlayerStreamer.data.playback_url,
-            livePlayerStreamerSid: livePlayerStreamer.data.sid,
+            stream_url: playerStreamer.data.playback_url,
+            playerStreamerSid: playerStreamer.data.sid,
             mediaProcessorSid: mediaProcessor.data.sid,
           })
         );
@@ -142,7 +142,7 @@ module.exports.handler = async (context, event, callback) => {
         streamDocument = await syncClient.documents.create({
           uniqueName: `stream-${room.sid}`,
           data: {
-            livePlayerStreamerSid: livePlayerStreamer.data.sid,
+            playerStreamerSid: playerStreamer.data.sid,
             mediaProcessorSid: mediaProcessor.data.sid,
           },
         });
