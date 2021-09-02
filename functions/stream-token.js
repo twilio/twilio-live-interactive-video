@@ -55,7 +55,7 @@ module.exports.handler = async (context, event, callback) => {
   }
 
   try {
-    // Get livePlayerStreamerSid from stream document
+    // Get playerStreamerSid from stream document
     streamDocument = await syncClient.documents(`stream-${room.sid}`).fetch();
   } catch (e) {
     response.setStatusCode(500);
@@ -70,7 +70,7 @@ module.exports.handler = async (context, event, callback) => {
 
   let playbackGrant;
   try {
-    playbackGrant = await getPlaybackGrant(streamDocument.data.livePlayerStreamerSid);
+    playbackGrant = await getPlaybackGrant(streamDocument.data.playerStreamerSid);
   } catch (e) {
     console.error(e);
     response.setStatusCode(500);
