@@ -5,6 +5,7 @@
 import TwilioPlayer
 
 class StreamManager: ObservableObject {
+    @Published var isLoading = false
     @Published var player: Player?
     @Published var showError = false
     @Published var error: Error? {
@@ -20,6 +21,7 @@ class StreamManager: ObservableObject {
     }
 
     func connect(config: StreamConfig) {
+        isLoading = true
         let request = StreamTokenRequest(userIdentity: config.userIdentity, roomName: config.roomName)
         
         api.request(request) { [weak self] result in
@@ -47,6 +49,7 @@ class StreamManager: ObservableObject {
 extension StreamManager: PlayerManagerDelegate {
     func playerManagerDidConnect(_ playerManager: PlayerManager) {
         player = playerManager.player
+        isLoading = false
     }
     
     func playerManager(_ playerManager: PlayerManager, didDisconnectWithError error: Error) {

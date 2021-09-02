@@ -3,11 +3,13 @@
 //
 
 import SwiftUI
+import ToastUI
 
 struct StreamView: View {
     @EnvironmentObject var streamManager: StreamManager
     @Environment(\.presentationMode) var presentationMode
     @Binding var config: StreamConfig!
+    @State private var presentingToast: Bool = false
     
     var body: some View {
         GeometryReader { geometry in
@@ -23,8 +25,12 @@ struct StreamView: View {
                                 .font(.system(size: 16))
                         }
                         .padding(6)
-                        SwiftUIPlayerView(player: $streamManager.player)
-//                        Color.purple
+                        ZStack {
+                            SwiftUIPlayerView(player: $streamManager.player)
+    //                        Color.purple
+//                            ProgressView()
+//                                .progressViewStyle(CircularProgressViewStyle(tint: .green))
+                        }
                     }
                     .padding(.leading, geometry.safeAreaInsets.leading)
                     .padding(.trailing, geometry.safeAreaInsets.trailing)
@@ -53,9 +59,47 @@ struct StreamView: View {
                         .frame(height: geometry.safeAreaInsets.bottom)
                 }
                 .edgesIgnoringSafeArea([.bottom, .horizontal])
+
+                if streamManager.isLoading {
+                    ZStack {
+                        Color.videoGridBackground
+                            .opacity(0.8)
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .green))
+                            .scaleEffect(2)
+                    }
+                    .ignoresSafeArea()
+                }
             }
         }
+//        .toast(isPresented: $streamManager.isLoading) {
+//          print("Toast dismissed")
+//        } content: {
+//            ZStack {
+//                Color.videoGridBackground
+//                    .ignoresSafeArea()
+//                    .opacity(0.8)
+//                ProgressView()
+//                    .progressViewStyle(CircularProgressViewStyle(tint: .green))
+//                    .scaleEffect(2)
+//            }
+
+//            ToastView(
+//                content: {
+//                    Text("Loading")
+//                        .foregroundColor(.green)
+//                },
+//                background: {
+//                    Color.black
+//                        .opacity(0.5)
+//                }
+//            )
+//
+//          ToastView("Loading...")
+//            .toastViewStyle(IndefiniteProgressToastViewStyle())
+//        }
         .onAppear {
+            presentingToast = true
             streamManager.connect(config: config)
         }
 //            .alert(isPresented: $streamManager.showError) {

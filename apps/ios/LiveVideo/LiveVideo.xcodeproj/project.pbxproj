@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		DC1ED0F026DFCD3C00FFA769 /* LiveBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED0EF26DFCD3C00FFA769 /* LiveBadge.swift */; };
+		DC1ED0F526DFFC8E00FFA769 /* ToastUI in Frameworks */ = {isa = PBXBuildFile; productRef = DC1ED0F426DFFC8E00FFA769 /* ToastUI */; };
 		DC4AA65926D0133600E677D5 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA65826D0133600E677D5 /* Color.swift */; };
 		DC4AA66026D047DD00E677D5 /* FormTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA65F26D047DD00E677D5 /* FormTextFieldStyle.swift */; };
 		DC4AA66226D0493E00E677D5 /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA66126D0493E00E677D5 /* PrimaryButtonStyle.swift */; };
@@ -105,6 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC1ED0F526DFFC8E00FFA769 /* ToastUI in Frameworks */,
 				DCC48F9826D828E500EE49EF /* Alamofire in Frameworks */,
 				DC5F458D26CEBCC9009C5C79 /* TwilioVideo in Frameworks */,
 				DCC48F7126D805C300EE49EF /* TwilioPlayer in Frameworks */,
@@ -370,6 +372,7 @@
 				DC4AA66726D175A600E677D5 /* SwiftyUserDefaults */,
 				DCC48F7026D805C300EE49EF /* TwilioPlayer */,
 				DCC48F9726D828E500EE49EF /* Alamofire */,
+				DC1ED0F426DFFC8E00FFA769 /* ToastUI */,
 			);
 			productName = LiveVideo;
 			productReference = DC5F453526CC061A009C5C79 /* LiveVideo.app */;
@@ -448,6 +451,7 @@
 				DC4AA66626D175A600E677D5 /* XCRemoteSwiftPackageReference "SwiftyUserDefaults" */,
 				DCC48F6F26D805C300EE49EF /* XCRemoteSwiftPackageReference "twilio-player-ios-internal-package" */,
 				DCC48F9626D828E500EE49EF /* XCRemoteSwiftPackageReference "Alamofire" */,
+				DC1ED0F326DFFC8E00FFA769 /* XCRemoteSwiftPackageReference "ToastUI" */,
 			);
 			productRefGroup = DC5F453626CC061A009C5C79 /* Products */;
 			projectDirPath = "";
@@ -840,6 +844,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		DC1ED0F326DFFC8E00FFA769 /* XCRemoteSwiftPackageReference "ToastUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/quanshousio/ToastUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		DC4AA66626D175A600E677D5 /* XCRemoteSwiftPackageReference "SwiftyUserDefaults" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sunshinejr/SwiftyUserDefaults";
@@ -883,6 +895,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		DC1ED0F426DFFC8E00FFA769 /* ToastUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC1ED0F326DFFC8E00FFA769 /* XCRemoteSwiftPackageReference "ToastUI" */;
+			productName = ToastUI;
+		};
 		DC4AA66726D175A600E677D5 /* SwiftyUserDefaults */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DC4AA66626D175A600E677D5 /* XCRemoteSwiftPackageReference "SwiftyUserDefaults" */;
