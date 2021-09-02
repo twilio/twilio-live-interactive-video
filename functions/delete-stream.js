@@ -11,18 +11,18 @@ exports.handler = async function (context, event, callback) {
 
   if (StatusCallbackEvent === 'room-ended') {
     try {
-      // Get livePlayerStreamerSid and mediaComposerSid from stream document
+      // Get playerStreamerSid and mediaProcessorSid from stream document
       const streamDocument = await syncClient.documents(`stream-${RoomSid}`).fetch();
-      const { livePlayerStreamerSid, mediaComposerSid } = streamDocument.data;
+      const { playerStreamerSid, mediaProcessorSid } = streamDocument.data;
 
-      // Stop mediaComposer
-      await axiosClient(`MediaComposers/${mediaComposerSid}`, {
+      // Stop mediaProcessor
+      await axiosClient(`MediaProcessors/${mediaProcessorSid}`, {
         method: 'post',
         data: 'Status=ENDED',
       });
 
-      // Stop livePlayerStreamer
-      await axiosClient(`PlayerStreamers/${livePlayerStreamerSid}`, {
+      // Stop playerStreamer
+      await axiosClient(`PlayerStreamers/${playerStreamerSid}`, {
         method: 'post',
         data: 'Status=ENDED',
       });
