@@ -13,22 +13,26 @@ class StreamManager: ObservableObject {
             showError = error != nil
         }
     }
-    private let api = API.shared
-    private let playerManager = PlayerManager()
+    private let api: API?
+    private let playerManager: PlayerManager?
     
-    init() {
-        playerManager.delegate = self
+    init(api: API?, playerManager: PlayerManager?) {
+        self.api = api
+        self.playerManager = playerManager
+        playerManager?.delegate = self
     }
 
     func connect(config: StreamConfig) {
+        guard let api = api else { return }
+        
         isLoading = true
         let request = StreamTokenRequest(userIdentity: config.userIdentity, roomName: config.roomName)
         
         api.request(request) { [weak self] result in
             switch result {
             case let .success(response):
-                self?.playerManager.configure(accessToken: response.token)
-                self?.playerManager.connect()
+                self?.playerManager?.configure(accessToken: response.token)
+                self?.playerManager?.connect()
             case let .failure(error):
                 self?.error = error
             }
@@ -36,8 +40,9 @@ class StreamManager: ObservableObject {
     }
     
     func disconnect() {
-        playerManager.disconnect()
+        playerManager?.disconnect()
         player = nil
+        isLoading = false
     }
     
     private func handleError(_ error: Error) {

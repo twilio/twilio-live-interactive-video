@@ -7,7 +7,7 @@ import SwiftUI
 @main
 struct LiveVideoApp: App {
     @StateObject private var authManager = AuthManager()
-    @StateObject private var streamManager = StreamManager()
+    @StateObject private var streamManager = StreamManager(api: API.shared, playerManager: PlayerManager())
     
     var body: some Scene {
         WindowGroup {
