@@ -63,7 +63,7 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  let room, livePlayerStreamer, mediaComposer, streamDocument, conversation;
+  let room, livePlayerStreamer, mediaProcessor, streamDocument, conversation;
   let roomCreated = false;
 
   if (create_room) {
@@ -97,28 +97,22 @@ module.exports.handler = async (context, event, callback) => {
 
     // If we created a room in the previous step, then we should create a new stream as well.
     if (roomCreated) {
-      // Create mediaComposerToken token
-      const mediaComposerToken = new AccessToken(ACCOUNT_SID, TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, {
-        ttl: MAX_ALLOWED_SESSION_DURATION,
-      });
-
-      mediaComposerToken.identity = 'LiveStreaming-MediaComposer';
-      const mediaComposerVideoGrant = new VideoGrant({ room: room_name });
-      mediaComposerToken.addGrant(mediaComposerVideoGrant);
-
       try {
         // Create livePlayerStreamer
         livePlayerStreamer = await axiosClient('PlayerStreamers', {
           method: 'post',
           data: 'Video=true',
         });
-        // Create mediaComposer
-        mediaComposer = await axiosClient('MediaComposers', {
+
+        // Create mediaProcessor
+        mediaProcessor = await axiosClient('MediaProcessors', {
           method: 'post',
           data: querystring.stringify({
-            WebAppUrl: `${context.MEDIA_COMPOSER_URL}?token=${mediaComposerToken.toJwt()}`,
-            Outputs: livePlayerStreamer.data.sid,
-            Video: true,
+            Extension: context.MEDIA_EXTENSION_URL,
+            ExtensionContext: JSON.stringify({
+              room: { name: room.sid },
+              outputs: [livePlayerStreamer.data.sid],
+            }),
           }),
         });
 
@@ -127,15 +121,9 @@ module.exports.handler = async (context, event, callback) => {
           JSON.stringify({
             stream_url: livePlayerStreamer.data.playback_url,
             livePlayerStreamerSid: livePlayerStreamer.data.sid,
-            mediaComposerSid: mediaComposer.data.sid,
+            mediaProcessorSid: mediaProcessor.data.sid,
           })
         );
-
-        // Start mediaComposer
-        await axiosClient(`MediaComposers/${mediaComposer.data.sid}`, {
-          method: 'post',
-          data: 'Status=STARTED',
-        });
       } catch (e) {
         console.error(e);
         response.setStatusCode(500);
@@ -155,7 +143,7 @@ module.exports.handler = async (context, event, callback) => {
           uniqueName: `stream-${room.sid}`,
           data: {
             livePlayerStreamerSid: livePlayerStreamer.data.sid,
-            mediaComposerSid: mediaComposer.data.sid,
+            mediaProcessorSid: mediaProcessor.data.sid,
           },
         });
       } catch (e) {
