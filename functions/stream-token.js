@@ -55,7 +55,7 @@ module.exports.handler = async (context, event, callback) => {
   }
 
   try {
-    // Get livePlayerStreamerSid from stream document
+    // Get livePlayerStreamerSid and mediaComposerSid from stream document
     streamDocument = await syncClient.documents(`stream-${room.sid}`).fetch();
   } catch (e) {
     response.setStatusCode(500);

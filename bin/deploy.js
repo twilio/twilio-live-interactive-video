@@ -14,6 +14,7 @@ const exec = promisify(require('child_process').exec);
      * Build the app projects
      */
     cli.action.start('building web app');
+    // await exec('npm --prefix composer run build');
     await exec('npm --prefix apps/web run build');
 
     /**
