@@ -14,8 +14,8 @@ struct StreamToolbarButton: View {
     
     let title: String
     let image: Image
-    let action: () -> Void
     let role: Role
+    let action: () -> Void
     
     init(_ title: String, image: Image, role: Role = .default, action: @escaping () -> Void = { }) {
         self.title = title

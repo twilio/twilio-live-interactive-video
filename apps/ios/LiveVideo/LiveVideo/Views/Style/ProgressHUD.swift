@@ -15,11 +15,9 @@ struct ProgressHUD: View {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: .green))
                     .scaleEffect(2)
-                if let label = label {
-                    Text(label)
-                        .foregroundColor(.white)
-                        .font(.system(size: 24, weight: .bold))
-                }
+                Text(label)
+                    .foregroundColor(.white)
+                    .font(.system(size: 24, weight: .bold))
             }
         }
         .ignoresSafeArea()

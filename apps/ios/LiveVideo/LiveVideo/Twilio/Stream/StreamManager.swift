@@ -34,7 +34,7 @@ class StreamManager: ObservableObject {
                 self?.playerManager?.configure(accessToken: response.token)
                 self?.playerManager?.connect()
             case let .failure(error):
-                self?.error = error
+                self?.handleError(error)
             }
         }
     }

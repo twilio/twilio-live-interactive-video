@@ -20,7 +20,7 @@ struct StreamView: View {
                         .padding(6)
                         SwiftUIPlayerView(player: $streamManager.player)
                     }
-                    .padding(.leading, geometry.safeAreaInsets.leading) // So views that are not toolbar stay inside safe area
+                    .padding(.leading, geometry.safeAreaInsets.leading)
                     .padding(.trailing, geometry.safeAreaInsets.trailing)
                     
                     StreamToolbar {
@@ -29,7 +29,7 @@ struct StreamView: View {
                         }
                     }
                     
-                    // For toolbar below safe area
+                    // For toolbar bottom that is below safe area
                     Color.formBackground
                         .frame(height: geometry.safeAreaInsets.bottom)
                 }
