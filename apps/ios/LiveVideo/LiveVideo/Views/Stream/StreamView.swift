@@ -24,7 +24,12 @@ struct StreamView: View {
                     .padding(.trailing, geometry.safeAreaInsets.trailing)
                     
                     StreamToolbar {
-                        StreamToolbarButton("Leave", image: Image(systemName: "arrow.left.circle.fill"), role: .destructive) {
+                        StreamToolbarButton(
+                            "Leave",
+                            image: Image(systemName: "arrow.left.circle.fill"),
+                            role: .destructive
+                        ) {
+                            streamManager.disconnect()
                             presentationMode.wrappedValue.dismiss()
                         }
                     }

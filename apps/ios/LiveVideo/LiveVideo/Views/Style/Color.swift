@@ -4,7 +4,7 @@
 
 import SwiftUI
 
-// https://paste.twilio.design/tokens/
+// Colors defined at https://paste.twilio.design/tokens/
 extension Color {
     static var background: Color { Color("Background") }
     static var backgroundBrandStronger: Color { Color("BackgroundBrandStronger") }
