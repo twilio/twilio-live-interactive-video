@@ -80,4 +80,8 @@ extension PlayerManager: PlayerDelegate {
     func playerWillRebuffer(player: Player) {
         print("Player will rebuffer.")
     }
+    
+    func playerNetworkDidBecomeUnavailable(player: Player) {
+        print("Player network did become unavailable.")
+    }
 }

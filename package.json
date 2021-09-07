@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
+    "dotenv": "^10.0.0",
     "fs-extra": "10.0.0",
     "twilio": "^3.59.0",
     "twilio-run": "^2.9.0"
