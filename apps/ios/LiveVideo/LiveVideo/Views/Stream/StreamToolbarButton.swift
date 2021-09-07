@@ -8,8 +8,8 @@ struct StreamToolbarButton: View {
     struct Role {
         let imageForegroundColor: Color
         
-        static let `default` = Role(imageForegroundColor: .videoToolbarText)
-        static let destructive = Role(imageForegroundColor: .destructive)
+        static let `default` = Role(imageForegroundColor: .textIcon)
+        static let destructive = Role(imageForegroundColor: .backgroundDestructive)
     }
     
     let title: String
@@ -39,7 +39,7 @@ struct StreamToolbarButton: View {
             }
             .padding(.top, 7)
             .frame(minWidth: 50)
-            .foregroundColor(.videoToolbarText)
+            .foregroundColor(.textIcon)
         }
     }
 }

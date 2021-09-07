@@ -5,17 +5,17 @@
 import SwiftUI
 
 struct ProgressHUD: View {
-    let label: String
+    let title: String
     
     var body: some View {
         ZStack {
-            Color.videoGridBackground
+            Color.backgroundBrandStronger
                 .opacity(0.8)
             VStack(spacing: 40) {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: .green))
                     .scaleEffect(2)
-                Text(label)
+                Text(title)
                     .foregroundColor(.white)
                     .font(.system(size: 24, weight: .bold))
             }
@@ -26,6 +26,6 @@ struct ProgressHUD: View {
 
 struct ProgressHUD_Previews: PreviewProvider {
     static var previews: some View {
-        ProgressHUD(label: "Label")
+        ProgressHUD(title: "Title")
     }
 }

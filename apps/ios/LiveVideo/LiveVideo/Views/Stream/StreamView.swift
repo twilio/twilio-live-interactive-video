@@ -12,12 +12,12 @@ struct StreamView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Color.videoGridBackground.ignoresSafeArea()
+                Color.backgroundBrandStronger.ignoresSafeArea()
 
                 VStack(spacing: 0) {
                     VStack(spacing: 0) {
-                        StreamStatusView(roomName: config.roomName)
-                        .padding(6)
+                        StreamStatusView(roomName: config.roomName, isLoading: $streamManager.isLoading)
+                            .padding([.horizontal, .bottom], 6)
                         SwiftUIPlayerView(player: $streamManager.player)
                     }
                     .padding(.leading, geometry.safeAreaInsets.leading)
@@ -30,13 +30,13 @@ struct StreamView: View {
                     }
                     
                     // For toolbar bottom that is below safe area
-                    Color.formBackground
+                    Color.background
                         .frame(height: geometry.safeAreaInsets.bottom)
                 }
                 .edgesIgnoringSafeArea([.horizontal, .bottom]) // So toolbar sides and bottom extend beyond safe area
 
                 if streamManager.isLoading {
-                    ProgressHUD(label: "Joining live event! 🎉")
+                    ProgressHUD(title: "Joining live event! 🎉")
                 }
             }
         }
@@ -67,10 +67,10 @@ struct StreamView_Previews: PreviewProvider {
         loadingStreamManager.isLoading = true
         
         return Group {
-            StreamView(config: .constant(StreamConfig(roomName: "", userIdentity: "")))
+            StreamView(config: .constant(StreamConfig(roomName: "Demo", userIdentity: "Alice")))
                 .previewDisplayName("Live")
                 .environmentObject(StreamManager(api: nil, playerManager: nil))
-            StreamView(config: .constant(StreamConfig(roomName: "", userIdentity: "")))
+            StreamView(config: .constant(StreamConfig(roomName: "Demo", userIdentity: "Alice")))
                 .previewDisplayName("Joining")
                 .environmentObject(loadingStreamManager)
         }

@@ -18,7 +18,7 @@ struct LiveBadge: View {
         .padding(.vertical, 4)
         .padding(.horizontal, 8)
         .foregroundColor(.black)
-        .background(Color.liveBadgeBackground)
+        .background(Color.backgroundLiveBadge)
         .cornerRadius(2)
     }
 }

@@ -4,13 +4,14 @@
 
 import SwiftUI
 
+// https://paste.twilio.design/tokens/
 extension Color {
-    static var destructive: Color { Color("DestructiveColor") }
-    static var formBackground: Color { Color("FormBackgroundColor") }
-    static var formFieldBorder: Color { Color("FormFieldBorderColor") }
-    static var liveBadgeBackground: Color { Color("LiveBadgeBackgroundColor") }
-    static var primaryButtonBackgroundEnabled: Color { Color("PrimaryButtonBackgroundEnabledColor") }
-    static var primaryButtonBackgroundDisabled: Color { Color("PrimaryButtonBackgroundDisabledColor") }
-    static var videoGridBackground: Color { Color("VideoGridBackgroundColor") }
-    static var videoToolbarText: Color { Color("VideoToolbarTextColor") }
+    static var background: Color { Color("Background") }
+    static var backgroundBrandStronger: Color { Color("BackgroundBrandStronger") }
+    static var backgroundDestructive: Color { Color("BackgroundDestructive") }
+    static var backgroundLiveBadge: Color { Color("BackgroundLiveBadge") }
+    static var backgroundPrimary: Color { Color("BackgroundPrimary") }
+    static var backgroundPrimaryWeak: Color { Color("BackgroundPrimaryWeak") }
+    static var border: Color { Color("Border") }
+    static var textIcon: Color { Color("TextIcon") }
 }

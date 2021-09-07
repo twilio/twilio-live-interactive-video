@@ -15,7 +15,7 @@ struct FormTextFieldStyle: TextFieldStyle {
                     RoundedRectangle(cornerRadius: cornerRadius)
                         .fill(Color.white)
                     RoundedRectangle(cornerRadius: cornerRadius)
-                        .strokeBorder(Color.formFieldBorder)
+                        .strokeBorder(Color.border)
                 }
             )
     }

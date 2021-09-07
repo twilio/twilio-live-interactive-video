@@ -17,7 +17,7 @@ struct StreamToolbar<Content>: View where Content: View {
             content()
             Spacer()
         }
-        .background(Color.formBackground)
+        .background(Color.background)
     }
 }
 
