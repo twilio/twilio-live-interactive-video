@@ -5,6 +5,6 @@
 import Foundation
 
 struct StreamConfig {
-    let roomName: String
+    let streamName: String
     let userIdentity: String
 }

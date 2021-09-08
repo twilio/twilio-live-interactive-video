@@ -16,7 +16,7 @@ struct StreamView: View {
 
                 VStack(spacing: 0) {
                     VStack(spacing: 0) {
-                        StreamStatusView(roomName: config.roomName, isLoading: $streamManager.isLoading)
+                        StreamStatusView(streamName: config.streamName, isLoading: $streamManager.isLoading)
                             .padding([.horizontal, .bottom], 6)
                         SwiftUIPlayerView(player: $streamManager.player)
                     }
@@ -72,10 +72,10 @@ struct StreamView_Previews: PreviewProvider {
         loadingStreamManager.isLoading = true
         
         return Group {
-            StreamView(config: .constant(StreamConfig(roomName: "Demo", userIdentity: "Alice")))
+            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice")))
                 .previewDisplayName("Live")
                 .environmentObject(StreamManager(api: nil, playerManager: nil))
-            StreamView(config: .constant(StreamConfig(roomName: "Demo", userIdentity: "Alice")))
+            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice")))
                 .previewDisplayName("Joining")
                 .environmentObject(loadingStreamManager)
         }

@@ -8,21 +8,21 @@ struct JoinStreamView: View {
     @EnvironmentObject var authManager: AuthManager
     @Environment(\.presentationMode) var presentationMode
     @Binding var streamConfig: StreamConfig?
-    @State private var roomName = ""
+    @State private var streamName = ""
     
     var body: some View {
         NavigationView {
             FormStack {
-                TextField("Event name", text: $roomName)
+                TextField("Event name", text: $streamName)
                     .textFieldStyle(FormTextFieldStyle())
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
                 Button("Continue") {
-                    streamConfig = StreamConfig(roomName: roomName, userIdentity: authManager.userIdentity)
+                    streamConfig = StreamConfig(streamName: streamName, userIdentity: authManager.userIdentity)
                     presentationMode.wrappedValue.dismiss()
                 }
-                .buttonStyle(PrimaryButtonStyle(isEnabled: !roomName.isEmpty))
-                .disabled(roomName.isEmpty)
+                .buttonStyle(PrimaryButtonStyle(isEnabled: !streamName.isEmpty))
+                .disabled(streamName.isEmpty)
             }
             .navigationBarTitle("Join event", displayMode: .inline)
             .toolbar {

@@ -26,7 +26,7 @@ class StreamManager: ObservableObject {
         guard let api = api else { return }
         
         isLoading = true
-        let request = StreamTokenRequest(userIdentity: config.userIdentity, roomName: config.roomName)
+        let request = StreamTokenRequest(userIdentity: config.userIdentity, roomName: config.streamName)
         
         api.request(request) { [weak self] result in
             switch result {
