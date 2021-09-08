@@ -18,7 +18,13 @@ struct StreamView: View {
                     VStack(spacing: 0) {
                         StreamStatusView(streamName: config.streamName, isLoading: $streamManager.isLoading)
                             .padding([.horizontal, .bottom], 6)
-                        SwiftUIPlayerView(player: $streamManager.player)
+                        
+                        switch config.role {
+                        case .host, .speaker:
+                            VideoGridView(videoTrack: $streamManager.videoTrack)
+                        case .viewer:
+                            SwiftUIPlayerView(player: $streamManager.player)
+                        }
                     }
                     .padding(.leading, geometry.safeAreaInsets.leading)
                     .padding(.trailing, geometry.safeAreaInsets.trailing)
@@ -68,14 +74,17 @@ struct StreamView: View {
 
 struct StreamView_Previews: PreviewProvider {
     static var previews: some View {
-        let loadingStreamManager = StreamManager(api: nil, playerManager: nil)
+        let loadingStreamManager = StreamManager(api: nil, roomManager: nil, playerManager: nil)
         loadingStreamManager.isLoading = true
         
         return Group {
-            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice")))
+            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice", role: .host)))
                 .previewDisplayName("Live")
-                .environmentObject(StreamManager(api: nil, playerManager: nil))
-            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice")))
+                .environmentObject(StreamManager(api: nil, roomManager: nil, playerManager: nil))
+            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice", role: .viewer)))
+                .previewDisplayName("Live")
+                .environmentObject(StreamManager(api: nil, roomManager: nil, playerManager: nil))
+            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice", role: .viewer)))
                 .previewDisplayName("Joining")
                 .environmentObject(loadingStreamManager)
         }

@@ -7,6 +7,7 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject var authManager: AuthManager
     @State private var showSettings = false
+    @State private var showCreateStream = false
     @State private var showJoinStream = false
     @State private var showStream = false
     @State private var signOut = false
@@ -16,11 +17,14 @@ struct HomeView: View {
         NavigationView {
             FormStack {
                 Spacer()
+                Button("Create Event") {
+                    showCreateStream = true
+                }
                 Button("Join Event") {
                     showJoinStream = true
                 }
-                .buttonStyle(PrimaryButtonStyle())
             }
+            .buttonStyle(PrimaryButtonStyle()) // TODO: Add to FormStack
             .toolbar {
                 Button(action: { showSettings.toggle() }) {
                     Image(systemName: "gear")
@@ -38,12 +42,21 @@ struct HomeView: View {
                 }
             )
             .sheet(
+                isPresented: $showCreateStream,
+                onDismiss: {
+                    showStream = streamConfig != nil
+                },
+                content: {
+                    JoinStreamView(streamConfig: $streamConfig, mode: .create) // TODO: CreateStreamView
+                }
+            )
+            .sheet(
                 isPresented: $showJoinStream,
                 onDismiss: {
                     showStream = streamConfig != nil
                 },
                 content: {
-                    JoinStreamView(streamConfig: $streamConfig)
+                    JoinStreamView(streamConfig: $streamConfig, mode: .join)
                 }
             )
             .fullScreenCover(isPresented: $authManager.isSignedOut, content: {
