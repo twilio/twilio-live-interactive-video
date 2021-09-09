@@ -30,14 +30,14 @@ import TwilioVideo
     var localParticipant: LocalParticipant!
     private(set) var remoteParticipants: [RemoteParticipant] = []
     private(set) var state: RoomState = .disconnected
-    @objc private(set) var room: TwilioVideo.Room? // Only exposed for stats and should not be used for anything else
     private let connectOptionsFactory = ConnectOptionsFactory()
     private let notificationCenter = NotificationCenter.default
+    private var room: TwilioVideo.Room?
 
     func connect(roomName: String, accessToken: String, identity: String) {
         guard state == .disconnected else { fatalError("Connection already in progress.") }
 
-        localParticipant = LocalParticipant(identity: identity, micTrackFactory: MicTrackFactory(), cameraManagerFactory: CameraManagerFactory())
+        localParticipant = LocalParticipant(identity: identity, micTrackFactory: MicTrackFactory())
         localParticipant.delegate = self
         localParticipant.isCameraOn = true
 //        localParticipant.isMicOn = true

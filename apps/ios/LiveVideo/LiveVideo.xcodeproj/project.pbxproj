@@ -28,7 +28,6 @@
 		DC1ED12626E92DEA00FFA769 /* CameraSourceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED11226E92DE900FFA769 /* CameraSourceFactory.swift */; };
 		DC1ED12726E92DEA00FFA769 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED11326E92DE900FFA769 /* CameraManager.swift */; };
 		DC1ED12826E92DEA00FFA769 /* CameraConfigFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED11426E92DE900FFA769 /* CameraConfigFactory.swift */; };
-		DC1ED12926E92DEA00FFA769 /* CameraManagerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED11526E92DE900FFA769 /* CameraManagerFactory.swift */; };
 		DC1ED12A26E92DEA00FFA769 /* MicTrackFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED11726E92DE900FFA769 /* MicTrackFactory.swift */; };
 		DC1ED12C26E936C600FFA769 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED12B26E936C600FFA769 /* Notifications.swift */; };
 		DC1ED12E26E94B5900FFA769 /* TokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED12D26E94B5900FFA769 /* TokenRequest.swift */; };
@@ -109,7 +108,6 @@
 		DC1ED11226E92DE900FFA769 /* CameraSourceFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSourceFactory.swift; sourceTree = "<group>"; };
 		DC1ED11326E92DE900FFA769 /* CameraManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
 		DC1ED11426E92DE900FFA769 /* CameraConfigFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraConfigFactory.swift; sourceTree = "<group>"; };
-		DC1ED11526E92DE900FFA769 /* CameraManagerFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraManagerFactory.swift; sourceTree = "<group>"; };
 		DC1ED11726E92DE900FFA769 /* MicTrackFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MicTrackFactory.swift; sourceTree = "<group>"; };
 		DC1ED12B26E936C600FFA769 /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		DC1ED12D26E94B5900FFA769 /* TokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRequest.swift; sourceTree = "<group>"; };
@@ -243,7 +241,6 @@
 				DC1ED11226E92DE900FFA769 /* CameraSourceFactory.swift */,
 				DC1ED11326E92DE900FFA769 /* CameraManager.swift */,
 				DC1ED11426E92DE900FFA769 /* CameraConfigFactory.swift */,
-				DC1ED11526E92DE900FFA769 /* CameraManagerFactory.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -646,7 +643,6 @@
 				DC1ED12526E92DEA00FFA769 /* CameraTrackFactory.swift in Sources */,
 				DC1ED11D26E92DEA00FFA769 /* ParticipantDelegate.swift in Sources */,
 				DC1ED13026E960C600FFA769 /* VideoGridView.swift in Sources */,
-				DC1ED12926E92DEA00FFA769 /* CameraManagerFactory.swift in Sources */,
 				DC5F458826CEA7CB009C5C79 /* SettingsView.swift in Sources */,
 				DC1ED12226E92DEA00FFA769 /* RemoteVideoTrack.swift in Sources */,
 				DC1ED12C26E936C600FFA769 /* Notifications.swift in Sources */,

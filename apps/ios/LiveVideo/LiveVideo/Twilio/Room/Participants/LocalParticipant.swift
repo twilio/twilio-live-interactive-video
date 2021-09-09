@@ -52,9 +52,9 @@ class LocalParticipant: NSObject, Participant {
             if newValue {
                 guard
                     cameraManager == nil,
-                    let cameraManager = cameraManagerFactory.makeCameraManager(position: cameraPosition)
-                    else {
-                        return
+                    let cameraManager = CameraManager(position: cameraPosition)
+                else {
+                    return
                 }
                 
                 self.cameraManager = cameraManager
@@ -104,13 +104,11 @@ class LocalParticipant: NSObject, Participant {
     weak var delegate: ParticipantDelegate?
     private(set) var micTrack: LocalAudioTrack?
     private let micTrackFactory: MicTrackFactory
-    private let cameraManagerFactory: CameraManagerFactory
     private var cameraManager: CameraManager?
 
-    init(identity: String, micTrackFactory: MicTrackFactory, cameraManagerFactory: CameraManagerFactory) {
+    init(identity: String, micTrackFactory: MicTrackFactory) {
         self.identity = identity
         self.micTrackFactory = micTrackFactory
-        self.cameraManagerFactory = cameraManagerFactory
     }
     
     private func sendUpdate() {
