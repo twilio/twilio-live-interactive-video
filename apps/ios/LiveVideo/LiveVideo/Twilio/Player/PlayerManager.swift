@@ -13,7 +13,6 @@ protocol PlayerManagerDelegate: AnyObject {
 class PlayerManager: NSObject {
     weak var delegate: PlayerManagerDelegate?
     private(set) var player: Player?
-    private(set) var isPlaying = false
     private let audioSession = AVAudioSession.sharedInstance()
     private var accessToken: String!
     
@@ -31,7 +30,6 @@ class PlayerManager: NSObject {
     
     func pause() {
         player?.pause()
-        isPlaying = false
     }
     
     func disconnect() {
@@ -71,7 +69,6 @@ extension PlayerManager: PlayerDelegate {
             // stream and does not miss the last 2 seconds because of delay.
             handleError(LiveVideoError.streamEndedByHost)
         case .playing:
-            isPlaying = true
             delegate?.playerManagerDidConnect(self)
         case .idle, .buffering:
             break
