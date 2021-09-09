@@ -15,11 +15,25 @@ class StreamManager: ObservableObject {
     }
     private let api: API?
     private let playerManager: PlayerManager?
+    private let notificationCenter = NotificationCenter.default
     
     init(api: API?, playerManager: PlayerManager?) {
         self.api = api
         self.playerManager = playerManager
         playerManager?.delegate = self
+        
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(appDidEnterBackground),
+            name: UIApplication.didEnterBackgroundNotification,
+            object: nil
+        )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(appWillEnterForeground),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
     }
 
     func connect(config: StreamConfig) {
@@ -48,6 +62,16 @@ class StreamManager: ObservableObject {
     private func handleError(_ error: Error) {
         disconnect()
         self.error = error
+    }
+
+    @objc private func appDidEnterBackground() {
+        player = nil // Stop rendering video to avoid unnecessary processing
+    }
+
+    @objc private func appWillEnterForeground() {
+        guard let playerManager = playerManager, playerManager.isPlaying else { return }
+        
+        player = playerManager.player // Resume rendering video
     }
 }
 
