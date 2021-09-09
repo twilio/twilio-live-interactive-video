@@ -70,14 +70,22 @@ class StreamManager: ObservableObject {
 
     @objc private func appWillEnterForeground() {
         guard let playerManager = playerManager, playerManager.isPlaying else { return }
-        
-        player = playerManager.player // Resume rendering video
+
+        player = playerManager.player // Render video when the app is in the foreground
     }
 }
 
 extension StreamManager: PlayerManagerDelegate {
-    func playerManagerDidConnect(_ playerManager: PlayerManager) {
-        player = playerManager.player
+    func playerManagerDidStartPlaying(_ playerManager: PlayerManager) {
+        switch UIApplication.shared.applicationState {
+        case .active, .inactive:
+            player = playerManager.player // Render video when the app is in the foreground
+        case .background:
+            break
+        @unknown default:
+            break
+        }
+
         isLoading = false
     }
     
