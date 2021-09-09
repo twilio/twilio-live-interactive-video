@@ -64,12 +64,13 @@ extension PlayerManager: PlayerDelegate {
         switch state {
         case .ready:
             play()
-            delegate?.playerManagerDidConnect(self)
         case .ended:
             // Use ended state to detect when the host ends the stream so that the user receives the entire
             // stream and does not miss the last 2 seconds because of delay.
             handleError(LiveVideoError.streamEndedByHost)
-        case .idle, .buffering, .playing:
+        case .playing:
+            delegate?.playerManagerDidConnect(self)
+        case .idle, .buffering:
             break
         @unknown default:
             break

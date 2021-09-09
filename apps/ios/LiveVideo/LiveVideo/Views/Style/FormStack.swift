@@ -15,7 +15,7 @@ struct FormStack<Content>: View where Content: View {
     
     var body: some View {
         ZStack {
-            Color.formBackground.ignoresSafeArea()
+            Color.background.ignoresSafeArea()
             VStack(spacing: spacing) {
                 content()
                 Spacer()

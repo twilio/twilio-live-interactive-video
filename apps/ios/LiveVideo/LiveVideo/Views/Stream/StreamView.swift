@@ -8,19 +8,41 @@ struct StreamView: View {
     @EnvironmentObject var streamManager: StreamManager
     @Environment(\.presentationMode) var presentationMode
     @Binding var config: StreamConfig!
-
+    
     var body: some View {
-        ZStack {
-            Color.videoGridBackground.ignoresSafeArea()
-            SwiftUIPlayerView(player: $streamManager.player)
-            VStack {
-                Spacer()
-                Button("Leave") {
-                    streamManager.disconnect()
-                    presentationMode.wrappedValue.dismiss()
+        GeometryReader { geometry in
+            ZStack {
+                Color.backgroundBrandStronger.ignoresSafeArea()
+
+                VStack(spacing: 0) {
+                    VStack(spacing: 0) {
+                        StreamStatusView(streamName: config.streamName, isLoading: $streamManager.isLoading)
+                            .padding([.horizontal, .bottom], 6)
+                        SwiftUIPlayerView(player: $streamManager.player)
+                    }
+                    .padding(.leading, geometry.safeAreaInsets.leading)
+                    .padding(.trailing, geometry.safeAreaInsets.trailing)
+                    
+                    StreamToolbar {
+                        StreamToolbarButton(
+                            "Leave",
+                            image: Image(systemName: "arrow.left.circle.fill"),
+                            role: .destructive
+                        ) {
+                            streamManager.disconnect()
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+                    
+                    // For toolbar bottom that is below safe area
+                    Color.background
+                        .frame(height: geometry.safeAreaInsets.bottom)
                 }
-                .foregroundColor(.white)
-                .padding(40)
+                .edgesIgnoringSafeArea([.horizontal, .bottom]) // So toolbar sides and bottom extend beyond safe area
+
+                if streamManager.isLoading {
+                    ProgressHUD(title: "Joining live event! 🎉")
+                }
             }
         }
         .onAppear {
@@ -46,7 +68,16 @@ struct StreamView: View {
 
 struct StreamView_Previews: PreviewProvider {
     static var previews: some View {
-        StreamView(config: .constant(StreamConfig(roomName: "", userIdentity: "")))
-            .environmentObject(StreamManager())
+        let loadingStreamManager = StreamManager(api: nil, playerManager: nil)
+        loadingStreamManager.isLoading = true
+        
+        return Group {
+            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice")))
+                .previewDisplayName("Live")
+                .environmentObject(StreamManager(api: nil, playerManager: nil))
+            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice")))
+                .previewDisplayName("Joining")
+                .environmentObject(loadingStreamManager)
+        }
     }
 }

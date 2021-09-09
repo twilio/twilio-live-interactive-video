@@ -5,6 +5,7 @@
 import TwilioPlayer
 
 class StreamManager: ObservableObject {
+    @Published var isLoading = false
     @Published var player: Player?
     @Published var showError = false
     @Published var error: Error? {
@@ -12,30 +13,36 @@ class StreamManager: ObservableObject {
             showError = error != nil
         }
     }
-    private let api = API.shared
-    private let playerManager = PlayerManager()
+    private let api: API?
+    private let playerManager: PlayerManager?
     
-    init() {
-        playerManager.delegate = self
+    init(api: API?, playerManager: PlayerManager?) {
+        self.api = api
+        self.playerManager = playerManager
+        playerManager?.delegate = self
     }
 
     func connect(config: StreamConfig) {
-        let request = StreamTokenRequest(userIdentity: config.userIdentity, roomName: config.roomName)
+        guard let api = api else { return }
+        
+        isLoading = true
+        let request = StreamTokenRequest(userIdentity: config.userIdentity, roomName: config.streamName)
         
         api.request(request) { [weak self] result in
             switch result {
             case let .success(response):
-                self?.playerManager.configure(accessToken: response.token)
-                self?.playerManager.connect()
+                self?.playerManager?.configure(accessToken: response.token)
+                self?.playerManager?.connect()
             case let .failure(error):
-                self?.error = error
+                self?.handleError(error)
             }
         }
     }
     
     func disconnect() {
-        playerManager.disconnect()
+        playerManager?.disconnect()
         player = nil
+        isLoading = false
     }
     
     private func handleError(_ error: Error) {
@@ -47,6 +54,7 @@ class StreamManager: ObservableObject {
 extension StreamManager: PlayerManagerDelegate {
     func playerManagerDidConnect(_ playerManager: PlayerManager) {
         player = playerManager.player
+        isLoading = false
     }
     
     func playerManager(_ playerManager: PlayerManager, didDisconnectWithError error: Error) {

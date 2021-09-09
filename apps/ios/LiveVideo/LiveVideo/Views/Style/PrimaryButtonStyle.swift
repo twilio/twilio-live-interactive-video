@@ -11,7 +11,7 @@ struct PrimaryButtonStyle: ButtonStyle {
         configuration.label
             .padding(16)
             .frame(maxWidth: .infinity)
-            .background(isEnabled ? Color.primaryButtonBackgroundEnabled : Color.primaryButtonBackgroundDisabled)
+            .background(isEnabled ? Color.backgroundPrimary : Color.backgroundPrimaryWeak)
             .foregroundColor(.white)
             .cornerRadius(4.0)
             .font(.body.bold())
