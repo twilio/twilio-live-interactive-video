@@ -16,7 +16,7 @@
 
 import TwilioVideo
 
-@objc class RoomManager: NSObject {
+class RoomManager: NSObject {
     enum Update {
         case didStartConnecting
         case didConnect

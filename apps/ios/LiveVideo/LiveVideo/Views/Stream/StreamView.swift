@@ -6,6 +6,7 @@ import SwiftUI
 
 struct StreamView: View {
     @EnvironmentObject var streamManager: StreamManager
+    @EnvironmentObject var streamViewModel: StreamViewModel
     @Environment(\.presentationMode) var presentationMode
     @Binding var config: StreamConfig!
     
@@ -21,7 +22,7 @@ struct StreamView: View {
                         
                         switch config.role {
                         case .host, .speaker:
-                            VideoGridView(videoTrack: $streamManager.videoTrack)
+                            VideoGridView(participants: $streamViewModel.roomParticipants)
                         case .viewer:
                             SwiftUIPlayerView(player: $streamManager.player)
                         }
