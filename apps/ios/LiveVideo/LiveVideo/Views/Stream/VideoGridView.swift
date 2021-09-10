@@ -9,12 +9,16 @@ struct VideoGridView: View {
     
     var body: some View {
         VStack {
-            ForEach(participants, id: \.self) { participant in
-                SwiftUIVideoView(videoTrack: participant.cameraTrack)
-            }
-            
-            ForEach(participants) { participant in
-                SwiftUIVideoView(videoTrack: participant.cameraTrack)
+            if participants.count == 0 {
+                Spacer()
+            } else {
+                ForEach($participants, id: \.self) { $participant in
+                    ZStack {
+                        SwiftUIVideoView(videoTrack: $participant.cameraTrack)
+                        Text(participant.identity)
+                            .foregroundColor(.purple)
+                    }
+                }
             }
         }
     }
@@ -22,7 +26,10 @@ struct VideoGridView: View {
 
 struct VideoGridView_Previews: PreviewProvider {
     static var previews: some View {
-        VideoGridView(participants: .constant([]))
+        VideoGridView(participants: .constant([
+            RoomParticipant(participant: LocalParticipant(identity:  "foo")),
+            RoomParticipant(participant: LocalParticipant(identity:  "bar"))
+        ]))
             .frame(height: 500)
             .previewLayout(.sizeThatFits)
     }
@@ -33,11 +40,22 @@ struct VideoGridView_Previews: PreviewProvider {
 
 
 
-class RoomParticipant: ObservableObject {
+class RoomParticipant: ObservableObject, Identifiable, Hashable {
+    static func == (lhs: RoomParticipant, rhs: RoomParticipant) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
     @Published var cameraTrack: VideoTrack?
+    let identity: String
+    var id: String { identity }
     
     init(participant: Participant) {
         cameraTrack = participant.cameraTrack
+        identity = participant.identity
     }
 }
 
@@ -57,8 +75,12 @@ class StreamViewModel: ObservableObject {
         case .didStartConnecting, .didConnect, .didFailToConnect, .didDisconnect: break
         case let .didAddRemoteParticipants(participants):
             roomParticipants.append(contentsOf: participants.map { RoomParticipant(participant: $0) })
-        case let .didRemoveRemoteParticipants(participants): break // delete(participants: participants)
-        case let .didUpdateParticipants(participants): break // update(participants: participants)
+        case let .didRemoveRemoteParticipants(participants):
+            roomParticipants.removeAll { $0.identity == participants[0].identity } // fix for multiple items
+        case let .didUpdateParticipants(participants):
+            
+            
+            break // update(participants: participants)
         }
     }
 }

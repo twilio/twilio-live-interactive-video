@@ -30,7 +30,7 @@ class LocalParticipant: NSObject, Participant {
         }
         set {
             if newValue {
-                guard micTrack == nil, let micTrack = micTrackFactory.makeMicTrack() else { return }
+                guard micTrack == nil, let micTrack = LocalAudioTrack(options: nil, enabled: true, name: TrackName.mic) else { return }
                 
                 self.micTrack = micTrack
                 participant?.publishAudioTrack(micTrack)
@@ -103,12 +103,10 @@ class LocalParticipant: NSObject, Participant {
     }
     weak var delegate: ParticipantDelegate?
     private(set) var micTrack: LocalAudioTrack?
-    private let micTrackFactory: MicTrackFactory
     private var cameraManager: CameraManager?
 
-    init(identity: String, micTrackFactory: MicTrackFactory) {
+    init(identity: String) {
         self.identity = identity
-        self.micTrackFactory = micTrackFactory
     }
     
     private func sendUpdate() {

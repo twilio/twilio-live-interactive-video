@@ -37,7 +37,7 @@ class RoomManager: NSObject {
     func connect(roomName: String, accessToken: String, identity: String) {
         guard state == .disconnected else { fatalError("Connection already in progress.") }
 
-        localParticipant = LocalParticipant(identity: identity, micTrackFactory: MicTrackFactory())
+        localParticipant = LocalParticipant(identity: identity)
         localParticipant.delegate = self
         localParticipant.isCameraOn = true
 //        localParticipant.isMicOn = true
