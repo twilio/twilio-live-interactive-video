@@ -6,7 +6,6 @@ import SwiftUI
 
 struct StreamView: View {
     @EnvironmentObject var streamManager: StreamManager
-    @EnvironmentObject var streamViewModel: StreamViewModel
     @Environment(\.presentationMode) var presentationMode
     @Binding var config: StreamConfig!
     
@@ -22,7 +21,10 @@ struct StreamView: View {
                         
                         switch config.role {
                         case .host, .speaker:
-                            VideoGridView(participants: $streamViewModel.roomParticipants)
+                            VideoGridView(
+                                participants: $streamManager.roomManager.remoteParticipants,
+                                remoteParticipants: $streamManager.roomManager.remoteParticipants
+                            )
                         case .viewer:
                             SwiftUIPlayerView(player: $streamManager.player)
                         }
@@ -73,21 +75,21 @@ struct StreamView: View {
     }
 }
 
-struct StreamView_Previews: PreviewProvider {
-    static var previews: some View {
-        let loadingStreamManager = StreamManager(api: nil, roomManager: nil, playerManager: nil)
-        loadingStreamManager.isLoading = true
-        
-        return Group {
-            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice", role: .host)))
-                .previewDisplayName("Live")
-                .environmentObject(StreamManager(api: nil, roomManager: nil, playerManager: nil))
-            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice", role: .viewer)))
-                .previewDisplayName("Live")
-                .environmentObject(StreamManager(api: nil, roomManager: nil, playerManager: nil))
-            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice", role: .viewer)))
-                .previewDisplayName("Joining")
-                .environmentObject(loadingStreamManager)
-        }
-    }
-}
+//struct StreamView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let loadingStreamManager = StreamManager(api: nil, roomManager: nil, playerManager: nil)
+//        loadingStreamManager.isLoading = true
+//
+//        return Group {
+//            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice", role: .host)))
+//                .previewDisplayName("Live")
+//                .environmentObject(StreamManager(api: nil, roomManager: nil, playerManager: nil))
+//            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice", role: .viewer)))
+//                .previewDisplayName("Live")
+//                .environmentObject(StreamManager(api: nil, roomManager: nil, playerManager: nil))
+//            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice", role: .viewer)))
+//                .previewDisplayName("Joining")
+//                .environmentObject(loadingStreamManager)
+//        }
+//    }
+//}

@@ -15,20 +15,18 @@
 //
 
 import TwilioVideo
+import Combine
 
-class RoomManager: NSObject {
+class RoomManager: NSObject, TwilioVideo.RoomDelegate, ObservableObject {
     enum Update {
         case didStartConnecting
         case didConnect
         case didFailToConnect(error: Error)
         case didDisconnect(error: Error?)
-        case didAddRemoteParticipants(participants: [Participant])
-        case didRemoveRemoteParticipants(participants: [Participant])
-        case didUpdateParticipants(participants: [Participant])
     }
 
     var localParticipant: LocalParticipant!
-    private(set) var remoteParticipants: [RemoteParticipant] = []
+    @Published var remoteParticipants: [RemoteParticipant] = []
     private(set) var state: RoomState = .disconnected
     private let connectOptionsFactory = ConnectOptionsFactory()
     private let notificationCenter = NotificationCenter.default
@@ -38,7 +36,6 @@ class RoomManager: NSObject {
         guard state == .disconnected else { fatalError("Connection already in progress.") }
 
         localParticipant = LocalParticipant(identity: identity)
-        localParticipant.delegate = self
         localParticipant.isCameraOn = true
 //        localParticipant.isMicOn = true
         
@@ -61,20 +58,14 @@ class RoomManager: NSObject {
     private func post(_ update: Update) {
         notificationCenter.post(name: .roomUpdate, object: self, payload: update)
     }
-}
 
-extension RoomManager: TwilioVideo.RoomDelegate {
     func roomDidConnect(room: TwilioVideo.Room) {
         localParticipant.participant = room.localParticipant
         remoteParticipants = room.remoteParticipants.map {
-            RemoteParticipant(participant: $0, delegate: self)
+            RemoteParticipant(participant: $0)
         }
         state = .connected
         post(.didConnect)
-        
-        if !remoteParticipants.isEmpty {
-            post(.didAddRemoteParticipants(participants: remoteParticipants))
-        }
     }
     
     func roomDidFailToConnect(room: TwilioVideo.Room, error: Error) {
@@ -84,26 +75,19 @@ extension RoomManager: TwilioVideo.RoomDelegate {
     
     func roomDidDisconnect(room: TwilioVideo.Room, error: Error?) {
         localParticipant.participant = nil
-        let participants = remoteParticipants
         remoteParticipants.removeAll()
         state = .disconnected
         post(.didDisconnect(error: error))
-        
-        if !remoteParticipants.isEmpty {
-            post(.didRemoveRemoteParticipants(participants: participants))
-        }
     }
     
     func participantDidConnect(room: TwilioVideo.Room, participant: TwilioVideo.RemoteParticipant) {
-        remoteParticipants.append(RemoteParticipant(participant: participant, delegate: self))
-    
-        post(.didAddRemoteParticipants(participants: [remoteParticipants.last!]))
+        remoteParticipants.append(RemoteParticipant(participant: participant))
     }
     
     func participantDidDisconnect(room: TwilioVideo.Room, participant: TwilioVideo.RemoteParticipant) {
         guard let index = remoteParticipants.firstIndex(where: { $0.identity == participant.identity }) else { return }
         
-        post(.didRemoveRemoteParticipants(participants: [remoteParticipants.remove(at: index)]))
+        remoteParticipants.remove(at: index)
     }
     
     func dominantSpeakerDidChange(room: TwilioVideo.Room, participant: TwilioVideo.RemoteParticipant?) {
@@ -112,12 +96,6 @@ extension RoomManager: TwilioVideo.RoomDelegate {
         let old = remoteParticipants.first(where: { $0.isDominantSpeaker })
         old?.isDominantSpeaker = false
         new.isDominantSpeaker = true
-        post(.didUpdateParticipants(participants: [old, new].compactMap { $0 }))
-    }
-}
-
-extension RoomManager: ParticipantDelegate {
-    func didUpdate(participant: Participant) {
-        post(.didUpdateParticipants(participants: [participant]))
+//        post(.didUpdateParticipants(participants: [old, new].compactMap { $0 }))
     }
 }

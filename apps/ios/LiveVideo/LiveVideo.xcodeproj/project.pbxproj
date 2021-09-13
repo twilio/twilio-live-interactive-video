@@ -16,7 +16,6 @@
 		DC1ED11A26E92DEA00FFA769 /* RoomManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10226E92DE800FFA769 /* RoomManager.swift */; };
 		DC1ED11B26E92DEA00FFA769 /* RoomState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10326E92DE800FFA769 /* RoomState.swift */; };
 		DC1ED11C26E92DEA00FFA769 /* RemoteParticipant.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10526E92DE900FFA769 /* RemoteParticipant.swift */; };
-		DC1ED11D26E92DEA00FFA769 /* ParticipantDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10626E92DE900FFA769 /* ParticipantDelegate.swift */; };
 		DC1ED11E26E92DEA00FFA769 /* LocalParticipant.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10726E92DE900FFA769 /* LocalParticipant.swift */; };
 		DC1ED11F26E92DEA00FFA769 /* Participant.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10826E92DE900FFA769 /* Participant.swift */; };
 		DC1ED12026E92DEA00FFA769 /* LocalVideoTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10B26E92DE900FFA769 /* LocalVideoTrack.swift */; };
@@ -96,7 +95,6 @@
 		DC1ED10226E92DE800FFA769 /* RoomManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomManager.swift; sourceTree = "<group>"; };
 		DC1ED10326E92DE800FFA769 /* RoomState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomState.swift; sourceTree = "<group>"; };
 		DC1ED10526E92DE900FFA769 /* RemoteParticipant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteParticipant.swift; sourceTree = "<group>"; };
-		DC1ED10626E92DE900FFA769 /* ParticipantDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticipantDelegate.swift; sourceTree = "<group>"; };
 		DC1ED10726E92DE900FFA769 /* LocalParticipant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalParticipant.swift; sourceTree = "<group>"; };
 		DC1ED10826E92DE900FFA769 /* Participant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Participant.swift; sourceTree = "<group>"; };
 		DC1ED10B26E92DE900FFA769 /* LocalVideoTrack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalVideoTrack.swift; sourceTree = "<group>"; };
@@ -205,7 +203,6 @@
 			isa = PBXGroup;
 			children = (
 				DC1ED10526E92DE900FFA769 /* RemoteParticipant.swift */,
-				DC1ED10626E92DE900FFA769 /* ParticipantDelegate.swift */,
 				DC1ED10726E92DE900FFA769 /* LocalParticipant.swift */,
 				DC1ED10826E92DE900FFA769 /* Participant.swift */,
 			);
@@ -641,7 +638,6 @@
 				DC1ED12426E92DEA00FFA769 /* VideoSource.swift in Sources */,
 				DC5F459626CEC247009C5C79 /* UserDefaultsKeys.swift in Sources */,
 				DC1ED12526E92DEA00FFA769 /* CameraTrackFactory.swift in Sources */,
-				DC1ED11D26E92DEA00FFA769 /* ParticipantDelegate.swift in Sources */,
 				DC1ED13026E960C600FFA769 /* VideoGridView.swift in Sources */,
 				DC5F458826CEA7CB009C5C79 /* SettingsView.swift in Sources */,
 				DC1ED12226E92DEA00FFA769 /* RemoteVideoTrack.swift in Sources */,

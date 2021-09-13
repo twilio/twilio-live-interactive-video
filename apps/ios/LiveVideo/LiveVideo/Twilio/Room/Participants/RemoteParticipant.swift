@@ -15,32 +15,42 @@
 //
 
 import TwilioVideo
+import Combine
 
-class RemoteParticipant: NSObject, Participant {
+class RemoteParticipant: NSObject, Participant, ObservableObject {
     let shouldMirrorCameraVideo = false
     let isRemote = true
     var identity: String { participant.identity }
-    var networkQualityLevel: NetworkQualityLevel { participant.networkQualityLevel }
     var isMicOn: Bool {
         guard let micTrack = participant.remoteAudioTracks.first else { return false }
         
         return micTrack.isTrackSubscribed && micTrack.isTrackEnabled
     }
     var isDominantSpeaker = false
-    private(set) var cameraTrack: VideoTrack?
+    @Published var cameraTrack: VideoTrack?
     private(set) var screenTrack: VideoTrack?
     private let participant: TwilioVideo.RemoteParticipant
-    private weak var delegate: ParticipantDelegate?
 
-    init(participant: TwilioVideo.RemoteParticipant, delegate: ParticipantDelegate) {
+    static func == (lhs: RemoteParticipant, rhs: RemoteParticipant) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    override var hash: Int {
+      var hasher = Hasher()
+      hasher.combine(id)
+      return hasher.finalize()
+    }
+
+    var id: String { identity }
+    
+    init(participant: TwilioVideo.RemoteParticipant) {
         self.participant = participant
-        self.delegate = delegate
         super.init()
         participant.delegate = self
     }
     
     private func sendUpdate() {
-        delegate?.didUpdate(participant: self)
+
     }
 }
 
@@ -81,8 +91,11 @@ extension RemoteParticipant: RemoteParticipantDelegate {
         guard let source = videoTrack.source else { return }
 
         switch source {
-        case .camera: cameraTrack = RemoteVideoTrack(track: videoTrack)
-        case .screen: screenTrack = RemoteVideoTrack(track: videoTrack)
+        case .camera:
+            cameraTrack = RemoteVideoTrack(track: videoTrack)
+            print("did set camera track")
+        case .screen:
+            screenTrack = RemoteVideoTrack(track: videoTrack)
         }
         
         sendUpdate()
@@ -129,13 +142,6 @@ extension RemoteParticipant: RemoteParticipantDelegate {
         audioTrack: RemoteAudioTrack,
         publication: RemoteAudioTrackPublication,
         participant: TwilioVideo.RemoteParticipant
-    ) {
-        sendUpdate()
-    }
-
-    func remoteParticipantNetworkQualityLevelDidChange(
-        participant: TwilioVideo.RemoteParticipant,
-        networkQualityLevel: NetworkQualityLevel
     ) {
         sendUpdate()
     }

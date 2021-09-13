@@ -13,6 +13,12 @@ struct SwiftUIVideoView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: VideoView, context: Context) {
-        videoTrack?.addRenderer(uiView) // TODO: Remove renderer
+        guard let videoTrack = videoTrack else {
+            return
+        }
+
+        if videoTrack.renderers.isEmpty {
+            videoTrack.addRenderer(uiView) // TODO: Remove renderer
+        }
     }
 }

@@ -15,16 +15,9 @@
 //
 
 import TwilioVideo
+import Foundation
 
-typealias NetworkQualityLevel = TwilioVideo.NetworkQualityLevel // So UI doesn't have to import TwilioVideo
-
-protocol Participant {
+protocol Participant: ObservableObject, Identifiable, Hashable {
     var identity: String { get }
-    var cameraTrack: VideoTrack? { get }
-    var screenTrack: VideoTrack? { get }
-    var shouldMirrorCameraVideo: Bool { get }
-    var networkQualityLevel: NetworkQualityLevel { get }
-    var isRemote: Bool { get }
-    var isMicOn: Bool { get }
-    var isDominantSpeaker: Bool { get }
+    var cameraTrack: VideoTrack? { get set }
 }

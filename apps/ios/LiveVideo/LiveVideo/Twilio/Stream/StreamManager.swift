@@ -14,13 +14,12 @@ class StreamManager: ObservableObject {
             showError = error != nil
         }
     }
-    @Published var videoTrack: VideoTrack?
     private let api: API?
-    private let roomManager: RoomManager?
+    var roomManager: RoomManager
     private let playerManager: PlayerManager?
     private let notificationCenter = NotificationCenter.default
     
-    init(api: API?, roomManager: RoomManager?, playerManager: PlayerManager?) {
+    init(api: API?, roomManager: RoomManager, playerManager: PlayerManager?) {
         self.api = api
         self.roomManager = roomManager
         self.playerManager = playerManager
@@ -40,7 +39,7 @@ class StreamManager: ObservableObject {
             api.request(request) { [weak self] result in
                 switch result {
                 case let .success(response):
-                    self?.roomManager?.connect(roomName: config.streamName, accessToken: response.token, identity: config.userIdentity)
+                    self?.roomManager.connect(roomName: config.streamName, accessToken: response.token, identity: config.userIdentity)
                 case let .failure(error):
                     self?.handleError(error)
                 }
@@ -61,7 +60,7 @@ class StreamManager: ObservableObject {
     }
     
     func disconnect() {
-        roomManager?.disconnect()
+        roomManager.disconnect()
         playerManager?.disconnect()
         player = nil
         isLoading = false
@@ -85,22 +84,6 @@ class StreamManager: ObservableObject {
         case let .didDisconnect(error):
             if let error = error {
                 handleError(error)
-            }
-        case .didAddRemoteParticipants, .didRemoveRemoteParticipants, .didUpdateParticipants:
-            updateVideoTrack()
-        }
-    }
-    
-    private func updateVideoTrack() {
-        print("Remote participant count: \(roomManager?.remoteParticipants.count ?? 0)")
-        
-        if let firstVideoTrack = roomManager?.remoteParticipants.compactMap({ $0.cameraTrack }).first {
-            if firstVideoTrack !== videoTrack {
-                videoTrack = firstVideoTrack
-            }
-        } else {
-            if videoTrack != nil {
-                videoTrack = nil
             }
         }
     }

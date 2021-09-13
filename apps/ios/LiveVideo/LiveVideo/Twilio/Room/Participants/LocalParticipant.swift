@@ -15,15 +15,15 @@
 //
 
 import TwilioVideo
+import Combine
 
 class LocalParticipant: NSObject, Participant {
     let identity: String
     let isDominantSpeaker = false
     let isRemote = false
-    var cameraTrack: VideoTrack? { cameraManager?.track }
+    @Published var cameraTrack: VideoTrack?
     var screenTrack: VideoTrack? { nil }
     var shouldMirrorCameraVideo: Bool { cameraPosition == .front }
-    var networkQualityLevel: NetworkQualityLevel { participant?.networkQualityLevel ?? .unknown }
     var isMicOn: Bool {
         get {
             micTrack?.isEnabled ?? false
@@ -60,11 +60,13 @@ class LocalParticipant: NSObject, Participant {
                 self.cameraManager = cameraManager
                 cameraManager.delegate = self
                 participant?.publishCameraTrack(cameraManager.track.track)
+                cameraTrack = cameraManager.track
             } else {
                 guard let cameraManager = cameraManager else { return }
                 
                 participant?.unpublishVideoTrack(cameraManager.track.track)
                 self.cameraManager = nil
+                cameraTrack = nil
             }
 
             sendUpdate()
@@ -101,16 +103,25 @@ class LocalParticipant: NSObject, Participant {
             sendUpdate()
         }
     }
-    weak var delegate: ParticipantDelegate?
     private(set) var micTrack: LocalAudioTrack?
     private var cameraManager: CameraManager?
 
+    static func == (lhs: LocalParticipant, rhs: LocalParticipant) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    override var hash: Int {
+      var hasher = Hasher()
+      hasher.combine(id)
+      return hasher.finalize()
+    }
+    
     init(identity: String) {
         self.identity = identity
     }
     
     private func sendUpdate() {
-        delegate?.didUpdate(participant: self)
+
     }
 }
 
@@ -129,13 +140,6 @@ extension LocalParticipant: LocalParticipantDelegate {
         error: Error
     ) {
         print("Failed to publish audio track: \(error)")
-    }
-    
-    func localParticipantNetworkQualityLevelDidChange(
-        participant: TwilioVideo.LocalParticipant,
-        networkQualityLevel: NetworkQualityLevel
-    ) {
-        sendUpdate()
     }
 }
 
