@@ -51,6 +51,26 @@ class RoomManager: NSObject, TwilioVideo.RoomDelegate, ObservableObject {
         )
         self.room = TwilioVideoSDK.connect(options: options, delegate: self)
     }
+    
+    var isLocalParticipantMuted: Bool {
+        get {
+            !localParticipant.isMicOn
+        }
+        set {
+            localParticipant.isMicOn = !newValue
+            speakerStore.updateLocalParticipant(isMuted: newValue)
+        }
+    }
+    
+    var isLocalParticipantCameraOn: Bool {
+        get {
+            localParticipant.isCameraOn
+        }
+        set {
+            localParticipant.isCameraOn = newValue
+            speakerStore.updateLocalParticipant(videoTrack: localParticipant.cameraTrack)
+        }
+    }
 
     func disconnect() {
         room?.disconnect()
@@ -65,6 +85,7 @@ class RoomManager: NSObject, TwilioVideo.RoomDelegate, ObservableObject {
         remoteParticipants = room.remoteParticipants.map {
             RemoteParticipant(participant: $0)
         }
+        speakerStore.addLocalParticipant(identity: localParticipant.identity, isMuted: false, videoTrack: localParticipant.cameraTrack)
         room.remoteParticipants.forEach { speakerStore.addRemoteParticipant($0) }
         state = .connected
         post(.didConnect)

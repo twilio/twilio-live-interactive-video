@@ -8,6 +8,20 @@ import Combine
 class SpeakerStore: NSObject, ObservableObject {
     @Published var speakers: [Speaker] = []
     
+    func addLocalParticipant(identity: String, isMuted: Bool, videoTrack: VideoTrack?) {
+        let speaker = Speaker(identity: identity, isMuted: isMuted)
+
+        speakers.append(speaker)
+    }
+    
+    func updateLocalParticipant(isMuted: Bool) {
+        speakers[0].isMuted = isMuted
+    }
+    
+    func updateLocalParticipant(videoTrack: VideoTrack?) {
+        speakers[0].cameraTrack = videoTrack
+    }
+    
     func addRemoteParticipant(_ participant: TwilioVideo.RemoteParticipant) {
         participant.delegate = self
         

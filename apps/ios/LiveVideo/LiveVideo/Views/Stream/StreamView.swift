@@ -30,13 +30,39 @@ struct StreamView: View {
                     .padding(.trailing, geometry.safeAreaInsets.trailing)
                     
                     StreamToolbar {
-                        StreamToolbarButton(
-                            "Leave",
-                            image: Image(systemName: "arrow.left.circle.fill"),
-                            role: .destructive
-                        ) {
-                            streamManager.disconnect()
-                            presentationMode.wrappedValue.dismiss()
+                        switch config.role {
+                        case .host, .speaker:
+                            StreamToolbarButton(
+                                "Leave",
+                                image: Image(systemName: "arrow.left.circle.fill"),
+                                role: .destructive
+                            ) {
+                                streamManager.disconnect()
+                                presentationMode.wrappedValue.dismiss()
+                            }
+                            StreamToolbarButton(
+                                "Mute",
+                                image: Image(systemName: "mic.slash"),
+                                role: .default
+                            ) {
+                                
+                            }
+                            StreamToolbarButton(
+                                "Stop Video",
+                                image: Image(systemName: "video"),
+                                role: .default
+                            ) {
+                                
+                            }
+                        case .viewer:
+                            StreamToolbarButton(
+                                "Leave",
+                                image: Image(systemName: "arrow.left.circle.fill"),
+                                role: .destructive
+                            ) {
+                                streamManager.disconnect()
+                                presentationMode.wrappedValue.dismiss()
+                            }
                         }
                     }
                     

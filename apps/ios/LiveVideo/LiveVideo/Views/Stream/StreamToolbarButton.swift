@@ -38,7 +38,7 @@ struct StreamToolbarButton: View {
                     .font(.system(size: 10))
             }
             .padding(.top, 7)
-            .frame(minWidth: 50)
+            .frame(width: 60)
             .foregroundColor(.textIcon)
         }
     }
