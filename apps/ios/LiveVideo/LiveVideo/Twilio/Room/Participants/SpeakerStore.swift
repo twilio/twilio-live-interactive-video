@@ -11,7 +11,9 @@ class SpeakerStore: NSObject, ObservableObject {
     func addRemoteParticipant(_ participant: TwilioVideo.RemoteParticipant) {
         participant.delegate = self
         
-        speakers.append(Speaker(identity: participant.identity))
+        let speaker = Speaker(identity: participant.identity, isMuted: participant.isMuted)
+        
+        speakers.append(speaker)
     }
     
     func removeRemoteParticipant(_ participant: TwilioVideo.RemoteParticipant) {
@@ -20,6 +22,12 @@ class SpeakerStore: NSObject, ObservableObject {
     
     func removeAll() {
         speakers.removeAll()
+    }
+    
+    private func updateMuteForParticipant(_ participant: TwilioVideo.RemoteParticipant) {
+        guard let speakerIndex = speakers.index(of: participant) else { return }
+
+        speakers[speakerIndex].isMuted = participant.isMuted
     }
 }
 
@@ -34,10 +42,8 @@ extension SpeakerStore: TwilioVideo.RemoteParticipantDelegate {
         switch source {
         case .camera:
             speakers[speakerIndex].cameraTrack = RemoteVideoTrack(track: videoTrack)
-            print("did set camera track: \(speakers)")
         case .screen:
-            break
-//            screenTrack = RemoteVideoTrack(track: videoTrack)
+            break // Implement later
         }
     }
     
@@ -51,10 +57,8 @@ extension SpeakerStore: TwilioVideo.RemoteParticipantDelegate {
         switch source {
         case .camera:
             speakers[speakerIndex].cameraTrack = nil
-            print("did clear camera track: \(speakers)")
         case .screen:
-            break
-//            screenTrack = nil
+            break // Implement later
         }
     }
     
@@ -62,16 +66,14 @@ extension SpeakerStore: TwilioVideo.RemoteParticipantDelegate {
         participant: TwilioVideo.RemoteParticipant,
         publication: RemoteAudioTrackPublication
     ) {
-        guard let speakerIndex = speakers.index(of: participant) else { return }
-
-        
+        updateMuteForParticipant(participant)
     }
     
     func remoteParticipantDidDisableAudioTrack(
         participant: TwilioVideo.RemoteParticipant,
         publication: RemoteAudioTrackPublication
     ) {
-        
+        updateMuteForParticipant(participant)
     }
     
     func didSubscribeToAudioTrack(
@@ -79,7 +81,7 @@ extension SpeakerStore: TwilioVideo.RemoteParticipantDelegate {
         publication: RemoteAudioTrackPublication,
         participant: TwilioVideo.RemoteParticipant
     ) {
-        
+        updateMuteForParticipant(participant)
     }
     
     func didUnsubscribeFromAudioTrack(
@@ -87,7 +89,7 @@ extension SpeakerStore: TwilioVideo.RemoteParticipantDelegate {
         publication: RemoteAudioTrackPublication,
         participant: TwilioVideo.RemoteParticipant
     ) {
-        
+        updateMuteForParticipant(participant)
     }
 }
 
@@ -106,6 +108,7 @@ private extension Array where Element == Speaker {
 struct Speaker: Hashable {
     let identity: String
     var cameraTrack: VideoTrack? = nil
+    var isMuted: Bool
     
     static func == (lhs: Speaker, rhs: Speaker) -> Bool {
         lhs.identity == rhs.identity
@@ -113,5 +116,13 @@ struct Speaker: Hashable {
 
     func hash(into hasher: inout Hasher) {
       hasher.combine(identity)
+    }
+}
+
+private extension TwilioVideo.RemoteParticipant {
+    var isMuted: Bool {
+        guard let micTrack = remoteAudioTracks.first else { return true }
+        
+        return !micTrack.isTrackSubscribed || !micTrack.isTrackEnabled
     }
 }

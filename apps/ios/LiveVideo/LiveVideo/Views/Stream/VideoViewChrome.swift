@@ -10,11 +10,30 @@ struct VideoViewChrome: View {
     var body: some View {
         ZStack {
             Color.backgroundStronger
+            Text(speaker.identity)
+                .lineLimit(2)
+                .foregroundColor(.white)
+                .font(.system(size: 24, weight: .bold))
+                .padding(.horizontal, 20)
             SwiftUIVideoView(videoTrack: $speaker.cameraTrack)
             VStack {
+                HStack {
+                    Spacer()
+                    Group {
+                        if speaker.isMuted {
+                            Image(systemName: "mic.slash")
+                                .foregroundColor(.white)
+                                .padding(9)
+                                .background(Color.backgroundBrandStronger.opacity(0.4))
+                                .clipShape(Circle())
+                        }
+                    }
+                    .padding(8)
+                }
                 Spacer()
                 HStack {
                     Text(speaker.identity)
+                        .lineLimit(1)
                         .foregroundColor(.white)
                         .padding(.horizontal, 6)
                         .padding(.vertical, 2)
@@ -32,9 +51,16 @@ struct VideoViewChrome: View {
 
 struct VideoViewChrome_Previews: PreviewProvider {
     static var previews: some View {
-        VideoViewChrome(speaker: .constant(Speaker(identity: "Alice")))
-            .previewLayout(.sizeThatFits)
-            .padding()
-            .aspectRatio(1, contentMode: .fit)
+        Group {
+            VideoViewChrome(speaker: .constant(Speaker(identity: "Alice", isMuted: false)))
+                .previewDisplayName("Note Muted")
+            VideoViewChrome(speaker: .constant(Speaker(identity: "A really long identity that is struncated or multiple lines and maxes out", isMuted: false)))
+                .previewDisplayName("Long Identity")
+            VideoViewChrome(speaker: .constant(Speaker(identity: "Alice", isMuted: true)))
+                .previewDisplayName("Muted")
+        }
+        .previewLayout(.sizeThatFits)
+        .padding()
+        .aspectRatio(1, contentMode: .fit)
     }
 }
