@@ -21,10 +21,7 @@ struct StreamView: View {
                         
                         switch config.role {
                         case .host, .speaker:
-                            VideoGridView(
-                                participants: $streamManager.roomManager.remoteParticipants,
-                                remoteParticipants: $streamManager.roomManager.remoteParticipants
-                            )
+                            VideoGridView()
                         case .viewer:
                             SwiftUIPlayerView(player: $streamManager.player)
                         }

@@ -9,16 +9,18 @@ struct SwiftUIVideoView: UIViewRepresentable {
     @Binding var videoTrack: VideoTrack?
 
     func makeUIView(context: Context) -> VideoView {
-        VideoView()
+        let view = VideoView()
+        view.contentMode = .scaleAspectFill
+        return view
     }
 
     func updateUIView(_ uiView: VideoView, context: Context) {
-        guard let videoTrack = videoTrack else {
-            return
-        }
-
-        if videoTrack.renderers.isEmpty {
-            videoTrack.addRenderer(uiView) // TODO: Remove renderer
+        if let videoTrack = videoTrack {
+            if videoTrack.renderers.first(where: { $0 === uiView }) == nil {
+                videoTrack.addRenderer(uiView)
+            }
+        } else {
+            videoTrack?.removeRenderer(uiView)
         }
     }
 }

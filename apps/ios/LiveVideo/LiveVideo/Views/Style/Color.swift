@@ -12,6 +12,7 @@ extension Color {
     static var backgroundLiveBadge: Color { Color("BackgroundLiveBadge") }
     static var backgroundPrimary: Color { Color("BackgroundPrimary") }
     static var backgroundPrimaryWeak: Color { Color("BackgroundPrimaryWeak") }
+    static var backgroundStronger: Color { Color("BackgroundStronger") }
     static var border: Color { Color("Border") }
     static var textIcon: Color { Color("TextIcon") }
 }

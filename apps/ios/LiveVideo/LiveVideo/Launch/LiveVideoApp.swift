@@ -12,12 +12,17 @@ struct LiveVideoApp: App {
         roomManager: RoomManager(),
         playerManager: PlayerManager()
     )
-
+    @StateObject private var speakerStore = SpeakerStore()
+    
     var body: some Scene {
         WindowGroup {
             HomeView()
                 .environmentObject(authManager)
                 .environmentObject(streamManager)
+                .environmentObject(speakerStore)
+                .onAppear {
+                    streamManager.roomManager.speakerStore = speakerStore
+                }
         }
     }
 }

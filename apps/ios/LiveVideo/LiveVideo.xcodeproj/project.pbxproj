@@ -37,6 +37,8 @@
 		DC4AA66226D0493E00E677D5 /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA66126D0493E00E677D5 /* PrimaryButtonStyle.swift */; };
 		DC4AA66526D1456100E677D5 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA66426D1456100E677D5 /* AuthManager.swift */; };
 		DC4AA66826D175A600E677D5 /* SwiftyUserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = DC4AA66726D175A600E677D5 /* SwiftyUserDefaults */; };
+		DC504A7526F0F18700C37EC9 /* SpeakerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC504A7426F0F18600C37EC9 /* SpeakerStore.swift */; };
+		DC504A7726F1468E00C37EC9 /* VideoViewChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC504A7626F1468E00C37EC9 /* VideoViewChrome.swift */; };
 		DC5F453926CC061A009C5C79 /* LiveVideoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */; };
 		DC5F453B26CC061A009C5C79 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453A26CC061A009C5C79 /* HomeView.swift */; };
 		DC5F453D26CC061F009C5C79 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC5F453C26CC061F009C5C79 /* Assets.xcassets */; };
@@ -115,6 +117,8 @@
 		DC4AA65F26D047DD00E677D5 /* FormTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormTextFieldStyle.swift; sourceTree = "<group>"; };
 		DC4AA66126D0493E00E677D5 /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
 		DC4AA66426D1456100E677D5 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		DC504A7426F0F18600C37EC9 /* SpeakerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerStore.swift; sourceTree = "<group>"; };
+		DC504A7626F1468E00C37EC9 /* VideoViewChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewChrome.swift; sourceTree = "<group>"; };
 		DC5F453526CC061A009C5C79 /* LiveVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoApp.swift; sourceTree = "<group>"; };
 		DC5F453A26CC061A009C5C79 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -203,6 +207,7 @@
 			isa = PBXGroup;
 			children = (
 				DC1ED10526E92DE900FFA769 /* RemoteParticipant.swift */,
+				DC504A7426F0F18600C37EC9 /* SpeakerStore.swift */,
 				DC1ED10726E92DE900FFA769 /* LocalParticipant.swift */,
 				DC1ED10826E92DE900FFA769 /* Participant.swift */,
 			);
@@ -434,6 +439,7 @@
 				DCC48FA226D8322900EE49EF /* SwiftUIPlayerView.swift */,
 				DC1ED13126E9666E00FFA769 /* SwiftUIVideoView.swift */,
 				DC1ED12F26E960C600FFA769 /* VideoGridView.swift */,
+				DC504A7626F1468E00C37EC9 /* VideoViewChrome.swift */,
 			);
 			path = Stream;
 			sourceTree = "<group>";
@@ -628,6 +634,7 @@
 				DC1ED0FD26E14D0B00FFA769 /* StreamToolbar.swift in Sources */,
 				DC1ED12626E92DEA00FFA769 /* CameraSourceFactory.swift in Sources */,
 				DC1ED0F926E1440200FFA769 /* StreamStatusView.swift in Sources */,
+				DC504A7726F1468E00C37EC9 /* VideoViewChrome.swift in Sources */,
 				DCC48FA326D8322900EE49EF /* SwiftUIPlayerView.swift in Sources */,
 				DC1ED0F726E12C7400FFA769 /* ProgressHUD.swift in Sources */,
 				DCC1D62626D9396400892038 /* StreamManager.swift in Sources */,
@@ -643,6 +650,7 @@
 				DC1ED12226E92DEA00FFA769 /* RemoteVideoTrack.swift in Sources */,
 				DC1ED12C26E936C600FFA769 /* Notifications.swift in Sources */,
 				DC1ED12A26E92DEA00FFA769 /* MicTrackFactory.swift in Sources */,
+				DC504A7526F0F18700C37EC9 /* SpeakerStore.swift in Sources */,
 				DC1ED12026E92DEA00FFA769 /* LocalVideoTrack.swift in Sources */,
 				DCC48F8926D8288B00EE49EF /* APIErrorResponse.swift in Sources */,
 				DC5F459426CEC1FF009C5C79 /* UserDefaultsManager.swift in Sources */,
