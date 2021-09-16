@@ -9,7 +9,12 @@ class SpeakerStore: NSObject, ObservableObject {
     @Published var speakers: [Speaker] = []
     
     func addLocalParticipant(identity: String, isMuted: Bool, videoTrack: VideoTrack?) {
-        var speaker = Speaker(identity: identity, isMuted: isMuted)
+        var speaker = Speaker(
+            identity: identity,
+            shouldMirrorCameraVideo: true,
+            isMuted: isMuted,
+            displayName: "You"
+        )
         speaker.cameraTrack = videoTrack
 
         speakers.append(speaker)
@@ -30,7 +35,12 @@ class SpeakerStore: NSObject, ObservableObject {
     func addRemoteParticipant(_ participant: TwilioVideo.RemoteParticipant) {
         participant.delegate = self
         
-        let speaker = Speaker(identity: participant.identity, isMuted: participant.isMuted)
+        let speaker = Speaker(
+            identity: participant.identity,
+            shouldMirrorCameraVideo: false,
+            isMuted: participant.isMuted,
+            displayName: participant.identity
+        )
         
         speakers.append(speaker)
     }
@@ -127,7 +137,9 @@ private extension Array where Element == Speaker {
 struct Speaker: Hashable {
     let identity: String
     var cameraTrack: VideoTrack? = nil
+    var shouldMirrorCameraVideo: Bool // True for local participant using front camera
     var isMuted: Bool
+    var displayName: String
     
     static func == (lhs: Speaker, rhs: Speaker) -> Bool {
         lhs.identity == rhs.identity

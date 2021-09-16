@@ -7,6 +7,7 @@ import TwilioVideo
 
 struct SwiftUIVideoView: UIViewRepresentable {
     @Binding var videoTrack: VideoTrack?
+    @Binding var shouldMirror: Bool
 
     func makeUIView(context: Context) -> VideoView {
         let view = VideoView()
@@ -22,5 +23,7 @@ struct SwiftUIVideoView: UIViewRepresentable {
         } else {
             videoTrack?.removeRenderer(uiView)
         }
+        
+        uiView.shouldMirror = shouldMirror
     }
 }

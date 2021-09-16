@@ -15,15 +15,11 @@
 //
 
 import TwilioVideo
-import Combine
 
-class LocalParticipant: NSObject, Participant {
+class LocalParticipant: NSObject {
     let identity: String
-    let isDominantSpeaker = false
-    let isRemote = false
-    @Published var cameraTrack: VideoTrack?
-    var screenTrack: VideoTrack? { nil }
-    var shouldMirrorCameraVideo: Bool { cameraPosition == .front }
+    var cameraTrack: VideoTrack?
+    var shouldMirrorCameraVideo = true
     var isMicOn: Bool {
         get {
             micTrack?.isEnabled ?? false
@@ -40,8 +36,6 @@ class LocalParticipant: NSObject, Participant {
                 participant?.unpublishAudioTrack(micTrack)
                 self.micTrack = nil
             }
-
-            sendUpdate()
         }
     }
     var isCameraOn: Bool {
@@ -52,7 +46,7 @@ class LocalParticipant: NSObject, Participant {
             if newValue {
                 guard
                     cameraManager == nil,
-                    let cameraManager = CameraManager(position: cameraPosition)
+                    let cameraManager = CameraManager(position: .front)
                 else {
                     return
                 }
@@ -68,54 +62,17 @@ class LocalParticipant: NSObject, Participant {
                 self.cameraManager = nil
                 cameraTrack = nil
             }
-
-            sendUpdate()
         }
     }
     var participant: TwilioVideo.LocalParticipant? {
         didSet {
-            guard let participant = participant else { return }
-            
-            participant.delegate = self
-
-            // Sync tracks in case user made changes while connecting to room
-            participant.localVideoTracks.compactMap { $0.localTrack }.filter { $0 !== cameraManager?.track.track }.forEach {
-                participant.unpublishVideoTrack($0)
-            }
-
-            if let cameraTrack = cameraManager?.track.track, !participant.localVideoTracks.contains(where: { $0.localTrack === cameraTrack }) {
-                participant.publishCameraTrack(cameraTrack)
-            }
-
-            participant.localAudioTracks.compactMap { $0.localTrack }.filter { $0 !== micTrack }.forEach {
-                participant.unpublishAudioTrack($0)
-            }
-
-            if let micTrack = micTrack, !participant.localAudioTracks.contains(where: { $0.localTrack === micTrack }) {
-                participant.publishAudioTrack(micTrack)
-            }
+            participant?.delegate = self
         }
     }
     var localCameraTrack: TwilioVideo.LocalVideoTrack? { cameraManager?.track.track }
-    var cameraPosition: AVCaptureDevice.Position = .front {
-        didSet {
-            cameraManager?.position = cameraPosition
-            sendUpdate()
-        }
-    }
     private(set) var micTrack: LocalAudioTrack?
     private var cameraManager: CameraManager?
 
-    static func == (lhs: LocalParticipant, rhs: LocalParticipant) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-    override var hash: Int {
-      var hasher = Hasher()
-      hasher.combine(id)
-      return hasher.finalize()
-    }
-    
     init(identity: String) {
         self.identity = identity
     }

@@ -10,7 +10,7 @@ struct VideoViewChrome: View {
     var body: some View {
         ZStack {
             Color.backgroundStronger
-            Text(speaker.identity)
+            Text(speaker.displayName)
                 .lineLimit(2)
                 .foregroundColor(.white)
                 .font(.system(size: 24, weight: .bold))
@@ -18,7 +18,7 @@ struct VideoViewChrome: View {
 
             // TODO: Really need to check this
             if speaker.cameraTrack != nil {
-                SwiftUIVideoView(videoTrack: $speaker.cameraTrack)
+                SwiftUIVideoView(videoTrack: $speaker.cameraTrack, shouldMirror: $speaker.shouldMirrorCameraVideo)
             }
 
             VStack {
@@ -37,7 +37,7 @@ struct VideoViewChrome: View {
                 }
                 Spacer()
                 HStack {
-                    Text(speaker.identity)
+                    Text(speaker.displayName)
                         .lineLimit(1)
                         .foregroundColor(.white)
                         .padding(.horizontal, 6)
@@ -57,11 +57,11 @@ struct VideoViewChrome: View {
 struct VideoViewChrome_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            VideoViewChrome(speaker: .constant(Speaker(identity: "Alice", isMuted: false)))
+            VideoViewChrome(speaker: .constant(Speaker(identity: "Alice", shouldMirrorCameraVideo: false, isMuted: false, displayName: "Alice")))
                 .previewDisplayName("Note Muted")
-            VideoViewChrome(speaker: .constant(Speaker(identity: "A really long identity that is struncated or multiple lines and maxes out", isMuted: false)))
+            VideoViewChrome(speaker: .constant(Speaker(identity: "A really long identity that is struncated or multiple lines and maxes out", shouldMirrorCameraVideo: false, isMuted: false, displayName: "Alice")))
                 .previewDisplayName("Long Identity")
-            VideoViewChrome(speaker: .constant(Speaker(identity: "Alice", isMuted: true)))
+            VideoViewChrome(speaker: .constant(Speaker(identity: "Alice", shouldMirrorCameraVideo: false, isMuted: true, displayName: "Alice")))
                 .previewDisplayName("Muted")
         }
         .previewLayout(.sizeThatFits)

@@ -26,7 +26,6 @@ class RoomManager: NSObject, TwilioVideo.RoomDelegate, ObservableObject {
     }
 
     var localParticipant: LocalParticipant!
-    @Published var remoteParticipants: [RemoteParticipant] = []
     var speakerStore: SpeakerStore!
     private(set) var state: RoomState = .disconnected
     private let connectOptionsFactory = ConnectOptionsFactory()
@@ -77,9 +76,6 @@ class RoomManager: NSObject, TwilioVideo.RoomDelegate, ObservableObject {
 
     func roomDidConnect(room: TwilioVideo.Room) {
         localParticipant.participant = room.localParticipant
-        remoteParticipants = room.remoteParticipants.map {
-            RemoteParticipant(participant: $0)
-        }
         speakerStore.addLocalParticipant(identity: localParticipant.identity, isMuted: isLocalParticipantMuted, videoTrack: localParticipant.cameraTrack)
         room.remoteParticipants.forEach { speakerStore.addRemoteParticipant($0) }
         state = .connected
@@ -93,30 +89,21 @@ class RoomManager: NSObject, TwilioVideo.RoomDelegate, ObservableObject {
     
     func roomDidDisconnect(room: TwilioVideo.Room, error: Error?) {
         localParticipant.participant = nil
-        remoteParticipants.removeAll()
         speakerStore.removeAll()
         state = .disconnected
         post(.didDisconnect(error: error))
     }
     
     func participantDidConnect(room: TwilioVideo.Room, participant: TwilioVideo.RemoteParticipant) {
-        remoteParticipants.append(RemoteParticipant(participant: participant))
         speakerStore.addRemoteParticipant(participant)
     }
     
     func participantDidDisconnect(room: TwilioVideo.Room, participant: TwilioVideo.RemoteParticipant) {
-        guard let index = remoteParticipants.firstIndex(where: { $0.identity == participant.identity }) else { return }
-        
-        remoteParticipants.remove(at: index)
         speakerStore.removeRemoteParticipant(participant)
     }
-    
-    func dominantSpeakerDidChange(room: TwilioVideo.Room, participant: TwilioVideo.RemoteParticipant?) {
-        guard let new = remoteParticipants.first(where: { $0.identity == participant?.identity }) else { return }
 
-        let old = remoteParticipants.first(where: { $0.isDominantSpeaker })
-        old?.isDominantSpeaker = false
-        new.isDominantSpeaker = true
-//        post(.didUpdateParticipants(participants: [old, new].compactMap { $0 }))
+    // TODO: Handle this in UI and speaker store
+    func dominantSpeakerDidChange(room: TwilioVideo.Room, participant: TwilioVideo.RemoteParticipant?) {
+
     }
 }
