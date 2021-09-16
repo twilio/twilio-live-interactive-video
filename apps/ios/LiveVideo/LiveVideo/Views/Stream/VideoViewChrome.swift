@@ -15,7 +15,12 @@ struct VideoViewChrome: View {
                 .foregroundColor(.white)
                 .font(.system(size: 24, weight: .bold))
                 .padding(.horizontal, 20)
-            SwiftUIVideoView(videoTrack: $speaker.cameraTrack)
+
+            // TODO: Really need to check this
+            if speaker.cameraTrack != nil {
+                SwiftUIVideoView(videoTrack: $speaker.cameraTrack)
+            }
+
             VStack {
                 HStack {
                     Spacer()

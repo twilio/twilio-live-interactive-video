@@ -6,11 +6,11 @@ import SwiftUI
 
 struct VideoGridView: View {
     @EnvironmentObject var speakerStore: SpeakerStore
-
+    
     let columns = [
         GridItem(.flexible())
     ]
-
+    
     var body: some View {
         VStack {
             if speakerStore.speakers.count == 0 {

@@ -9,10 +9,10 @@ struct LiveVideoApp: App {
     @StateObject private var authManager = AuthManager()
     @StateObject private var streamManager = StreamManager(
         api: API.shared,
-        roomManager: RoomManager(),
         playerManager: PlayerManager()
     )
     @StateObject private var speakerStore = SpeakerStore()
+    @StateObject private var roomManager = RoomManager()
     
     var body: some Scene {
         WindowGroup {
@@ -20,7 +20,9 @@ struct LiveVideoApp: App {
                 .environmentObject(authManager)
                 .environmentObject(streamManager)
                 .environmentObject(speakerStore)
+                .environmentObject(roomManager)
                 .onAppear {
+                    streamManager.roomManager = roomManager
                     streamManager.roomManager.speakerStore = speakerStore
                 }
         }

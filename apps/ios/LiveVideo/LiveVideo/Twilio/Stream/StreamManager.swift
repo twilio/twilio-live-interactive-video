@@ -15,13 +15,12 @@ class StreamManager: ObservableObject {
         }
     }
     private let api: API?
-    var roomManager: RoomManager
+    var roomManager: RoomManager!
     private let playerManager: PlayerManager?
     private let notificationCenter = NotificationCenter.default
     
-    init(api: API?, roomManager: RoomManager, playerManager: PlayerManager?) {
+    init(api: API?, playerManager: PlayerManager?) {
         self.api = api
-        self.roomManager = roomManager
         self.playerManager = playerManager
         notificationCenter.addObserver(self, selector: #selector(handleRoomUpdate(_:)), name: .roomUpdate, object: roomManager)
         playerManager?.delegate = self

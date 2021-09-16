@@ -6,6 +6,7 @@ import SwiftUI
 
 struct StreamView: View {
     @EnvironmentObject var streamManager: StreamManager
+    @EnvironmentObject var roomManager: RoomManager
     @Environment(\.presentationMode) var presentationMode
     @Binding var config: StreamConfig!
     
@@ -41,18 +42,18 @@ struct StreamView: View {
                                 presentationMode.wrappedValue.dismiss()
                             }
                             StreamToolbarButton(
-                                "Mute",
-                                image: Image(systemName: "mic.slash"),
+                                roomManager.isLocalParticipantMuted ? "Unmute" : "Mute",
+                                image: Image(systemName: roomManager.isLocalParticipantMuted ? "mic" : "mic.slash"),
                                 role: .default
                             ) {
-                                
+                                roomManager.isLocalParticipantMuted.toggle()
                             }
                             StreamToolbarButton(
-                                "Stop Video",
-                                image: Image(systemName: "video"),
+                                roomManager.isLocalParticipantCameraOn ? "Stop Video" : "Start Video",
+                                image: Image(systemName: roomManager.isLocalParticipantCameraOn ? "video.slash" : "video"),
                                 role: .default
                             ) {
-                                
+                                roomManager.isLocalParticipantCameraOn.toggle()
                             }
                         case .viewer:
                             StreamToolbarButton(

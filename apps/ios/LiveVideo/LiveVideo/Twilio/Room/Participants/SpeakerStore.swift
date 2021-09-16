@@ -9,16 +9,21 @@ class SpeakerStore: NSObject, ObservableObject {
     @Published var speakers: [Speaker] = []
     
     func addLocalParticipant(identity: String, isMuted: Bool, videoTrack: VideoTrack?) {
-        let speaker = Speaker(identity: identity, isMuted: isMuted)
+        var speaker = Speaker(identity: identity, isMuted: isMuted)
+        speaker.cameraTrack = videoTrack
 
         speakers.append(speaker)
     }
     
     func updateLocalParticipant(isMuted: Bool) {
+        guard !speakers.isEmpty else { return }
+        
         speakers[0].isMuted = isMuted
     }
     
     func updateLocalParticipant(videoTrack: VideoTrack?) {
+        guard !speakers.isEmpty else { return }
+
         speakers[0].cameraTrack = videoTrack
     }
     
