@@ -17,16 +17,9 @@
 import TwilioVideo
 import Combine
 
-class RoomManager: NSObject, TwilioVideo.RoomDelegate, ObservableObject {
-    enum Update {
-        case didStartConnecting
-        case didConnect
-        case didFailToConnect(error: Error)
-        case didDisconnect(error: Error?)
-    }
-
+class RoomManager: NSObject, ObservableObject {
     var localParticipant: LocalParticipant!
-    var speakerStore: SpeakerStore!
+    var remoteParticipants: [RoomRemoteParticipant] = []
     private(set) var state: RoomState = .disconnected
     private let connectOptionsFactory = ConnectOptionsFactory()
     private let notificationCenter = NotificationCenter.default
@@ -35,13 +28,10 @@ class RoomManager: NSObject, TwilioVideo.RoomDelegate, ObservableObject {
     func connect(roomName: String, accessToken: String, identity: String) {
         guard state == .disconnected else { fatalError("Connection already in progress.") }
 
-        localParticipant = LocalParticipant(identity: identity)
-        isLocalParticipantCameraOn = true
         localParticipant.isCameraOn = true
 //        localParticipant.isMicOn = true
         
         state = .connecting
-        post(.didStartConnecting)
 
         let options = self.connectOptionsFactory.makeConnectOptions(
             accessToken: accessToken,
@@ -51,55 +41,41 @@ class RoomManager: NSObject, TwilioVideo.RoomDelegate, ObservableObject {
         )
         self.room = TwilioVideoSDK.connect(options: options, delegate: self)
     }
-    
-    @Published var isLocalParticipantMuted = true {
-        didSet {
-            localParticipant.isMicOn = !isLocalParticipantMuted
-            speakerStore.updateLocalParticipant(isMuted: isLocalParticipantMuted)
-        }
-    }
-    
-    @Published var isLocalParticipantCameraOn = true {
-        didSet {
-            localParticipant.isCameraOn = isLocalParticipantCameraOn
-            speakerStore.updateLocalParticipant(videoTrack: localParticipant.cameraTrack)
-        }
-    }
 
     func disconnect() {
         room?.disconnect()
     }
-    
-    private func post(_ update: Update) {
-        notificationCenter.post(name: .roomUpdate, object: self, payload: update)
-    }
+}
 
+extension RoomManager: RoomDelegate {
     func roomDidConnect(room: TwilioVideo.Room) {
         localParticipant.participant = room.localParticipant
-        speakerStore.addLocalParticipant(identity: localParticipant.identity, isMuted: isLocalParticipantMuted, videoTrack: localParticipant.cameraTrack)
-        room.remoteParticipants.forEach { speakerStore.addRemoteParticipant($0) }
+        remoteParticipants = room.remoteParticipants.map { RoomRemoteParticipant(participant: $0) }
         state = .connected
-        post(.didConnect)
+        notificationCenter.post(name: .roomDidConnect, object: self)
     }
     
     func roomDidFailToConnect(room: TwilioVideo.Room, error: Error) {
         state = .disconnected
-        post(.didFailToConnect(error: error))
+        notificationCenter.post(name: .roomDidFailToConnect, object: error)
     }
     
     func roomDidDisconnect(room: TwilioVideo.Room, error: Error?) {
         localParticipant.participant = nil
-        speakerStore.removeAll()
+        remoteParticipants.removeAll()
         state = .disconnected
-        post(.didDisconnect(error: error))
+        notificationCenter.post(name: .roomDidDisconnect, object: error)
     }
     
     func participantDidConnect(room: TwilioVideo.Room, participant: TwilioVideo.RemoteParticipant) {
-        speakerStore.addRemoteParticipant(participant)
+        remoteParticipants.append(RoomRemoteParticipant(participant: participant))
+        notificationCenter.post(name: .remoteParticipantDidConnect, object: remoteParticipants.last)
     }
     
     func participantDidDisconnect(room: TwilioVideo.Room, participant: TwilioVideo.RemoteParticipant) {
-        speakerStore.removeRemoteParticipant(participant)
+        guard let index = remoteParticipants.firstIndex(where: { $0.identity == participant.identity }) else { return }
+
+        notificationCenter.post(name: .remoteParticipantDidDisconnect, object: remoteParticipants.remove(at: index))
     }
 
     // TODO: Handle this in UI and speaker store

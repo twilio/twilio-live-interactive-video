@@ -2,6 +2,7 @@
 //  Copyright (C) 2021 Twilio, Inc.
 //
 
+import Combine
 import TwilioPlayer
 import TwilioVideo
 
@@ -18,12 +19,32 @@ class StreamManager: ObservableObject {
     var roomManager: RoomManager!
     private let playerManager: PlayerManager?
     private let notificationCenter = NotificationCenter.default
-    
+    private var subscriptions = Set<AnyCancellable>()
+
     init(api: API?, playerManager: PlayerManager?) {
         self.api = api
         self.playerManager = playerManager
-        notificationCenter.addObserver(self, selector: #selector(handleRoomUpdate(_:)), name: .roomUpdate, object: roomManager)
         playerManager?.delegate = self
+        
+        notificationCenter.publisher(for: .roomDidConnect)
+            .sink() { _ in self.isLoading = false }
+            .store(in: &subscriptions)
+
+        notificationCenter.publisher(for: .roomDidFailToConnect)
+            .sink() { notification in
+                guard let error = notification.object as? Error else { return }
+                
+                self.handleError(error)
+            }
+            .store(in: &subscriptions)
+
+        notificationCenter.publisher(for: .roomDidDisconnect)
+            .sink() { notification in
+                guard let error = notification.object as? Error else { return }
+                
+                self.handleError(error)
+            }
+            .store(in: &subscriptions)
     }
 
     func connect(config: StreamConfig) {
@@ -68,23 +89,6 @@ class StreamManager: ObservableObject {
     private func handleError(_ error: Error) {
         disconnect()
         self.error = error
-    }
-
-    @objc private func handleRoomUpdate(_ notification: Notification) {
-        guard let payload = notification.payload as? RoomManager.Update else { return }
-        
-        switch payload {
-        case .didStartConnecting:
-            break
-        case .didConnect:
-            isLoading = false
-        case let .didFailToConnect(error):
-            handleError(error)
-        case let .didDisconnect(error):
-            if let error = error {
-                handleError(error)
-            }
-        }
     }
 }
 

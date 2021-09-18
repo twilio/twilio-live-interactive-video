@@ -17,16 +17,16 @@
 import Foundation
 
 extension Notification.Name {
-    static let roomUpdate = Notification.Name("RoomUpdate")
-}
+    static let roomDidConnect = Notification.Name("roomDidConnect")
+    static let roomDidFailToConnect = Notification.Name("roomDidFailToConnect")
+    static let roomDidDisconnect = Notification.Name("roomDidDisconnect")
+    static let remoteParticipantDidConnect = Notification.Name("remoteParticipantDidConnect")
+    static let remoteParticipantDidDisconnect = Notification.Name("remoteParticipantDidDisconnect")
 
-extension NotificationCenter {
-    func post(name aName: NSNotification.Name, object anObject: Any?, payload: Any) {
-        post(name: aName, object: anObject, userInfo: [Notification.payloadKey: payload])
-    }
-}
+    static let remoteParticipantDidChangeMic = Notification.Name("remoteParticipantDidChangeMic")
+    static let remoteParticipantDidChangeCameraTrack = Notification.Name("remoteParticipantDidChangeCameraTrack")
 
-extension Notification {
-    static let payloadKey = "payload"
-    var payload: Any? { userInfo?[Self.payloadKey] }
+    static let localParticipantDidChangeMic = Notification.Name("localParticipantDidChangeMic")
+    static let localParticipantDidChangeCameraTrack = Notification.Name("localParticipantDidChangeCameraTrack")
+
 }

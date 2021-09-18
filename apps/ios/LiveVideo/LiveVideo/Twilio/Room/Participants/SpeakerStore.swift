@@ -5,155 +5,93 @@
 import TwilioVideo
 import Combine
 
-class SpeakerStore: NSObject, ObservableObject {
+class SpeakerStore: ObservableObject {
     @Published var speakers: [Speaker] = []
-    
-    func addLocalParticipant(identity: String, isMuted: Bool, videoTrack: VideoTrack?) {
-        var speaker = Speaker(
-            identity: identity,
-            shouldMirrorCameraVideo: true,
-            isMuted: isMuted,
-            displayName: "You"
-        )
-        speaker.cameraTrack = videoTrack
+    private var subscriptions = Set<AnyCancellable>()
+    var roomManager: RoomManager!
 
-        speakers.append(speaker)
-    }
-    
-    func updateLocalParticipant(isMuted: Bool) {
-        guard !speakers.isEmpty else { return }
+    init() {
+        let notificationCenter = NotificationCenter.default
         
-        speakers[0].isMuted = isMuted
-    }
-    
-    func updateLocalParticipant(videoTrack: VideoTrack?) {
-        guard !speakers.isEmpty else { return }
-
-        speakers[0].cameraTrack = videoTrack
-    }
-    
-    func addRemoteParticipant(_ participant: TwilioVideo.RemoteParticipant) {
-        participant.delegate = self
+        // TODO: Need weak self?
+        notificationCenter.publisher(for: .roomDidConnect)
+            .sink() { _ in
+                self.speakers.append(Speaker(localParticipant: self.roomManager.localParticipant))
+                self.roomManager.remoteParticipants.forEach { self.speakers.append(Speaker(remoteParticipant: $0)) }
+            }
+            .store(in: &subscriptions)
         
-        let speaker = Speaker(
-            identity: participant.identity,
-            shouldMirrorCameraVideo: false,
-            isMuted: participant.isMuted,
-            displayName: participant.identity
-        )
+        notificationCenter.publisher(for: .roomDidDisconnect)
+            .sink() { _ in
+                self.speakers.removeAll()
+            }
+            .store(in: &subscriptions)
+
+        notificationCenter.publisher(for: .remoteParticipantDidConnect)
+            .sink() { notification in
+                guard let remoteParticipant = notification.object as? RoomRemoteParticipant else { return }
+                
+                self.speakers.append(Speaker(remoteParticipant: remoteParticipant))
+            }
+            .store(in: &subscriptions)
+
+        notificationCenter.publisher(for: .remoteParticipantDidDisconnect)
+            .sink() { notification in
+                guard let remoteParticipant = notification.object as? RoomRemoteParticipant else { return }
+                
+                self.speakers.removeAll { $0.identity == remoteParticipant.identity }
+            }
+            .store(in: &subscriptions)
         
-        speakers.append(speaker)
-    }
-    
-    func removeRemoteParticipant(_ participant: TwilioVideo.RemoteParticipant) {
-        speakers.removeAll { $0.identity == participant.identity }
-    }
-    
-    func removeAll() {
-        speakers.removeAll()
-    }
-    
-    private func updateMuteForParticipant(_ participant: TwilioVideo.RemoteParticipant) {
-        guard let speakerIndex = speakers.index(of: participant) else { return }
+        notificationCenter.publisher(for: .localParticipantDidChangeMic)
+            .sink() { _ in
+                guard !self.speakers.isEmpty else { return }
+                
+                self.speakers[0].isMuted = !self.roomManager.localParticipant.isMicOn
+            }
+            .store(in: &subscriptions)
 
-        speakers[speakerIndex].isMuted = participant.isMuted
-    }
-}
+        notificationCenter.publisher(for: .localParticipantDidChangeCameraTrack)
+            .sink() { _ in
+                guard !self.speakers.isEmpty else { return }
 
-extension SpeakerStore: TwilioVideo.RemoteParticipantDelegate {
-    func didSubscribeToVideoTrack(
-        videoTrack: TwilioVideo.RemoteVideoTrack,
-        publication: RemoteVideoTrackPublication,
-        participant: TwilioVideo.RemoteParticipant
-    ) {
-        guard let source = videoTrack.source, let speakerIndex = speakers.index(of: participant) else { return }
+                self.speakers[0].cameraTrack = self.roomManager.localParticipant.cameraTrack
+            }
+            .store(in: &subscriptions)
 
-        switch source {
-        case .camera:
-            speakers[speakerIndex].cameraTrack = RemoteVideoTrack(track: videoTrack)
-        case .screen:
-            break // Implement later
-        }
-    }
-    
-    func didUnsubscribeFromVideoTrack(
-        videoTrack: TwilioVideo.RemoteVideoTrack,
-        publication: RemoteVideoTrackPublication,
-        participant: TwilioVideo.RemoteParticipant
-    ) {
-        guard let source = videoTrack.source, let speakerIndex = speakers.index(of: participant) else { return }
+        notificationCenter.publisher(for: .remoteParticipantDidChangeMic)
+            .sink() { notification in
+                guard
+                    let remoteParticipant = notification.object as? RoomRemoteParticipant,
+                    let speakerIndex = self.speakers.index(of: remoteParticipant)
+                else {
+                    return
+                }
+                
+                self.speakers[speakerIndex].isMuted = !remoteParticipant.isMicOn
+            }
+            .store(in: &subscriptions)
 
-        switch source {
-        case .camera:
-            speakers[speakerIndex].cameraTrack = nil
-        case .screen:
-            break // Implement later
-        }
-    }
-    
-    func remoteParticipantDidEnableAudioTrack(
-        participant: TwilioVideo.RemoteParticipant,
-        publication: RemoteAudioTrackPublication
-    ) {
-        updateMuteForParticipant(participant)
-    }
-    
-    func remoteParticipantDidDisableAudioTrack(
-        participant: TwilioVideo.RemoteParticipant,
-        publication: RemoteAudioTrackPublication
-    ) {
-        updateMuteForParticipant(participant)
-    }
-    
-    func didSubscribeToAudioTrack(
-        audioTrack: RemoteAudioTrack,
-        publication: RemoteAudioTrackPublication,
-        participant: TwilioVideo.RemoteParticipant
-    ) {
-        updateMuteForParticipant(participant)
-    }
-    
-    func didUnsubscribeFromAudioTrack(
-        audioTrack: RemoteAudioTrack,
-        publication: RemoteAudioTrackPublication,
-        participant: TwilioVideo.RemoteParticipant
-    ) {
-        updateMuteForParticipant(participant)
-    }
-}
+        notificationCenter.publisher(for: .remoteParticipantDidChangeCameraTrack)
+            .sink() { notification in
+                print("camera notification received")
+                
+                guard
+                    let remoteParticipant = notification.object as? RoomRemoteParticipant,
+                    let speakerIndex = self.speakers.index(of: remoteParticipant)
+                else {
+                    return
+                }
+                print("camera track set")
 
-private extension TwilioVideo.RemoteVideoTrack {
-    var source: VideoSource? { VideoSource(trackName: name) }
+                self.speakers[speakerIndex].cameraTrack = remoteParticipant.cameraTrack
+            }
+            .store(in: &subscriptions)
+    }
 }
 
 private extension Array where Element == Speaker {
-    func index(of participant: TwilioVideo.RemoteParticipant) -> Int? {
+    func index(of participant: RoomRemoteParticipant) -> Int? {
         firstIndex { $0.identity == participant.identity }
-    }
-}
-
-
-
-struct Speaker: Hashable {
-    let identity: String
-    var cameraTrack: VideoTrack? = nil
-    var shouldMirrorCameraVideo: Bool // True for local participant using front camera
-    var isMuted: Bool
-    var displayName: String
-    
-    static func == (lhs: Speaker, rhs: Speaker) -> Bool {
-        lhs.identity == rhs.identity
-    }
-
-    func hash(into hasher: inout Hasher) {
-      hasher.combine(identity)
-    }
-}
-
-private extension TwilioVideo.RemoteParticipant {
-    var isMuted: Bool {
-        guard let micTrack = remoteAudioTracks.first else { return true }
-        
-        return !micTrack.isTrackSubscribed || !micTrack.isTrackEnabled
     }
 }

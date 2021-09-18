@@ -6,7 +6,7 @@ import SwiftUI
 
 struct StreamView: View {
     @EnvironmentObject var streamManager: StreamManager
-    @EnvironmentObject var roomManager: RoomManager
+    @EnvironmentObject var localParticipantViewModel: LocalParticipantViewModel
     @Environment(\.presentationMode) var presentationMode
     @Binding var config: StreamConfig!
     
@@ -42,18 +42,18 @@ struct StreamView: View {
                                 presentationMode.wrappedValue.dismiss()
                             }
                             StreamToolbarButton(
-                                roomManager.isLocalParticipantMuted ? "Unmute" : "Mute",
-                                image: Image(systemName: roomManager.isLocalParticipantMuted ? "mic" : "mic.slash"),
+                                localParticipantViewModel.isMicOn ? "Mute" : "Unmute",
+                                image: Image(systemName: localParticipantViewModel.isMicOn ? "mic.slash" : "mic"),
                                 role: .default
                             ) {
-                                roomManager.isLocalParticipantMuted.toggle()
+                                localParticipantViewModel.isMicOn.toggle()
                             }
                             StreamToolbarButton(
-                                roomManager.isLocalParticipantCameraOn ? "Stop Video" : "Start Video",
-                                image: Image(systemName: roomManager.isLocalParticipantCameraOn ? "video.slash" : "video"),
+                                localParticipantViewModel.isCameraOn ? "Stop Video" : "Start Video",
+                                image: Image(systemName: localParticipantViewModel.isCameraOn ? "video.slash" : "video"),
                                 role: .default
                             ) {
-                                roomManager.isLocalParticipantCameraOn.toggle()
+                                localParticipantViewModel.isCameraOn.toggle()
                             }
                         case .viewer:
                             StreamToolbarButton(

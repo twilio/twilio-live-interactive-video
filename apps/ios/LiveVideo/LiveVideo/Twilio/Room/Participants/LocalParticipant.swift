@@ -36,6 +36,8 @@ class LocalParticipant: NSObject {
                 participant?.unpublishAudioTrack(micTrack)
                 self.micTrack = nil
             }
+            
+            notificationCenter.post(name: .localParticipantDidChangeMic, object: self)
         }
     }
     var isCameraOn: Bool {
@@ -62,6 +64,8 @@ class LocalParticipant: NSObject {
                 self.cameraManager = nil
                 cameraTrack = nil
             }
+            
+            notificationCenter.post(name: .localParticipantDidChangeCameraTrack, object: self)
         }
     }
     var participant: TwilioVideo.LocalParticipant? {
@@ -72,13 +76,10 @@ class LocalParticipant: NSObject {
     var localCameraTrack: TwilioVideo.LocalVideoTrack? { cameraManager?.track.track }
     private(set) var micTrack: LocalAudioTrack?
     private var cameraManager: CameraManager?
+    private let notificationCenter = NotificationCenter.default
 
     init(identity: String) {
         self.identity = identity
-    }
-    
-    private func sendUpdate() {
-
     }
 }
 
@@ -102,13 +103,13 @@ extension LocalParticipant: LocalParticipantDelegate {
 
 extension LocalParticipant: CameraManagerDelegate {
     func trackSourceWasInterrupted(track: LocalVideoTrack) {
-        track.track.isEnabled = false
-        sendUpdate()
+//        track.track.isEnabled = false
+//        sendUpdate()
     }
     
     func trackSourceInterruptionEnded(track: LocalVideoTrack) {
-        track.track.isEnabled = true
-        sendUpdate()
+//        track.track.isEnabled = true
+//        sendUpdate()
     }
 }
 
