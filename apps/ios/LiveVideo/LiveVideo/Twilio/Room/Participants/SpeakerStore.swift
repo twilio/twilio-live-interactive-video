@@ -72,6 +72,19 @@ class SpeakerStore: ObservableObject {
             }
             .store(in: &subscriptions)
 
+        notificationCenter.publisher(for: .remoteParticipantDidChangeDominantSpeaker)
+            .sink() { notification in
+                guard
+                    let remoteParticipant = notification.object as? RoomRemoteParticipant,
+                    let speakerIndex = self.speakers.index(of: remoteParticipant)
+                else {
+                    return
+                }
+                
+                self.speakers[speakerIndex].isDominantSpeaker = remoteParticipant.isDominantSpeaker
+            }
+            .store(in: &subscriptions)
+
         notificationCenter.publisher(for: .remoteParticipantDidChangeCameraTrack)
             .sink() { notification in
                 print("camera notification received")

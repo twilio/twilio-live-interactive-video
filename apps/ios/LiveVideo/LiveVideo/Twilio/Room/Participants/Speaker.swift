@@ -10,6 +10,7 @@ struct Speaker: Hashable {
     var shouldMirrorCameraVideo: Bool // True for local participant using front camera
     var isMuted: Bool
     var displayName: String
+    var isDominantSpeaker: Bool
     
     static func == (lhs: Speaker, rhs: Speaker) -> Bool {
         lhs.identity == rhs.identity
@@ -25,6 +26,7 @@ struct Speaker: Hashable {
         shouldMirrorCameraVideo = true
         isMuted = !localParticipant.isMicOn
         displayName = "You"
+        isDominantSpeaker = false // TODO: Improve this?
     }
     
     // TODO: Rename parameter?
@@ -34,6 +36,7 @@ struct Speaker: Hashable {
         shouldMirrorCameraVideo = false
         isMuted = !remoteParticipant.isMicOn
         displayName = remoteParticipant.identity
+        isDominantSpeaker = false
     }
     
     // For UI previews
@@ -42,12 +45,14 @@ struct Speaker: Hashable {
         cameraTrack: VideoTrack? = nil,
         shouldMirrorCameraVideo: Bool = false,
         isMuted: Bool = false,
-        displayName: String
+        displayName: String,
+        isDominantSpeaker: Bool = false
     ) {
         self.identity = identity
         self.cameraTrack = cameraTrack
         self.shouldMirrorCameraVideo = shouldMirrorCameraVideo
         self.isMuted = isMuted
         self.displayName = displayName
+        self.isDominantSpeaker = isDominantSpeaker
     }
 }

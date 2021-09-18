@@ -16,6 +16,7 @@
 
 import TwilioVideo
 import Combine
+import Foundation
 
 class RoomManager: NSObject, ObservableObject {
     var localParticipant: LocalParticipant!
@@ -53,6 +54,12 @@ extension RoomManager: RoomDelegate {
         remoteParticipants = room.remoteParticipants.map { RoomRemoteParticipant(participant: $0) }
         state = .connected
         notificationCenter.post(name: .roomDidConnect, object: self)
+        
+        if let dominantSpeaker = room.dominantSpeaker {
+            if let participant = remoteParticipants.first(where: { $0.identity == dominantSpeaker.identity }) {
+                participant.isDominantSpeaker = true
+            }
+        }
     }
     
     func roomDidFailToConnect(room: TwilioVideo.Room, error: Error) {
@@ -80,6 +87,10 @@ extension RoomManager: RoomDelegate {
 
     // TODO: Handle this in UI and speaker store
     func dominantSpeakerDidChange(room: TwilioVideo.Room, participant: TwilioVideo.RemoteParticipant?) {
+        guard let new = remoteParticipants.first(where: { $0.identity == participant?.identity }) else { return }
 
+        let old = remoteParticipants.first(where: { $0.isDominantSpeaker })
+        old?.isDominantSpeaker = false
+        new.isDominantSpeaker = true
     }
 }

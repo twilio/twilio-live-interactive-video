@@ -14,5 +14,6 @@ extension Color {
     static var backgroundPrimaryWeak: Color { Color("BackgroundPrimaryWeak") }
     static var backgroundStronger: Color { Color("BackgroundStronger") }
     static var border: Color { Color("Border") }
+    static var borderSuccessWeak: Color { Color("BorderSuccessWeak") }
     static var textIcon: Color { Color("TextIcon") }
 }

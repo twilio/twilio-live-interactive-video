@@ -11,7 +11,8 @@ struct VideoViewChrome: View {
         ZStack {
             Color.backgroundStronger
             Text(speaker.displayName)
-                .lineLimit(2)
+                .lineLimit(3)
+                .multilineTextAlignment(.center)
                 .foregroundColor(.white)
                 .font(.system(size: 24, weight: .bold))
                 .padding(.horizontal, 20)
@@ -49,8 +50,14 @@ struct VideoViewChrome: View {
                 }
                 .padding(4)
             }
+
+            if speaker.isDominantSpeaker {
+                RoundedRectangle(cornerRadius: 3)
+                    .stroke(Color.borderSuccessWeak, lineWidth: 4)
+            }
         }
         .cornerRadius(3)
+        .animation(.none)
     }
 }
 
@@ -59,13 +66,16 @@ struct VideoViewChrome_Previews: PreviewProvider {
         Group {
             VideoViewChrome(speaker: .constant(Speaker(identity: "Alice", shouldMirrorCameraVideo: false, isMuted: false, displayName: "Alice")))
                 .previewDisplayName("Note Muted")
-            VideoViewChrome(speaker: .constant(Speaker(identity: "A really long identity that is struncated or multiple lines and maxes out", shouldMirrorCameraVideo: false, isMuted: false, displayName: "Alice")))
+            VideoViewChrome(speaker: .constant(Speaker(identity: "A really long identity that is struncated or multiple lines and maxes out", shouldMirrorCameraVideo: false, isMuted: false, displayName: "Alice with a really long name")))
                 .previewDisplayName("Long Identity")
             VideoViewChrome(speaker: .constant(Speaker(identity: "Alice", shouldMirrorCameraVideo: false, isMuted: true, displayName: "Alice")))
                 .previewDisplayName("Muted")
+            VideoViewChrome(speaker: .constant(Speaker(identity: "Alice", shouldMirrorCameraVideo: false, isMuted: true, displayName: "Alice", isDominantSpeaker: true)))
+                .previewDisplayName("Dominant Speaker")
         }
         .previewLayout(.sizeThatFits)
         .padding()
         .aspectRatio(1, contentMode: .fit)
+        .background(Color.backgroundBrandStronger)
     }
 }

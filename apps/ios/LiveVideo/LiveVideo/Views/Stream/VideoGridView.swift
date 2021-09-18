@@ -6,8 +6,16 @@ import SwiftUI
 
 struct VideoGridView: View {
     @EnvironmentObject var speakerStore: SpeakerStore
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.verticalSizeClass) var verticalSizeClass
+    @Namespace private var animation
     
     let columns = [
+        GridItem(.flexible())
+    ]
+    
+    let landscapeColumns = [
+        GridItem(.flexible()),
         GridItem(.flexible())
     ]
     
@@ -16,18 +24,41 @@ struct VideoGridView: View {
             if speakerStore.speakers.count == 0 {
                 Spacer()
             } else {
-                GeometryReader { geometry in
-                    LazyVGrid(columns: columns, spacing: 4) {
-                        ForEach($speakerStore.speakers, id: \.self) { $speaker in
-                            VideoViewChrome(speaker: $speaker)
-                                .frame(height: (geometry.size.height / CGFloat(speakerStore.speakers.count) - 4))
+                if verticalSizeClass == .regular && horizontalSizeClass == .compact {
+                    GeometryReader { geometry in
+                        LazyVGrid(columns: speakerStore.speakers.count < 4 ? columns : landscapeColumns, spacing: 8) {
+                            ForEach($speakerStore.speakers, id: \.self) { $speaker in
+                                VideoViewChrome(speaker: $speaker)
+                                    .frame(height: (geometry.size.height / rowCount()) - 8)
+                                    .matchedGeometryEffect(id: speaker.identity, in: animation)
+                            }
                         }
+                        .animation(.spring())
                     }
-                    .animation(.interactiveSpring())
+                    .padding(.horizontal, 4)
+                } else {
+                    GeometryReader { geometry in
+                        LazyVGrid(columns: landscapeColumns, spacing: 4) {
+                            ForEach($speakerStore.speakers, id: \.self) { $speaker in
+                                VideoViewChrome(speaker: $speaker)
+                                    .frame(height: geometry.size.height - 4)
+                                    .matchedGeometryEffect(id: speaker.identity, in: animation)
+                            }
+                        }
+                        .animation(.spring())
+                    }
+                    .padding(.horizontal, 4)
                 }
-                .padding(.horizontal, 4)
             }
         }
+    }
+    
+    private func rowCount() -> CGFloat {
+        let speakerCount: Double = Double(speakerStore.speakers.count)
+        let columnCount: Double = speakerCount < 4 ? 1 : 2
+        
+        return CGFloat(ceil(speakerCount / columnCount))
+        
     }
 }
 

@@ -19,7 +19,11 @@ import Combine
 
 class RoomRemoteParticipant: NSObject {
     var identity: String { participant.identity }
-    var isDominantSpeaker = false
+    var isDominantSpeaker = false {
+        didSet {
+            notificationCenter.post(name: .remoteParticipantDidChangeDominantSpeaker, object: self)
+        }
+    }
     private(set) var isMicOn = false {
         didSet {
             notificationCenter.post(name: .remoteParticipantDidChangeMic, object: self)
@@ -43,7 +47,6 @@ class RoomRemoteParticipant: NSObject {
     
     private func updateVideoTracks() {
         cameraTrack = participant.cameraTrack
-        print("cameraTrack: \(cameraTrack)")
     }
     
     private func updateMic() {
