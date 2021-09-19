@@ -10,7 +10,14 @@ struct Speaker: Hashable {
     var shouldMirrorCameraVideo: Bool // True for local participant using front camera
     var isMuted: Bool
     var displayName: String
-    var isDominantSpeaker: Bool
+    var isDominantSpeaker: Bool {
+        didSet {
+            if isDominantSpeaker {
+                dominantSpeakerTimestamp = Date() // Date.now in iOS 15
+            }
+        }
+    }
+    var dominantSpeakerTimestamp: Date = .distantPast
     
     static func == (lhs: Speaker, rhs: Speaker) -> Bool {
         lhs.identity == rhs.identity

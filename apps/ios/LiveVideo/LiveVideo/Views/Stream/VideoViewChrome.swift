@@ -50,14 +50,17 @@ struct VideoViewChrome: View {
                 }
                 .padding(4)
             }
+            .animation(nil)
 
-            if speaker.isDominantSpeaker {
-                RoundedRectangle(cornerRadius: 3)
-                    .stroke(Color.borderSuccessWeak, lineWidth: 4)
+            VStack {
+                if speaker.isDominantSpeaker {
+                    RoundedRectangle(cornerRadius: 3)
+                        .stroke(Color.borderSuccessWeak, lineWidth: 4)
+                }
             }
+            .animation(nil)
         }
         .cornerRadius(3)
-        .animation(.none)
     }
 }
 
