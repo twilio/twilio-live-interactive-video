@@ -35,7 +35,7 @@ struct StreamView: View {
                         case .host, .speaker:
                             StreamToolbarButton(
                                 "Leave",
-                                image: Image(systemName: "arrow.left.circle.fill"),
+                                image: Image(systemName: "arrow.left"),
                                 role: .destructive
                             ) {
                                 streamManager.disconnect()

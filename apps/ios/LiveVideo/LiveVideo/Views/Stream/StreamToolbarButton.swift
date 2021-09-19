@@ -7,9 +7,16 @@ import SwiftUI
 struct StreamToolbarButton: View {
     struct Role {
         let imageForegroundColor: Color
+        let imageBackgroundColor: Color
         
-        static let `default` = Role(imageForegroundColor: .textIcon)
-        static let destructive = Role(imageForegroundColor: .backgroundDestructive)
+        static let `default` = Role(
+            imageForegroundColor: .backgroundStrongest,
+            imageBackgroundColor: .backgroundStrong
+        )
+        static let destructive = Role(
+            imageForegroundColor: .white,
+            imageBackgroundColor: .backgroundDestructive
+        )
     }
     
     let title: String
@@ -29,17 +36,24 @@ struct StreamToolbarButton: View {
             action()
         }) {
             VStack(spacing: 4) {
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundColor(role.imageForegroundColor)
-                    .frame(width: 24, height: 24, alignment: .bottom)
+                ZStack {
+                    role.imageBackgroundColor
+                        .clipShape(Circle())
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(6)
+                        .foregroundColor(role.imageForegroundColor)
+//                        .background(role.imageBackgroundColor)
+//                        .clipShape(Circle())
+                }
+                .frame(width: 27, height: 27, alignment: .bottom)
                 Text(title)
                     .font(.system(size: 10))
             }
             .padding(.top, 7)
             .frame(width: 60)
-            .foregroundColor(.textIcon)
+            .foregroundColor(.backgroundStrongest)
         }
     }
 }
