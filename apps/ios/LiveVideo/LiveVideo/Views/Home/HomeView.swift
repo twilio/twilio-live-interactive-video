@@ -16,7 +16,11 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             FormStack {
-                Spacer()
+                Text("Create or join?")
+                    .font(.system(size: 28, weight: .bold))
+                Text("Create your own event or join one that’s already happening.")
+                    .foregroundColor(.textIcon)
+                    .font(.system(size: 15))
                 Button("Create Event") {
                     showCreateStream = true
                 }
@@ -30,6 +34,7 @@ struct HomeView: View {
                     Image(systemName: "gear")
                 }
             }
+            .navigationBarTitleDisplayMode(.inline)
             .sheet(
                 isPresented: $showSettings,
                 onDismiss: {
