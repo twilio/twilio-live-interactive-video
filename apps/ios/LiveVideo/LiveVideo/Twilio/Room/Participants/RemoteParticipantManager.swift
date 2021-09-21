@@ -15,27 +15,13 @@
 //
 
 import TwilioVideo
-import Combine
 
 class RoomRemoteParticipant: NSObject {
     var identity: String { participant.identity }
-    var isDominantSpeaker = false {
-        didSet {
-            notificationCenter.post(name: .remoteParticipantDidChangeDominantSpeaker, object: self)
-        }
-    }
-    private(set) var isMicOn = false {
-        didSet {
-            notificationCenter.post(name: .remoteParticipantDidChangeMic, object: self)
-        }
-    }
-    private(set) var cameraTrack: VideoTrack? {
-        didSet {
-            notificationCenter.post(name: .remoteParticipantDidChangeCameraTrack, object: self)
-        }
-    }
+    @Published var isDominantSpeaker = false
+    @Published private(set) var isMicOn = false
+    @Published private(set) var cameraTrack: VideoTrack?
     private let participant: RemoteParticipant
-    private let notificationCenter = NotificationCenter.default
     
     init(participant: RemoteParticipant) {
         self.participant = participant
@@ -54,23 +40,7 @@ class RoomRemoteParticipant: NSObject {
     }
 }
 
-// Not a lot of activity so to keep this code simple just update everything
 extension RoomRemoteParticipant: RemoteParticipantDelegate {
-    func remoteParticipantDidEnableVideoTrack(
-        participant: RemoteParticipant,
-        publication: RemoteVideoTrackPublication
-    ) {
-        updateVideoTracks()
-    }
-    
-    func remoteParticipantDidDisableVideoTrack(
-        participant: RemoteParticipant,
-        publication: RemoteVideoTrackPublication
-    ) {
-        updateVideoTracks()
-    }
-    
-    // TODO: Add UX for track switch off?
     func didSubscribeToVideoTrack(
         videoTrack: TwilioVideo.RemoteVideoTrack,
         publication: RemoteVideoTrackPublication,
@@ -86,21 +56,21 @@ extension RoomRemoteParticipant: RemoteParticipantDelegate {
     ) {
         updateVideoTracks()
     }
-        
-    func remoteParticipantDidEnableAudioTrack(
+
+    func remoteParticipantDidEnableVideoTrack(
         participant: RemoteParticipant,
-        publication: RemoteAudioTrackPublication
+        publication: RemoteVideoTrackPublication
     ) {
-        updateMic()
+        updateVideoTracks()
     }
     
-    func remoteParticipantDidDisableAudioTrack(
+    func remoteParticipantDidDisableVideoTrack(
         participant: RemoteParticipant,
-        publication: RemoteAudioTrackPublication
+        publication: RemoteVideoTrackPublication
     ) {
-        updateMic()
+        updateVideoTracks()
     }
-    
+
     func didSubscribeToAudioTrack(
         audioTrack: RemoteAudioTrack,
         publication: RemoteAudioTrackPublication,
@@ -116,6 +86,20 @@ extension RoomRemoteParticipant: RemoteParticipantDelegate {
     ) {
         updateMic()
     }
+
+    func remoteParticipantDidEnableAudioTrack(
+        participant: RemoteParticipant,
+        publication: RemoteAudioTrackPublication
+    ) {
+        updateMic()
+    }
+    
+    func remoteParticipantDidDisableAudioTrack(
+        participant: RemoteParticipant,
+        publication: RemoteAudioTrackPublication
+    ) {
+        updateMic()
+    }
 }
 
 private extension RemoteParticipant {
@@ -127,7 +111,6 @@ private extension RemoteParticipant {
     
     var cameraTrack: VideoTrack? {
         guard
-            // TODO: Refactor contains?
             let publication = remoteVideoTracks.first(where: { $0.trackName.contains(TrackName.camera) }),
             let track = publication.remoteTrack,
             track.isEnabled

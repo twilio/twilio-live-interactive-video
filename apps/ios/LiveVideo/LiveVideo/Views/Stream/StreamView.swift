@@ -79,7 +79,11 @@ struct StreamView: View {
             }
         }
         .onAppear {
+            UIApplication.shared.isIdleTimerDisabled = true
             streamManager.connect(config: config)
+        }
+        .onDisappear {
+            UIApplication.shared.isIdleTimerDisabled = false
         }
         .alert(isPresented: $streamManager.showError) {
             if let error = streamManager.error as? LiveVideoError, error.isStreamEndedByHostError {
