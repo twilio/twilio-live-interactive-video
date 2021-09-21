@@ -15,36 +15,37 @@
 //
 
 import TwilioVideo
-import Combine
-import Foundation
 
 class RoomManager: NSObject, ObservableObject {
     var localParticipant: LocalParticipant!
     var remoteParticipants: [RoomRemoteParticipant] = []
-    private(set) var state: RoomState = .disconnected
-    private let connectOptionsFactory = ConnectOptionsFactory()
     private let notificationCenter = NotificationCenter.default
-    private var room: TwilioVideo.Room?
+    private var room: Room?
 
     func connect(roomName: String, accessToken: String, identity: String) {
-        guard state == .disconnected else { fatalError("Connection already in progress.") }
-
         localParticipant.isCameraOn = true
 //        localParticipant.isMicOn = true
-        
-        state = .connecting
 
-        let options = self.connectOptionsFactory.makeConnectOptions(
-            accessToken: accessToken,
-            roomName: roomName,
-            audioTracks: [self.localParticipant.micTrack].compactMap { $0 },
-            videoTracks: [self.localParticipant.localCameraTrack].compactMap { $0 }
-        )
+        let options = ConnectOptions(token: accessToken) { builder in
+            builder.roomName = roomName
+            builder.audioTracks = [self.localParticipant.micTrack].compactMap { $0 }
+            builder.videoTracks = [self.localParticipant.localCameraTrack].compactMap { $0 }
+            builder.isDominantSpeakerEnabled = true
+            builder.bandwidthProfileOptions = BandwidthProfileOptions(
+                videoOptions: VideoBandwidthProfileOptions { builder in
+                    builder.mode = .grid
+                }
+            )
+            builder.preferredVideoCodecs = [Vp8Codec(simulcast: true)]
+            builder.encodingParameters = EncodingParameters(audioBitrate: 16, videoBitrate: 0)
+        }
+
         self.room = TwilioVideoSDK.connect(options: options, delegate: self)
     }
 
     func disconnect() {
         room?.disconnect()
+        room = nil
     }
 }
 
@@ -52,7 +53,6 @@ extension RoomManager: RoomDelegate {
     func roomDidConnect(room: TwilioVideo.Room) {
         localParticipant.participant = room.localParticipant
         remoteParticipants = room.remoteParticipants.map { RoomRemoteParticipant(participant: $0) }
-        state = .connected
         notificationCenter.post(name: .roomDidConnect, object: self)
         
         if let dominantSpeaker = room.dominantSpeaker {
@@ -63,14 +63,12 @@ extension RoomManager: RoomDelegate {
     }
     
     func roomDidFailToConnect(room: TwilioVideo.Room, error: Error) {
-        state = .disconnected
         notificationCenter.post(name: .roomDidFailToConnect, object: error)
     }
     
     func roomDidDisconnect(room: TwilioVideo.Room, error: Error?) {
         localParticipant.participant = nil
         remoteParticipants.removeAll()
-        state = .disconnected
         notificationCenter.post(name: .roomDidDisconnect, object: error)
     }
     
@@ -85,7 +83,6 @@ extension RoomManager: RoomDelegate {
         notificationCenter.post(name: .remoteParticipantDidDisconnect, object: remoteParticipants.remove(at: index))
     }
 
-    // TODO: Handle this in UI and speaker store
     func dominantSpeakerDidChange(room: TwilioVideo.Room, participant: TwilioVideo.RemoteParticipant?) {
         guard let new = remoteParticipants.first(where: { $0.identity == participant?.identity }) else { return }
 
