@@ -53,14 +53,14 @@ struct Speaker: Hashable {
         cameraTrack: VideoTrack? = nil,
         shouldMirrorCameraVideo: Bool = false,
         isMuted: Bool = false,
-        displayName: String,
+        displayName: String? = nil,
         isDominantSpeaker: Bool = false
     ) {
         self.identity = identity
         self.cameraTrack = cameraTrack
         self.shouldMirrorCameraVideo = shouldMirrorCameraVideo
         self.isMuted = isMuted
-        self.displayName = displayName
+        self.displayName = displayName ?? identity
         self.isDominantSpeaker = isDominantSpeaker
     }
 }

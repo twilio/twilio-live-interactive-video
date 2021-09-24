@@ -8,7 +8,34 @@ struct VideoGridView: View {
     @EnvironmentObject var speakerStore: SpeakerStore
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
-    @Namespace private var animation
+    private let spacing: CGFloat = 4
+    
+    private var isPortraitOrientation: Bool {
+        verticalSizeClass == .regular && horizontalSizeClass == .compact
+    }
+
+    private var rowCount: CGFloat {
+        if isPortraitOrientation { // TODO: Clean up math
+            let speakerCount: Double = Double(speakerStore.speakers.count)
+            let columnCount: Double = speakerCount < 4 ? 1 : 2
+            
+            return CGFloat(ceil(speakerCount / columnCount))
+        } else {
+            return 1
+        }
+    }
+    
+    private var columnCount: Int {
+        if isPortraitOrientation {
+            return speakerStore.speakers.count < 4 ? 1 : 2
+        } else {
+            return speakerStore.speakers.count
+        }
+    }
+    
+    private var columns: [GridItem] {
+        [GridItem](repeating: GridItem(.flexible()), count: columnCount)
+    }
     
     var body: some View {
         VStack {
@@ -16,53 +43,43 @@ struct VideoGridView: View {
                 Spacer()
             } else {
                 GeometryReader { geometry in
-                    LazyVGrid(columns: goodColumns(), spacing: 8) {
+                    LazyVGrid(columns: columns, spacing: spacing) {
                         ForEach($speakerStore.speakers, id: \.self) { $speaker in
                             VideoViewChrome(speaker: $speaker)
-                                .frame(height: (geometry.size.height / rowCount()) - 8)
+                                .frame(height: geometry.size.height / rowCount - spacing)
                         }
                     }
                 }
-                .padding(.horizontal, 4)
+                .padding(.horizontal, spacing)
             }
-        }
-    }
-    
-    private func goodColumns() -> [GridItem] {
-        if verticalSizeClass == .regular && horizontalSizeClass == .compact {
-            // Portrait
-            if speakerStore.speakers.count < 4 {
-                return [GridItem(.flexible())]
-            } else {
-                return [GridItem(.flexible()), GridItem(.flexible())]
-            }
-        } else {
-            // Landscape
-            return [GridItem](repeating: GridItem(.flexible()), count: speakerStore.speakers.count)
-        }
-    }
-    
-    private func rowCount() -> CGFloat {
-        if verticalSizeClass == .regular && horizontalSizeClass == .compact {
-            // Portrait
-            let speakerCount: Double = Double(speakerStore.speakers.count)
-            let columnCount: Double = speakerCount < 4 ? 1 : 2
-            
-            return CGFloat(ceil(speakerCount / columnCount))
-        } else {
-            // Landscape
-            return 1
         }
     }
 }
 
-//struct VideoGridView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        VideoGridView(participants: .constant([
-//            RoomParticipant(participant: LocalParticipant(identity:  "foo")),
-//            RoomParticipant(participant: LocalParticipant(identity:  "bar"))
-//        ]))
-//            .frame(height: 500)
-//            .previewLayout(.sizeThatFits)
-//    }
-//}
+struct VideoGridView_Previews: PreviewProvider {
+    static func makeSpeakerStore(_ speakers: Int) -> SpeakerStore {
+        let speakerStore = SpeakerStore()
+        
+        let theRange: [Int] = Array(1...speakers)
+        
+        speakerStore.speakers = theRange.map { Speaker(identity: "Participant \($0)") }
+        return speakerStore
+    }
+
+    static var previews: some View {
+        Group {
+            ForEach((1...6), id: \.self) {
+                VideoGridView()
+                    .environmentObject(makeSpeakerStore($0))
+            }
+            .frame(width: 400, height: 700)
+
+            ForEach((1...6), id: \.self) {
+                VideoGridView()
+                    .environmentObject(makeSpeakerStore($0))
+            }
+            .frame(width: 700, height: 400)
+        }
+        .previewLayout(.sizeThatFits)
+    }
+}
