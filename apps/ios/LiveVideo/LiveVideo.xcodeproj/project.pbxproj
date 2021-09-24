@@ -184,9 +184,9 @@
 		DC1ED10426E92DE900FFA769 /* Participants */ = {
 			isa = PBXGroup;
 			children = (
-				DC1ED10226E92DE800FFA769 /* RoomManager.swift */,
-				DC1ED10526E92DE900FFA769 /* RemoteParticipantManager.swift */,
 				DC1ED10726E92DE900FFA769 /* LocalParticipantManager.swift */,
+				DC1ED10526E92DE900FFA769 /* RemoteParticipantManager.swift */,
+				DC1ED10226E92DE800FFA769 /* RoomManager.swift */,
 				DC1ED10E26E92DE900FFA769 /* TrackName.swift */,
 			);
 			path = Participants;

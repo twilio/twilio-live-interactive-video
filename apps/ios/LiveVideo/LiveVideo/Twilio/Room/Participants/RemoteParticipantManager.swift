@@ -19,9 +19,9 @@ import TwilioVideo
 class RemoteParticipantManager: NSObject {
     var identity: String { participant.identity }
     var isMicOn: Bool {
-        guard let micTrack = participant.remoteAudioTracks.first else { return false }
+        guard let track = participant.remoteAudioTracks.first else { return false }
         
-        return micTrack.isTrackSubscribed && micTrack.isTrackEnabled
+        return track.isTrackSubscribed && track.isTrackEnabled
     }
     var cameraTrack: VideoTrack? {
         guard
@@ -36,11 +36,11 @@ class RemoteParticipantManager: NSObject {
     }
     var isDominantSpeaker = false {
         didSet {
-            dominantSpeakerTimestamp = Date() // Date.now in iOS 15
-            postRemoteParticipantDidChangeNotification()
+            dominantSpeakerStartTime = Date()
+            postChangeNotification()
         }
     }
-    var dominantSpeakerTimestamp: Date = .distantPast
+    var dominantSpeakerStartTime: Date = .distantPast
     private let participant: RemoteParticipant
     private let notificationCenter = NotificationCenter.default
     
@@ -50,40 +50,40 @@ class RemoteParticipantManager: NSObject {
         participant.delegate = self
     }
 
-    private func postRemoteParticipantDidChangeNotification() {
+    private func postChangeNotification() {
         notificationCenter.post(name: .remoteParticpantDidChange, object: self)
     }
 }
 
 extension RemoteParticipantManager: RemoteParticipantDelegate {
     func didSubscribeToVideoTrack(
-        videoTrack: TwilioVideo.RemoteVideoTrack,
+        videoTrack: RemoteVideoTrack,
         publication: RemoteVideoTrackPublication,
         participant: RemoteParticipant
     ) {
-        postRemoteParticipantDidChangeNotification()
+        postChangeNotification()
     }
     
     func didUnsubscribeFromVideoTrack(
-        videoTrack: TwilioVideo.RemoteVideoTrack,
+        videoTrack: RemoteVideoTrack,
         publication: RemoteVideoTrackPublication,
         participant: RemoteParticipant
     ) {
-        postRemoteParticipantDidChangeNotification()
+        postChangeNotification()
     }
 
     func remoteParticipantDidEnableVideoTrack(
         participant: RemoteParticipant,
         publication: RemoteVideoTrackPublication
     ) {
-        postRemoteParticipantDidChangeNotification()
+        postChangeNotification()
     }
     
     func remoteParticipantDidDisableVideoTrack(
         participant: RemoteParticipant,
         publication: RemoteVideoTrackPublication
     ) {
-        postRemoteParticipantDidChangeNotification()
+        postChangeNotification()
     }
 
     func didSubscribeToAudioTrack(
@@ -91,7 +91,7 @@ extension RemoteParticipantManager: RemoteParticipantDelegate {
         publication: RemoteAudioTrackPublication,
         participant: RemoteParticipant
     ) {
-        postRemoteParticipantDidChangeNotification()
+        postChangeNotification()
     }
     
     func didUnsubscribeFromAudioTrack(
@@ -99,20 +99,20 @@ extension RemoteParticipantManager: RemoteParticipantDelegate {
         publication: RemoteAudioTrackPublication,
         participant: RemoteParticipant
     ) {
-        postRemoteParticipantDidChangeNotification()
+        postChangeNotification()
     }
 
     func remoteParticipantDidEnableAudioTrack(
         participant: RemoteParticipant,
         publication: RemoteAudioTrackPublication
     ) {
-        postRemoteParticipantDidChangeNotification()
+        postChangeNotification()
     }
     
     func remoteParticipantDidDisableAudioTrack(
         participant: RemoteParticipant,
         publication: RemoteAudioTrackPublication
     ) {
-        postRemoteParticipantDidChangeNotification()
+        postChangeNotification()
     }
 }

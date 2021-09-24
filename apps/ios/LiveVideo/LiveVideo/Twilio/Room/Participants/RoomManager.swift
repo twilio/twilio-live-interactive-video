@@ -26,7 +26,7 @@ class RoomManager: NSObject, ObservableObject {
         let options = ConnectOptions(token: accessToken) { builder in
             builder.roomName = roomName
             builder.audioTracks = [self.localParticipant.micTrack].compactMap { $0 }
-            builder.videoTracks = [self.localParticipant.localCameraTrack].compactMap { $0 }
+            builder.videoTracks = [self.localParticipant.cameraTrack].compactMap { $0 }
             builder.isDominantSpeakerEnabled = true
             builder.bandwidthProfileOptions = BandwidthProfileOptions(
                 videoOptions: VideoBandwidthProfileOptions { builder in

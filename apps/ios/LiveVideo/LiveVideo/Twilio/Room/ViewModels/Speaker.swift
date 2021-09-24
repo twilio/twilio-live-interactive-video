@@ -23,7 +23,13 @@ struct Speaker: Hashable {
 
     init(localParticipant: LocalParticipantManager) {
         identity = localParticipant.identity
-        cameraTrack = localParticipant.localCameraTrack
+        
+        if let cameraTrack = localParticipant.cameraTrack, cameraTrack.isEnabled {
+            self.cameraTrack = cameraTrack
+        } else {
+            cameraTrack = nil
+        }
+        
         shouldMirrorCameraVideo = true
         isMuted = !localParticipant.isMicOn
         displayName = "You"
@@ -38,7 +44,7 @@ struct Speaker: Hashable {
         isMuted = !remoteParticipant.isMicOn
         displayName = remoteParticipant.identity
         isDominantSpeaker = remoteParticipant.isDominantSpeaker
-        dominantSpeakerTimestamp = remoteParticipant.dominantSpeakerTimestamp
+        dominantSpeakerTimestamp = remoteParticipant.dominantSpeakerStartTime
     }
     
     // For UI previews

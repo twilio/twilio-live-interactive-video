@@ -15,18 +15,21 @@
 //
 
 import TwilioVideo
-import Combine
 
 class LocalParticipantManager: NSObject {
     let identity: String
-    var shouldMirrorCameraVideo = true
     var isMicOn: Bool {
         get {
             micTrack?.isEnabled ?? false
         }
         set {
             if newValue {
-                guard micTrack == nil, let micTrack = LocalAudioTrack(options: nil, enabled: true, name: TrackName.mic) else { return }
+                guard
+                    micTrack == nil,
+                    let micTrack = LocalAudioTrack(options: nil, enabled: true, name: TrackName.mic)
+                else {
+                    return
+                }
                 
                 self.micTrack = micTrack
                 participant?.publishAudioTrack(micTrack)
@@ -40,49 +43,58 @@ class LocalParticipantManager: NSObject {
             postChangeNotification()
         }
     }
-    private var camera: CameraSource?
-
     var isCameraOn = false {
         didSet {
             guard oldValue != isCameraOn else { return }
             
             if isCameraOn {
-                let frontCamera = CameraSource.captureDevice(position: .front)
-
-                if (frontCamera != nil) {
-                    let options = CameraSourceOptions { (builder) in
-                        builder.orientationTracker = UserInterfaceTracker(scene: UIApplication.shared.keyWindow!.windowScene!)
-                    }
+                let sourceOptions = CameraSourceOptions { builder in
+                    guard let scene = self.app.windows.filter({ $0.isKeyWindow }).first?.windowScene else { return }
                     
-                    camera = CameraSource(options: options, delegate: self)
-                    
-                    localCameraTrack = TwilioVideo.LocalVideoTrack(source: camera!, enabled: true, name: TrackName.camera)
-                    
-                    camera!.startCapture(device: frontCamera!) { (captureDevice, videoFormat, error) in
-                        if let error = error {
-                            print("Start capture error: \(error)")
-                        }
-                    }
-
-                    participant?.publishCameraTrack(localCameraTrack!)
+                    builder.orientationTracker = UserInterfaceTracker(scene: scene)
                 }
+                
+                guard
+                    let cameraSource = CameraSource(options: sourceOptions, delegate: self),
+                    let captureDevice = CameraSource.captureDevice(position: .front),
+                    let cameraTrack = LocalVideoTrack(source: cameraSource, enabled: true, name: TrackName.camera)
+                else {
+                    return
+                }
+                
+                cameraSource.startCapture(device: captureDevice) { _, _, error in
+                    if let error = error {
+                        print("Start capture error: \(error)")
+                    }
+                }
+
+                let publicationOptions = LocalTrackPublicationOptions(priority: .low)
+                participant?.publishVideoTrack(cameraTrack, publicationOptions: publicationOptions)
+                self.cameraSource = cameraSource
+                self.cameraTrack = cameraTrack
             } else {
-                participant?.unpublishVideoTrack(localCameraTrack!)
-                camera = nil
-                localCameraTrack = nil
+                if let cameraTrack = cameraTrack {
+                    participant?.unpublishVideoTrack(cameraTrack)
+                }
+                
+                cameraSource?.stopCapture()
+                cameraSource = nil
+                cameraTrack = nil
             }
             
             postChangeNotification()
         }
     }
-    var participant: TwilioVideo.LocalParticipant? {
+    var participant: LocalParticipant? {
         didSet {
             participant?.delegate = self
         }
     }
-    var localCameraTrack: TwilioVideo.LocalVideoTrack?
     private(set) var micTrack: LocalAudioTrack?
+    private(set) var cameraTrack: LocalVideoTrack?
     private let notificationCenter = NotificationCenter.default
+    private let app = UIApplication.shared
+    private var cameraSource: CameraSource?
 
     init(identity: String) {
         self.identity = identity
@@ -95,15 +107,15 @@ class LocalParticipantManager: NSObject {
 
 extension LocalParticipantManager: LocalParticipantDelegate {
     func localParticipantDidFailToPublishVideoTrack(
-        participant: TwilioVideo.LocalParticipant,
-        videoTrack: TwilioVideo.LocalVideoTrack,
+        participant: LocalParticipant,
+        videoTrack: LocalVideoTrack,
         error: Error
     ) {
         print("Failed to publish video track: \(error)")
     }
     
     func localParticipantDidFailToPublishAudioTrack(
-        participant: TwilioVideo.LocalParticipant,
+        participant: LocalParticipant,
         audioTrack: LocalAudioTrack,
         error: Error
     ) {
@@ -113,19 +125,12 @@ extension LocalParticipantManager: LocalParticipantDelegate {
 
 extension LocalParticipantManager: CameraSourceDelegate {
     func cameraSourceWasInterrupted(source: CameraSource, reason: AVCaptureSession.InterruptionReason) {
-        //        track.track.isEnabled = false
-        //        sendUpdate()
+        cameraTrack?.isEnabled = false
+        postChangeNotification()
     }
 
     func cameraSourceInterruptionEnded(source: CameraSource) {
-        //        track.track.isEnabled = true
-        //        sendUpdate()
-    }
-}
-
-private extension TwilioVideo.LocalParticipant {
-    func publishCameraTrack(_ track: TwilioVideo.LocalVideoTrack) {
-        let publicationOptions = LocalTrackPublicationOptions(priority: .low)
-        publishVideoTrack(track, publicationOptions: publicationOptions)
+        cameraTrack?.isEnabled = true
+        postChangeNotification()
     }
 }
