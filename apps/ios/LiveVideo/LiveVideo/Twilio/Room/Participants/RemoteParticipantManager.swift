@@ -18,25 +18,40 @@ import TwilioVideo
 
 class RoomRemoteParticipant: NSObject {
     var identity: String { participant.identity }
-    @Published var isDominantSpeaker = false
-    @Published private(set) var isMicOn = false
-    @Published private(set) var cameraTrack: VideoTrack?
+    var isMicOn: Bool {
+        guard let micTrack = participant.remoteAudioTracks.first else { return false }
+        
+        return micTrack.isTrackSubscribed && micTrack.isTrackEnabled
+    }
+    var cameraTrack: VideoTrack? {
+        guard
+            let publication = participant.remoteVideoTracks.first(where: { $0.trackName.contains(TrackName.camera) }),
+            let track = publication.remoteTrack,
+            track.isEnabled
+        else {
+            return nil
+        }
+        
+        return RemoteVideoTrack(track: track)
+    }
+    var isDominantSpeaker = false {
+        didSet {
+            dominantSpeakerTimestame = Date() // Date.now in iOS 15
+            postRemoteParticipantDidChangeNotification()
+        }
+    }
+    var dominantSpeakerTimestame: Date = .distantPast
     private let participant: RemoteParticipant
+    private let notificationCenter = NotificationCenter.default
     
     init(participant: RemoteParticipant) {
         self.participant = participant
         super.init()
         participant.delegate = self
-        updateMic()
-        updateVideoTracks()
     }
-    
-    private func updateVideoTracks() {
-        cameraTrack = participant.cameraTrack
-    }
-    
-    private func updateMic() {
-        isMicOn = participant.isMicOn
+
+    private func postRemoteParticipantDidChangeNotification() {
+        notificationCenter.post(name: .remoteParticpantDidChange, object: self)
     }
 }
 
@@ -46,7 +61,7 @@ extension RoomRemoteParticipant: RemoteParticipantDelegate {
         publication: RemoteVideoTrackPublication,
         participant: RemoteParticipant
     ) {
-        updateVideoTracks()
+        postRemoteParticipantDidChangeNotification()
     }
     
     func didUnsubscribeFromVideoTrack(
@@ -54,21 +69,21 @@ extension RoomRemoteParticipant: RemoteParticipantDelegate {
         publication: RemoteVideoTrackPublication,
         participant: RemoteParticipant
     ) {
-        updateVideoTracks()
+        postRemoteParticipantDidChangeNotification()
     }
 
     func remoteParticipantDidEnableVideoTrack(
         participant: RemoteParticipant,
         publication: RemoteVideoTrackPublication
     ) {
-        updateVideoTracks()
+        postRemoteParticipantDidChangeNotification()
     }
     
     func remoteParticipantDidDisableVideoTrack(
         participant: RemoteParticipant,
         publication: RemoteVideoTrackPublication
     ) {
-        updateVideoTracks()
+        postRemoteParticipantDidChangeNotification()
     }
 
     func didSubscribeToAudioTrack(
@@ -76,7 +91,7 @@ extension RoomRemoteParticipant: RemoteParticipantDelegate {
         publication: RemoteAudioTrackPublication,
         participant: RemoteParticipant
     ) {
-        updateMic()
+        postRemoteParticipantDidChangeNotification()
     }
     
     func didUnsubscribeFromAudioTrack(
@@ -84,40 +99,20 @@ extension RoomRemoteParticipant: RemoteParticipantDelegate {
         publication: RemoteAudioTrackPublication,
         participant: RemoteParticipant
     ) {
-        updateMic()
+        postRemoteParticipantDidChangeNotification()
     }
 
     func remoteParticipantDidEnableAudioTrack(
         participant: RemoteParticipant,
         publication: RemoteAudioTrackPublication
     ) {
-        updateMic()
+        postRemoteParticipantDidChangeNotification()
     }
     
     func remoteParticipantDidDisableAudioTrack(
         participant: RemoteParticipant,
         publication: RemoteAudioTrackPublication
     ) {
-        updateMic()
-    }
-}
-
-private extension RemoteParticipant {
-    var isMicOn: Bool {
-        guard let micTrack = remoteAudioTracks.first else { return false }
-        
-        return micTrack.isTrackSubscribed && micTrack.isTrackEnabled
-    }
-    
-    var cameraTrack: VideoTrack? {
-        guard
-            let publication = remoteVideoTracks.first(where: { $0.trackName.contains(TrackName.camera) }),
-            let track = publication.remoteTrack,
-            track.isEnabled
-        else {
-            return nil
-        }
-        
-        return RemoteVideoTrack(track: track)
+        postRemoteParticipantDidChangeNotification()
     }
 }

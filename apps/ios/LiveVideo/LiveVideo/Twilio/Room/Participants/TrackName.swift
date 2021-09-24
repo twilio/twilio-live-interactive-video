@@ -14,17 +14,10 @@
 //  limitations under the License.
 //
 
-import TwilioVideo
+import Foundation
 
-class CameraSourceFactory {
-    func makeCameraSource() -> CameraSource? {
-        let options = CameraSourceOptions() { builder in
-            builder.orientationTracker = UserInterfaceTracker(scene: UIApplication.shared.keyWindow!.windowScene!)
-            
-            // Take a best guess and remove rotation tags using hardware acceleration
-            builder.rotationTags = .remove
-        }
-        
-        return CameraSource(options: options, delegate: nil)
-    }
+enum TrackName {
+    static let camera = "camera"
+    static let screen = "screen"
+    static let mic = "microphone"
 }

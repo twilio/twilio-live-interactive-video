@@ -16,60 +16,11 @@ class SpeakerStore: ObservableObject {
         
         // TODO: Need weak self?
         notificationCenter.publisher(for: .roomDidConnect)
-            .sink() { _ in
-                self.speakers.append(Speaker(localParticipant: self.roomManager.localParticipant))
-                
-                self.roomManager.remoteParticipants[...min(4, self.roomManager.remoteParticipants.count - 1)].forEach { self.speakers.append(Speaker(remoteParticipant: $0)) }
-                
-                if self.roomManager.remoteParticipants.count > 5 {
-                    self.roomManager.remoteParticipants[5...].forEach { self.offscreenSpeakers.append(Speaker(remoteParticipant: $0)) }
-                }
-                
-                self.roomManager.remoteParticipants.forEach { participant in
-                    participant.$isMicOn
-                        .sink { value in
-                            guard let speakerIndex = self.speakers.firstIndex(where: { $0.identity == participant.identity }) else { return }
-                            
-                            self.speakers[speakerIndex].isMuted = !value
-                        }
-                        .store(in: &self.subscriptions)
-                    
-                    participant.$cameraTrack
-                        .sink() { value in
-                            guard let speakerIndex = self.speakers.firstIndex(where: { $0.identity == participant.identity }) else { return }
+            .map { $0.object as! RoomManager }
+            .sink {
+                self.addSpeaker(Speaker(localParticipant: self.roomManager.localParticipant))
 
-                            self.speakers[speakerIndex].cameraTrack = value
-                        }
-                        .store(in: &self.subscriptions)
-                    
-                    participant.$isDominantSpeaker
-                        .sink() { value in
-                            if let speakerIndex = self.speakers.firstIndex(where: { $0.identity == participant.identity }) {
-                                self.speakers[speakerIndex].isDominantSpeaker = value
-                            } else if let speakerIndex = self.offscreenSpeakers.firstIndex(where: { $0.identity == participant.identity }) {
-                                if value {
-                                    // Find oldest dominant speaker
-                                    let sortedSpeakers = self.speakers[1...].sorted { $0.dominantSpeakerTimestamp < $1.dominantSpeakerTimestamp }
-                                    print(sortedSpeakers)
-                                    
-                                    let oldest = sortedSpeakers.first! // Don't bang
-                                    // Move them offscreen
-                                    
-                                    let oldestIndex = self.speakers.firstIndex { $0.identity == oldest.identity }!
-                                    
-                                    self.speakers.remove(at: oldestIndex)
-                                    
-                                    // Move new dominant speaker onscreen
-                                    self.speakers.insert(self.offscreenSpeakers.remove(at: speakerIndex), at: oldestIndex)
-                                    self.speakers[oldestIndex].isDominantSpeaker = true
-                                    self.offscreenSpeakers.insert(oldest, at: 0)
-                                } else {
-                                    self.offscreenSpeakers[speakerIndex].isDominantSpeaker = value
-                                }
-                            }
-                        }
-                        .store(in: &self.subscriptions)
-                }
+                $0.remoteParticipants.map { Speaker(remoteParticipant: $0) }.forEach { self.addSpeaker($0) }
             }
             .store(in: &subscriptions)
         
@@ -78,53 +29,72 @@ class SpeakerStore: ObservableObject {
             .store(in: &subscriptions)
 
         notificationCenter.publisher(for: .remoteParticipantDidConnect)
-            .sink() { notification in
-                guard let remoteParticipant = notification.object as? RoomRemoteParticipant else { return }
-                
-                if self.speakers.count < 6 {
-                    self.speakers.append(Speaker(remoteParticipant: remoteParticipant))
-                } else {
-                    self.offscreenSpeakers.append(Speaker(remoteParticipant: remoteParticipant))
-                }
-            }
+            .map { Speaker(remoteParticipant: $0.object as! RoomRemoteParticipant) }
+            .sink { self.addSpeaker($0) }
             .store(in: &subscriptions)
 
         notificationCenter.publisher(for: .remoteParticipantDidDisconnect)
-            .sink() { notification in
-                guard let remoteParticipant = notification.object as? RoomRemoteParticipant else { return }
-
-                if let index = self.speakers.index(of: remoteParticipant) {
-                    self.speakers.remove(at: index)
-                    
-                    if !self.offscreenSpeakers.isEmpty {
-                        self.speakers.append(self.offscreenSpeakers.removeFirst())
-                    }
-                } else {
-                    self.offscreenSpeakers.removeAll { $0.identity == remoteParticipant.identity }
-                }
-            }
+            .map { $0.object as! RoomRemoteParticipant }
+            .sink { self.removeSpeaker($0) }
             .store(in: &subscriptions)
         
-        notificationCenter.publisher(for: .localParticipantDidChangeMic)
-            .sink() { _ in
+        notificationCenter.publisher(for: .localParticipantDidChange)
+            .map { $0.object as! LocalParticipant }
+            .sink {
                 guard !self.speakers.isEmpty else { return }
                 
-                self.speakers[0].isMuted = !self.roomManager.localParticipant.isMicOn
+                self.speakers[0] = Speaker(localParticipant: $0)
             }
             .store(in: &subscriptions)
 
-        notificationCenter.publisher(for: .localParticipantDidChangeCameraTrack)
-            .sink() { _ in
-                guard !self.speakers.isEmpty else { return }
-
-                self.speakers[0].cameraTrack = self.roomManager.localParticipant.cameraTrack
-            }
+        notificationCenter.publisher(for: .remoteParticpantDidChange)
+            .map { Speaker(remoteParticipant: $0.object as! RoomRemoteParticipant) }
+            .sink { self.updateSpeaker($0) }
             .store(in: &subscriptions)
     }
-}
-
-private extension Array where Element == Speaker {
-    func index(of participant: RoomRemoteParticipant) -> Int? {
-        firstIndex { $0.identity == participant.identity }
+    
+    private func addSpeaker(_ speaker: Speaker) {
+        if speakers.count < 6 {
+            speakers.append(speaker)
+        } else {
+            offscreenSpeakers.append(speaker)
+        }
+    }
+    
+    private func removeSpeaker(_ remoteParticipant: RoomRemoteParticipant) {
+        if let index = self.speakers.firstIndex(where: { $0.identity == remoteParticipant.identity }) {
+            self.speakers.remove(at: index)
+            
+            if !self.offscreenSpeakers.isEmpty {
+                self.speakers.append(self.offscreenSpeakers.removeFirst())
+            }
+        } else {
+            self.offscreenSpeakers.removeAll { $0.identity == remoteParticipant.identity }
+        }
+    }
+    
+    private func updateSpeaker(_ speaker: Speaker) {
+        // Find and replace
+        if let speakerIndex = speakers.firstIndex(where: { $0.identity == speaker.identity }) {
+            speakers[speakerIndex] = speaker
+        } else if let speakerIndex = offscreenSpeakers.firstIndex(where: { $0.identity == speaker.identity }) {
+            offscreenSpeakers[speakerIndex] = speaker
+            
+            if speaker.isDominantSpeaker {
+                // Find oldest dominant speaker
+                let sortedSpeakers = speakers[1...].sorted { $0.dominantSpeakerTimestamp < $1.dominantSpeakerTimestamp }
+                
+                let oldest = sortedSpeakers.first! // Don't bang
+                // Move them offscreen
+                
+                let oldestIndex = speakers.firstIndex { $0.identity == oldest.identity }!
+                
+                speakers.remove(at: oldestIndex)
+                
+                // Move new dominant speaker onscreen
+                speakers.insert(offscreenSpeakers.remove(at: speakerIndex), at: oldestIndex)
+                offscreenSpeakers.insert(oldest, at: 0)
+            }
+        }
     }
 }

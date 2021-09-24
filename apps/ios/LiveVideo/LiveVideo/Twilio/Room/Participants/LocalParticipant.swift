@@ -15,6 +15,7 @@
 //
 
 import TwilioVideo
+import Combine
 
 class LocalParticipant: NSObject {
     let identity: String
@@ -37,35 +38,44 @@ class LocalParticipant: NSObject {
                 self.micTrack = nil
             }
             
-            notificationCenter.post(name: .localParticipantDidChangeMic, object: self)
+            postChangeNotification()
         }
     }
-    var isCameraOn: Bool {
-        get {
-            cameraManager?.track.isEnabled ?? false
-        }
-        set {
-            if newValue {
-                guard
-                    cameraManager == nil,
-                    let cameraManager = CameraManager(position: .front)
-                else {
-                    return
+    private var camera: CameraSource?
+
+    var isCameraOn = false {
+        didSet {
+            guard oldValue != isCameraOn else { return }
+            
+            if isCameraOn {
+                let frontCamera = CameraSource.captureDevice(position: .front)
+
+                if (frontCamera != nil) {
+                    let options = CameraSourceOptions { (builder) in
+                        builder.orientationTracker = UserInterfaceTracker(scene: UIApplication.shared.keyWindow!.windowScene!)
+                    }
+                    
+                    camera = CameraSource(options: options, delegate: self)
+                    
+                    localCameraTrack = TwilioVideo.LocalVideoTrack(source: camera!, enabled: true, name: TrackName.camera)
+                    
+                    camera!.startCapture(device: frontCamera!) { (captureDevice, videoFormat, error) in
+                        if let error = error {
+                            print("Start capture error: \(error)")
+                        }
+                    }
+
+                    participant?.publishCameraTrack(localCameraTrack!)
+                    cameraTrack = LocalVideoTrack(track: localCameraTrack!)
                 }
-                
-                self.cameraManager = cameraManager
-                cameraManager.delegate = self
-                participant?.publishCameraTrack(cameraManager.track.track)
-                cameraTrack = cameraManager.track
             } else {
-                guard let cameraManager = cameraManager else { return }
-                
-                participant?.unpublishVideoTrack(cameraManager.track.track)
-                self.cameraManager = nil
+                participant?.unpublishVideoTrack(localCameraTrack!)
+                camera = nil
+                localCameraTrack = nil
                 cameraTrack = nil
             }
             
-            notificationCenter.post(name: .localParticipantDidChangeCameraTrack, object: self)
+            postChangeNotification()
         }
     }
     var participant: TwilioVideo.LocalParticipant? {
@@ -73,13 +83,16 @@ class LocalParticipant: NSObject {
             participant?.delegate = self
         }
     }
-    var localCameraTrack: TwilioVideo.LocalVideoTrack? { cameraManager?.track.track }
+    var localCameraTrack: TwilioVideo.LocalVideoTrack?
     private(set) var micTrack: LocalAudioTrack?
-    private var cameraManager: CameraManager?
     private let notificationCenter = NotificationCenter.default
 
     init(identity: String) {
         self.identity = identity
+    }
+    
+    private func postChangeNotification() {
+        notificationCenter.post(name: .localParticipantDidChange, object: self)
     }
 }
 
@@ -101,15 +114,15 @@ extension LocalParticipant: LocalParticipantDelegate {
     }
 }
 
-extension LocalParticipant: CameraManagerDelegate {
-    func trackSourceWasInterrupted(track: LocalVideoTrack) {
-//        track.track.isEnabled = false
-//        sendUpdate()
+extension LocalParticipant: CameraSourceDelegate {
+    func cameraSourceWasInterrupted(source: CameraSource, reason: AVCaptureSession.InterruptionReason) {
+        //        track.track.isEnabled = false
+        //        sendUpdate()
     }
-    
-    func trackSourceInterruptionEnded(track: LocalVideoTrack) {
-//        track.track.isEnabled = true
-//        sendUpdate()
+
+    func cameraSourceInterruptionEnded(source: CameraSource) {
+        //        track.track.isEnabled = true
+        //        sendUpdate()
     }
 }
 

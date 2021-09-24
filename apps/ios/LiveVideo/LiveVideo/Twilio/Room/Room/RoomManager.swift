@@ -54,12 +54,6 @@ extension RoomManager: RoomDelegate {
         localParticipant.participant = room.localParticipant
         remoteParticipants = room.remoteParticipants.map { RoomRemoteParticipant(participant: $0) }
         notificationCenter.post(name: .roomDidConnect, object: self)
-        
-        if let dominantSpeaker = room.dominantSpeaker {
-            if let participant = remoteParticipants.first(where: { $0.identity == dominantSpeaker.identity }) {
-                participant.isDominantSpeaker = true
-            }
-        }
     }
     
     func roomDidFailToConnect(room: TwilioVideo.Room, error: Error) {

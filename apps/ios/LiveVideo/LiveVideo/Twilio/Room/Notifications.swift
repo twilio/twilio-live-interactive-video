@@ -22,8 +22,7 @@ extension Notification.Name {
     static let roomDidDisconnect = Notification.Name("roomDidDisconnect")
     static let remoteParticipantDidConnect = Notification.Name("remoteParticipantDidConnect")
     static let remoteParticipantDidDisconnect = Notification.Name("remoteParticipantDidDisconnect")
-
-    static let localParticipantDidChangeMic = Notification.Name("localParticipantDidChangeMic")
-    static let localParticipantDidChangeCameraTrack = Notification.Name("localParticipantDidChangeCameraTrack")
-
+    static let remoteParticpantDidChange = Notification.Name("remoteParticipantDidChange")
+    
+    static let localParticipantDidChange = Notification.Name("localParticipantDidChange")
 }

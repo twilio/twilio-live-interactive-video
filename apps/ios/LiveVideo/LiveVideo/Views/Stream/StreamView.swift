@@ -53,7 +53,8 @@ struct StreamView: View {
                                 image: Image(systemName: localParticipantViewModel.isCameraOn ? "video.slash" : "video"),
                                 role: .default
                             ) {
-                                localParticipantViewModel.isCameraOn.toggle()
+                                streamManager.roomManager.localParticipant.isCameraOn.toggle()
+//                                localParticipantViewModel.isCameraOn.toggle()
                             }
                         case .viewer:
                             StreamToolbarButton(

@@ -8,11 +8,15 @@ import Combine
 class LocalParticipantViewModel: ObservableObject {
     @Published var isMicOn = false {
         didSet {
+            guard oldValue != isMicOn else { return }
+            
             localParticipant.isMicOn = isMicOn
         }
     }
     @Published var isCameraOn = false {
         didSet {
+            guard oldValue != isCameraOn else { return }
+
             localParticipant.isCameraOn = isCameraOn
         }
     }
@@ -27,14 +31,13 @@ class LocalParticipantViewModel: ObservableObject {
     
     init() {
         let notificationCenter = NotificationCenter.default
-        
-        // TODO: Need weak self?
-        notificationCenter.publisher(for: .localParticipantDidChangeMic)
-            .sink() { _ in self.isMicOn = self.localParticipant.isMicOn }
-            .store(in: &subscriptions)
 
-        notificationCenter.publisher(for: .localParticipantDidChangeCameraTrack)
-            .sink() { _ in self.isCameraOn = self.localParticipant.isCameraOn }
+        // TODO: Need weak self?
+        notificationCenter.publisher(for: .localParticipantDidChange)
+            .sink() { _ in
+                self.isMicOn = self.localParticipant.isMicOn
+                self.isCameraOn = self.localParticipant.isCameraOn
+            }
             .store(in: &subscriptions)
     }
 }
