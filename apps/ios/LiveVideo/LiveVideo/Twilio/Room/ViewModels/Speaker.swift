@@ -2,7 +2,7 @@
 //  Copyright (C) 2021 Twilio, Inc.
 //
 
-import Foundation
+import TwilioVideo
 
 struct Speaker: Hashable {
     let identity: String
@@ -21,9 +21,9 @@ struct Speaker: Hashable {
       hasher.combine(identity)
     }
 
-    init(localParticipant: LocalParticipant) {
+    init(localParticipant: LocalParticipantManager) {
         identity = localParticipant.identity
-        cameraTrack = localParticipant.cameraTrack
+        cameraTrack = localParticipant.localCameraTrack
         shouldMirrorCameraVideo = true
         isMuted = !localParticipant.isMicOn
         displayName = "You"
@@ -31,14 +31,14 @@ struct Speaker: Hashable {
     }
     
     // TODO: Rename parameter?
-    init(remoteParticipant: RoomRemoteParticipant) {
+    init(remoteParticipant: RemoteParticipantManager) {
         identity = remoteParticipant.identity
         cameraTrack = remoteParticipant.cameraTrack
         shouldMirrorCameraVideo = false
         isMuted = !remoteParticipant.isMicOn
         displayName = remoteParticipant.identity
         isDominantSpeaker = remoteParticipant.isDominantSpeaker
-        dominantSpeakerTimestamp = remoteParticipant.dominantSpeakerTimestame
+        dominantSpeakerTimestamp = remoteParticipant.dominantSpeakerTimestamp
     }
     
     // For UI previews

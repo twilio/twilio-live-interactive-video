@@ -29,17 +29,17 @@ class SpeakerStore: ObservableObject {
             .store(in: &subscriptions)
 
         notificationCenter.publisher(for: .remoteParticipantDidConnect)
-            .map { Speaker(remoteParticipant: $0.object as! RoomRemoteParticipant) }
+            .map { Speaker(remoteParticipant: $0.object as! RemoteParticipantManager) }
             .sink { self.addSpeaker($0) }
             .store(in: &subscriptions)
 
         notificationCenter.publisher(for: .remoteParticipantDidDisconnect)
-            .map { $0.object as! RoomRemoteParticipant }
+            .map { $0.object as! RemoteParticipantManager }
             .sink { self.removeSpeaker($0) }
             .store(in: &subscriptions)
         
         notificationCenter.publisher(for: .localParticipantDidChange)
-            .map { $0.object as! LocalParticipant }
+            .map { $0.object as! LocalParticipantManager }
             .sink {
                 guard !self.speakers.isEmpty else { return }
                 
@@ -48,7 +48,7 @@ class SpeakerStore: ObservableObject {
             .store(in: &subscriptions)
 
         notificationCenter.publisher(for: .remoteParticpantDidChange)
-            .map { Speaker(remoteParticipant: $0.object as! RoomRemoteParticipant) }
+            .map { Speaker(remoteParticipant: $0.object as! RemoteParticipantManager) }
             .sink { self.updateSpeaker($0) }
             .store(in: &subscriptions)
     }
@@ -61,7 +61,7 @@ class SpeakerStore: ObservableObject {
         }
     }
     
-    private func removeSpeaker(_ remoteParticipant: RoomRemoteParticipant) {
+    private func removeSpeaker(_ remoteParticipant: RemoteParticipantManager) {
         if let index = self.speakers.firstIndex(where: { $0.identity == remoteParticipant.identity }) {
             self.speakers.remove(at: index)
             

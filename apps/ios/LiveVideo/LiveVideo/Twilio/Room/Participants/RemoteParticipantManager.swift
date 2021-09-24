@@ -16,7 +16,7 @@
 
 import TwilioVideo
 
-class RoomRemoteParticipant: NSObject {
+class RemoteParticipantManager: NSObject {
     var identity: String { participant.identity }
     var isMicOn: Bool {
         guard let micTrack = participant.remoteAudioTracks.first else { return false }
@@ -32,15 +32,15 @@ class RoomRemoteParticipant: NSObject {
             return nil
         }
         
-        return RemoteVideoTrack(track: track)
+        return track
     }
     var isDominantSpeaker = false {
         didSet {
-            dominantSpeakerTimestame = Date() // Date.now in iOS 15
+            dominantSpeakerTimestamp = Date() // Date.now in iOS 15
             postRemoteParticipantDidChangeNotification()
         }
     }
-    var dominantSpeakerTimestame: Date = .distantPast
+    var dominantSpeakerTimestamp: Date = .distantPast
     private let participant: RemoteParticipant
     private let notificationCenter = NotificationCenter.default
     
@@ -55,7 +55,7 @@ class RoomRemoteParticipant: NSObject {
     }
 }
 
-extension RoomRemoteParticipant: RemoteParticipantDelegate {
+extension RemoteParticipantManager: RemoteParticipantDelegate {
     func didSubscribeToVideoTrack(
         videoTrack: TwilioVideo.RemoteVideoTrack,
         publication: RemoteVideoTrackPublication,

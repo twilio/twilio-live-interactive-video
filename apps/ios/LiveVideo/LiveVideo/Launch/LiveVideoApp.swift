@@ -26,7 +26,7 @@ struct LiveVideoApp: App {
                 .onAppear {
                     streamManager.roomManager = roomManager
                     speakerStore.roomManager = roomManager
-                    roomManager.localParticipant = LocalParticipant(identity: authManager.userIdentity)
+                    roomManager.localParticipant = LocalParticipantManager(identity: authManager.userIdentity)
                     localParticipantViewModel.localParticipant = roomManager.localParticipant
                 }
         }

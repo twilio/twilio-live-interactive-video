@@ -14,10 +14,7 @@
 		DC1ED0FD26E14D0B00FFA769 /* StreamToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED0FC26E14D0B00FFA769 /* StreamToolbar.swift */; };
 		DC1ED11A26E92DEA00FFA769 /* RoomManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10226E92DE800FFA769 /* RoomManager.swift */; };
 		DC1ED11C26E92DEA00FFA769 /* RemoteParticipantManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10526E92DE900FFA769 /* RemoteParticipantManager.swift */; };
-		DC1ED11E26E92DEA00FFA769 /* LocalParticipant.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10726E92DE900FFA769 /* LocalParticipant.swift */; };
-		DC1ED12026E92DEA00FFA769 /* LocalVideoTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10B26E92DE900FFA769 /* LocalVideoTrack.swift */; };
-		DC1ED12126E92DEA00FFA769 /* VideoTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10C26E92DE900FFA769 /* VideoTrack.swift */; };
-		DC1ED12226E92DEA00FFA769 /* RemoteVideoTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10D26E92DE900FFA769 /* RemoteVideoTrack.swift */; };
+		DC1ED11E26E92DEA00FFA769 /* LocalParticipantManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10726E92DE900FFA769 /* LocalParticipantManager.swift */; };
 		DC1ED12326E92DEA00FFA769 /* TrackName.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10E26E92DE900FFA769 /* TrackName.swift */; };
 		DC1ED12C26E936C600FFA769 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED12B26E936C600FFA769 /* Notifications.swift */; };
 		DC1ED12E26E94B5900FFA769 /* TokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED12D26E94B5900FFA769 /* TokenRequest.swift */; };
@@ -88,10 +85,7 @@
 		DC1ED0FC26E14D0B00FFA769 /* StreamToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamToolbar.swift; sourceTree = "<group>"; };
 		DC1ED10226E92DE800FFA769 /* RoomManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomManager.swift; sourceTree = "<group>"; };
 		DC1ED10526E92DE900FFA769 /* RemoteParticipantManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteParticipantManager.swift; sourceTree = "<group>"; };
-		DC1ED10726E92DE900FFA769 /* LocalParticipant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalParticipant.swift; sourceTree = "<group>"; };
-		DC1ED10B26E92DE900FFA769 /* LocalVideoTrack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalVideoTrack.swift; sourceTree = "<group>"; };
-		DC1ED10C26E92DE900FFA769 /* VideoTrack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoTrack.swift; sourceTree = "<group>"; };
-		DC1ED10D26E92DE900FFA769 /* RemoteVideoTrack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteVideoTrack.swift; sourceTree = "<group>"; };
+		DC1ED10726E92DE900FFA769 /* LocalParticipantManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalParticipantManager.swift; sourceTree = "<group>"; };
 		DC1ED10E26E92DE900FFA769 /* TrackName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackName.swift; sourceTree = "<group>"; };
 		DC1ED12B26E936C600FFA769 /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		DC1ED12D26E94B5900FFA769 /* TokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRequest.swift; sourceTree = "<group>"; };
@@ -182,18 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				DC14B78626FA385E003BDABC /* ViewModels */,
-				DC1ED12B26E936C600FFA769 /* Notifications.swift */,
 				DC1ED10426E92DE900FFA769 /* Participants */,
-				DC1ED0FF26E92DE800FFA769 /* Room */,
-				DC1ED10926E92DE900FFA769 /* Tracks */,
-			);
-			path = Room;
-			sourceTree = "<group>";
-		};
-		DC1ED0FF26E92DE800FFA769 /* Room */ = {
-			isa = PBXGroup;
-			children = (
-				DC1ED10226E92DE800FFA769 /* RoomManager.swift */,
 			);
 			path = Room;
 			sourceTree = "<group>";
@@ -201,29 +184,12 @@
 		DC1ED10426E92DE900FFA769 /* Participants */ = {
 			isa = PBXGroup;
 			children = (
+				DC1ED10226E92DE800FFA769 /* RoomManager.swift */,
 				DC1ED10526E92DE900FFA769 /* RemoteParticipantManager.swift */,
-				DC1ED10726E92DE900FFA769 /* LocalParticipant.swift */,
+				DC1ED10726E92DE900FFA769 /* LocalParticipantManager.swift */,
 				DC1ED10E26E92DE900FFA769 /* TrackName.swift */,
 			);
 			path = Participants;
-			sourceTree = "<group>";
-		};
-		DC1ED10926E92DE900FFA769 /* Tracks */ = {
-			isa = PBXGroup;
-			children = (
-				DC1ED10A26E92DE900FFA769 /* Core */,
-			);
-			path = Tracks;
-			sourceTree = "<group>";
-		};
-		DC1ED10A26E92DE900FFA769 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				DC1ED10B26E92DE900FFA769 /* LocalVideoTrack.swift */,
-				DC1ED10C26E92DE900FFA769 /* VideoTrack.swift */,
-				DC1ED10D26E92DE900FFA769 /* RemoteVideoTrack.swift */,
-			);
-			path = Core;
 			sourceTree = "<group>";
 		};
 		DC4AA65226D0118200E677D5 /* Views */ = {
@@ -431,6 +397,7 @@
 			isa = PBXGroup;
 			children = (
 				DCC48F9A26D8296300EE49EF /* LiveVideoError.swift */,
+				DC1ED12B26E936C600FFA769 /* Notifications.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -615,10 +582,8 @@
 				DC5F459626CEC247009C5C79 /* UserDefaultsKeys.swift in Sources */,
 				DC1ED13026E960C600FFA769 /* VideoGridView.swift in Sources */,
 				DC5F458826CEA7CB009C5C79 /* SettingsView.swift in Sources */,
-				DC1ED12226E92DEA00FFA769 /* RemoteVideoTrack.swift in Sources */,
 				DC1ED12C26E936C600FFA769 /* Notifications.swift in Sources */,
 				DC504A7526F0F18700C37EC9 /* SpeakerStore.swift in Sources */,
-				DC1ED12026E92DEA00FFA769 /* LocalVideoTrack.swift in Sources */,
 				DCC48F8926D8288B00EE49EF /* APIErrorResponse.swift in Sources */,
 				DC5F459426CEC1FF009C5C79 /* UserDefaultsManager.swift in Sources */,
 				DC5F458F26CEBEC8009C5C79 /* AppInfoStore.swift in Sources */,
@@ -634,12 +599,11 @@
 				DC1ED0FB26E144AE00FFA769 /* StreamToolbarButton.swift in Sources */,
 				DC5F453926CC061A009C5C79 /* LiveVideoApp.swift in Sources */,
 				DCC48F7726D8116C00EE49EF /* StreamView.swift in Sources */,
-				DC1ED11E26E92DEA00FFA769 /* LocalParticipant.swift in Sources */,
+				DC1ED11E26E92DEA00FFA769 /* LocalParticipantManager.swift in Sources */,
 				DCC48F8B26D8288B00EE49EF /* APIRequest.swift in Sources */,
 				DC1ED12E26E94B5900FFA769 /* TokenRequest.swift in Sources */,
 				DC1ED0F026DFCD3C00FFA769 /* LiveBadge.swift in Sources */,
 				DCC48FA126D8311700EE49EF /* PlayerManager.swift in Sources */,
-				DC1ED12126E92DEA00FFA769 /* VideoTrack.swift in Sources */,
 				DC4AA66026D047DD00E677D5 /* FormTextFieldStyle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

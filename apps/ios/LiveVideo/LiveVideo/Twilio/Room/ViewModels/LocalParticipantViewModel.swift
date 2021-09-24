@@ -22,7 +22,7 @@ class LocalParticipantViewModel: ObservableObject {
     }
     private var subscriptions = Set<AnyCancellable>()
 
-    var localParticipant: LocalParticipant! {
+    var localParticipant: LocalParticipantManager! {
         didSet {
             isMicOn = localParticipant.isMicOn
             isCameraOn = localParticipant.isCameraOn

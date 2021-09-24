@@ -30,15 +30,7 @@ class StreamManager: ObservableObject {
             .sink() { _ in self.isLoading = false }
             .store(in: &subscriptions)
 
-        notificationCenter.publisher(for: .roomDidFailToConnect)
-            .sink() { notification in
-                guard let error = notification.object as? Error else { return }
-                
-                self.handleError(error)
-            }
-            .store(in: &subscriptions)
-
-        notificationCenter.publisher(for: .roomDidDisconnect)
+        notificationCenter.publisher(for: .roomDidDisconnectWithError)
             .sink() { notification in
                 guard let error = notification.object as? Error else { return }
                 
@@ -59,7 +51,9 @@ class StreamManager: ObservableObject {
             api.request(request) { [weak self] result in
                 switch result {
                 case let .success(response):
-                    self?.roomManager.connect(roomName: config.streamName, accessToken: response.token, identity: config.userIdentity)
+//                    self?.roomManager.localParticipant.isMicOn = true
+                    self?.roomManager.localParticipant.isCameraOn = true
+                    self?.roomManager.connect(roomName: config.streamName, accessToken: response.token)
                 case let .failure(error):
                     self?.handleError(error)
                 }
