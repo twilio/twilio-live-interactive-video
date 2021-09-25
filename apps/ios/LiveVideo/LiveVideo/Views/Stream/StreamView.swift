@@ -22,7 +22,7 @@ struct StreamView: View {
                         
                         switch config.role {
                         case .host, .speaker:
-                            VideoGridView()
+                            SpeakerGridView()
                         case .viewer:
                             SwiftUIPlayerView(player: $streamManager.player)
                         }

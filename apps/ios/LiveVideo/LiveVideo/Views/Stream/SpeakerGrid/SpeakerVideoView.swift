@@ -4,8 +4,8 @@
 
 import SwiftUI
 
-struct VideoViewChrome: View {
-    @Binding var speaker: Speaker
+struct SpeakerVideoView: View {
+    @Binding var speaker: SpeakerVideoViewModel
     
     var body: some View {
         ZStack {
@@ -67,13 +67,13 @@ struct VideoViewChrome: View {
 struct VideoViewChrome_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            VideoViewChrome(speaker: .constant(Speaker(identity: "Alice", shouldMirrorCameraVideo: false, isMuted: false, displayName: "Alice")))
+            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(identity: "Alice", shouldMirrorCameraVideo: false, isMuted: false, displayName: "Alice")))
                 .previewDisplayName("Note Muted")
-            VideoViewChrome(speaker: .constant(Speaker(identity: "A really long identity that is struncated or multiple lines and maxes out", shouldMirrorCameraVideo: false, isMuted: false, displayName: "Alice with a really long name")))
+            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(identity: "A really long identity that is struncated or multiple lines and maxes out", shouldMirrorCameraVideo: false, isMuted: false, displayName: "Alice with a really long name")))
                 .previewDisplayName("Long Identity")
-            VideoViewChrome(speaker: .constant(Speaker(identity: "Alice", shouldMirrorCameraVideo: false, isMuted: true, displayName: "Alice")))
+            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(identity: "Alice", shouldMirrorCameraVideo: false, isMuted: true, displayName: "Alice")))
                 .previewDisplayName("Muted")
-            VideoViewChrome(speaker: .constant(Speaker(identity: "Alice", shouldMirrorCameraVideo: false, isMuted: true, displayName: "Alice", isDominantSpeaker: true)))
+            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(identity: "Alice", shouldMirrorCameraVideo: false, isMuted: true, displayName: "Alice", isDominantSpeaker: true)))
                 .previewDisplayName("Dominant Speaker")
         }
         .previewLayout(.sizeThatFits)

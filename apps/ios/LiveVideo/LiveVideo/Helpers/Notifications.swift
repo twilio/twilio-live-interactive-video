@@ -17,12 +17,10 @@
 import Foundation
 
 extension Notification.Name {
-    static let roomDidConnect = Notification.Name("roomDidConnect")
-    static let roomDidDisconnect = Notification.Name("roomDidDisconnect")
-    static let roomDidDisconnectWithError = Notification.Name("roomDidDisconnectWithError")
+    static let localParticipantDidChange = Notification.Name("localParticipantDidChange")
     static let remoteParticipantDidConnect = Notification.Name("remoteParticipantDidConnect")
     static let remoteParticipantDidDisconnect = Notification.Name("remoteParticipantDidDisconnect")
     static let remoteParticpantDidChange = Notification.Name("remoteParticipantDidChange")
-    
-    static let localParticipantDidChange = Notification.Name("localParticipantDidChange")
+    static let roomDidConnect = Notification.Name("roomDidConnect")
+    static let roomDidDisconnectWithError = Notification.Name("roomDidDisconnectWithError")
 }

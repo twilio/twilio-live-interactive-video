@@ -4,22 +4,19 @@
 
 import SwiftUI
 
-struct VideoGridView: View {
-    @EnvironmentObject var speakerStore: SpeakerStore
+struct SpeakerGridView: View {
+    @EnvironmentObject var viewModel: SpeakerGridViewModel
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     private let spacing: CGFloat = 4
-    
+
     private var isPortraitOrientation: Bool {
         verticalSizeClass == .regular && horizontalSizeClass == .compact
     }
 
-    private var rowCount: CGFloat {
-        if isPortraitOrientation { // TODO: Clean up math
-            let speakerCount: Double = Double(speakerStore.speakers.count)
-            let columnCount: Double = speakerCount < 4 ? 1 : 2
-            
-            return CGFloat(ceil(speakerCount / columnCount))
+    private var rowCount: Int {
+        if isPortraitOrientation {
+            return (viewModel.speakers.count + viewModel.speakers.count % columnCount) / columnCount
         } else {
             return 1
         }
@@ -27,9 +24,9 @@ struct VideoGridView: View {
     
     private var columnCount: Int {
         if isPortraitOrientation {
-            return speakerStore.speakers.count < 4 ? 1 : 2
+            return viewModel.speakers.count < 4 ? 1 : 2
         } else {
-            return speakerStore.speakers.count
+            return viewModel.speakers.count
         }
     }
     
@@ -39,14 +36,14 @@ struct VideoGridView: View {
     
     var body: some View {
         VStack {
-            if speakerStore.speakers.count == 0 {
+            if viewModel.speakers.isEmpty {
                 Spacer()
             } else {
                 GeometryReader { geometry in
                     LazyVGrid(columns: columns, spacing: spacing) {
-                        ForEach($speakerStore.speakers, id: \.self) { $speaker in
-                            VideoViewChrome(speaker: $speaker)
-                                .frame(height: geometry.size.height / rowCount - spacing)
+                        ForEach($viewModel.speakers, id: \.self) { $speaker in
+                            SpeakerVideoView(speaker: $speaker)
+                                .frame(height: geometry.size.height / CGFloat(rowCount) - spacing)
                         }
                     }
                 }
@@ -57,29 +54,27 @@ struct VideoGridView: View {
 }
 
 struct VideoGridView_Previews: PreviewProvider {
-    static func makeSpeakerStore(_ speakers: Int) -> SpeakerStore {
-        let speakerStore = SpeakerStore()
-        
-        let theRange: [Int] = Array(1...speakers)
-        
-        speakerStore.speakers = theRange.map { Speaker(identity: "Participant \($0)") }
-        return speakerStore
-    }
-
     static var previews: some View {
         Group {
             ForEach((1...6), id: \.self) {
-                VideoGridView()
-                    .environmentObject(makeSpeakerStore($0))
+                SpeakerGridView()
+                    .environmentObject(SpeakerGridViewModel(speakerCount: $0))
             }
             .frame(width: 400, height: 700)
 
             ForEach((1...6), id: \.self) {
-                VideoGridView()
-                    .environmentObject(makeSpeakerStore($0))
+                SpeakerGridView()
+                    .environmentObject(SpeakerGridViewModel(speakerCount: $0))
             }
             .frame(width: 700, height: 400)
         }
         .previewLayout(.sizeThatFits)
+    }
+}
+
+private extension SpeakerGridViewModel {
+    convenience init(speakerCount: Int) {
+        self.init()
+        speakers = Array(1...speakerCount).map { SpeakerVideoViewModel(identity: "Speaker \($0)") }
     }
 }

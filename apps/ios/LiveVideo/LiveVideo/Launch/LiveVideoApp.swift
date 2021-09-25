@@ -12,7 +12,7 @@ struct LiveVideoApp: App {
         playerManager: PlayerManager()
     )
     @StateObject private var roomManager = RoomManager()
-    @StateObject private var speakerStore = SpeakerStore()
+    @StateObject private var speakerStore = SpeakerGridViewModel()
     @StateObject private var localParticipantViewModel = LocalParticipantViewModel()
 
     var body: some Scene {
@@ -25,7 +25,6 @@ struct LiveVideoApp: App {
                 .environmentObject(localParticipantViewModel)
                 .onAppear {
                     streamManager.roomManager = roomManager
-                    speakerStore.roomManager = roomManager
                     roomManager.localParticipant = LocalParticipantManager(identity: authManager.userIdentity)
                     localParticipantViewModel.localParticipant = roomManager.localParticipant
                 }

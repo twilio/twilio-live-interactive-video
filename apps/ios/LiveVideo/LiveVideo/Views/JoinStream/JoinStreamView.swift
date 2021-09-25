@@ -17,6 +17,7 @@ struct JoinStreamView: View {
     @Binding var streamConfig: StreamConfig?
     let mode: Mode
     @State private var streamName = ""
+    @State private var favoriteColor = 0
     
     var body: some View {
         NavigationView {
@@ -25,6 +26,14 @@ struct JoinStreamView: View {
                     .textFieldStyle(FormTextFieldStyle())
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
+                
+                Picker("What is your favorite color?", selection: $favoriteColor) {
+                    Text("Viewer").tag(0)
+                    Text("Speaker").tag(1)
+                }
+                .pickerStyle(.segmented)
+                .padding(.vertical, 10)
+                
                 Button("Continue") {
                     streamConfig = StreamConfig(
                         streamName: streamName,

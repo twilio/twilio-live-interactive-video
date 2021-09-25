@@ -68,8 +68,7 @@ class LocalParticipantManager: NSObject {
                     }
                 }
 
-                let publicationOptions = LocalTrackPublicationOptions(priority: .low)
-                participant?.publishVideoTrack(cameraTrack, publicationOptions: publicationOptions)
+                participant?.publishVideoTrack(cameraTrack)
                 self.cameraSource = cameraSource
                 self.cameraTrack = cameraTrack
             } else {

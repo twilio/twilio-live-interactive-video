@@ -44,7 +44,9 @@ class RoomManager: NSObject, ObservableObject {
     func disconnect() {
         room?.disconnect()
         cleanUp()
-        notificationCenter.post(name: .roomDidDisconnect, object: self)
+        
+        // Intentional disconnect and no error so object is nil
+        notificationCenter.post(name: .roomDidDisconnectWithError, object: nil)
     }
     
     private func cleanUp() {
