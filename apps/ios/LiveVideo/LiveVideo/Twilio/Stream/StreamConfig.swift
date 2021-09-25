@@ -5,10 +5,12 @@
 import Foundation
 
 struct StreamConfig {
-    enum Role {
+    enum Role: String, Identifiable {
         case host
         case speaker
         case viewer
+        
+        var id: String { rawValue }
     }
     
     let streamName: String

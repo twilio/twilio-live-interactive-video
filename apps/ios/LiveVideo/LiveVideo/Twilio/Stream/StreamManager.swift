@@ -4,7 +4,6 @@
 
 import Combine
 import TwilioPlayer
-import TwilioVideo
 
 class StreamManager: ObservableObject {
     @Published var isLoading = false
@@ -15,8 +14,8 @@ class StreamManager: ObservableObject {
             showError = error != nil
         }
     }
-    private let api: API?
     var roomManager: RoomManager!
+    private let api: API?
     private let playerManager: PlayerManager?
     private let notificationCenter = NotificationCenter.default
     private var subscriptions = Set<AnyCancellable>()
@@ -27,14 +26,15 @@ class StreamManager: ObservableObject {
         playerManager?.delegate = self
         
         notificationCenter.publisher(for: .roomDidConnect)
-            .sink() { _ in self.isLoading = false }
+            .sink { [weak self] _ in self?.isLoading = false }
             .store(in: &subscriptions)
 
         notificationCenter.publisher(for: .roomDidDisconnectWithError)
-            .sink() { notification in
-                guard let error = notification.object as? Error else { return }
+            .map { $0.object as? Error }
+            .sink { [weak self] error in
+                guard let error = error else { return }
                 
-                self.handleError(error)
+                self?.handleError(error)
             }
             .store(in: &subscriptions)
     }
@@ -51,8 +51,8 @@ class StreamManager: ObservableObject {
             api.request(request) { [weak self] result in
                 switch result {
                 case let .success(response):
-//                    self?.roomManager.localParticipant.isMicOn = true
                     self?.roomManager.localParticipant.isCameraOn = true
+                    self?.roomManager.localParticipant.isMicOn = true
                     self?.roomManager.connect(roomName: config.streamName, accessToken: response.token)
                 case let .failure(error):
                     self?.handleError(error)

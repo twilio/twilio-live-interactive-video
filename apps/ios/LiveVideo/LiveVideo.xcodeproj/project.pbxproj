@@ -16,7 +16,7 @@
 		DC1ED11C26E92DEA00FFA769 /* RemoteParticipantManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10526E92DE900FFA769 /* RemoteParticipantManager.swift */; };
 		DC1ED11E26E92DEA00FFA769 /* LocalParticipantManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10726E92DE900FFA769 /* LocalParticipantManager.swift */; };
 		DC1ED12326E92DEA00FFA769 /* TrackName.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED10E26E92DE900FFA769 /* TrackName.swift */; };
-		DC1ED12C26E936C600FFA769 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED12B26E936C600FFA769 /* Notifications.swift */; };
+		DC1ED12C26E936C600FFA769 /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED12B26E936C600FFA769 /* NotificationName.swift */; };
 		DC1ED12E26E94B5900FFA769 /* TokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED12D26E94B5900FFA769 /* TokenRequest.swift */; };
 		DC1ED13026E960C600FFA769 /* SpeakerGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED12F26E960C600FFA769 /* SpeakerGridView.swift */; };
 		DC1ED13226E9666E00FFA769 /* SwiftUIVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED13126E9666E00FFA769 /* SwiftUIVideoView.swift */; };
@@ -87,7 +87,7 @@
 		DC1ED10526E92DE900FFA769 /* RemoteParticipantManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteParticipantManager.swift; sourceTree = "<group>"; };
 		DC1ED10726E92DE900FFA769 /* LocalParticipantManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalParticipantManager.swift; sourceTree = "<group>"; };
 		DC1ED10E26E92DE900FFA769 /* TrackName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackName.swift; sourceTree = "<group>"; };
-		DC1ED12B26E936C600FFA769 /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		DC1ED12B26E936C600FFA769 /* NotificationName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
 		DC1ED12D26E94B5900FFA769 /* TokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRequest.swift; sourceTree = "<group>"; };
 		DC1ED12F26E960C600FFA769 /* SpeakerGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerGridView.swift; sourceTree = "<group>"; };
 		DC1ED13126E9666E00FFA769 /* SwiftUIVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIVideoView.swift; sourceTree = "<group>"; };
@@ -405,7 +405,7 @@
 			isa = PBXGroup;
 			children = (
 				DCC48F9A26D8296300EE49EF /* LiveVideoError.swift */,
-				DC1ED12B26E936C600FFA769 /* Notifications.swift */,
+				DC1ED12B26E936C600FFA769 /* NotificationName.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -590,7 +590,7 @@
 				DC5F459626CEC247009C5C79 /* UserDefaultsKeys.swift in Sources */,
 				DC1ED13026E960C600FFA769 /* SpeakerGridView.swift in Sources */,
 				DC5F458826CEA7CB009C5C79 /* SettingsView.swift in Sources */,
-				DC1ED12C26E936C600FFA769 /* Notifications.swift in Sources */,
+				DC1ED12C26E936C600FFA769 /* NotificationName.swift in Sources */,
 				DC504A7526F0F18700C37EC9 /* SpeakerGridViewModel.swift in Sources */,
 				DCC48F8926D8288B00EE49EF /* APIErrorResponse.swift in Sources */,
 				DC5F459426CEC1FF009C5C79 /* UserDefaultsManager.swift in Sources */,

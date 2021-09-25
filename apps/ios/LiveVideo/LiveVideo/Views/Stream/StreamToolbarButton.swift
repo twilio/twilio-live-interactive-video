@@ -44,10 +44,9 @@ struct StreamToolbarButton: View {
                         .aspectRatio(contentMode: .fit)
                         .padding(6)
                         .foregroundColor(role.imageForegroundColor)
-//                        .background(role.imageBackgroundColor)
-//                        .clipShape(Circle())
                 }
-                .frame(width: 27, height: 27, alignment: .bottom)
+                .frame(width: 27, height: 27)
+
                 Text(title)
                     .font(.system(size: 10))
             }
@@ -61,9 +60,9 @@ struct StreamToolbarButton: View {
 struct StreamToolbarButton_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            StreamToolbarButton("Default", image: Image(systemName: "mic.slash.fill"))
+            StreamToolbarButton("Default", image: Image(systemName: "mic.slash"))
                 .previewDisplayName("Default")
-            StreamToolbarButton("Destructive", image: Image(systemName: "arrow.left.circle.fill"), role: .destructive)
+            StreamToolbarButton("Destructive", image: Image(systemName: "arrow.left"), role: .destructive)
                 .previewDisplayName("Destructive")
         }
         .previewLayout(.sizeThatFits)

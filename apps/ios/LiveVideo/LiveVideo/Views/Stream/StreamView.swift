@@ -9,6 +9,7 @@ struct StreamView: View {
     @EnvironmentObject var localParticipantViewModel: LocalParticipantViewModel
     @Environment(\.presentationMode) var presentationMode
     @Binding var config: StreamConfig!
+    private let app = UIApplication.shared
     
     var body: some View {
         GeometryReader { geometry in
@@ -53,13 +54,12 @@ struct StreamView: View {
                                 image: Image(systemName: localParticipantViewModel.isCameraOn ? "video.slash" : "video"),
                                 role: .default
                             ) {
-                                streamManager.roomManager.localParticipant.isCameraOn.toggle()
-//                                localParticipantViewModel.isCameraOn.toggle()
+                                localParticipantViewModel.isCameraOn.toggle()
                             }
                         case .viewer:
                             StreamToolbarButton(
                                 "Leave",
-                                image: Image(systemName: "arrow.left.circle.fill"),
+                                image: Image(systemName: "arrow.left"),
                                 role: .destructive
                             ) {
                                 streamManager.disconnect()
@@ -80,11 +80,11 @@ struct StreamView: View {
             }
         }
         .onAppear {
-            UIApplication.shared.isIdleTimerDisabled = true
+            app.isIdleTimerDisabled = true
             streamManager.connect(config: config)
         }
         .onDisappear {
-            UIApplication.shared.isIdleTimerDisabled = false
+            app.isIdleTimerDisabled = false
         }
         .alert(isPresented: $streamManager.showError) {
             if let error = streamManager.error as? LiveVideoError, error.isStreamEndedByHostError {
@@ -104,21 +104,37 @@ struct StreamView: View {
     }
 }
 
-//struct StreamView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        let loadingStreamManager = StreamManager(api: nil, roomManager: nil, playerManager: nil)
-//        loadingStreamManager.isLoading = true
-//
-//        return Group {
-//            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice", role: .host)))
-//                .previewDisplayName("Live")
-//                .environmentObject(StreamManager(api: nil, roomManager: nil, playerManager: nil))
-//            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice", role: .viewer)))
-//                .previewDisplayName("Live")
-//                .environmentObject(StreamManager(api: nil, roomManager: nil, playerManager: nil))
-//            StreamView(config: .constant(StreamConfig(streamName: "Demo", userIdentity: "Alice", role: .viewer)))
-//                .previewDisplayName("Joining")
-//                .environmentObject(loadingStreamManager)
-//        }
-//    }
-//}
+struct StreamView_Previews: PreviewProvider {
+    static var previews: some View {
+        return Group {
+            StreamView(config: .constant(StreamConfig(role: .host)))
+                .previewDisplayName("Speaker")
+                .environmentObject(StreamManager())
+                .environmentObject(SpeakerGridViewModel(speakerCount: 6))
+
+            Group {
+                StreamView(config: .constant(StreamConfig(role: .viewer)))
+                    .previewDisplayName("Viewer")
+                    .environmentObject(StreamManager())
+                StreamView(config: .constant(StreamConfig(role: .viewer)))
+                    .previewDisplayName("Joining")
+                    .environmentObject(StreamManager(isLoading: true))
+            }
+            .environmentObject(SpeakerGridViewModel())
+        }
+        .environmentObject(LocalParticipantViewModel())
+    }
+}
+
+private extension StreamManager {
+    convenience init(isLoading: Bool = false) {
+        self.init(api: nil, playerManager: nil)
+        self.isLoading = isLoading
+    }
+}
+
+private extension StreamConfig {
+    init(role: Role) {
+        self.init(streamName: "Demo", userIdentity: "Alice", role: role)
+    }
+}

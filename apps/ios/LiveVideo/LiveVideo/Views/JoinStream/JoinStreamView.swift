@@ -7,9 +7,10 @@ import SwiftUI
 struct JoinStreamView: View {
     struct Mode: Equatable {
         let title: String
+        let shouldSelectViewerOrSpeaker: Bool
         
-        static let create = Mode(title: "Create event")
-        static let join = Mode(title: "Join event")
+        static let create = Mode(title: "Create new event", shouldSelectViewerOrSpeaker: false)
+        static let join = Mode(title: "Join event", shouldSelectViewerOrSpeaker: true)
     }
     
     @EnvironmentObject var authManager: AuthManager
@@ -17,7 +18,7 @@ struct JoinStreamView: View {
     @Binding var streamConfig: StreamConfig?
     let mode: Mode
     @State private var streamName = ""
-    @State private var favoriteColor = 0
+    @State private var role = StreamConfig.Role.viewer
     
     var body: some View {
         NavigationView {
@@ -27,18 +28,20 @@ struct JoinStreamView: View {
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
                 
-                Picker("What is your favorite color?", selection: $favoriteColor) {
-                    Text("Viewer").tag(0)
-                    Text("Speaker").tag(1)
+                if mode.shouldSelectViewerOrSpeaker {
+                    Picker("What is your favorite color?", selection: $role) {
+                        Text("Viewer").tag(StreamConfig.Role.viewer)
+                        Text("Speaker").tag(StreamConfig.Role.speaker)
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(.vertical, 10)
                 }
-                .pickerStyle(.segmented)
-                .padding(.vertical, 10)
                 
                 Button("Continue") {
                     streamConfig = StreamConfig(
                         streamName: streamName,
                         userIdentity: authManager.userIdentity,
-                        role: mode == .create ? .host : .viewer
+                        role: mode == .create ? .host : role
                     )
                     presentationMode.wrappedValue.dismiss()
                 }

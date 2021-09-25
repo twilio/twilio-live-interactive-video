@@ -15,9 +15,8 @@ struct SpeakerVideoView: View {
                 .multilineTextAlignment(.center)
                 .foregroundColor(.white)
                 .font(.system(size: 24, weight: .bold))
-                .padding(.horizontal, 20)
+                .padding()
 
-            // TODO: Really need to check this
             if speaker.cameraTrack != nil {
                 SwiftUIVideoView(videoTrack: $speaker.cameraTrack, shouldMirror: $speaker.shouldMirrorCameraVideo)
             }
@@ -25,16 +24,15 @@ struct SpeakerVideoView: View {
             VStack {
                 HStack {
                     Spacer()
-                    Group {
-                        if speaker.isMuted {
-                            Image(systemName: "mic.slash")
-                                .foregroundColor(.white)
-                                .padding(9)
-                                .background(Color.backgroundBrandStronger.opacity(0.4))
-                                .clipShape(Circle())
-                        }
+                    
+                    if speaker.isMuted {
+                        Image(systemName: "mic.slash")
+                            .foregroundColor(.white)
+                            .padding(9)
+                            .background(Color.backgroundBrandStronger.opacity(0.4))
+                            .clipShape(Circle())
+                            .padding(8)
                     }
-                    .padding(8)
                 }
                 Spacer()
                 HStack {
@@ -50,7 +48,6 @@ struct SpeakerVideoView: View {
                 }
                 .padding(4)
             }
-            .animation(nil)
 
             VStack {
                 if speaker.isDominantSpeaker {
@@ -58,27 +55,47 @@ struct SpeakerVideoView: View {
                         .stroke(Color.borderSuccessWeak, lineWidth: 4)
                 }
             }
-            .animation(nil)
         }
         .cornerRadius(3)
     }
 }
 
-struct VideoViewChrome_Previews: PreviewProvider {
+struct SpeakerVideoView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(identity: "Alice", shouldMirrorCameraVideo: false, isMuted: false, displayName: "Alice")))
-                .previewDisplayName("Note Muted")
-            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(identity: "A really long identity that is struncated or multiple lines and maxes out", shouldMirrorCameraVideo: false, isMuted: false, displayName: "Alice with a really long name")))
+            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel()))
+                .previewDisplayName("Not Muted")
+            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(identity: String(repeating: "Long ", count: 20))))
                 .previewDisplayName("Long Identity")
-            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(identity: "Alice", shouldMirrorCameraVideo: false, isMuted: true, displayName: "Alice")))
+            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(isMuted: true)))
                 .previewDisplayName("Muted")
-            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(identity: "Alice", shouldMirrorCameraVideo: false, isMuted: true, displayName: "Alice", isDominantSpeaker: true)))
+            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(isDominantSpeaker: true)))
                 .previewDisplayName("Dominant Speaker")
         }
+        .frame(width: 200, height: 200)
         .previewLayout(.sizeThatFits)
         .padding()
-        .aspectRatio(1, contentMode: .fit)
-        .background(Color.backgroundBrandStronger)
+    }
+}
+
+import TwilioVideo
+
+extension SpeakerVideoViewModel {
+    init(
+        identity: String = "Alice",
+        displayName: String? = nil,
+        isMuted: Bool = false,
+        isDominantSpeaker: Bool = false,
+        dominantSpeakerTimestamp: Date = .distantPast,
+        cameraTrack: VideoTrack? = nil,
+        shouldMirrorCameraVideo: Bool = false
+    ) {
+        self.identity = identity
+        self.displayName = displayName ?? identity
+        self.isMuted = isMuted
+        self.isDominantSpeaker = isDominantSpeaker
+        self.dominantSpeakerStartTime = dominantSpeakerTimestamp
+        self.cameraTrack = cameraTrack
+        self.shouldMirrorCameraVideo = shouldMirrorCameraVideo
     }
 }

@@ -16,10 +16,10 @@ class SpeakerGridViewModel: ObservableObject {
         notificationCenter.publisher(for: .roomDidConnect)
             .map { $0.object as! RoomManager }
             .sink { [weak self] roomManager in
-                self?.addSpeaker(SpeakerVideoViewModel(localParticipant: roomManager.localParticipant))
+                self?.addSpeaker(SpeakerVideoViewModel(participant: roomManager.localParticipant))
 
                 roomManager.remoteParticipants
-                    .map { SpeakerVideoViewModel(remoteParticipant: $0) }
+                    .map { SpeakerVideoViewModel(participant: $0) }
                     .forEach { self?.addSpeaker($0) }
             }
             .store(in: &subscriptions)
@@ -33,13 +33,13 @@ class SpeakerGridViewModel: ObservableObject {
             .sink { [weak self] participant in
                 guard let self = self, !self.speakers.isEmpty else { return }
                 
-                self.speakers[0] = SpeakerVideoViewModel(localParticipant: participant)
+                self.speakers[0] = SpeakerVideoViewModel(participant: participant)
             }
             .store(in: &subscriptions)
 
         notificationCenter.publisher(for: .remoteParticipantDidConnect)
             .map { $0.object as! RemoteParticipantManager }
-            .sink { [weak self] participant in self?.addSpeaker(SpeakerVideoViewModel(remoteParticipant: participant)) }
+            .sink { [weak self] participant in self?.addSpeaker(SpeakerVideoViewModel(participant: participant)) }
             .store(in: &subscriptions)
 
         notificationCenter.publisher(for: .remoteParticipantDidDisconnect)
@@ -47,9 +47,9 @@ class SpeakerGridViewModel: ObservableObject {
             .sink { [weak self] participant in self?.removeSpeaker(with: participant.identity) }
             .store(in: &subscriptions)
         
-        notificationCenter.publisher(for: .remoteParticpantDidChange)
+        notificationCenter.publisher(for: .remoteParticipantDidChange)
             .map { $0.object as! RemoteParticipantManager }
-            .sink { [weak self] participant in self?.updateSpeaker(SpeakerVideoViewModel(remoteParticipant: participant)) }
+            .sink { [weak self] participant in self?.updateSpeaker(SpeakerVideoViewModel(participant: participant)) }
             .store(in: &subscriptions)
     }
     

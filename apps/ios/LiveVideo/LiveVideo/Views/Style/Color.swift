@@ -17,5 +17,5 @@ extension Color {
     static var backgroundStrongest: Color { Color("BackgroundStrongest") }
     static var border: Color { Color("Border") }
     static var borderSuccessWeak: Color { Color("BorderSuccessWeak") }
-    static var textIcon: Color { Color("TextIcon") }
+    static var textWeak: Color { Color("TextWeak") }
 }

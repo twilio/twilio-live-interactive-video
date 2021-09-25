@@ -51,7 +51,7 @@ class RemoteParticipantManager: NSObject {
     }
 
     private func postChangeNotification() {
-        notificationCenter.post(name: .remoteParticpantDidChange, object: self)
+        notificationCenter.post(name: .remoteParticipantDidChange, object: self)
     }
 }
 

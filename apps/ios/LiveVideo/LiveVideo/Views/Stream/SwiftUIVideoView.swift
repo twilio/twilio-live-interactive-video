@@ -10,14 +10,14 @@ struct SwiftUIVideoView: UIViewRepresentable {
     @Binding var shouldMirror: Bool
 
     func makeUIView(context: Context) -> VideoView {
-        let view = VideoView()
-        view.contentMode = .scaleAspectFill
-        return view
+        let videoView = VideoView()
+        videoView.contentMode = .scaleAspectFill
+        return videoView
     }
 
     func updateUIView(_ uiView: VideoView, context: Context) {
         if let videoTrack = videoTrack {
-            if videoTrack.renderers.first(where: { $0 === uiView }) == nil {
+            if !videoTrack.isRendered(by: uiView) {
                 videoTrack.addRenderer(uiView)
             }
         } else {
@@ -25,5 +25,11 @@ struct SwiftUIVideoView: UIViewRepresentable {
         }
         
         uiView.shouldMirror = shouldMirror
+    }
+}
+
+private extension VideoTrack {
+    func isRendered(by renderer: VideoRenderer) -> Bool {
+        renderers.first { $0 === renderer } != nil
     }
 }

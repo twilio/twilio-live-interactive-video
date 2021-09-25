@@ -31,7 +31,10 @@ struct SpeakerGridView: View {
     }
     
     private var columns: [GridItem] {
-        [GridItem](repeating: GridItem(.flexible()), count: columnCount)
+        [GridItem](
+            repeating: GridItem(.flexible(), spacing: spacing),
+            count: columnCount
+        )
     }
     
     var body: some View {
@@ -40,7 +43,7 @@ struct SpeakerGridView: View {
                 Spacer()
             } else {
                 GeometryReader { geometry in
-                    LazyVGrid(columns: columns, spacing: spacing) {
+                    LazyVGrid(columns: columns, spacing: 4) {
                         ForEach($viewModel.speakers, id: \.self) { $speaker in
                             SpeakerVideoView(speaker: $speaker)
                                 .frame(height: geometry.size.height / CGFloat(rowCount) - spacing)
@@ -53,7 +56,7 @@ struct SpeakerGridView: View {
     }
 }
 
-struct VideoGridView_Previews: PreviewProvider {
+struct SpeakerGridView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             ForEach((1...6), id: \.self) {
@@ -66,13 +69,13 @@ struct VideoGridView_Previews: PreviewProvider {
                 SpeakerGridView()
                     .environmentObject(SpeakerGridViewModel(speakerCount: $0))
             }
-            .frame(width: 700, height: 400)
+            .frame(width: 700, height: 300)
         }
         .previewLayout(.sizeThatFits)
     }
 }
 
-private extension SpeakerGridViewModel {
+extension SpeakerGridViewModel {
     convenience init(speakerCount: Int) {
         self.init()
         speakers = Array(1...speakerCount).map { SpeakerVideoViewModel(identity: "Speaker \($0)") }

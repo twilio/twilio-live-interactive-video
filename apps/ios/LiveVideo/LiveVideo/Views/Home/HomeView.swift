@@ -19,7 +19,7 @@ struct HomeView: View {
                 Text("Create or join?")
                     .font(.system(size: 28, weight: .bold))
                 Text("Create your own event or join one that’s already happening.")
-                    .foregroundColor(.textIcon)
+                    .foregroundColor(.textWeak)
                     .font(.system(size: 15))
                 Button("Create Event") {
                     showCreateStream = true
@@ -28,7 +28,7 @@ struct HomeView: View {
                     showJoinStream = true
                 }
             }
-            .buttonStyle(PrimaryButtonStyle()) // TODO: Add to FormStack
+            .buttonStyle(PrimaryButtonStyle())
             .toolbar {
                 Button(action: { showSettings.toggle() }) {
                     Image(systemName: "gear")
@@ -52,7 +52,7 @@ struct HomeView: View {
                     showStream = streamConfig != nil
                 },
                 content: {
-                    JoinStreamView(streamConfig: $streamConfig, mode: .create) // TODO: CreateStreamView
+                    JoinStreamView(streamConfig: $streamConfig, mode: .create)
                 }
             )
             .sheet(
