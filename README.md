@@ -15,7 +15,7 @@ This section describes the steps required for all developers to get started with
 ### Requirements
 
 * [Node.js v14+](https://nodejs.org/en/download/)
-* NPM v6+ (comes installed with newer Node versions)
+* NPM v7+ (upgrade from NPM 6 with `npm install --global npm`)
 
 ### Setup Enviromenment
 
