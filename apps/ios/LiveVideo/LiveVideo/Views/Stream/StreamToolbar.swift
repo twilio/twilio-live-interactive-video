@@ -24,7 +24,7 @@ struct StreamToolbar<Content>: View where Content: View {
 struct StreamToolbar_Previews: PreviewProvider {
     static var previews: some View {
         StreamToolbar {
-            StreamToolbarButton("Destructive", image: Image(systemName: "arrow.left.circle.fill"), role: .destructive)
+            StreamToolbarButton("Destructive", image: Image(systemName: "arrow.left"), role: .destructive)
             StreamToolbarButton("Default", image: Image(systemName: "mic.slash.fill"))
         }
         .previewLayout(.sizeThatFits)

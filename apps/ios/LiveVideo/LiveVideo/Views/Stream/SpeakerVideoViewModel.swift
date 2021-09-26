@@ -4,6 +4,7 @@
 
 import TwilioVideo
 
+/// Speaker abstraction so the UI can handle local and remote participants the same way.
 struct SpeakerVideoViewModel {
     let identity: String
     let displayName: String

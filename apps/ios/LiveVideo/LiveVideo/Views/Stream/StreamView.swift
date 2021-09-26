@@ -6,7 +6,7 @@ import SwiftUI
 
 struct StreamView: View {
     @EnvironmentObject var streamManager: StreamManager
-    @EnvironmentObject var localParticipantViewModel: LocalParticipantViewModel
+    @EnvironmentObject var speakerSettingsManager: SpeakerSettingsManager
     @Environment(\.presentationMode) var presentationMode
     @Binding var config: StreamConfig!
     private let app = UIApplication.shared
@@ -43,18 +43,18 @@ struct StreamView: View {
                                 presentationMode.wrappedValue.dismiss()
                             }
                             StreamToolbarButton(
-                                localParticipantViewModel.isMicOn ? "Mute" : "Unmute",
-                                image: Image(systemName: localParticipantViewModel.isMicOn ? "mic.slash" : "mic"),
+                                speakerSettingsManager.isMicOn ? "Mute" : "Unmute",
+                                image: Image(systemName: speakerSettingsManager.isMicOn ? "mic.slash" : "mic"),
                                 role: .default
                             ) {
-                                localParticipantViewModel.isMicOn.toggle()
+                                speakerSettingsManager.isMicOn.toggle()
                             }
                             StreamToolbarButton(
-                                localParticipantViewModel.isCameraOn ? "Stop Video" : "Start Video",
-                                image: Image(systemName: localParticipantViewModel.isCameraOn ? "video.slash" : "video"),
+                                speakerSettingsManager.isCameraOn ? "Stop Video" : "Start Video",
+                                image: Image(systemName: speakerSettingsManager.isCameraOn ? "video.slash" : "video"),
                                 role: .default
                             ) {
-                                localParticipantViewModel.isCameraOn.toggle()
+                                speakerSettingsManager.isCameraOn.toggle()
                             }
                         case .viewer:
                             StreamToolbarButton(
@@ -122,7 +122,7 @@ struct StreamView_Previews: PreviewProvider {
             }
             .environmentObject(SpeakerGridViewModel())
         }
-        .environmentObject(LocalParticipantViewModel())
+        .environmentObject(SpeakerSettingsManager())
     }
 }
 
@@ -135,6 +135,8 @@ private extension StreamManager {
 
 private extension StreamConfig {
     init(role: Role) {
-        self.init(streamName: "Demo", userIdentity: "Alice", role: role)
+        streamName = "Demo"
+        userIdentity = "Alice"
+        self.role = role
     }
 }

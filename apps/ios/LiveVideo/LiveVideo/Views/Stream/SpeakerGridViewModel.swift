@@ -5,14 +5,20 @@
 import TwilioVideo
 import Combine
 
+/// Subscribes to room and participant state changes to provide speaker state for the UI to display in a grid
 class SpeakerGridViewModel: ObservableObject {
+    /// The speakers that the UI should display.
     @Published var speakers: [SpeakerVideoViewModel] = []
+    
+    private let maxSpeakerCount = 6
+    private let notificationCenter = NotificationCenter.default
+    
+    /// The speakers that the UI should not display.
     private var offscreen: [SpeakerVideoViewModel] = []
+    
     private var subscriptions = Set<AnyCancellable>()
-
+    
     init() {
-        let notificationCenter = NotificationCenter.default
-        
         notificationCenter.publisher(for: .roomDidConnect)
             .map { $0.object as! RoomManager }
             .sink { [weak self] roomManager in
@@ -54,7 +60,7 @@ class SpeakerGridViewModel: ObservableObject {
     }
     
     private func addSpeaker(_ speaker: SpeakerVideoViewModel) {
-        if speakers.count < 6 {
+        if speakers.count < maxSpeakerCount {
             speakers.append(speaker)
         } else {
             offscreen.append(speaker)
@@ -74,26 +80,26 @@ class SpeakerGridViewModel: ObservableObject {
     }
     
     private func updateSpeaker(_ speaker: SpeakerVideoViewModel) {
-        // Find and replace
-        if let speakerIndex = speakers.firstIndex(where: { $0.identity == speaker.identity }) {
-            speakers[speakerIndex] = speaker
-        } else if let speakerIndex = offscreen.firstIndex(where: { $0.identity == speaker.identity }) {
-            offscreen[speakerIndex] = speaker
-            
+        if let index = speakers.firstIndex(of: speaker) {
+            speakers[index] = speaker
+        } else if let index = offscreen.firstIndex(of: speaker) {
+            offscreen[index] = speaker
+
+            // If an offscreen speaker becomes dominant speaker move them to onscreen speakers.
+            // The oldest dominant speaker that is onscreen is moved to the start of offscreen users.
+            // The new dominant speaker is moved onscreen where the oldest dominant speaker was located.
+            // This approach always keeps the most recent dominant speakers visible.
             if speaker.isDominantSpeaker {
-                // Find oldest dominant speaker
-                let sortedSpeakers = speakers[1...].sorted { $0.dominantSpeakerStartTime < $1.dominantSpeakerStartTime }
+                let oldestDominantSpeaker = speakers[1...] // Skip local user at 0
+                    .sorted { $0.dominantSpeakerStartTime < $1.dominantSpeakerStartTime }
+                    .first!
                 
-                let oldest = sortedSpeakers.first! // Don't bang
-                // Move them offscreen
+                let oldestDominantSpeakerIndex = speakers.firstIndex(of: oldestDominantSpeaker)!
                 
-                let oldestIndex = speakers.firstIndex { $0.identity == oldest.identity }!
-                
-                speakers.remove(at: oldestIndex)
-                
-                // Move new dominant speaker onscreen
-                speakers.insert(offscreen.remove(at: speakerIndex), at: oldestIndex)
-                offscreen.insert(oldest, at: 0)
+                speakers.remove(at: oldestDominantSpeakerIndex)
+                speakers.insert(speaker, at: oldestDominantSpeakerIndex)
+                offscreen.remove(at: index)
+                offscreen.insert(oldestDominantSpeaker, at: 0)
             }
         }
     }
