@@ -20,6 +20,8 @@
 		DC1ED12E26E94B5900FFA769 /* TokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED12D26E94B5900FFA769 /* TokenRequest.swift */; };
 		DC1ED13026E960C600FFA769 /* SpeakerGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED12F26E960C600FFA769 /* SpeakerGridView.swift */; };
 		DC1ED13226E9666E00FFA769 /* SwiftUIVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED13126E9666E00FFA769 /* SwiftUIVideoView.swift */; };
+		DC44BB3F2703C8AD00DB656D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC44BB3E2703C8AD00DB656D /* AppDelegate.swift */; };
+		DC44BB412703C8DD00DB656D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC44BB402703C8DD00DB656D /* SceneDelegate.swift */; };
 		DC4AA65926D0133600E677D5 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA65826D0133600E677D5 /* Color.swift */; };
 		DC4AA66026D047DD00E677D5 /* FormTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA65F26D047DD00E677D5 /* FormTextFieldStyle.swift */; };
 		DC4AA66226D0493E00E677D5 /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA66126D0493E00E677D5 /* PrimaryButtonStyle.swift */; };
@@ -91,6 +93,8 @@
 		DC1ED12D26E94B5900FFA769 /* TokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRequest.swift; sourceTree = "<group>"; };
 		DC1ED12F26E960C600FFA769 /* SpeakerGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerGridView.swift; sourceTree = "<group>"; };
 		DC1ED13126E9666E00FFA769 /* SwiftUIVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIVideoView.swift; sourceTree = "<group>"; };
+		DC44BB3E2703C8AD00DB656D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		DC44BB402703C8DD00DB656D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		DC4AA65826D0133600E677D5 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		DC4AA65F26D047DD00E677D5 /* FormTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormTextFieldStyle.swift; sourceTree = "<group>"; };
 		DC4AA66126D0493E00E677D5 /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
@@ -197,7 +201,9 @@
 		DC4AA65326D011C900E677D5 /* Launch */ = {
 			isa = PBXGroup;
 			children = (
+				DC44BB3E2703C8AD00DB656D /* AppDelegate.swift */,
 				DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */,
+				DC44BB402703C8DD00DB656D /* SceneDelegate.swift */,
 			);
 			path = Launch;
 			sourceTree = "<group>";
@@ -559,6 +565,7 @@
 				DC1ED13226E9666E00FFA769 /* SwiftUIVideoView.swift in Sources */,
 				DCB4497626F65A7000B52774 /* SpeakerVideoViewModel.swift in Sources */,
 				DC5F458326CDBA0B009C5C79 /* SignInView.swift in Sources */,
+				DC44BB412703C8DD00DB656D /* SceneDelegate.swift in Sources */,
 				DC1ED11A26E92DEA00FFA769 /* RoomManager.swift in Sources */,
 				DC4AA66526D1456100E677D5 /* AuthManager.swift in Sources */,
 				DC1ED0FD26E14D0B00FFA769 /* StreamToolbar.swift in Sources */,
@@ -574,6 +581,7 @@
 				DC5F459626CEC247009C5C79 /* UserDefaultsKeys.swift in Sources */,
 				DC1ED13026E960C600FFA769 /* SpeakerGridView.swift in Sources */,
 				DC5F458826CEA7CB009C5C79 /* SettingsView.swift in Sources */,
+				DC44BB3F2703C8AD00DB656D /* AppDelegate.swift in Sources */,
 				DC1ED12C26E936C600FFA769 /* NotificationName.swift in Sources */,
 				DC504A7526F0F18700C37EC9 /* SpeakerGridViewModel.swift in Sources */,
 				DCC48F8926D8288B00EE49EF /* APIErrorResponse.swift in Sources */,

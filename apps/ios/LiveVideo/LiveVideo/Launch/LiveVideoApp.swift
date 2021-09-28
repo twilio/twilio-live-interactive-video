@@ -6,6 +6,7 @@ import SwiftUI
 
 @main
 struct LiveVideoApp: App {
+    @UIApplicationDelegateAdaptor var delegate: AppDelegate
     @StateObject private var authManager = AuthManager()
     @StateObject private var streamManager = StreamManager(api: API.shared, playerManager: PlayerManager())
     @StateObject private var speakerSettingsManager = SpeakerSettingsManager()
