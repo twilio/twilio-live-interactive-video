@@ -71,6 +71,10 @@ extension RoomManager: RoomDelegate {
     }
     
     func participantDidConnect(room: Room, participant: RemoteParticipant) {
+        // Hide the video composer participant because it is not a human. The video composer
+        // participant may connect here after a temporary disconnect.
+        guard !participant.isVideoComposer else { return }
+        
         remoteParticipants.append(RemoteParticipantManager(participant: participant))
 
         // For convenience send participant as object instead of self
