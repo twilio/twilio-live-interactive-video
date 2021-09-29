@@ -36,19 +36,13 @@ struct SwiftUIVideoView: UIViewRepresentable {
 class VideoTrackStoringVideoView: VideoView {
     var videoTrack: VideoTrack? {
         didSet {
+            guard oldValue != videoTrack else { return }
+            
+            oldValue?.removeRenderer(self)
+            
             if let videoTrack = videoTrack {
-                if !videoTrack.isRendered(by: self) {
-                    videoTrack.addRenderer(self)
-                }
-            } else {
-                oldValue?.removeRenderer(self)
+                videoTrack.addRenderer(self)
             }
         }
-    }
-}
-
-private extension VideoTrack {
-    func isRendered(by renderer: VideoRenderer) -> Bool {
-        renderers.first { $0 === renderer } != nil
     }
 }
