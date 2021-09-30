@@ -6,7 +6,7 @@ import TwilioVideo
 
 /// Maintains local participant state and uses notifications to broadcast state changes to multiple subscribers.
 ///
-/// Also configures the microphone and camera.
+/// The microphone and camera may be configured before and after connecting to a video room.
 class LocalParticipantManager: NSObject {
     let identity: String
     var isMicOn: Bool {
