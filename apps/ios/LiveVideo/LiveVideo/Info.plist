@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>This app uses the microphone so others in the event can hear you.</string>
+	<string>${PRODUCT_NAME} uses the microphone so others in the event can hear you.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>This app uses the camera so others in the event can see you.</string>
+	<string>${PRODUCT_NAME} uses the camera so others in the event can see you.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
