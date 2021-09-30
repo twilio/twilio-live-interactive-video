@@ -18,7 +18,7 @@ struct StreamView: View {
 
                 VStack(spacing: 0) {
                     VStack(spacing: 0) {
-                        StreamStatusView(streamName: config.streamName, isLoading: $streamManager.isLoading)
+                        StreamStatusView(streamName: config.streamName, streamState: $streamManager.state)
                             .padding([.horizontal, .bottom], 6)
                         
                         switch config.role {
@@ -74,7 +74,7 @@ struct StreamView: View {
                 }
                 .edgesIgnoringSafeArea([.horizontal, .bottom]) // So toolbar sides and bottom extend beyond safe area
 
-                if streamManager.isLoading {
+                if streamManager.state == .connecting {
                     ProgressHUD(title: "Joining live event! 🎉")
                 }
             }
@@ -118,7 +118,7 @@ struct StreamView_Previews: PreviewProvider {
                     .environmentObject(StreamManager())
                 StreamView(config: .constant(StreamConfig(role: .viewer)))
                     .previewDisplayName("Joining")
-                    .environmentObject(StreamManager(isLoading: true))
+                    .environmentObject(StreamManager(state: .connecting))
             }
             .environmentObject(SpeakerGridViewModel())
         }
@@ -127,9 +127,9 @@ struct StreamView_Previews: PreviewProvider {
 }
 
 private extension StreamManager {
-    convenience init(isLoading: Bool = false) {
+    convenience init(state: StreamManager.State = .connected) {
         self.init(api: nil, playerManager: nil)
-        self.isLoading = isLoading
+        self.state = state
     }
 }
 

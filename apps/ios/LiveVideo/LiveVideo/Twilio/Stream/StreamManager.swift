@@ -6,7 +6,13 @@ import Combine
 import TwilioPlayer
 
 class StreamManager: ObservableObject {
-    @Published var isLoading = false
+    enum State {
+        case disconnected
+        case connecting
+        case connected
+    }
+    
+    @Published var state = State.disconnected
     @Published var player: Player?
     @Published var showError = false
     @Published var error: Error? {
@@ -26,7 +32,7 @@ class StreamManager: ObservableObject {
         playerManager?.delegate = self
         
         notificationCenter.publisher(for: .roomDidConnect)
-            .sink { [weak self] _ in self?.isLoading = false }
+            .sink { [weak self] _ in self?.state = .connected }
             .store(in: &subscriptions)
 
         notificationCenter.publisher(for: .roomDidDisconnectWithError)
@@ -42,7 +48,7 @@ class StreamManager: ObservableObject {
     func connect(config: StreamConfig) {
         guard let api = api else { return }
         
-        isLoading = true
+        state = .connecting
  
         switch config.role {
         case .host, .speaker:
@@ -77,7 +83,7 @@ class StreamManager: ObservableObject {
         roomManager.disconnect()
         playerManager?.disconnect()
         player = nil
-        isLoading = false
+        state = .disconnected
     }
     
     private func handleError(_ error: Error) {
@@ -89,7 +95,7 @@ class StreamManager: ObservableObject {
 extension StreamManager: PlayerManagerDelegate {
     func playerManagerDidConnect(_ playerManager: PlayerManager) {
         player = playerManager.player
-        isLoading = false
+        state = .connected
     }
     
     func playerManager(_ playerManager: PlayerManager, didDisconnectWithError error: Error) {
