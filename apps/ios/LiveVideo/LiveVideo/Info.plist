@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>${PRODUCT_NAME} uses the microphone so others in the event can hear you.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>${PRODUCT_NAME} uses the camera so others in the event can see you.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -54,5 +50,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>${PRODUCT_NAME} uses the microphone so others in the event can hear you.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>${PRODUCT_NAME} uses the camera so others in the event can see you.</string>
 </dict>
 </plist>
