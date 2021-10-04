@@ -20,29 +20,29 @@ class StreamManager: ObservableObject {
             showError = error != nil
         }
     }
-    var roomManager: RoomManager!
-    private let api: API?
-    private let playerManager: PlayerManager?
-    private let notificationCenter = NotificationCenter.default
+    private var api: API?
+    private var playerManager: PlayerManager?
+    private var roomManager: RoomManager!
     private var subscriptions = Set<AnyCancellable>()
 
-    init(api: API?, playerManager: PlayerManager?) {
-        self.api = api
+    func configure(roomManager: RoomManager, playerManager: PlayerManager, api: API) {
+        self.roomManager = roomManager
         self.playerManager = playerManager
-        playerManager?.delegate = self
+        self.api = api
         
-        notificationCenter.publisher(for: .roomDidConnect)
-            .sink { [weak self] _ in self?.state = .connected }
+        roomManager.roomConnectPublisher
+            .sink { [weak self] in self?.state = .connected }
             .store(in: &subscriptions)
 
-        notificationCenter.publisher(for: .roomDidDisconnectWithError)
-            .map { $0.object as? Error }
+        roomManager.roomDisconnectPublisher
             .sink { [weak self] error in
                 guard let error = error else { return }
                 
                 self?.handleError(error)
             }
             .store(in: &subscriptions)
+
+        playerManager.delegate = self
     }
 
     func connect(config: StreamConfig) {

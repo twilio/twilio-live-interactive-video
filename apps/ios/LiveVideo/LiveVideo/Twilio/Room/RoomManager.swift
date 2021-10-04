@@ -2,15 +2,31 @@
 //  Copyright (C) 2020 Twilio, Inc.
 //
 
+import Combine
 import TwilioVideo
 
-/// Configures the video room connection and uses notifications to broadcast state changes to multiple subscribers.
+/// Configures the video room connection and uses publishers to notify subscribers of state changes.
 class RoomManager: NSObject {
-    var localParticipant: LocalParticipantManager!
+    // MARK: Publishers
+    let roomConnectPublisher = PassthroughSubject<Void, Never>()
+    let roomDisconnectPublisher = PassthroughSubject<Error?, Never>()
+    let remoteParticipantConnectPublisher = PassthroughSubject<RemoteParticipantManager, Never>()
+    let remoteParticipantDisconnectPublisher = PassthroughSubject<RemoteParticipantManager, Never>()
+
+    /// Send remote participant updates from `RoomManager` instead of `RemoteParticipantManager` so that
+    /// one publisher can provide updates for all remote participants. Otherwise subscribers would need to make
+    /// subscription changes whenever a remote participant connects or disconnects.
+    let remoteParticipantChangePublisher = PassthroughSubject<RemoteParticipantManager, Never>()
+    // MARK: -
+
+    private(set) var localParticipant: LocalParticipantManager!
     private(set) var remoteParticipants: [RemoteParticipantManager] = []
-    private let notificationCenter = NotificationCenter.default
     private var room: Room?
 
+    func configure(localParticipant: LocalParticipantManager) {
+        self.localParticipant = localParticipant
+    }
+    
     func connect(roomName: String, accessToken: String) {
         let options = ConnectOptions(token: accessToken) { builder in
             builder.roomName = roomName
@@ -33,8 +49,8 @@ class RoomManager: NSObject {
         room?.disconnect()
         cleanUp()
         
-        // Intentional disconnect and no error so object is nil
-        notificationCenter.post(name: .roomDidDisconnectWithError, object: nil)
+        // Intentional disconnect so no error
+        roomDisconnectPublisher.send(nil)
     }
     
     private func cleanUp() {
@@ -45,9 +61,7 @@ class RoomManager: NSObject {
     
     private func handleError(_ error: Error) {
         cleanUp()
-        
-        // For convenience send error as object instead of self
-        notificationCenter.post(name: .roomDidDisconnectWithError, object: error)
+        roomDisconnectPublisher.send(error)
     }
 }
 
@@ -56,8 +70,8 @@ extension RoomManager: RoomDelegate {
         localParticipant.participant = room.localParticipant
         remoteParticipants = room.remoteParticipants
             .filter { !$0.isVideoComposer } // Hide the video composer participant because it is not a human
-            .map { RemoteParticipantManager(participant: $0) }
-        notificationCenter.post(name: .roomDidConnect, object: self)
+            .map { RemoteParticipantManager(participant: $0, delegate: self) }
+        roomConnectPublisher.send()
     }
     
     func roomDidFailToConnect(room: Room, error: Error) {
@@ -75,17 +89,15 @@ extension RoomManager: RoomDelegate {
         // participant may connect here after a temporary disconnect.
         guard !participant.isVideoComposer else { return }
         
-        remoteParticipants.append(RemoteParticipantManager(participant: participant))
-
-        // For convenience send participant as object instead of self
-        notificationCenter.post(name: .remoteParticipantDidConnect, object: remoteParticipants.last)
+        let participant = RemoteParticipantManager(participant: participant, delegate: self)
+        remoteParticipants.append(participant)
+        remoteParticipantConnectPublisher.send(participant)
     }
     
     func participantDidDisconnect(room: Room, participant: RemoteParticipant) {
         guard let index = remoteParticipants.firstIndex(where: { $0.identity == participant.identity }) else { return }
 
-        // For convenience send participant as object instead of self
-        notificationCenter.post(name: .remoteParticipantDidDisconnect, object: remoteParticipants.remove(at: index))
+        remoteParticipantDisconnectPublisher.send(remoteParticipants.remove(at: index))
     }
 
     func dominantSpeakerDidChange(room: Room, participant: RemoteParticipant?) {
@@ -93,6 +105,12 @@ extension RoomManager: RoomDelegate {
         // participant state. This is better for the UI.
         remoteParticipants.first { $0.isDominantSpeaker }?.isDominantSpeaker = false // Old speaker
         remoteParticipants.first { $0.identity == participant?.identity }?.isDominantSpeaker = true // New speaker
+    }
+}
+
+extension RoomManager: RemoteParticipantManagerDelegate {
+    func participantDidChange(_ participant: RemoteParticipantManager) {
+        remoteParticipantChangePublisher.send(participant)
     }
 }
 

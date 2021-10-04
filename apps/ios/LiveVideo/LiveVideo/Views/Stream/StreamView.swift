@@ -128,7 +128,7 @@ struct StreamView_Previews: PreviewProvider {
 
 private extension StreamManager {
     convenience init(state: StreamManager.State = .connected) {
-        self.init(api: nil, playerManager: nil)
+        self.init()
         self.state = state
     }
 }

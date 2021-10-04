@@ -20,24 +20,21 @@ class SpeakerSettingsManager: ObservableObject {
             localParticipant?.isCameraOn = isCameraOn
         }
     }
-    var localParticipant: LocalParticipantManager? {
-        didSet {
-            guard let localParticipant = localParticipant else { return }
-            
-            isMicOn = localParticipant.isMicOn
-            isCameraOn = localParticipant.isCameraOn
-        }
-    }
-    private let notificationCenter = NotificationCenter.default
+    private var localParticipant: LocalParticipantManager?
     private var subscriptions = Set<AnyCancellable>()
-
-    init() {
-        notificationCenter.publisher(for: .localParticipantDidChange)
-            .sink { [weak self] _ in
-                guard let self = self, let localParticipant = self.localParticipant else { return }
+    
+    func configure(localParticipant: LocalParticipantManager) {
+        self.localParticipant = localParticipant
+        
+        isMicOn = localParticipant.isMicOn
+        isCameraOn = localParticipant.isCameraOn
+        
+        localParticipant.changePublisher
+            .sink { [weak self] participant in
+                guard let self = self else { return }
                 
-                self.isMicOn = localParticipant.isMicOn
-                self.isCameraOn = localParticipant.isCameraOn
+                self.isMicOn = participant.isMicOn
+                self.isCameraOn = participant.isCameraOn
             }
             .store(in: &subscriptions)
     }

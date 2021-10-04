@@ -8,7 +8,7 @@ import SwiftUI
 struct LiveVideoApp: App {
     @UIApplicationDelegateAdaptor var delegate: AppDelegate
     @StateObject private var authManager = AuthManager()
-    @StateObject private var streamManager = StreamManager(api: API.shared, playerManager: PlayerManager())
+    @StateObject private var streamManager = StreamManager()
     @StateObject private var speakerSettingsManager = SpeakerSettingsManager()
     @StateObject private var speakerGridViewModel = SpeakerGridViewModel()
 
@@ -20,10 +20,12 @@ struct LiveVideoApp: App {
                 .environmentObject(speakerGridViewModel)
                 .environmentObject(speakerSettingsManager)
                 .onAppear {
+                    let localParticipant = LocalParticipantManager(identity: authManager.userIdentity)
                     let roomManager = RoomManager()
-                    roomManager.localParticipant = LocalParticipantManager(identity: authManager.userIdentity)
-                    streamManager.roomManager = roomManager
-                    speakerSettingsManager.localParticipant = roomManager.localParticipant
+                    roomManager.configure(localParticipant: localParticipant)
+                    streamManager.configure(roomManager: roomManager, playerManager: PlayerManager(), api: API.shared)
+                    speakerSettingsManager.configure(localParticipant: localParticipant)
+                    speakerGridViewModel.configure(roomManager: roomManager)
                 }
         }
     }

@@ -4,10 +4,14 @@
 
 import TwilioVideo
 
-/// Determines remote participant state and uses notifications to broadcast state changes to multiple subscribers.
+protocol RemoteParticipantManagerDelegate: AnyObject {
+    func participantDidChange(_ participant: RemoteParticipantManager)
+}
+
+/// Determines remote participant state and sends updates to delegate.
 ///
-/// Also stores dominant speaker state received by the room so that participants contains all participant state.
-/// This is better for the UI. See `isDominantSpeaker` and `dominantSpeakerStartTime`.
+/// Also stores dominant speaker state received by the room so that participants contain all participant state
+/// which is good for the UI. See `isDominantSpeaker` and `dominantSpeakerStartTime`.
 class RemoteParticipantManager: NSObject {
     var identity: String { participant.identity }
     var isMicOn: Bool {
@@ -29,21 +33,18 @@ class RemoteParticipantManager: NSObject {
     var isDominantSpeaker = false {
         didSet {
             dominantSpeakerStartTime = Date()
-            postChangeNotification()
+            delegate?.participantDidChange(self)
         }
     }
     var dominantSpeakerStartTime: Date = .distantPast
     private let participant: RemoteParticipant
-    private let notificationCenter = NotificationCenter.default
-    
-    init(participant: RemoteParticipant) {
+    private weak var delegate: RemoteParticipantManagerDelegate?
+
+    init(participant: RemoteParticipant, delegate: RemoteParticipantManagerDelegate) {
         self.participant = participant
+        self.delegate = delegate
         super.init()
         participant.delegate = self
-    }
-
-    private func postChangeNotification() {
-        notificationCenter.post(name: .remoteParticipantDidChange, object: self)
     }
 }
 
@@ -53,7 +54,7 @@ extension RemoteParticipantManager: RemoteParticipantDelegate {
         publication: RemoteVideoTrackPublication,
         participant: RemoteParticipant
     ) {
-        postChangeNotification()
+        delegate?.participantDidChange(self)
     }
     
     func didUnsubscribeFromVideoTrack(
@@ -61,21 +62,21 @@ extension RemoteParticipantManager: RemoteParticipantDelegate {
         publication: RemoteVideoTrackPublication,
         participant: RemoteParticipant
     ) {
-        postChangeNotification()
+        delegate?.participantDidChange(self)
     }
 
     func remoteParticipantDidEnableVideoTrack(
         participant: RemoteParticipant,
         publication: RemoteVideoTrackPublication
     ) {
-        postChangeNotification()
+        delegate?.participantDidChange(self)
     }
     
     func remoteParticipantDidDisableVideoTrack(
         participant: RemoteParticipant,
         publication: RemoteVideoTrackPublication
     ) {
-        postChangeNotification()
+        delegate?.participantDidChange(self)
     }
 
     func didSubscribeToAudioTrack(
@@ -83,7 +84,7 @@ extension RemoteParticipantManager: RemoteParticipantDelegate {
         publication: RemoteAudioTrackPublication,
         participant: RemoteParticipant
     ) {
-        postChangeNotification()
+        delegate?.participantDidChange(self)
     }
     
     func didUnsubscribeFromAudioTrack(
@@ -91,20 +92,20 @@ extension RemoteParticipantManager: RemoteParticipantDelegate {
         publication: RemoteAudioTrackPublication,
         participant: RemoteParticipant
     ) {
-        postChangeNotification()
+        delegate?.participantDidChange(self)
     }
 
     func remoteParticipantDidEnableAudioTrack(
         participant: RemoteParticipant,
         publication: RemoteAudioTrackPublication
     ) {
-        postChangeNotification()
+        delegate?.participantDidChange(self)
     }
     
     func remoteParticipantDidDisableAudioTrack(
         participant: RemoteParticipant,
         publication: RemoteAudioTrackPublication
     ) {
-        postChangeNotification()
+        delegate?.participantDidChange(self)
     }
 }

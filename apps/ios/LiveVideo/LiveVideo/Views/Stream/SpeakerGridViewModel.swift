@@ -11,31 +11,33 @@ class SpeakerGridViewModel: ObservableObject {
     @Published var speakers: [SpeakerVideoViewModel] = []
     
     private let maxSpeakerCount = 6
-    private let notificationCenter = NotificationCenter.default
     
     /// The speakers that the UI should not display.
     private var offscreen: [SpeakerVideoViewModel] = []
     
+    private var roomManager: RoomManager!
     private var subscriptions = Set<AnyCancellable>()
-    
-    init() {
-        notificationCenter.publisher(for: .roomDidConnect)
-            .map { $0.object as! RoomManager }
-            .sink { [weak self] roomManager in
-                self?.addSpeaker(SpeakerVideoViewModel(participant: roomManager.localParticipant))
 
-                roomManager.remoteParticipants
+    func configure(roomManager: RoomManager) {
+        self.roomManager = roomManager
+        
+        roomManager.roomConnectPublisher
+            .sink { [weak self] in
+                guard let self = self else { return }
+                
+                self.addSpeaker(SpeakerVideoViewModel(participant: self.roomManager.localParticipant))
+
+                self.roomManager.remoteParticipants
                     .map { SpeakerVideoViewModel(participant: $0) }
-                    .forEach { self?.addSpeaker($0) }
+                    .forEach { self.addSpeaker($0) }
             }
             .store(in: &subscriptions)
         
-        notificationCenter.publisher(for: .roomDidDisconnectWithError)
+        roomManager.roomDisconnectPublisher
             .sink { [weak self] _ in self?.speakers.removeAll() }
             .store(in: &subscriptions)
 
-        notificationCenter.publisher(for: .localParticipantDidChange)
-            .map { $0.object as! LocalParticipantManager }
+        roomManager.localParticipant.changePublisher
             .sink { [weak self] participant in
                 guard let self = self, !self.speakers.isEmpty else { return }
                 
@@ -43,18 +45,15 @@ class SpeakerGridViewModel: ObservableObject {
             }
             .store(in: &subscriptions)
 
-        notificationCenter.publisher(for: .remoteParticipantDidConnect)
-            .map { $0.object as! RemoteParticipantManager }
+        roomManager.remoteParticipantConnectPublisher
             .sink { [weak self] participant in self?.addSpeaker(SpeakerVideoViewModel(participant: participant)) }
             .store(in: &subscriptions)
 
-        notificationCenter.publisher(for: .remoteParticipantDidDisconnect)
-            .map { $0.object as! RemoteParticipantManager }
+        roomManager.remoteParticipantDisconnectPublisher
             .sink { [weak self] participant in self?.removeSpeaker(with: participant.identity) }
             .store(in: &subscriptions)
-        
-        notificationCenter.publisher(for: .remoteParticipantDidChange)
-            .map { $0.object as! RemoteParticipantManager }
+
+        roomManager.remoteParticipantChangePublisher
             .sink { [weak self] participant in self?.updateSpeaker(SpeakerVideoViewModel(participant: participant)) }
             .store(in: &subscriptions)
     }

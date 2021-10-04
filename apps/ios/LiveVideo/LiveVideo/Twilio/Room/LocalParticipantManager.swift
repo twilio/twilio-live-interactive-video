@@ -2,12 +2,14 @@
 //  Copyright (C) 2021 Twilio, Inc.
 //
 
+import Combine
 import TwilioVideo
 
-/// Maintains local participant state and uses notifications to broadcast state changes to multiple subscribers.
+/// Maintains local participant state and uses a publisher to notify subscribers of state changes.
 ///
 /// The microphone and camera may be configured before and after connecting to a video room.
 class LocalParticipantManager: NSObject {
+    let changePublisher = PassthroughSubject<LocalParticipantManager, Never>()
     let identity: String
     var isMicOn: Bool {
         get {
@@ -31,7 +33,7 @@ class LocalParticipantManager: NSObject {
                 self.micTrack = nil
             }
             
-            postChangeNotification()
+            changePublisher.send(self)
         }
     }
     var isCameraOn = false {
@@ -71,8 +73,8 @@ class LocalParticipantManager: NSObject {
                 cameraSource = nil
                 cameraTrack = nil
             }
-            
-            postChangeNotification()
+
+            changePublisher.send(self)
         }
     }
     var participant: LocalParticipant? {
@@ -82,16 +84,11 @@ class LocalParticipantManager: NSObject {
     }
     private(set) var micTrack: LocalAudioTrack?
     private(set) var cameraTrack: LocalVideoTrack?
-    private let notificationCenter = NotificationCenter.default
     private let app = UIApplication.shared
     private var cameraSource: CameraSource?
 
     init(identity: String) {
         self.identity = identity
-    }
-    
-    private func postChangeNotification() {
-        notificationCenter.post(name: .localParticipantDidChange, object: self)
     }
 }
 
@@ -116,11 +113,11 @@ extension LocalParticipantManager: LocalParticipantDelegate {
 extension LocalParticipantManager: CameraSourceDelegate {
     func cameraSourceWasInterrupted(source: CameraSource, reason: AVCaptureSession.InterruptionReason) {
         cameraTrack?.isEnabled = false
-        postChangeNotification()
+        changePublisher.send(self)
     }
 
     func cameraSourceInterruptionEnded(source: CameraSource) {
         cameraTrack?.isEnabled = true
-        postChangeNotification()
+        changePublisher.send(self)
     }
 }
