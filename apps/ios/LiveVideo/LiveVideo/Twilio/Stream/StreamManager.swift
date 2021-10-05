@@ -41,6 +41,10 @@ class StreamManager: ObservableObject {
                 self?.handleError(error)
             }
             .store(in: &subscriptions)
+        
+        roomManager.localParticipant.errorPublisher
+            .sink { [weak self] error in self?.handleError(error) }
+            .store(in: &subscriptions)
 
         playerManager.delegate = self
     }
