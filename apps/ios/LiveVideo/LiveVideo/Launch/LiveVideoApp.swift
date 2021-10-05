@@ -20,7 +20,7 @@ struct LiveVideoApp: App {
                 .environmentObject(speakerGridViewModel)
                 .environmentObject(speakerSettingsManager)
                 .onAppear {
-                    let localParticipant = LocalParticipantManager(identity: authManager.userIdentity)
+                    let localParticipant = LocalParticipantManager(authManager: authManager)
                     let roomManager = RoomManager()
                     roomManager.configure(localParticipant: localParticipant)
                     streamManager.configure(roomManager: roomManager, playerManager: PlayerManager(), api: API.shared)

@@ -11,7 +11,7 @@ import TwilioVideo
 class LocalParticipantManager: NSObject {
     let changePublisher = PassthroughSubject<LocalParticipantManager, Never>()
     let errorPublisher = PassthroughSubject<Error, Never>()
-    let identity: String
+    var identity: String { authManager.userIdentity }
     var isMicOn: Bool {
         get {
             micTrack?.isEnabled ?? false
@@ -87,9 +87,10 @@ class LocalParticipantManager: NSObject {
     private(set) var cameraTrack: LocalVideoTrack?
     private let app = UIApplication.shared
     private var cameraSource: CameraSource?
-
-    init(identity: String) {
-        self.identity = identity
+    private var authManager: AuthManager
+    
+    init(authManager: AuthManager) {
+        self.authManager = authManager
     }
 }
 
