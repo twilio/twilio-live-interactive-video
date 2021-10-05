@@ -18,7 +18,7 @@ struct SpeakerGridView: View {
         if isPortraitOrientation {
             return (viewModel.speakers.count + viewModel.speakers.count % columnCount) / columnCount
         } else {
-            return 1
+            return viewModel.speakers.count < 5 ? 1 : 2
         }
     }
     
@@ -26,7 +26,7 @@ struct SpeakerGridView: View {
         if isPortraitOrientation {
             return viewModel.speakers.count < 4 ? 1 : 2
         } else {
-            return viewModel.speakers.count
+            return (viewModel.speakers.count + viewModel.speakers.count % rowCount) / rowCount
         }
     }
     
