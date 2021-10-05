@@ -42,15 +42,15 @@ struct StreamToolbarButton: View {
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .padding(6)
+                        .padding(7)
                         .foregroundColor(role.imageForegroundColor)
                 }
-                .frame(width: 27, height: 27)
+                .frame(width: 32, height: 32)
 
                 Text(title)
                     .font(.system(size: 10))
             }
-            .padding(.top, 7)
+            .padding(.top, 14)
             .frame(width: 60)
             .foregroundColor(.backgroundStrongest)
         }
