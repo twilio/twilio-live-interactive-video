@@ -7,6 +7,7 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject var authManager: AuthManager
     @State private var showSettings = false
+    @State private var showCreateStream = false
     @State private var showJoinStream = false
     @State private var showStream = false
     @State private var signOut = false
@@ -15,17 +16,25 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             FormStack {
-                Spacer()
+                Text("Create or join?")
+                    .font(.system(size: 28, weight: .bold))
+                Text("Create your own event or join one that’s already happening.")
+                    .foregroundColor(.textWeak)
+                    .font(.system(size: 15))
+                Button("Create Event") {
+                    showCreateStream = true
+                }
                 Button("Join Event") {
                     showJoinStream = true
                 }
-                .buttonStyle(PrimaryButtonStyle())
             }
+            .buttonStyle(PrimaryButtonStyle())
             .toolbar {
                 Button(action: { showSettings.toggle() }) {
                     Image(systemName: "gear")
                 }
             }
+            .navigationBarTitleDisplayMode(.inline)
             .sheet(
                 isPresented: $showSettings,
                 onDismiss: {
@@ -38,12 +47,21 @@ struct HomeView: View {
                 }
             )
             .sheet(
+                isPresented: $showCreateStream,
+                onDismiss: {
+                    showStream = streamConfig != nil
+                },
+                content: {
+                    JoinStreamView(streamConfig: $streamConfig, mode: .create)
+                }
+            )
+            .sheet(
                 isPresented: $showJoinStream,
                 onDismiss: {
                     showStream = streamConfig != nil
                 },
                 content: {
-                    JoinStreamView(streamConfig: $streamConfig)
+                    JoinStreamView(streamConfig: $streamConfig, mode: .join)
                 }
             )
             .fullScreenCover(isPresented: $authManager.isSignedOut, content: {

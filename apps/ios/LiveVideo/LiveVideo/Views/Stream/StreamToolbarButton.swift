@@ -7,9 +7,16 @@ import SwiftUI
 struct StreamToolbarButton: View {
     struct Role {
         let imageForegroundColor: Color
+        let imageBackgroundColor: Color
         
-        static let `default` = Role(imageForegroundColor: .textIcon)
-        static let destructive = Role(imageForegroundColor: .backgroundDestructive)
+        static let `default` = Role(
+            imageForegroundColor: .backgroundStrongest,
+            imageBackgroundColor: .backgroundStrong
+        )
+        static let destructive = Role(
+            imageForegroundColor: .white,
+            imageBackgroundColor: .backgroundDestructive
+        )
     }
     
     let title: String
@@ -29,17 +36,23 @@ struct StreamToolbarButton: View {
             action()
         }) {
             VStack(spacing: 4) {
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundColor(role.imageForegroundColor)
-                    .frame(width: 24, height: 24, alignment: .bottom)
+                ZStack {
+                    role.imageBackgroundColor
+                        .clipShape(Circle())
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(6)
+                        .foregroundColor(role.imageForegroundColor)
+                }
+                .frame(width: 27, height: 27)
+
                 Text(title)
                     .font(.system(size: 10))
             }
             .padding(.top, 7)
-            .frame(minWidth: 50)
-            .foregroundColor(.textIcon)
+            .frame(width: 60)
+            .foregroundColor(.backgroundStrongest)
         }
     }
 }
@@ -47,9 +60,9 @@ struct StreamToolbarButton: View {
 struct StreamToolbarButton_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            StreamToolbarButton("Default", image: Image(systemName: "mic.slash.fill"))
+            StreamToolbarButton("Default", image: Image(systemName: "mic.slash"))
                 .previewDisplayName("Default")
-            StreamToolbarButton("Destructive", image: Image(systemName: "arrow.left.circle.fill"), role: .destructive)
+            StreamToolbarButton("Destructive", image: Image(systemName: "arrow.left"), role: .destructive)
                 .previewDisplayName("Destructive")
         }
         .previewLayout(.sizeThatFits)

@@ -6,11 +6,11 @@ import SwiftUI
 
 struct StreamStatusView: View {
     let streamName: String
-    @Binding var isLoading: Bool
+    @Binding var streamState: StreamManager.State
     
     var body: some View {
         HStack {
-            if !isLoading {
+            if streamState == .connected {
                 LiveBadge()
             }
 
@@ -27,11 +27,14 @@ struct StreamStatusView: View {
 struct StreamStatusView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            StreamStatusView(streamName: "Room name", isLoading: .constant(true))
+            StreamStatusView(streamName: "Room name", streamState: .constant(.connecting))
                 .previewDisplayName("Loading")
-            StreamStatusView(streamName: "Short room name", isLoading: .constant(false))
+            StreamStatusView(streamName: "Short room name", streamState: .constant(.connected))
                 .previewDisplayName("Short Room Name")
-            StreamStatusView(streamName: "A very long room name that doesn't fit completely", isLoading: .constant(false))
+            StreamStatusView(
+                streamName: "A very long room name that doesn't fit completely",
+                streamState: .constant(.connected)
+            )
                 .previewDisplayName("Long Room Name")
         }
         .previewLayout(.sizeThatFits)

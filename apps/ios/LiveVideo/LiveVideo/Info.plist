@@ -50,5 +50,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>${PRODUCT_NAME} uses the microphone so others in the event can hear you.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>${PRODUCT_NAME} uses the camera so others in the event can see you.</string>
 </dict>
 </plist>
