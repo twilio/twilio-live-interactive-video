@@ -8,7 +8,7 @@ struct SpeakerGridView: View {
     @EnvironmentObject var viewModel: SpeakerGridViewModel
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
-    private let spacing: CGFloat = 4
+    private let spacing: CGFloat = 6
 
     private var isPortraitOrientation: Bool {
         verticalSizeClass == .regular && horizontalSizeClass == .compact
@@ -18,7 +18,7 @@ struct SpeakerGridView: View {
         if isPortraitOrientation {
             return (viewModel.speakers.count + viewModel.speakers.count % columnCount) / columnCount
         } else {
-            return 1
+            return viewModel.speakers.count < 5 ? 1 : 2
         }
     }
     
@@ -26,7 +26,7 @@ struct SpeakerGridView: View {
         if isPortraitOrientation {
             return viewModel.speakers.count < 4 ? 1 : 2
         } else {
-            return viewModel.speakers.count
+            return (viewModel.speakers.count + viewModel.speakers.count % rowCount) / rowCount
         }
     }
     
@@ -43,7 +43,7 @@ struct SpeakerGridView: View {
                 Spacer()
             } else {
                 GeometryReader { geometry in
-                    LazyVGrid(columns: columns, spacing: 4) {
+                    LazyVGrid(columns: columns, spacing: spacing) {
                         ForEach($viewModel.speakers, id: \.self) { $speaker in
                             SpeakerVideoView(speaker: $speaker)
                                 .frame(height: geometry.size.height / CGFloat(rowCount) - spacing)
