@@ -2,6 +2,7 @@
 'use strict';
 
 const AccessToken = Twilio.jwt.AccessToken;
+const SyncGrant = AccessToken.SyncGrant;
 const MAX_ALLOWED_SESSION_DURATION = 14400;
 
 module.exports.handler = async (context, event, callback) => {
@@ -83,6 +84,40 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
+  // Create write access viewer document
+  const participantDocumentName = `viewer-${room.sid}-${user_identity}`
+
+  try {
+    await syncClient
+      .documents
+      .create({uniqueName: participantDocumentName, ttl: MAX_ALLOWED_SESSION_DURATION})
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error creating participant document',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  // Give participant write access to their document
+  try {
+    await syncClient.documents(participantDocumentName)
+      .documentPermissions(user_identity)
+      .update({read: true, write: true, manage: false})
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error giving write access to document',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
   // Create token
   const token = new AccessToken(context.ACCOUNT_SID, context.TWILIO_API_KEY_SID, context.TWILIO_API_KEY_SECRET, {
     ttl: MAX_ALLOWED_SESSION_DURATION,
@@ -98,10 +133,15 @@ module.exports.handler = async (context, event, callback) => {
     toPayload: () => playbackGrant,
   });
 
+  // Add sync grant to token
+  const syncGrant = new SyncGrant({ serviceSid: context.SYNC_SERVICE_SID });
+  token.addGrant(syncGrant);
+
   // Return token
   response.setStatusCode(200);
   response.setBody({
     token: token.toJwt(),
+    room_sid: room.sid
   });
 
   callback(null, response);

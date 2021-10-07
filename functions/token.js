@@ -5,6 +5,7 @@ const querystring = require('querystring');
 const AccessToken = Twilio.jwt.AccessToken;
 const VideoGrant = AccessToken.VideoGrant;
 const ChatGrant = AccessToken.ChatGrant;
+const SyncGrant = AccessToken.SyncGrant;
 const MAX_ALLOWED_SESSION_DURATION = 14400;
 
 module.exports.handler = async (context, event, callback) => {
@@ -103,6 +104,8 @@ module.exports.handler = async (context, event, callback) => {
           method: 'post',
           data: 'Video=true',
         });
+
+        console.log('Created playerStreamer')
 
         // Create mediaProcessor
         mediaProcessor = await axiosClient('MediaProcessors', {
@@ -204,6 +207,43 @@ module.exports.handler = async (context, event, callback) => {
         }
       }
     }
+
+    const syncService = client.sync.services(context.SYNC_SERVICE_SID); // TODO: Use other sync client
+    const raisedHandsMapName = `raised_hands-${room.sid}`
+
+    // Create raised hands map if it doesn't exist
+    try {
+      await syncService.syncMaps(raisedHandsMapName).fetch();
+    } catch (e) {
+      try {
+        await syncService.syncMaps.create({ uniqueName: raisedHandsMapName, ttl: MAX_ALLOWED_SESSION_DURATION });
+      } catch (e) {
+        response.setStatusCode(500);
+        response.setBody({
+          error: {
+            message: 'error creating raised hands map',
+            explanation: e.message,
+          },
+        });
+        return callback(null, response);
+      }
+    }
+
+    // Give participant read access to raised hands map
+    try {
+      await syncService.syncMaps(raisedHandsMapName)
+        .syncMapPermissions(user_identity)
+        .update({read: true, write: false, manage: false})
+    } catch (e) {
+      response.setStatusCode(500);
+      response.setBody({
+        error: {
+          message: 'error giving read access to raised hands map',
+          explanation: e.message,
+        },
+      });
+      return callback(null, response);
+    }
   }
 
   // Create token
@@ -218,12 +258,16 @@ module.exports.handler = async (context, event, callback) => {
   const videoGrant = new VideoGrant({ room: room_name });
   token.addGrant(videoGrant);
 
-  // Add chat grant to token
-  const chatGrant = new ChatGrant({ serviceSid: CONVERSATIONS_SERVICE_SID });
-  token.addGrant(chatGrant);
+  // // Add chat grant to token
+  // const chatGrant = new ChatGrant({ serviceSid: CONVERSATIONS_SERVICE_SID });
+  // token.addGrant(chatGrant);
 
+  // Add sync grant to token
+  const syncGrant = new SyncGrant({ serviceSid: context.SYNC_SERVICE_SID });
+  token.addGrant(syncGrant);
+  
   // Return token
   response.setStatusCode(200);
-  response.setBody({ token: token.toJwt(), room_type: ROOM_TYPE });
+  response.setBody({ token: token.toJwt(), room_type: ROOM_TYPE, room_sid: room.sid });
   return callback(null, response);
 };

@@ -12,6 +12,7 @@ struct HomeView: View {
     @State private var showStream = false
     @State private var signOut = false
     @State private var streamConfig: StreamConfig?
+    @EnvironmentObject var streamManager: StreamManager
 
     var body: some View {
         NavigationView {
@@ -50,6 +51,7 @@ struct HomeView: View {
                 isPresented: $showCreateStream,
                 onDismiss: {
                     showStream = streamConfig != nil
+                    streamManager.config = streamConfig
                 },
                 content: {
                     JoinStreamView(streamConfig: $streamConfig, mode: .create)
@@ -59,6 +61,7 @@ struct HomeView: View {
                 isPresented: $showJoinStream,
                 onDismiss: {
                     showStream = streamConfig != nil
+                    streamManager.config = streamConfig
                 },
                 content: {
                     JoinStreamView(streamConfig: $streamConfig, mode: .join)
@@ -68,7 +71,7 @@ struct HomeView: View {
                 SignInView()
             })
             .fullScreenCover(isPresented: $showStream, content: {
-                StreamView(config: $streamConfig)
+                StreamView()
             })
         }
     }

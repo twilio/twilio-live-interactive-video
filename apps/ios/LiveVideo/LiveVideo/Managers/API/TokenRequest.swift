@@ -12,6 +12,7 @@ struct TokenRequest: APIRequest {
 
     struct Response: Decodable {
         let token: String
+        let roomSid: String
     }
 
     let path = "token"

@@ -38,6 +38,15 @@
         }
       },
       {
+        "package": "TwilioSyncClient",
+        "repositoryURL": "https://github.com/twilio/twilio-sync-ios",
+        "state": {
+          "branch": null,
+          "revision": "dd300a5841544afc145feec90800ced480b7cfd2",
+          "version": "1.1.0"
+        }
+      },
+      {
         "package": "TwilioVideo",
         "repositoryURL": "https://github.com/twilio/twilio-video-ios",
         "state": {

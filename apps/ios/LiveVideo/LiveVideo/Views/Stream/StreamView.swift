@@ -8,7 +8,7 @@ struct StreamView: View {
     @EnvironmentObject var streamManager: StreamManager
     @EnvironmentObject var speakerSettingsManager: SpeakerSettingsManager
     @Environment(\.presentationMode) var presentationMode
-    @Binding var config: StreamConfig!
+    @State private var isShowingParticipants = false
     private let app = UIApplication.shared
     
     var body: some View {
@@ -18,10 +18,10 @@ struct StreamView: View {
 
                 VStack(spacing: 0) {
                     VStack(spacing: 0) {
-                        StreamStatusView(streamName: config.streamName, streamState: $streamManager.state)
+                        StreamStatusView(streamName: streamManager.config.streamName, streamState: $streamManager.state)
                             .padding([.horizontal, .bottom], 6)
                         
-                        switch config.role {
+                        switch streamManager.config.role {
                         case .host, .speaker:
                             SpeakerGridView()
                         case .viewer:
@@ -32,7 +32,7 @@ struct StreamView: View {
                     .padding(.trailing, geometry.safeAreaInsets.trailing)
                     
                     StreamToolbar {
-                        switch config.role {
+                        switch streamManager.config.role {
                         case .host, .speaker:
                             StreamToolbarButton(
                                 "Leave",
@@ -56,6 +56,26 @@ struct StreamView: View {
                             ) {
                                 speakerSettingsManager.isCameraOn.toggle()
                             }
+                            StreamToolbarButton(
+                                "Participants",
+                                image: Image(systemName: "person.2"),
+                                role: .default
+                            ) {
+                                isShowingParticipants = true
+                            }
+                            Menu {
+                                Button("Return to Viewers") {
+                                    streamManager.moveToViewers()
+                                }
+                            } label: {
+                                StreamToolbarButton(
+                                    "More",
+                                    image: Image(systemName: "ellipsis"),
+                                    role: .default
+                                ) {
+
+                                }
+                            }
                         case .viewer:
                             StreamToolbarButton(
                                 "Leave",
@@ -64,6 +84,13 @@ struct StreamView: View {
                             ) {
                                 streamManager.disconnect()
                                 presentationMode.wrappedValue.dismiss()
+                            }
+                            StreamToolbarButton(
+                                streamManager.isHandRaised ? "Lower hand" : "Raise hand",
+                                image: Image(systemName: streamManager.isHandRaised ? "hand.raised.slash" : "hand.raised"),
+                                role: .default
+                            ) {
+                                streamManager.isHandRaised.toggle()
                             }
                         }
                     }
@@ -81,7 +108,7 @@ struct StreamView: View {
         }
         .onAppear {
             app.isIdleTimerDisabled = true
-            streamManager.connect(config: config)
+            streamManager.connect()
         }
         .onDisappear {
             app.isIdleTimerDisabled = false
@@ -101,30 +128,41 @@ struct StreamView: View {
                 }
             }
         }
-    }
-}
-
-struct StreamView_Previews: PreviewProvider {
-    static var previews: some View {
-        return Group {
-            StreamView(config: .constant(StreamConfig(role: .host)))
-                .previewDisplayName("Speaker")
-                .environmentObject(StreamManager())
-                .environmentObject(SpeakerGridViewModel(speakerCount: 6))
-
-            Group {
-                StreamView(config: .constant(StreamConfig(role: .viewer)))
-                    .previewDisplayName("Viewer")
-                    .environmentObject(StreamManager())
-                StreamView(config: .constant(StreamConfig(role: .viewer)))
-                    .previewDisplayName("Joining")
-                    .environmentObject(StreamManager(state: .connecting))
-            }
-            .environmentObject(SpeakerGridViewModel())
+        .alert(isPresented: $streamManager.haveSpeakerInvite) {
+            Alert(
+                title: Text("Speaker invitation"),
+                message: Text("Would you like to join speakers?"),
+                primaryButton: .default(Text("Join")) { streamManager.moveToSpeakers() },
+                secondaryButton: .destructive(Text("Cancel"))
+            )
         }
-        .environmentObject(SpeakerSettingsManager())
+        .sheet(isPresented: $isShowingParticipants) {
+            ParticipantsView()
+        }
     }
 }
+
+//struct StreamView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        return Group {
+//            StreamView(config: .constant(StreamConfig(role: .host)))
+//                .previewDisplayName("Speaker")
+//                .environmentObject(StreamManager())
+//                .environmentObject(SpeakerGridViewModel(speakerCount: 6))
+//
+//            Group {
+//                StreamView(config: .constant(StreamConfig(role: .viewer)))
+//                    .previewDisplayName("Viewer")
+//                    .environmentObject(StreamManager())
+//                StreamView(config: .constant(StreamConfig(role: .viewer)))
+//                    .previewDisplayName("Joining")
+//                    .environmentObject(StreamManager(state: .connecting))
+//            }
+//            .environmentObject(SpeakerGridViewModel())
+//        }
+//        .environmentObject(SpeakerSettingsManager())
+//    }
+//}
 
 private extension StreamManager {
     convenience init(state: StreamManager.State = .connected) {

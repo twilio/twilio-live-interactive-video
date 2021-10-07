@@ -12,6 +12,7 @@ struct StreamTokenRequest: APIRequest {
 
     struct Response: Decodable {
         let token: String
+        let roomSid: String
     }
 
     let path = "stream-token"

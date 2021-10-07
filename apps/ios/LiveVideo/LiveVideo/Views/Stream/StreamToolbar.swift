@@ -12,7 +12,7 @@ struct StreamToolbar<Content>: View where Content: View {
     }
     
     var body: some View {
-        HStack(spacing: 25) {
+        HStack(spacing: 10) {
             Spacer()
             content()
             Spacer()
