@@ -1,10 +1,10 @@
 const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
 const { getListOfFunctionsAndAssets } = require('@twilio-labs/serverless-api/dist/utils/fs');
-const { getService } = require('@twilio-labs/serverless-api/dist/api/services');
 const cli = require('cli-ux').default;
 const constants = require('../constants');
 const { customAlphabet } = require('nanoid');
 const viewApp = require(`${__dirname}/list.js`);
+const { Command } = require('commander');
 
 function getRandomInt(length) {
   return customAlphabet('1234567890', length)();
@@ -12,23 +12,62 @@ function getRandomInt(length) {
 
 require('dotenv').config();
 
+const program = new Command();
+program.option('-o, --override', 'Override existing deployment');
+program.parse(process.argv);
+const options = program.opts();
+
 const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
 const serverlessClient = new TwilioServerlessApiClient({
   username: process.env.ACCOUNT_SID,
   password: process.env.AUTH_TOKEN,
 });
 
+async function findExistingConfiguration() {
+  const services = await client.serverless.services.list();
+  const service = services.find((service) => service.friendlyName.includes(constants.SERVICE_NAME));
+
+  if (service) {
+    const envVariables = await serverlessClient.getEnvironmentVariables({
+      serviceSid: service.sid,
+      environment: 'dev',
+      keys: ['TWILIO_API_KEY_SID', 'TWILIO_API_KEY_SECRET', 'CONVERSATIONS_SERVICE_SID', 'SYNC_SERVICE_SID'],
+      getValues: true,
+    });
+
+    const envVariablesObj = envVariables.variables.reduce(
+      (p, c) => {
+        p[c.key] = c.value;
+        return p;
+      },
+      { serviceSid: service.sid }
+    );
+
+    return envVariablesObj;
+  }
+}
+
 async function deployFunctions() {
-  cli.action.start('Creating Api Key');
-  const apiKey = await client.newKeys.create({ friendlyName: constants.API_KEY_NAME });
+  let apiKey, conversationsService, syncService;
+  const existingConfiguration = await findExistingConfiguration();
 
-  cli.action.start('Creating Conversations Service');
-  const conversationsService = await client.conversations.services.create({
-    friendlyName: constants.TWILIO_CONVERSATIONS_SERVICE_NAME,
-  });
+  if (!options.override && existingConfiguration) {
+    console.log('An app is already deployed. Please use the --override flag to override the previous deployment.\n');
+    return;
+  }
 
-  cli.action.start('Creating Sync Service');
-  const syncService = await client.sync.services.create({ friendlyName: constants.TWILIO_SYNC_SERVICE_NAME });
+  if (!existingConfiguration) {
+    cli.action.start('Creating Api Key');
+    apiKey = await client.newKeys.create({ friendlyName: constants.API_KEY_NAME });
+
+    cli.action.start('Creating Conversations Service');
+    conversationsService = await client.conversations.services.create({
+      friendlyName: constants.TWILIO_CONVERSATIONS_SERVICE_NAME,
+    });
+
+    cli.action.start('Creating Sync Service');
+    syncService = await client.sync.services.create({ friendlyName: constants.TWILIO_SYNC_SERVICE_NAME });
+  }
 
   const { assets, functions } = await getListOfFunctionsAndAssets(__dirname, {
     functionsFolderNames: ['../functions'],
@@ -57,14 +96,12 @@ async function deployFunctions() {
     });
   }
 
-  // serverlessClient
-  return serverlessClient.deployProject({
+  const deployConfig = {
     env: {
-      TWILIO_API_KEY_SID: apiKey.sid,
-      TWILIO_API_KEY_SECRET: apiKey.secret,
-      CONVERSATIONS_SERVICE_SID: conversationsService.sid,
-      SYNC_SERVICE_SID: syncService.sid,
-      VIDEO_IDENTITY: constants.VIDEO_IDENTITY,
+      TWILIO_API_KEY_SID: existingConfiguration?.TWILIO_API_KEY_SID || apiKey.sid,
+      TWILIO_API_KEY_SECRET: existingConfiguration?.TWILIO_API_KEY_SECRET || apiKey.secret,
+      CONVERSATIONS_SERVICE_SID: existingConfiguration?.CONVERSATIONS_SERVICE_SID || conversationsService.sid,
+      SYNC_SERVICE_SID: existingConfiguration?.SYNC_SERVICE_SID || syncService.sid,
       MEDIA_EXTENSION: constants.MEDIA_EXTENSION,
       APP_EXPIRY: Date.now() + 1000 * 60 * 60 * 24 * 7, // One week
       PASSCODE: getRandomInt(6),
@@ -78,9 +115,16 @@ async function deployFunctions() {
     functionsEnv: 'dev',
     assets,
     functions,
-    serviceName: `${constants.SERVICE_NAME}-${getRandomInt(4)}`,
-    overrideExistingService: true,
-  });
+    overrideExistingService: options.override,
+  };
+
+  if (existingConfiguration) {
+    deployConfig.serviceSid = existingConfiguration.serviceSid;
+  } else {
+    deployConfig.serviceName = `${constants.SERVICE_NAME}-${getRandomInt(4)}`;
+  }
+
+  return serverlessClient.deployProject(deployConfig);
 }
 
 async function deploy() {
