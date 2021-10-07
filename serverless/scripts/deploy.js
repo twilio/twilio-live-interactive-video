@@ -52,7 +52,9 @@ async function deployFunctions() {
   const existingConfiguration = await findExistingConfiguration();
 
   if (!options.override && existingConfiguration) {
-    console.log('An app is already deployed. Please use the --override flag to override the previous deployment.\n');
+    console.log(
+      'An app is already deployed. Please run "npm run serverless:deploy-override" to override the previous deployment.\n'
+    );
     return;
   }
 
@@ -77,6 +79,14 @@ async function deployFunctions() {
   serverlessClient.on('status-update', (evt) => {
     cli.action.start(evt.message);
   });
+
+  try {
+    const doc = await syncService.documents(`viewer-${room_sid}-${user_identity}`);
+    doc.mutate(function (remoteData) {
+      remoteData.video_room_token = token;
+      return remoteData;
+    });
+  } catch {}
 
   // Calling 'getListOfFunctionsAndAssets' twice is necessary because it only gets the assets from
   // the first matching folder in the array
