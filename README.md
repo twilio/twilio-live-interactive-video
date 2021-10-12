@@ -42,9 +42,11 @@ Once you have setup all your environment variables, run `npm install` to install
 Once the application environment has been configured and dependencies have been installed, you can deploy the app backend and web app using the following command.
 
 ```shell
-npm run deploy
+npm run serverless:deploy
 
-App: https://twilio-live-interactive-video-7873-dev.twil.io
+App deployed to: https://twilio-live-interactive-video-1234-5678-dev.twil.io
+Passcode: 123 456 1234 5678
+This URL is for demo purposes only. It will expire on Tue Oct 19 2021 14:58:20 GMT-0600 (Mountain Daylight Time)
 ```
 
-If you make any changes to the application, then you can run `npm run deploy` again and subsequent deploys will override your existing app.
+If you make any changes to the application, then you can run `npm run serverless:deploy -- --override` again and subsequent deploys will override your existing app.

@@ -6,7 +6,10 @@
   "scripts": {
     "postinstall": "npm install --prod --prefix apps/web",
     "test": "true",
-    "deploy": "bin/deploy.js"
+    "preserverless:deploy": "npm run build --prefix apps/web",
+    "serverless:deploy": "node serverless/scripts/deploy.js",
+    "serverless:list": "node serverless/scripts/list.js",
+    "serverless:remove": "node serverless/scripts/remove.js"
   },
   "repository": {
     "type": "git",
@@ -15,16 +18,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.1"
+    "@twilio-labs/serverless-api": "^5.2.1",
+    "axios": "^0.21.4",
+    "cli-ux": "^5.6.3",
+    "commander": "^8.2.0",
+    "dotenv": "^10.0.0",
+    "nanoid": "^3.1.28",
+    "twilio": "^3.68.0"
   },
   "bugs": {
     "url": "https://github.com/twilio/twilio-live-interactive-video/issues"
   },
-  "homepage": "https://github.com/twilio/twilio-live-interactive-video#readme",
-  "devDependencies": {
-    "cli-ux": "^5.6.3",
-    "dotenv": "^10.0.0",
-    "fs-extra": "^10.0.0",
-    "twilio-run": "^3.2.2"
-  }
+  "homepage": "https://github.com/twilio/twilio-live-interactive-video#readme"
 }
