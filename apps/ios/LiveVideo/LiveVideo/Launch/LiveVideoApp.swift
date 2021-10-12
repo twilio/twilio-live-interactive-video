@@ -11,7 +11,7 @@ struct LiveVideoApp: App {
     @StateObject private var streamManager = StreamManager()
     @StateObject private var speakerSettingsManager = SpeakerSettingsManager()
     @StateObject private var speakerGridViewModel = SpeakerGridViewModel()
-    @StateObject private var mapManager = SyncRaisedHandsMapManager()
+    @StateObject private var raisedHandsStore = RaisedHandsStore()
 
     var body: some Scene {
         WindowGroup {
@@ -20,7 +20,7 @@ struct LiveVideoApp: App {
                 .environmentObject(streamManager)
                 .environmentObject(speakerGridViewModel)
                 .environmentObject(speakerSettingsManager)
-                .environmentObject(mapManager)
+                .environmentObject(raisedHandsStore)
                 .onAppear {
                     let localParticipant = LocalParticipantManager(authManager: authManager)
                     let roomManager = RoomManager()
@@ -29,8 +29,7 @@ struct LiveVideoApp: App {
                     speakerSettingsManager.configure(localParticipant: localParticipant)
                     speakerGridViewModel.configure(roomManager: roomManager)
                     
-                    streamManager.syncViewerDocumentManager.authManager = authManager
-                    streamManager.mapManager = mapManager
+                    streamManager.raisedHandsStore = raisedHandsStore
                 }
         }
     }

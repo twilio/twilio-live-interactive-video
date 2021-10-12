@@ -5,20 +5,20 @@
 import SwiftUI
 
 struct ParticipantsView: View {
-    @EnvironmentObject var mapManager: SyncRaisedHandsMapManager
+    @EnvironmentObject var raisedHandsStore: RaisedHandsStore
     @EnvironmentObject var streamManager: StreamManager
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         NavigationView {
-            List(mapManager.raisedHands) { participant in
+            List(raisedHandsStore.raisedHands) { participant in
                 HStack {
-                    Text("\(participant.name) 🖐")
+                    Text("\(participant.userIdentity) 🖐")
                     Spacer()
                     Button("Invite to speak") {
                         print("Invite to speak tapped")
                         
-                        streamManager.sendSpeakerInvite(userIdentity: participant.name)
+                        streamManager.sendSpeakerInvite(userIdentity: participant.userIdentity)
                     }
                     .foregroundColor(.backgroundPrimary)
                 }
@@ -37,10 +37,16 @@ struct ParticipantsView: View {
 
 struct ParticipantsView_Previews: PreviewProvider {
     static var previews: some View {
-        let mapManager = SyncRaisedHandsMapManager()
-        mapManager.raisedHands = [RaisedHand(name: "Bob")]
+        let raisedHandsStore = RaisedHandsStore()
+        raisedHandsStore.raisedHands = [RaisedHandsStore.RaisedHand()]
         
         return ParticipantsView()
-            .environmentObject(mapManager)
+            .environmentObject(raisedHandsStore)
+    }
+}
+
+private extension RaisedHandsStore.RaisedHand {
+    init(userIdentity: String = "Alice") {
+        self.userIdentity = userIdentity
     }
 }

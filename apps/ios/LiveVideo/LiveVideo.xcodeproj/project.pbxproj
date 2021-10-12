@@ -7,12 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DC175F2D270E232F00D9D1FE /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F2C270E232F00D9D1FE /* SyncManager.swift */; };
+		DC175F2D270E232F00D9D1FE /* SyncClientManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F2C270E232F00D9D1FE /* SyncClientManager.swift */; };
 		DC175F30270E238F00D9D1FE /* TwilioSyncClient in Frameworks */ = {isa = PBXBuildFile; productRef = DC175F2F270E238F00D9D1FE /* TwilioSyncClient */; };
-		DC175F32270E23F900D9D1FE /* SyncViewerDocumentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F31270E23F900D9D1FE /* SyncViewerDocumentManager.swift */; };
-		DC175F34270E3FD200D9D1FE /* SyncRaisedHandsMapManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F33270E3FD200D9D1FE /* SyncRaisedHandsMapManager.swift */; };
+		DC175F32270E23F900D9D1FE /* ViewerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F31270E23F900D9D1FE /* ViewerStore.swift */; };
+		DC175F34270E3FD200D9D1FE /* RaisedHandsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F33270E3FD200D9D1FE /* RaisedHandsStore.swift */; };
 		DC175F37270E5B6F00D9D1FE /* ParticipantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F36270E5B6F00D9D1FE /* ParticipantsView.swift */; };
 		DC175F39270F673600D9D1FE /* SendSpeakerInviteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F38270F673600D9D1FE /* SendSpeakerInviteRequest.swift */; };
+		DC175F3C2715FBB600D9D1FE /* SpeakersStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F3B2715FBB600D9D1FE /* SpeakersStore.swift */; };
 		DC1ED0F026DFCD3C00FFA769 /* LiveBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED0EF26DFCD3C00FFA769 /* LiveBadge.swift */; };
 		DC1ED0F726E12C7400FFA769 /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED0F626E12C7400FFA769 /* ProgressHUD.swift */; };
 		DC1ED0F926E1440200FFA769 /* StreamStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED0F826E1440200FFA769 /* StreamStatusView.swift */; };
@@ -85,11 +86,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		DC175F2C270E232F00D9D1FE /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
-		DC175F31270E23F900D9D1FE /* SyncViewerDocumentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncViewerDocumentManager.swift; sourceTree = "<group>"; };
-		DC175F33270E3FD200D9D1FE /* SyncRaisedHandsMapManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncRaisedHandsMapManager.swift; sourceTree = "<group>"; };
+		DC175F2C270E232F00D9D1FE /* SyncClientManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncClientManager.swift; sourceTree = "<group>"; };
+		DC175F31270E23F900D9D1FE /* ViewerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewerStore.swift; sourceTree = "<group>"; };
+		DC175F33270E3FD200D9D1FE /* RaisedHandsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaisedHandsStore.swift; sourceTree = "<group>"; };
 		DC175F36270E5B6F00D9D1FE /* ParticipantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsView.swift; sourceTree = "<group>"; };
 		DC175F38270F673600D9D1FE /* SendSpeakerInviteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendSpeakerInviteRequest.swift; sourceTree = "<group>"; };
+		DC175F3B2715FBB600D9D1FE /* SpeakersStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakersStore.swift; sourceTree = "<group>"; };
 		DC1ED0EF26DFCD3C00FFA769 /* LiveBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBadge.swift; sourceTree = "<group>"; };
 		DC1ED0F626E12C7400FFA769 /* ProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
 		DC1ED0F826E1440200FFA769 /* StreamStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamStatusView.swift; sourceTree = "<group>"; };
@@ -190,6 +192,17 @@
 				DC175F36270E5B6F00D9D1FE /* ParticipantsView.swift */,
 			);
 			path = Participants;
+			sourceTree = "<group>";
+		};
+		DC175F3A2715DC4500D9D1FE /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				DC175F2C270E232F00D9D1FE /* SyncClientManager.swift */,
+				DC175F31270E23F900D9D1FE /* ViewerStore.swift */,
+				DC175F33270E3FD200D9D1FE /* RaisedHandsStore.swift */,
+				DC175F3B2715FBB600D9D1FE /* SpeakersStore.swift */,
+			);
+			path = Sync;
 			sourceTree = "<group>";
 		};
 		DC1ED0FE26E92D7C00FFA769 /* Room */ = {
@@ -368,9 +381,6 @@
 			children = (
 				DCC1D62526D9396400892038 /* StreamManager.swift */,
 				DCC1D62726D9568700892038 /* StreamConfig.swift */,
-				DC175F2C270E232F00D9D1FE /* SyncManager.swift */,
-				DC175F31270E23F900D9D1FE /* SyncViewerDocumentManager.swift */,
-				DC175F33270E3FD200D9D1FE /* SyncRaisedHandsMapManager.swift */,
 			);
 			path = Stream;
 			sourceTree = "<group>";
@@ -428,6 +438,7 @@
 				DCC48F9F26D830E300EE49EF /* Player */,
 				DC1ED0FE26E92D7C00FFA769 /* Room */,
 				DCC1D62426D9393900892038 /* Stream */,
+				DC175F3A2715DC4500D9D1FE /* Sync */,
 			);
 			path = Twilio;
 			sourceTree = "<group>";
@@ -595,10 +606,10 @@
 				DC1ED0FD26E14D0B00FFA769 /* StreamToolbar.swift in Sources */,
 				DC1ED0F926E1440200FFA769 /* StreamStatusView.swift in Sources */,
 				DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */,
-				DC175F34270E3FD200D9D1FE /* SyncRaisedHandsMapManager.swift in Sources */,
+				DC175F34270E3FD200D9D1FE /* RaisedHandsStore.swift in Sources */,
 				DCC48FA326D8322900EE49EF /* SwiftUIPlayerView.swift in Sources */,
 				DC1ED0F726E12C7400FFA769 /* ProgressHUD.swift in Sources */,
-				DC175F32270E23F900D9D1FE /* SyncViewerDocumentManager.swift in Sources */,
+				DC175F32270E23F900D9D1FE /* ViewerStore.swift in Sources */,
 				DCC1D62626D9396400892038 /* StreamManager.swift in Sources */,
 				DCC48F9B26D8296300EE49EF /* LiveVideoError.swift in Sources */,
 				DC4AA66226D0493E00E677D5 /* PrimaryButtonStyle.swift in Sources */,
@@ -613,7 +624,7 @@
 				DC5F459426CEC1FF009C5C79 /* UserDefaultsManager.swift in Sources */,
 				DC5F458F26CEBEC8009C5C79 /* AppInfoStore.swift in Sources */,
 				DCC1D62C26D97BB200892038 /* ErrorAlert.swift in Sources */,
-				DC175F2D270E232F00D9D1FE /* SyncManager.swift in Sources */,
+				DC175F2D270E232F00D9D1FE /* SyncClientManager.swift in Sources */,
 				DC1ED12326E92DEA00FFA769 /* TrackName.swift in Sources */,
 				DCC48F9D26D82E9300EE49EF /* StreamTokenRequest.swift in Sources */,
 				DC4AA65926D0133600E677D5 /* Color.swift in Sources */,
@@ -627,6 +638,7 @@
 				DC175F37270E5B6F00D9D1FE /* ParticipantsView.swift in Sources */,
 				DCC48F7726D8116C00EE49EF /* StreamView.swift in Sources */,
 				DC1ED11E26E92DEA00FFA769 /* LocalParticipantManager.swift in Sources */,
+				DC175F3C2715FBB600D9D1FE /* SpeakersStore.swift in Sources */,
 				DCC48F8B26D8288B00EE49EF /* APIRequest.swift in Sources */,
 				DC1ED12E26E94B5900FFA769 /* TokenRequest.swift in Sources */,
 				DC175F39270F673600D9D1FE /* SendSpeakerInviteRequest.swift in Sources */,

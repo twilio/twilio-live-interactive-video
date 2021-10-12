@@ -22,16 +22,17 @@ class StreamManager: ObservableObject {
     }
     @Published var isHandRaised = false {
         didSet {
-            syncViewerDocumentManager.isHandRaised = isHandRaised
+            viewerStore.isHandRaised = isHandRaised
         }
     }
     private var api: API?
     private var playerManager: PlayerManager?
     private var roomManager: RoomManager!
     private var subscriptions = Set<AnyCancellable>()
-    private let syncManager = SyncManager()
-    let syncViewerDocumentManager = SyncViewerDocumentManager()
-    var mapManager: SyncRaisedHandsMapManager!
+    private let syncManager = SyncClientManager()
+    let viewerStore = ViewerStore()
+    var raisedHandsStore: RaisedHandsStore!
+    private let speakersStore: SpeakersStore()
     @Published var config: StreamConfig!
     private var token: String!
     @Published var haveSpeakerInvite = false
@@ -61,9 +62,8 @@ class StreamManager: ObservableObject {
             .sink { [weak self] in self?.handleSyncConnect()}
             .store(in: &subscriptions)
         
-        syncViewerDocumentManager.tokenPublisher
-            .sink { [weak self] _ in
-                print("Received token from publisher")
+        viewerStore.speakerInvitePublisher
+            .sink { [weak self] in
                 self?.haveSpeakerInvite = true
             }
             .store(in: &subscriptions)
@@ -81,8 +81,9 @@ class StreamManager: ObservableObject {
     }
     
     private func handleSyncConnect() {
-        syncViewerDocumentManager.configure(client: syncManager.client!, roomSID: syncManager.roomSID)
-        mapManager.configure(client: syncManager.client!, roomSID: syncManager.roomSID)
+        viewerStore.connect(client: syncManager.client!, documentName: "", completion: { _ in }) // TODO: Handle error
+        raisedHandsStore.connect(client: syncManager.client!, mapName: "", completion: { _ in }) // TODO: Handle error
+        speakersStore.connect(client: syncManager.client!, mapName: "", completion: { _ in }) // TODO: Handle error
         
         switch config.role {
         case .host, .speaker:
@@ -136,7 +137,7 @@ class StreamManager: ObservableObject {
     func moveToSpeakers() {
         playerManager?.pause()
         state = .connecting
-        token = syncViewerDocumentManager.videoRoomToken
+//        token = syncViewerDocumentManager.videoRoomToken
         config = StreamConfig(streamName: config.streamName, userIdentity: config.userIdentity, role: .speaker)
         connectToRoom()
     }
