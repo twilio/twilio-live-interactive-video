@@ -6,8 +6,8 @@
   "scripts": {
     "postinstall": "npm install --prod --prefix apps/web",
     "test": "true",
+    "preserverless:deploy": "npm run build --prefix apps/web",
     "serverless:deploy": "node serverless/scripts/deploy.js",
-    "serverless:deploy-override": "node serverless/scripts/deploy.js --override",
     "serverless:list": "node serverless/scripts/list.js",
     "serverless:remove": "node serverless/scripts/remove.js"
   },

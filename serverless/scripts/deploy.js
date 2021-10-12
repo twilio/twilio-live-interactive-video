@@ -54,7 +54,7 @@ async function deployFunctions() {
 
   if (!options.override && existingConfiguration) {
     console.log(
-      'An app is already deployed. Please run "npm run serverless:deploy-override" to override the previous deployment.\n'
+      'An app is already deployed. Please run "npm run serverless:deploy -- --override" to override the previous deployment.\n'
     );
     return;
   }
