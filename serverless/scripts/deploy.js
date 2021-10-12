@@ -1,10 +1,10 @@
 const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
 const { getListOfFunctionsAndAssets } = require('@twilio-labs/serverless-api/dist/utils/fs');
 const cli = require('cli-ux').default;
+const { Command } = require('commander');
 const constants = require('../constants');
 const { customAlphabet } = require('nanoid');
 const viewApp = require(`${__dirname}/list.js`);
-const { Command } = require('commander');
 
 function getRandomInt(length) {
   return customAlphabet('1234567890', length)();
@@ -23,6 +23,7 @@ const serverlessClient = new TwilioServerlessApiClient({
   password: process.env.AUTH_TOKEN,
 });
 
+// Returns an object of the previously deployed environment variables if they exist.
 async function findExistingConfiguration() {
   const services = await client.serverless.services.list();
   const service = services.find((service) => service.friendlyName.includes(constants.SERVICE_NAME));
@@ -36,9 +37,9 @@ async function findExistingConfiguration() {
     });
 
     const envVariablesObj = envVariables.variables.reduce(
-      (p, c) => {
-        p[c.key] = c.value;
-        return p;
+      (prev, curr) => {
+        prev[curr.key] = curr.value;
+        return prev;
       },
       { serviceSid: service.sid }
     );
@@ -58,6 +59,7 @@ async function deployFunctions() {
     return;
   }
 
+  // Create new services if they don't already exist
   if (!existingConfiguration) {
     cli.action.start('Creating Api Key');
     apiKey = await client.newKeys.create({ friendlyName: constants.API_KEY_NAME });
@@ -80,14 +82,6 @@ async function deployFunctions() {
     cli.action.start(evt.message);
   });
 
-  try {
-    const doc = await syncService.documents(`viewer-${room_sid}-${user_identity}`);
-    doc.mutate(function (remoteData) {
-      remoteData.video_room_token = token;
-      return remoteData;
-    });
-  } catch {}
-
   // Calling 'getListOfFunctionsAndAssets' twice is necessary because it only gets the assets from
   // the first matching folder in the array
   const { assets: fnAssets } = await getListOfFunctionsAndAssets(__dirname, {
@@ -99,6 +93,7 @@ async function deployFunctions() {
   const indexHTML = assets.find((asset) => asset.name.includes('index.html'));
 
   if (indexHTML) {
+    // Create root asset
     assets.push({
       ...indexHTML,
       path: '/',
@@ -129,6 +124,7 @@ async function deployFunctions() {
   };
 
   if (existingConfiguration) {
+    // Deploy to existing service if it exists
     deployConfig.serviceSid = existingConfiguration.serviceSid;
   } else {
     deployConfig.serviceName = `${constants.SERVICE_NAME}-${getRandomInt(4)}`;
@@ -139,7 +135,6 @@ async function deployFunctions() {
 
 async function deploy() {
   await deployFunctions();
-
   cli.action.stop();
   await viewApp();
 }
