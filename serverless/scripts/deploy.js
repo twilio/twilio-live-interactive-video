@@ -136,6 +136,7 @@ async function deployFunctions() {
 async function deploy() {
   await deployFunctions();
   cli.action.stop();
+  console.log('\n');
   await viewApp();
 }
 
