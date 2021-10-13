@@ -3,12 +3,13 @@ import { makeStyles, Typography, Grid, Button, Theme, Hidden } from '@material-u
 import CircularProgress from '@material-ui/core/CircularProgress';
 import LocalVideoPreview from './LocalVideoPreview/LocalVideoPreview';
 import SettingsMenu from './SettingsMenu/SettingsMenu';
-import { Steps } from '../PreJoinScreens';
+
 import ToggleAudioButton from '../../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleVideoButton from '../../Buttons/ToggleVideoButton/ToggleVideoButton';
 import { useAppState } from '../../../state';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import { actionTypes, ActiveScreen, stateType } from '../prejoinReducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -53,12 +54,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface DeviceSelectionScreenProps {
-  name: string;
-  roomName: string;
-  setStep: (step: Steps) => void;
+  state: stateType;
+  dispatch: React.Dispatch<actionTypes>;
 }
 
-export default function DeviceSelectionScreen({ name, roomName, setStep }: DeviceSelectionScreenProps) {
+export default function DeviceSelectionScreen({ state, dispatch }: DeviceSelectionScreenProps) {
   const classes = useStyles();
   const { getToken, isFetching } = useAppState();
   const { connect: chatConnect } = useChatContext();
@@ -66,10 +66,11 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
 
   const handleJoin = () => {
-    getToken(name, roomName).then(({ token }) => {
-      videoConnect(token);
-      process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-    });
+    console.log('join!', state);
+    // getToken(name, roomName).then(({ token }) => {
+    //   videoConnect(token);
+    //   process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+    // });
   };
 
   if (isFetching || isConnecting) {
@@ -90,13 +91,13 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
   return (
     <>
       <Typography variant="h5" className={classes.gutterBottom}>
-        Join {roomName}
+        Join {state.eventName}
       </Typography>
 
       <Grid container justifyContent="center">
         <Grid item md={7} sm={12} xs={12}>
           <div className={classes.localPreviewContainer}>
-            <LocalVideoPreview identity={name} />
+            <LocalVideoPreview identity={state.name} />
           </div>
           <div className={classes.mobileButtonBar}>
             <Hidden mdUp>
@@ -115,8 +116,20 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
               </Hidden>
             </div>
             <div className={classes.joinButtons}>
-              <Button variant="outlined" color="primary" onClick={() => setStep(Steps.roomNameStep)}>
-                Cancel
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() =>
+                  dispatch({
+                    type: 'set-active-screen',
+                    activeScreen:
+                      state.participantType === 'host'
+                        ? ActiveScreen.CreateNewEventScreen
+                        : ActiveScreen.JoinEventNameScreen,
+                  })
+                }
+              >
+                Go Back
               </Button>
               <Button
                 variant="contained"
