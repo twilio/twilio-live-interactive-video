@@ -11,28 +11,34 @@ struct ParticipantsView: View {
 
     var body: some View {
         NavigationView {
-            List(raisedHandsStore.raisedHands) { participant in
-                HStack {
-                    Text("\(participant.userIdentity) 🖐")
-                    Spacer()
-                    Button("Invite to speak") {
-                        let request = SendSpeakerInviteRequest(
-                            userIdentity: participant.userIdentity,
-                            roomName: "",
-                            roomSID: ""
-                        )
-                        
-                        api.request(request) // TODO: Maybe display error
+            List {
+                Section(header: Text("Viewers")) {
+                    ForEach(raisedHandsStore.raisedHands) { participant in
+                        HStack {
+                            Text("\(participant.userIdentity) 🖐")
+                            Spacer()
+                            Button("Invite to speak") {
+                                let request = SendSpeakerInviteRequest(
+                                    userIdentity: participant.userIdentity,
+                                    roomName: "",
+                                    roomSID: ""
+                                )
+                                
+                                api.request(request) // TODO: Maybe display error
+                            }
+                            .foregroundColor(.backgroundPrimary)
+                        }
                     }
-                    .foregroundColor(.backgroundPrimary)
                 }
             }
             .listStyle(.plain)
             .navigationTitle("Participants")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                Button("Done") {
-                    presentationMode.wrappedValue.dismiss()
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        presentationMode.wrappedValue.dismiss()
+                    }
                 }
             }
         }
