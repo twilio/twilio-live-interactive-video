@@ -41,15 +41,15 @@ export default function PreJoinScreens() {
   //   }
   // }, [user, URLRoomName]);
 
-  // useEffect(() => {
-  //   if (step === Steps.deviceSelectionStep && !mediaError) {
-  //     getAudioAndVideoTracks().catch(error => {
-  //       console.log('Error acquiring local media:');
-  //       console.dir(error);
-  //       setMediaError(error);
-  //     });
-  //   }
-  // }, [getAudioAndVideoTracks, step, mediaError]);
+  useEffect(() => {
+    if (state.activeScreen === ActiveScreen.DeviceSelectionScreen && !mediaError) {
+      getAudioAndVideoTracks().catch(error => {
+        console.log('Error acquiring local media:');
+        console.dir(error);
+        setMediaError(error);
+      });
+    }
+  }, [getAudioAndVideoTracks, state.activeScreen, mediaError]);
 
   // const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
   //   event.preventDefault();
