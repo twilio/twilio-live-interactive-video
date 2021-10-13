@@ -5,8 +5,7 @@
 import Alamofire
 import Foundation
 
-class API {
-    static var shared = API()
+class API: ObservableObject {
     private let session = Session()
     private let jsonEncoder = JSONEncoder()
     private let jsonDecoder = JSONDecoder()

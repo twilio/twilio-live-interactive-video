@@ -5,7 +5,7 @@
 import Combine
 import TwilioSyncClient
 
-class ViewerStore: NSObject {
+class ViewerStore: NSObject, SyncStoring, ObservableObject {
     let speakerInvitePublisher = PassthroughSubject<Void, Never>()
     var isHandRaised = false {
         didSet {
@@ -19,9 +19,10 @@ class ViewerStore: NSObject {
             )
         }
     }
+    var documentName: String!
     private var document: TWSDocument?
     
-    func connect(client: TwilioSyncClient, documentName: String, completion: @escaping (Error?) -> Void) {
+    func connect(client: TwilioSyncClient, completion: @escaping (Error?) -> Void) {
         guard let options = TWSOpenOptions.open(withSidOrUniqueName: documentName) else { return }
         
         client.openDocument(with: options, delegate: self) { [weak self] result, document in
@@ -33,6 +34,11 @@ class ViewerStore: NSObject {
             self?.document = document
             completion(nil)
         }
+    }
+    
+    func disconnect() {
+        document = nil
+        isHandRaised = false
     }
 }
 

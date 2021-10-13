@@ -4,7 +4,7 @@
 
 import TwilioSyncClient
 
-class RaisedHandsStore: NSObject, ObservableObject {
+class RaisedHandsStore: NSObject, ObservableObject, SyncStoring {
     struct RaisedHand: Identifiable {
         let userIdentity: String
         var id: String { userIdentity }
@@ -15,9 +15,10 @@ class RaisedHandsStore: NSObject, ObservableObject {
     }
 
     @Published var raisedHands: [RaisedHand] = []
+    var mapName: String!
     private var map: TWSMap?
 
-    func connect(client: TwilioSyncClient, mapName: String, completion: @escaping (Error?) -> Void) {
+    func connect(client: TwilioSyncClient, completion: @escaping (Error?) -> Void) {
         guard let openOptions = TWSOpenOptions.open(withSidOrUniqueName: mapName) else { return }
 
         client.openMap(with: openOptions, delegate: self) { [weak self] result, map in
@@ -42,6 +43,11 @@ class RaisedHandsStore: NSObject, ObservableObject {
                 completion(nil)
             }
         }
+    }
+    
+    func disconnect() {
+        map = nil
+        raisedHands = []
     }
 }
 

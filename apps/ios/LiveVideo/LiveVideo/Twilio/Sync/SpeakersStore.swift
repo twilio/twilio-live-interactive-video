@@ -4,7 +4,7 @@
 
 import TwilioSyncClient
 
-class SpeakersStore: NSObject {
+class SpeakersStore: NSObject, SyncStoring {
     struct Speaker {
         let userIdentity: String
         let isHost: Bool
@@ -15,10 +15,11 @@ class SpeakersStore: NSObject {
         }
     }
 
+    var mapName: String!
     private(set) var speakers: [Speaker] = []
     private var map: TWSMap?
 
-    func connect(client: TwilioSyncClient, mapName: String, completion: @escaping (Error?) -> Void) {
+    func connect(client: TwilioSyncClient, completion: @escaping (Error?) -> Void) {
         guard let openOptions = TWSOpenOptions.open(withSidOrUniqueName: mapName) else { return }
 
         client.openMap(with: openOptions, delegate: self) { [weak self] result, map in

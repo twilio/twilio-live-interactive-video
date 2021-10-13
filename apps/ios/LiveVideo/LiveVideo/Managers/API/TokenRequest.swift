@@ -11,15 +11,41 @@ struct TokenRequest: APIRequest {
     }
 
     struct Response: Decodable {
+        struct SyncObjectNames: Decodable {
+            let speakersMap: String
+            let raisedHandsMap: String
+            let viewerDocument: String
+        }
+        
         let token: String
-        let roomSid: String
+        let syncObjectNames: SyncObjectNames
     }
 
-    let path = "token"
+    let path: String
     let parameters: Parameters
     let responseType = Response.self
     
-    init(userIdentity: String, roomName: String) {
+    init(userIdentity: String, roomName: String, role: Role) {
         parameters = Parameters(userIdentity: userIdentity, roomName: roomName)
+        path = role.path
     }
+}
+
+private extension Role {
+    var path: String {
+        switch self {
+        case .host: return "token"
+        case .speaker: return "token"
+        case .viewer: return "stream-token"
+        }
+    }
+}
+
+
+enum Role: String, Identifiable {
+    case host
+    case speaker
+    case viewer
+
+    var id: String { rawValue }
 }

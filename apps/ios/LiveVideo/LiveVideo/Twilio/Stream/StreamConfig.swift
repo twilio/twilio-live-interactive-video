@@ -5,15 +5,7 @@
 import Foundation
 
 struct StreamConfig {
-    enum Role: String, Identifiable {
-        case host
-        case speaker
-        case viewer
-        
-        var id: String { rawValue }
-    }
-    
     let streamName: String
     let userIdentity: String
-    let role: Role
+    var role: Role
 }

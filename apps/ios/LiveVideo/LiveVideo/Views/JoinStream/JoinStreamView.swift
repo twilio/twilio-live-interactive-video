@@ -18,7 +18,7 @@ struct JoinStreamView: View {
     @Binding var streamConfig: StreamConfig?
     let mode: Mode
     @State private var streamName = ""
-    @State private var role = StreamConfig.Role.viewer
+    @State private var role = Role.viewer
     
     var body: some View {
         NavigationView {
@@ -30,8 +30,8 @@ struct JoinStreamView: View {
                 
                 if mode.shouldSelectViewerOrSpeaker {
                     Picker("What is your favorite color?", selection: $role) {
-                        Text("Viewer").tag(StreamConfig.Role.viewer)
-                        Text("Speaker").tag(StreamConfig.Role.speaker)
+                        Text("Viewer").tag(Role.viewer)
+                        Text("Speaker").tag(Role.speaker)
                     }
                     .pickerStyle(.segmented)
                     .padding(.vertical, 10)

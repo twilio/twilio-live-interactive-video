@@ -14,7 +14,7 @@ class StreamManager: ObservableObject {
     
     @Published var state = State.disconnected
     @Published var player: Player?
-    @Published var showError = false
+    @Published var showError = false // TODO: Move out?
     @Published var error: Error? {
         didSet {
             showError = error != nil
@@ -29,18 +29,23 @@ class StreamManager: ObservableObject {
     private var playerManager: PlayerManager?
     private var roomManager: RoomManager!
     private var subscriptions = Set<AnyCancellable>()
-    private let syncManager = SyncClientManager()
-    let viewerStore = ViewerStore()
+    private let syncManager = SyncManager()
+    private var viewerStore: ViewerStore!
     var raisedHandsStore: RaisedHandsStore!
-    private let speakersStore: SpeakersStore()
+    private let speakersStore = SpeakersStore()
     @Published var config: StreamConfig!
-    private var token: String!
     @Published var haveSpeakerInvite = false
 
-    func configure(roomManager: RoomManager, playerManager: PlayerManager, api: API) {
+    func configure(
+        roomManager: RoomManager,
+        playerManager: PlayerManager,
+        api: API,
+        viewerStore: ViewerStore
+    ) {
         self.roomManager = roomManager
         self.playerManager = playerManager
         self.api = api
+        self.viewerStore = viewerStore
         
         roomManager.roomConnectPublisher
             .sink { [weak self] in self?.state = .connected }
@@ -58,10 +63,6 @@ class StreamManager: ObservableObject {
             .sink { [weak self] error in self?.handleError(error) }
             .store(in: &subscriptions)
 
-        syncManager.syncClientPublisher
-            .sink { [weak self] in self?.handleSyncConnect()}
-            .store(in: &subscriptions)
-        
         viewerStore.speakerInvitePublisher
             .sink { [weak self] in
                 self?.haveSpeakerInvite = true
@@ -70,91 +71,96 @@ class StreamManager: ObservableObject {
 
         playerManager.delegate = self
     }
-
-    // TODO: Move this out
-    func sendSpeakerInvite(userIdentity: String) {
-        let request = SendSpeakerInviteRequest(userIdentity: userIdentity, roomName: config.streamName, roomSID: syncManager.roomSID)
-        
-        api?.request(request) { result in
-            print(result)
-        }
-    }
-    
-    private func handleSyncConnect() {
-        viewerStore.connect(client: syncManager.client!, documentName: "", completion: { _ in }) // TODO: Handle error
-        raisedHandsStore.connect(client: syncManager.client!, mapName: "", completion: { _ in }) // TODO: Handle error
-        speakersStore.connect(client: syncManager.client!, mapName: "", completion: { _ in }) // TODO: Handle error
-        
-        switch config.role {
-        case .host, .speaker:
-            connectToRoom()
-        case .viewer:
-            playerManager?.configure(accessToken: token)
-            playerManager?.connect()
-        }
-    }
     
     func connect() {
-        guard let api = api else { return }
+        guard api != nil else { return }
         
         state = .connecting
- 
-        switch config.role {
-        case .host, .speaker:
-            let request = TokenRequest(userIdentity: config.userIdentity, roomName: config.streamName)
-            
-            api.request(request) { [weak self] result in
-                switch result {
-                case let .success(response):
-                    self?.token = response.token
-                    self?.syncManager.configure(token: response.token, roomSID: response.roomSid)
-                case let .failure(error):
-                    self?.handleError(error)
-                }
-            }
-        case .viewer:
-            let request = StreamTokenRequest(userIdentity: config.userIdentity, roomName: config.streamName)
-            
-            api.request(request) { [weak self] result in
-                switch result {
-                case let .success(response):
-                    self?.token = response.token
-                    self?.syncManager.configure(token: response.token, roomSID: response.roomSid)
-                case let .failure(error):
-                    self?.handleError(error)
-                }
-            }
-        }
+        fetchToken()
     }
     
     func disconnect() {
         roomManager.disconnect()
         playerManager?.disconnect()
+        syncManager.disconnect()
+        raisedHandsStore.disconnect() // TODO: Move
+        viewerStore.disconnect() // TODO: Move
         player = nil
         state = .disconnected
+        
+        // TODO: Delete stream
     }
     
     func moveToSpeakers() {
-        playerManager?.pause()
         state = .connecting
-//        token = syncViewerDocumentManager.videoRoomToken
-        config = StreamConfig(streamName: config.streamName, userIdentity: config.userIdentity, role: .speaker)
-        connectToRoom()
+        playerManager?.disconnect()
+        config.role = .speaker
+        fetchToken()
     }
     
     func moveToViewers() {
-        roomManager.disconnect()
         state = .connecting
-        config = StreamConfig(streamName: config.streamName, userIdentity: config.userIdentity, role: .viewer)
-        playerManager?.connect()
+        roomManager.disconnect()
+        config.role = .viewer
+        fetchToken()
+    }
+
+    private func fetchToken() {
+        let request = TokenRequest(userIdentity: config.userIdentity, roomName: config.streamName, role: config.role)
+        
+        api?.request(request) { [weak self] result in
+            switch result {
+            case let .success(response):
+                self?.connectSync(
+                    token: response.token,
+                    viewerDocumentName: response.syncObjectNames.viewerDocument,
+                    raisedHandsMapName: response.syncObjectNames.raisedHandsMap,
+                    speakersMapName: response.syncObjectNames.speakersMap
+                )
+            case let .failure(error):
+                self?.handleError(error)
+            }
+        }
     }
     
-    func connectToRoom() {
-        roomManager.localParticipant.isCameraOn = true
-        roomManager.localParticipant.isMicOn = true
-        roomManager.connect(roomName: config.streamName, accessToken: token)
+    private func connectSync(
+        token: String,
+        viewerDocumentName: String,
+        raisedHandsMapName: String,
+        speakersMapName: String
+    ) {
+        guard !syncManager.isConnected else {
+            connectRoomOrPlayer(token: token)
+            return
+        }
+        
+        viewerStore.documentName = viewerDocumentName
+        raisedHandsStore.mapName = raisedHandsMapName
+        speakersStore.mapName = speakersMapName
+
+        let stores: [SyncStoring] = [viewerStore, raisedHandsStore, speakersStore]
+        
+        syncManager.connect(token: token, stores: stores) { [weak self] error in
+            if let error = error {
+                self?.handleError(error)
+                return
+            }
+            
+            self?.connectRoomOrPlayer(token: token)
+        }
     }
     
+    private func connectRoomOrPlayer(token: String) {
+        switch self.config.role {
+        case .host, .speaker:
+            roomManager.localParticipant.isCameraOn = true // TODO: Move
+            roomManager.localParticipant.isMicOn = true
+            roomManager.connect(roomName: config.streamName, accessToken: token)
+        case .viewer:
+            playerManager?.connect(accessToken: token)
+        }
+    }
+
     private func handleError(_ error: Error) {
         disconnect()
         self.error = error

@@ -6,7 +6,7 @@ import SwiftUI
 
 struct ParticipantsView: View {
     @EnvironmentObject var raisedHandsStore: RaisedHandsStore
-    @EnvironmentObject var streamManager: StreamManager
+    @EnvironmentObject var api: API
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -16,9 +16,13 @@ struct ParticipantsView: View {
                     Text("\(participant.userIdentity) 🖐")
                     Spacer()
                     Button("Invite to speak") {
-                        print("Invite to speak tapped")
+                        let request = SendSpeakerInviteRequest(
+                            userIdentity: participant.userIdentity,
+                            roomName: "",
+                            roomSID: ""
+                        )
                         
-                        streamManager.sendSpeakerInvite(userIdentity: participant.userIdentity)
+                        api.request(request) // TODO: Maybe display error
                     }
                     .foregroundColor(.backgroundPrimary)
                 }
