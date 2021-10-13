@@ -32,7 +32,6 @@ class StreamManager: ObservableObject {
     private let syncManager = SyncManager()
     private var viewerStore: ViewerStore!
     var raisedHandsStore: RaisedHandsStore!
-    private let speakersStore = SpeakersStore()
     @Published var config: StreamConfig!
     @Published var haveSpeakerInvite = false
 
@@ -88,7 +87,7 @@ class StreamManager: ObservableObject {
         player = nil
         state = .disconnected
         
-        // TODO: Delete stream
+        // TODO: Delete stream if role is host, and handle errors for other participants also
     }
     
     func moveToSpeakers() {
@@ -114,8 +113,7 @@ class StreamManager: ObservableObject {
                 self?.connectSync(
                     token: response.token,
                     viewerDocumentName: response.syncObjectNames.viewerDocument,
-                    raisedHandsMapName: response.syncObjectNames.raisedHandsMap,
-                    speakersMapName: response.syncObjectNames.speakersMap
+                    raisedHandsMapName: response.syncObjectNames.raisedHandsMap
                 )
             case let .failure(error):
                 self?.handleError(error)
@@ -126,8 +124,7 @@ class StreamManager: ObservableObject {
     private func connectSync(
         token: String,
         viewerDocumentName: String,
-        raisedHandsMapName: String,
-        speakersMapName: String
+        raisedHandsMapName: String
     ) {
         guard !syncManager.isConnected else {
             connectRoomOrPlayer(token: token)
@@ -136,9 +133,8 @@ class StreamManager: ObservableObject {
         
         viewerStore.documentName = viewerDocumentName
         raisedHandsStore.mapName = raisedHandsMapName
-        speakersStore.mapName = speakersMapName
 
-        let stores: [SyncStoring] = [viewerStore, raisedHandsStore, speakersStore]
+        let stores: [SyncStoring] = [viewerStore, raisedHandsStore]
         
         syncManager.connect(token: token, stores: stores) { [weak self] error in
             if let error = error {

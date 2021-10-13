@@ -25,13 +25,13 @@ struct TokenRequest: APIRequest {
     let parameters: Parameters
     let responseType = Response.self
     
-    init(userIdentity: String, roomName: String, role: Role) {
+    init(userIdentity: String, roomName: String, role: StreamConfig.Role) {
         parameters = Parameters(userIdentity: userIdentity, roomName: roomName)
         path = role.path
     }
 }
 
-private extension Role {
+private extension StreamConfig.Role {
     var path: String {
         switch self {
         case .host: return "token"
@@ -39,13 +39,4 @@ private extension Role {
         case .viewer: return "stream-token"
         }
     }
-}
-
-
-enum Role: String, Identifiable {
-    case host
-    case speaker
-    case viewer
-
-    var id: String { rawValue }
 }
