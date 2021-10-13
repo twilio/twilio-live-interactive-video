@@ -14,7 +14,7 @@ class StreamManager: ObservableObject {
     
     @Published var state = State.disconnected
     @Published var player: Player?
-    @Published var showError = false // TODO: Move out?
+    @Published var showError = false
     @Published var error: Error? {
         didSet {
             showError = error != nil
@@ -25,26 +25,30 @@ class StreamManager: ObservableObject {
             viewerStore.isHandRaised = isHandRaised
         }
     }
-    private var api: API?
-    private var playerManager: PlayerManager?
-    private var roomManager: RoomManager!
-    private var subscriptions = Set<AnyCancellable>()
-    private let syncManager = SyncManager()
-    private var viewerStore: ViewerStore!
-    var raisedHandsStore: RaisedHandsStore!
     @Published var config: StreamConfig!
     @Published var haveSpeakerInvite = false
+    private var api: API!
+    private var playerManager: PlayerManager!
+    private var roomManager: RoomManager!
+    private var syncManager: SyncManager!
+    private var viewerStore: ViewerStore!
+    private var raisedHandsStore: RaisedHandsStore!
+    private var subscriptions = Set<AnyCancellable>()
 
     func configure(
         roomManager: RoomManager,
         playerManager: PlayerManager,
         api: API,
-        viewerStore: ViewerStore
+        syncManager: SyncManager,
+        viewerStore: ViewerStore,
+        raisedHandsStore: RaisedHandsStore
     ) {
         self.roomManager = roomManager
         self.playerManager = playerManager
+        self.syncManager = syncManager
         self.api = api
         self.viewerStore = viewerStore
+        self.raisedHandsStore = raisedHandsStore
         
         roomManager.roomConnectPublisher
             .sink { [weak self] in self?.state = .connected }
@@ -62,6 +66,10 @@ class StreamManager: ObservableObject {
             .sink { [weak self] error in self?.handleError(error) }
             .store(in: &subscriptions)
 
+        syncManager.errorPublisher
+            .sink { [weak self] error in self?.handleError(error) }
+            .store(in: &subscriptions)
+
         viewerStore.speakerInvitePublisher
             .sink { [weak self] in
                 self?.haveSpeakerInvite = true
@@ -72,7 +80,7 @@ class StreamManager: ObservableObject {
     }
     
     func connect() {
-        guard api != nil else { return }
+        guard api != nil else { return } // TODO: Explain more
         
         state = .connecting
         fetchToken()
@@ -82,8 +90,6 @@ class StreamManager: ObservableObject {
         roomManager.disconnect()
         playerManager?.disconnect()
         syncManager.disconnect()
-        raisedHandsStore.disconnect() // TODO: Move
-        viewerStore.disconnect() // TODO: Move
         player = nil
         state = .disconnected
         
@@ -127,6 +133,7 @@ class StreamManager: ObservableObject {
         raisedHandsMapName: String
     ) {
         guard !syncManager.isConnected else {
+            // Sync is already connected because the user was already connected to the stream as a different role
             connectRoomOrPlayer(token: token)
             return
         }

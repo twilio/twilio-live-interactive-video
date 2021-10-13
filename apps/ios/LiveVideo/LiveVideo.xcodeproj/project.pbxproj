@@ -13,6 +13,7 @@
 		DC175F34270E3FD200D9D1FE /* RaisedHandsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F33270E3FD200D9D1FE /* RaisedHandsStore.swift */; };
 		DC175F37270E5B6F00D9D1FE /* ParticipantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F36270E5B6F00D9D1FE /* ParticipantsView.swift */; };
 		DC175F39270F673600D9D1FE /* SendSpeakerInviteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F38270F673600D9D1FE /* SendSpeakerInviteRequest.swift */; };
+		DC175F3E2717530D00D9D1FE /* SyncStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F3D2717530D00D9D1FE /* SyncStoring.swift */; };
 		DC1ED0F026DFCD3C00FFA769 /* LiveBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED0EF26DFCD3C00FFA769 /* LiveBadge.swift */; };
 		DC1ED0F726E12C7400FFA769 /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED0F626E12C7400FFA769 /* ProgressHUD.swift */; };
 		DC1ED0F926E1440200FFA769 /* StreamStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED0F826E1440200FFA769 /* StreamStatusView.swift */; };
@@ -89,6 +90,7 @@
 		DC175F33270E3FD200D9D1FE /* RaisedHandsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaisedHandsStore.swift; sourceTree = "<group>"; };
 		DC175F36270E5B6F00D9D1FE /* ParticipantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsView.swift; sourceTree = "<group>"; };
 		DC175F38270F673600D9D1FE /* SendSpeakerInviteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendSpeakerInviteRequest.swift; sourceTree = "<group>"; };
+		DC175F3D2717530D00D9D1FE /* SyncStoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStoring.swift; sourceTree = "<group>"; };
 		DC1ED0EF26DFCD3C00FFA769 /* LiveBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBadge.swift; sourceTree = "<group>"; };
 		DC1ED0F626E12C7400FFA769 /* ProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
 		DC1ED0F826E1440200FFA769 /* StreamStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamStatusView.swift; sourceTree = "<group>"; };
@@ -193,9 +195,10 @@
 		DC175F3A2715DC4500D9D1FE /* Sync */ = {
 			isa = PBXGroup;
 			children = (
-				DC175F2C270E232F00D9D1FE /* SyncManager.swift */,
-				DC175F31270E23F900D9D1FE /* ViewerStore.swift */,
 				DC175F33270E3FD200D9D1FE /* RaisedHandsStore.swift */,
+				DC175F2C270E232F00D9D1FE /* SyncManager.swift */,
+				DC175F3D2717530D00D9D1FE /* SyncStoring.swift */,
+				DC175F31270E23F900D9D1FE /* ViewerStore.swift */,
 			);
 			path = Sync;
 			sourceTree = "<group>";
@@ -613,6 +616,7 @@
 				DC1ED13026E960C600FFA769 /* SpeakerGridView.swift in Sources */,
 				DC5F458826CEA7CB009C5C79 /* SettingsView.swift in Sources */,
 				DC44BB3F2703C8AD00DB656D /* AppDelegate.swift in Sources */,
+				DC175F3E2717530D00D9D1FE /* SyncStoring.swift in Sources */,
 				DC504A7526F0F18700C37EC9 /* SpeakerGridViewModel.swift in Sources */,
 				DCC48F8926D8288B00EE49EF /* APIErrorResponse.swift in Sources */,
 				DC5F459426CEC1FF009C5C79 /* UserDefaultsManager.swift in Sources */,

@@ -28,16 +28,17 @@ struct LiveVideoApp: App {
                     let localParticipant = LocalParticipantManager(authManager: authManager)
                     let roomManager = RoomManager()
                     roomManager.configure(localParticipant: localParticipant)
+                    let syncManager = SyncManager()
                     streamManager.configure(
                         roomManager: roomManager,
                         playerManager: PlayerManager(),
                         api: api,
-                        viewerStore: viewerStore
+                        syncManager: syncManager,
+                        viewerStore: viewerStore,
+                        raisedHandsStore: raisedHandsStore
                     )
                     speakerSettingsManager.configure(localParticipant: localParticipant)
                     speakerGridViewModel.configure(roomManager: roomManager)
-                    
-                    streamManager.raisedHandsStore = raisedHandsStore
                 }
         }
     }

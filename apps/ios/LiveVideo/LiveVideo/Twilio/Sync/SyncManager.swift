@@ -5,35 +5,38 @@
 import Combine
 import TwilioSyncClient
 
+/// Coordinate connection and errors with client and sync objects.
 class SyncManager: NSObject {
+    let errorPublisher = PassthroughSubject<Error, Never>()
     var isConnected: Bool { client?.connectionState == .connected }
     private var client: TwilioSyncClient?
+    private var stores: [SyncStoring] = []
 
     func connect(token: String, stores: [SyncStoring], completion: @escaping (Error?) -> Void) {
-        let properties = TwilioSyncClientProperties()
-        
         TwilioSyncClient.syncClient(
             withToken: token,
-            properties: properties,
+            properties: nil,
             delegate: self
         ) { [weak self] result, client in
-            if let error = result.error {
-                completion(error)
+            guard let client = client else {
+                completion(result.error!)
                 return
             }
 
             self?.client = client
+            self?.stores = stores
 
             var connectedStoreCount = 0
             
             stores.forEach { store in
-                store.connect(client: client!) { error in
-                    if client?.connectionState != .connected {
-                        return // An error was already reported so silently stop
-                    }
-
-                    if let error = result.error {
-                        client?.shutdown() // TODO: Make sure
+                store.errorHandler = { error in
+                    self?.disconnect()
+                    self?.errorPublisher.send(error)
+                }
+                
+                store.connect(client: client) { error in
+                    if let error = error {
+                        self?.disconnect()
                         completion(error)
                         return
                     }
@@ -50,16 +53,12 @@ class SyncManager: NSObject {
     
     func disconnect() {
         client?.shutdown()
+        client = nil
+        stores.forEach { $0.disconnect() }
+        stores = []
     }
 }
 
 extension SyncManager: TwilioSyncClientDelegate {
-    
-}
-
-
-
-
-protocol SyncStoring {
-    func connect(client: TwilioSyncClient, completion: @escaping (Error?) -> Void)
+    // TODO: Ask Sync team if I need to handle error
 }

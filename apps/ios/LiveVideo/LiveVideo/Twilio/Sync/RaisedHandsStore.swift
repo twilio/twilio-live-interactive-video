@@ -4,7 +4,7 @@
 
 import TwilioSyncClient
 
-class RaisedHandsStore: NSObject, ObservableObject, SyncStoring {
+class RaisedHandsStore: NSObject, SyncStoring, ObservableObject {
     struct RaisedHand: Identifiable {
         let userIdentity: String
         var id: String { userIdentity }
@@ -16,14 +16,15 @@ class RaisedHandsStore: NSObject, ObservableObject, SyncStoring {
 
     @Published var raisedHands: [RaisedHand] = []
     var mapName: String!
+    var errorHandler: ((Error) -> Void)?
     private var map: TWSMap?
 
     func connect(client: TwilioSyncClient, completion: @escaping (Error?) -> Void) {
         guard let openOptions = TWSOpenOptions.open(withSidOrUniqueName: mapName) else { return }
 
         client.openMap(with: openOptions, delegate: self) { [weak self] result, map in
-            if let error = result.error {
-                completion(error)
+            guard let map = map else {
+                completion(result.error!)
                 return
             }
             
@@ -33,13 +34,13 @@ class RaisedHandsStore: NSObject, ObservableObject, SyncStoring {
             /// it is too many raised hands for a host to manage anyway.
             let queryOptions = TWSMapQueryOptions().withPageSize(100)
 
-            map?.queryItems(with: queryOptions) { result, paginator in
-                if let error = result.error {
-                    completion(error)
+            map.queryItems(with: queryOptions) { result, paginator in
+                guard let paginator = paginator else {
+                    completion(result.error!)
                     return
                 }
 
-                self?.raisedHands = paginator?.getItems().map { RaisedHand(mapItem: $0) } ?? []
+                self?.raisedHands = paginator.getItems().map { RaisedHand(mapItem: $0) }
                 completion(nil)
             }
         }
@@ -56,7 +57,17 @@ extension RaisedHandsStore: TWSMapDelegate {
         raisedHands.append(RaisedHand(mapItem: item))
     }
     
-    func onMap(_ map: TWSMap, itemRemovedWithKey itemKey: String, previousItemData: [String : Any], eventContext: TWSEventContext) {
+    func onMap(
+        _ map: TWSMap,
+        itemRemovedWithKey itemKey: String,
+        previousItemData: [String : Any],
+        eventContext: TWSEventContext
+    ) {
         raisedHands.removeAll { $0.userIdentity == itemKey }
+    }
+    
+    func onMap(_ map: TWSMap, errorOccurred error: TWSError) {
+        disconnect()
+        errorHandler?(error)
     }
 }
