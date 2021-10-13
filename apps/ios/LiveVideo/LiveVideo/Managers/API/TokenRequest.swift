@@ -12,7 +12,6 @@ struct TokenRequest: APIRequest {
 
     struct Response: Decodable {
         struct SyncObjectNames: Decodable {
-            let speakersMap: String
             let raisedHandsMap: String
             let viewerDocument: String
         }
@@ -34,7 +33,7 @@ struct TokenRequest: APIRequest {
 private extension StreamConfig.Role {
     var path: String {
         switch self {
-        case .host: return "token"
+        case .host: return "create-stream"
         case .speaker: return "token"
         case .viewer: return "stream-token"
         }
