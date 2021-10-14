@@ -59,7 +59,7 @@ module.exports.handler = async (context, event, callback) => {
 
   try {
     // Reset the viewers hand_raised and speaker_invite status
-    syncClient.documents(`viewer-${room.sid}-${user_identity}`).update({ hand_raised: false, speaker_invite: false });
+    await syncClient.documents(`viewer-${room.sid}-${user_identity}`).update({ speaker_invite: false });
   } catch (e) {
     // Ignore 404 errors. It is possible that the user may not have a viewer document
     if (e.code !== 20404) {
@@ -68,6 +68,25 @@ module.exports.handler = async (context, event, callback) => {
       response.setBody({
         error: {
           message: 'error updating viewer document',
+          explanation: e.message,
+        },
+      });
+      return callback(null, response);
+    }
+  }
+
+  // Lower the participant's hand
+  try {
+    const raisedHandsMapName = `raised_hands-${room_sid}`;
+    await syncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
+  } catch (e) {
+    // Ignore 404 errors. It is possible that the user may not have a key in the raised hands map
+    if (e.code !== 20404) {
+      console.error(e);
+      response.setStatusCode(500);
+      response.setBody({
+        error: {
+          message: 'error updating raised hands map',
           explanation: e.message,
         },
       });
