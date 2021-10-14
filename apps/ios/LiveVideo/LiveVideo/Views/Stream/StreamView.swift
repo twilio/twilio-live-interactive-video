@@ -20,7 +20,22 @@ struct StreamView: View {
                     VStack(spacing: 0) {
                         StreamStatusView(streamName: streamManager.config.streamName, streamState: $streamManager.state)
                             .padding([.horizontal, .bottom], 6)
-                        
+                            .alert(isPresented: $streamManager.showError) {
+                                if let error = streamManager.error as? LiveVideoError, error.isStreamEndedByHostError {
+                                    return Alert(
+                                        title: Text("Event is no longer available"),
+                                        message: Text("This event has been ended by the host."),
+                                        dismissButton: .default(Text("OK")) {
+                                            presentationMode.wrappedValue.dismiss()
+                                        }
+                                    )
+                                } else {
+                                    return Alert(error: streamManager.error!) {
+                                        presentationMode.wrappedValue.dismiss()
+                                    }
+                                }
+                            }
+
                         switch streamManager.config.role {
                         case .host, .speaker:
                             SpeakerGridView()
@@ -92,6 +107,14 @@ struct StreamView: View {
                             ) {
                                 streamManager.isHandRaised.toggle()
                             }
+                            .alert(isPresented: $streamManager.haveSpeakerInvite) {
+                                Alert(
+                                    title: Text("Speaker invitation"),
+                                    message: Text("Would you like to join speakers?"),
+                                    primaryButton: .default(Text("Join")) { streamManager.moveToSpeakers() },
+                                    secondaryButton: .destructive(Text("Cancel"))
+                                )
+                            }
                         }
                     }
                     
@@ -112,29 +135,6 @@ struct StreamView: View {
         }
         .onDisappear {
             app.isIdleTimerDisabled = false
-        }
-        .alert(isPresented: $streamManager.showError) {
-            if let error = streamManager.error as? LiveVideoError, error.isStreamEndedByHostError {
-                return Alert(
-                    title: Text("Event is no longer available"),
-                    message: Text("This event has been ended by the host."),
-                    dismissButton: .default(Text("OK")) {
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                )
-            } else {
-                return Alert(error: streamManager.error!) {
-                    presentationMode.wrappedValue.dismiss()
-                }
-            }
-        }
-        .alert(isPresented: $streamManager.haveSpeakerInvite) {
-            Alert(
-                title: Text("Speaker invitation"),
-                message: Text("Would you like to join speakers?"),
-                primaryButton: .default(Text("Join")) { streamManager.moveToSpeakers() },
-                secondaryButton: .destructive(Text("Cancel"))
-            )
         }
         .sheet(isPresented: $isShowingParticipants) {
             ParticipantsView()
