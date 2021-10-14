@@ -15,7 +15,7 @@ module.exports.handler = async (context, event, callback) => {
   const common = require(Runtime.getAssets()['/common.js'].path);
   const { axiosClient } = common(context, event, callback);
 
-  const { user_identity, event_name } = event;
+  const { user_identity, stream_name } = event;
 
   let response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
@@ -31,12 +31,12 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  if (!event_name) {
+  if (!stream_name) {
     response.setStatusCode(400);
     response.setBody({
       error: {
-        message: 'missing event_name',
-        explanation: 'The event_name parameter is missing.',
+        message: 'missing stream_name',
+        explanation: 'The stream_name parameter is missing.',
       },
     });
     return callback(null, response);
@@ -49,7 +49,7 @@ module.exports.handler = async (context, event, callback) => {
 
   try {
     room = await client.video.rooms.create({
-      uniqueName: event_name,
+      uniqueName: stream_name,
       type: 'group',
     });
   } catch (e) {
@@ -191,7 +191,7 @@ module.exports.handler = async (context, event, callback) => {
   token.identity = user_identity;
 
   // Add video grant to token
-  const videoGrant = new VideoGrant({ room: event_name });
+  const videoGrant = new VideoGrant({ room: stream_name });
   token.addGrant(videoGrant);
 
   // Add chat grant to token

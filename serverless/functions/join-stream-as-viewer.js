@@ -9,7 +9,7 @@ module.exports.handler = async (context, event, callback) => {
   const common = require(Runtime.getAssets()['/common.js'].path);
   const { getPlaybackGrant } = common(context, event, callback);
 
-  const { user_identity, event_name } = event;
+  const { user_identity, stream_name } = event;
 
   let response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
@@ -25,12 +25,12 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  if (!event_name) {
+  if (!stream_name) {
     response.setStatusCode(400);
     response.setBody({
       error: {
-        message: 'missing event_name',
-        explanation: 'The event_name parameter is missing.',
+        message: 'missing stream_name',
+        explanation: 'The stream_name parameter is missing.',
       },
     });
     return callback(null, response);
@@ -43,7 +43,7 @@ module.exports.handler = async (context, event, callback) => {
 
   try {
     // See if a room already exists
-    room = await client.video.rooms(event_name).fetch();
+    room = await client.video.rooms(stream_name).fetch();
   } catch (e) {
     console.error(e);
     response.setStatusCode(500);
