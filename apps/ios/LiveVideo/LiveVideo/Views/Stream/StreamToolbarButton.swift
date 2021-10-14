@@ -19,13 +19,11 @@ struct StreamToolbarButton: View {
         )
     }
     
-    let title: String
     let image: Image
     let role: Role
     let action: () -> Void
     
-    init(_ title: String, image: Image, role: Role = .default, action: @escaping () -> Void = { }) {
-        self.title = title
+    init(image: Image, role: Role = .default, action: @escaping () -> Void = { }) {
         self.image = image
         self.role = role
         self.action = action
@@ -42,13 +40,10 @@ struct StreamToolbarButton: View {
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .padding(7)
+                        .padding(10)
                         .foregroundColor(role.imageForegroundColor)
                 }
-                .frame(width: 32, height: 32)
-
-                Text(title)
-                    .font(.system(size: 10))
+                .frame(width: 44, height: 44)
             }
             .padding(.top, 14)
             .frame(width: 60)
@@ -60,9 +55,9 @@ struct StreamToolbarButton: View {
 struct StreamToolbarButton_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            StreamToolbarButton("Default", image: Image(systemName: "mic.slash"))
+            StreamToolbarButton(image: Image(systemName: "mic.slash"))
                 .previewDisplayName("Default")
-            StreamToolbarButton("Destructive", image: Image(systemName: "arrow.left"), role: .destructive)
+            StreamToolbarButton(image: Image(systemName: "arrow.left"), role: .destructive)
                 .previewDisplayName("Destructive")
         }
         .previewLayout(.sizeThatFits)

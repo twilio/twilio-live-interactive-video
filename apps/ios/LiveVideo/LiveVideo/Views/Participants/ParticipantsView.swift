@@ -9,6 +9,13 @@ struct ParticipantsView: View {
     @EnvironmentObject var streamManager: StreamManager
     @EnvironmentObject var api: API
     @Environment(\.presentationMode) var presentationMode
+    @State private var error: Error? {
+        didSet {
+            showError = error != nil
+        }
+    }
+    @State private var showError = false
+    @State private var showSpeakerInviteConfirmation = false
 
     var body: some View {
         NavigationView {
@@ -17,16 +24,33 @@ struct ParticipantsView: View {
                     ForEach(raisedHandsStore.raisedHands) { participant in
                         HStack {
                             Text("\(participant.userIdentity) 🖐")
+                                .alert(isPresented: $showSpeakerInviteConfirmation) {
+                                    Alert(
+                                        title: Text("Invitation sent"),
+                                        message: Text("You invited \(participant.userIdentity) to be a speaker. They’ll be able to share audio and video."),
+                                        dismissButton: .default(Text("Got it!"))
+                                    )
+                                }
                             Spacer()
-                            Button("Invite to speak") {
-                                let request = SendSpeakerInviteRequest(
-                                    userIdentity: participant.userIdentity,
-                                    roomSID: streamManager.roomSID!
-                                )
-                                
-                                api.request(request) // TODO: Maybe display error
+                            
+                            if streamManager.config.role == .host {
+                                Button("Invite to speak") {
+                                    let request = SendSpeakerInviteRequest(
+                                        userIdentity: participant.userIdentity,
+                                        roomSID: streamManager.roomSID!
+                                    )
+
+                                    // TODO: Need view model to show error
+                                    api.request(request)
+                                    showSpeakerInviteConfirmation = true
+                                }
+                                .foregroundColor(.backgroundPrimary)
+                                .alert(isPresented: $showError) {
+                                    Alert(error: error!) {
+                                        presentationMode.wrappedValue.dismiss()
+                                    }
+                                }
                             }
-                            .foregroundColor(.backgroundPrimary)
                         }
                         .buttonStyle(PlainButtonStyle())
                     }

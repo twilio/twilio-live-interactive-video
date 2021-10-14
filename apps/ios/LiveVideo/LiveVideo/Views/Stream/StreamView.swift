@@ -47,62 +47,52 @@ struct StreamView: View {
                     .padding(.trailing, geometry.safeAreaInsets.trailing)
                     
                     StreamToolbar {
+                        StreamToolbarButton(
+                            image: Image(systemName: "arrow.left"),
+                            role: .destructive
+                        ) {
+                            streamManager.disconnect()
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                        
                         switch streamManager.config.role {
                         case .host, .speaker:
                             StreamToolbarButton(
-                                "Leave",
-                                image: Image(systemName: "arrow.left"),
-                                role: .destructive
-                            ) {
-                                streamManager.disconnect()
-                                presentationMode.wrappedValue.dismiss()
-                            }
-                            StreamToolbarButton(
-                                speakerSettingsManager.isMicOn ? "Mute" : "Unmute",
-                                image: Image(systemName: speakerSettingsManager.isMicOn ? "mic.slash" : "mic"),
+                                image: Image(systemName: speakerSettingsManager.isMicOn ? "mic" : "mic.slash"),
                                 role: .default
                             ) {
                                 speakerSettingsManager.isMicOn.toggle()
                             }
                             StreamToolbarButton(
-                                speakerSettingsManager.isCameraOn ? "Stop Video" : "Start Video",
-                                image: Image(systemName: speakerSettingsManager.isCameraOn ? "video.slash" : "video"),
+                                image: Image(systemName: speakerSettingsManager.isCameraOn ? "video" : "video.slash"),
                                 role: .default
                             ) {
                                 speakerSettingsManager.isCameraOn.toggle()
                             }
                             StreamToolbarButton(
-                                "Participants",
                                 image: Image(systemName: "person.2"),
                                 role: .default
                             ) {
                                 isShowingParticipants = true
                             }
-                            Menu {
-                                Button("Return to Viewers") {
-                                    streamManager.moveToViewers()
-                                }
-                            } label: {
-                                StreamToolbarButton(
-                                    "More",
-                                    image: Image(systemName: "ellipsis"),
-                                    role: .default
-                                ) {
+                            
+                            if streamManager.config.role != .host {
+                                Menu {
+                                    Button("Move to Viewers") {
+                                        streamManager.moveToViewers()
+                                    }
+                                } label: {
+                                    StreamToolbarButton(
+                                        image: Image(systemName: "ellipsis"),
+                                        role: .default
+                                    ) {
 
+                                    }
                                 }
                             }
                         case .viewer:
                             StreamToolbarButton(
-                                "Leave",
-                                image: Image(systemName: "arrow.left"),
-                                role: .destructive
-                            ) {
-                                streamManager.disconnect()
-                                presentationMode.wrappedValue.dismiss()
-                            }
-                            StreamToolbarButton(
-                                streamManager.isHandRaised ? "Lower hand" : "Raise hand",
-                                image: Image(systemName: streamManager.isHandRaised ? "hand.raised.slash" : "hand.raised"),
+                                image: Image(systemName: streamManager.isHandRaised ? "hand.raised" : "hand.raised.slash"),
                                 role: .default
                             ) {
                                 streamManager.isHandRaised.toggle()
@@ -126,6 +116,8 @@ struct StreamView: View {
 
                 if streamManager.state == .connecting {
                     ProgressHUD(title: "Joining live event! 🎉")
+                } else if streamManager.state == .changingRole {
+                    ProgressHUD()
                 }
             }
         }

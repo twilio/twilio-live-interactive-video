@@ -16,6 +16,7 @@ struct SettingsView: UIViewControllerRepresentable {
 
         let settingsViewController = IASKAppSettingsViewController()
         settingsViewController.delegate = context.coordinator
+        settingsViewController.neverShowPrivacySettings = true
 
         let navigationController = UINavigationController()
         navigationController.viewControllers = [settingsViewController]

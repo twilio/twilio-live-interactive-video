@@ -10,6 +10,7 @@ class StreamManager: ObservableObject {
         case disconnected
         case connecting
         case connected
+        case changingRole
     }
     
     @Published var state = State.disconnected
@@ -101,7 +102,7 @@ class StreamManager: ObservableObject {
     }
     
     func moveToSpeakers() {
-        state = .connecting
+        state = .changingRole
         playerManager?.disconnect()
         syncManager.disconnect()
         config.role = .speaker
@@ -109,7 +110,7 @@ class StreamManager: ObservableObject {
     }
     
     func moveToViewers() {
-        state = .connecting
+        state = .changingRole
         roomManager.disconnect()
         syncManager.disconnect()
         config.role = .viewer
