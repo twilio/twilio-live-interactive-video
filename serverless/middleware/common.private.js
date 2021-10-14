@@ -20,9 +20,12 @@ module.exports = (context, event, callback) => {
   async function getPlaybackGrant(playerStreamerSid) {
     const playbackGrant = await axiosClient(`PlayerStreamers/${playerStreamerSid}/PlaybackGrant`, {
       method: 'post',
-      data: `AccessControlAllowOrigin=*`,
+      data: `Ttl=60&AccessControlAllowOrigin=*`,
     });
-    return playbackGrant.data.grant;
+    return {
+      grant: playbackGrant.data.grant,
+      grantExpiration: new Date().getTime() + 45000
+    };
   }
 
   return {

@@ -68,19 +68,22 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  let playbackGrant;
-  try {
-    playbackGrant = await getPlaybackGrant(streamDocument.data.playerStreamerSid);
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error getting playback grant',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
+  let playbackGrant = streamDocument.data.playbackGrant;
+  if (!playbackGrant || !playbackGrant.grantExpiration || playbackGrant.grantExpiration < new Date().getTime()) {
+    try {
+      playbackGrant = streamDocument.data.playbackGrant = await getPlaybackGrant(streamDocument.data.playerStreamerSid);
+      await syncClient.documents(`stream-${room.sid}`).update({data: streamDocument.data});
+    } catch (e) {
+      console.error(e);
+      response.setStatusCode(500);
+      response.setBody({
+        error: {
+          message: 'error getting playback grant',
+          explanation: e.message,
+        },
+      });
+      return callback(null, response);
+    }
   }
 
   // Create token
@@ -94,8 +97,8 @@ module.exports.handler = async (context, event, callback) => {
   // Add player grant to token
   token.addGrant({
     key: 'player',
-    player: playbackGrant,
-    toPayload: () => playbackGrant,
+    player: playbackGrant.grant,
+    toPayload: () => playbackGrant.grant,
   });
 
   // Return token

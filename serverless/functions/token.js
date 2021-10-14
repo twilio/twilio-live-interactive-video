@@ -144,6 +144,7 @@ module.exports.handler = async (context, event, callback) => {
           data: {
             playerStreamerSid: playerStreamer.data.sid,
             mediaProcessorSid: mediaProcessor.data.sid,
+            playbackGrant: null,
           },
         });
       } catch (e) {
