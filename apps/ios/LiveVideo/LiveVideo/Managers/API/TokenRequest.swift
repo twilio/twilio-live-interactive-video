@@ -7,13 +7,13 @@ import Foundation
 struct TokenRequest: APIRequest {
     struct Parameters: Encodable {
         let userIdentity: String
-        let roomName: String
+        let eventName: String
     }
 
     struct Response: Decodable {
         struct SyncObjectNames: Decodable {
             let raisedHandsMap: String
-            let viewerDocument: String
+            let viewerDocument: String?
         }
         
         let token: String
@@ -24,8 +24,8 @@ struct TokenRequest: APIRequest {
     let parameters: Parameters
     let responseType = Response.self
     
-    init(userIdentity: String, roomName: String, role: StreamConfig.Role) {
-        parameters = Parameters(userIdentity: userIdentity, roomName: roomName)
+    init(userIdentity: String, eventName: String, role: StreamConfig.Role) {
+        parameters = Parameters(userIdentity: userIdentity, eventName: eventName)
         path = role.path
     }
 }
@@ -34,8 +34,8 @@ private extension StreamConfig.Role {
     var path: String {
         switch self {
         case .host: return "create-stream"
-        case .speaker: return "token"
-        case .viewer: return "stream-token"
+        case .speaker: return "join-stream-as-speaker"
+        case .viewer: return "join-stream-as-viewer"
         }
     }
 }

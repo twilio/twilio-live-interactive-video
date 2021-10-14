@@ -21,7 +21,7 @@ class RoomManager: NSObject {
 
     private(set) var localParticipant: LocalParticipantManager!
     private(set) var remoteParticipants: [RemoteParticipantManager] = []
-    private var room: Room?
+    private(set) var room: Room? // Just for room SID
 
     func configure(localParticipant: LocalParticipantManager) {
         self.localParticipant = localParticipant

@@ -27,6 +27,7 @@ class StreamManager: ObservableObject {
     }
     @Published var config: StreamConfig!
     @Published var haveSpeakerInvite = false
+    var roomSID: String? { roomManager.room?.sid }
     private var api: API!
     private var playerManager: PlayerManager!
     private var roomManager: RoomManager!
@@ -93,12 +94,16 @@ class StreamManager: ObservableObject {
         player = nil
         state = .disconnected
         
-        // TODO: Delete stream if role is host, and handle errors for other participants also
+        if config.role == .host {
+            let request = DeleteStreamRequest(roomName: config.streamName)
+            api.request(request) // TODO: Make sure others receive the right error and quit correctly
+        }
     }
     
     func moveToSpeakers() {
         state = .connecting
         playerManager?.disconnect()
+        syncManager.disconnect()
         config.role = .speaker
         fetchToken()
     }
@@ -106,12 +111,13 @@ class StreamManager: ObservableObject {
     func moveToViewers() {
         state = .connecting
         roomManager.disconnect()
+        syncManager.disconnect()
         config.role = .viewer
         fetchToken()
     }
 
     private func fetchToken() {
-        let request = TokenRequest(userIdentity: config.userIdentity, roomName: config.streamName, role: config.role)
+        let request = TokenRequest(userIdentity: config.userIdentity, eventName: config.streamName, role: config.role)
         
         api?.request(request) { [weak self] result in
             switch result {
@@ -129,19 +135,27 @@ class StreamManager: ObservableObject {
     
     private func connectSync(
         token: String,
-        viewerDocumentName: String,
+        viewerDocumentName: String?,
         raisedHandsMapName: String
     ) {
-        guard !syncManager.isConnected else {
-            // Sync is already connected because the user was already connected to the stream as a different role
-            connectRoomOrPlayer(token: token)
-            return
-        }
+//        guard !syncManager.isConnected else {
+//            // Sync is already connected because the user was already connected to the stream as a different role
+//            connectRoomOrPlayer(token: token)
+//            return
+//        }
         
-        viewerStore.documentName = viewerDocumentName
-        raisedHandsStore.mapName = raisedHandsMapName
+        let stores: [SyncStoring]
+        
+        if let viewerDocumentName = viewerDocumentName {
+            viewerStore.documentName = viewerDocumentName
+            raisedHandsStore.mapName = raisedHandsMapName
 
-        let stores: [SyncStoring] = [viewerStore, raisedHandsStore]
+            stores = [viewerStore, raisedHandsStore]
+        } else {
+            raisedHandsStore.mapName = raisedHandsMapName
+
+            stores = [raisedHandsStore]
+        }
         
         syncManager.connect(token: token, stores: stores) { [weak self] error in
             if let error = error {

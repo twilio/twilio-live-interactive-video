@@ -6,6 +6,7 @@ import SwiftUI
 
 struct ParticipantsView: View {
     @EnvironmentObject var raisedHandsStore: RaisedHandsStore
+    @EnvironmentObject var streamManager: StreamManager
     @EnvironmentObject var api: API
     @Environment(\.presentationMode) var presentationMode
 
@@ -20,14 +21,14 @@ struct ParticipantsView: View {
                             Button("Invite to speak") {
                                 let request = SendSpeakerInviteRequest(
                                     userIdentity: participant.userIdentity,
-                                    roomName: "",
-                                    roomSID: ""
+                                    roomSID: streamManager.roomSID!
                                 )
                                 
                                 api.request(request) // TODO: Maybe display error
                             }
                             .foregroundColor(.backgroundPrimary)
                         }
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
             }

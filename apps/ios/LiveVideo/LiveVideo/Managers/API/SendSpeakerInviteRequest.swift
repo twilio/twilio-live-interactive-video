@@ -7,10 +7,10 @@ import Foundation
 struct SendSpeakerInviteRequest: APIRequest {
     struct Parameters: Encodable {
         let userIdentity: String
-        let roomName: String
         let roomSid: String
     }
 
+    // TODO: null response?
     struct Response: Decodable {
         let success: Bool
     }
@@ -19,7 +19,7 @@ struct SendSpeakerInviteRequest: APIRequest {
     let parameters: Parameters
     let responseType = Response.self
     
-    init(userIdentity: String, roomName: String, roomSID: String) {
-        parameters = Parameters(userIdentity: userIdentity, roomName: roomName, roomSid: roomSID)
+    init(userIdentity: String, roomSID: String) {
+        parameters = Parameters(userIdentity: userIdentity, roomSid: roomSID)
     }
 }
