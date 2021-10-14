@@ -21,11 +21,13 @@ struct StreamToolbarButton: View {
     
     let image: Image
     let role: Role
+    let shouldShowBadge: Bool
     let action: () -> Void
     
-    init(image: Image, role: Role = .default, action: @escaping () -> Void = { }) {
+    init(image: Image, role: Role = .default, shouldShowBadge: Bool = false, action: @escaping () -> Void = { }) {
         self.image = image
         self.role = role
+        self.shouldShowBadge = shouldShowBadge
         self.action = action
     }
     
@@ -42,6 +44,25 @@ struct StreamToolbarButton: View {
                         .aspectRatio(contentMode: .fit)
                         .padding(10)
                         .foregroundColor(role.imageForegroundColor)
+
+                    if shouldShowBadge {
+                        HStack {
+                            Spacer()
+                            VStack {
+                                ZStack {
+                                    Circle()
+                                        .foregroundColor(.background)
+                                    Circle()
+                                        .foregroundColor(.backgroundDestructive)
+                                        .padding(2)
+                                }
+                                .frame(width: 12, height: 12)
+                                .padding(1)
+                                
+                                Spacer()
+                            }
+                        }
+                    }
                 }
                 .frame(width: 44, height: 44)
             }
@@ -57,9 +78,12 @@ struct StreamToolbarButton_Previews: PreviewProvider {
         Group {
             StreamToolbarButton(image: Image(systemName: "mic.slash"))
                 .previewDisplayName("Default")
+            StreamToolbarButton(image: Image(systemName: "person.2"), shouldShowBadge: true)
+                .previewDisplayName("Badge")
             StreamToolbarButton(image: Image(systemName: "arrow.left"), role: .destructive)
                 .previewDisplayName("Destructive")
         }
         .previewLayout(.sizeThatFits)
+        .background(Color.background)
     }
 }

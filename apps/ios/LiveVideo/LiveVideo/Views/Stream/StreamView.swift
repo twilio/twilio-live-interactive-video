@@ -7,6 +7,7 @@ import SwiftUI
 struct StreamView: View {
     @EnvironmentObject var streamManager: StreamManager
     @EnvironmentObject var speakerSettingsManager: SpeakerSettingsManager
+    @EnvironmentObject var raisedHandsStore: RaisedHandsStore
     @Environment(\.presentationMode) var presentationMode
     @State private var isShowingParticipants = false
     private let app = UIApplication.shared
@@ -71,7 +72,8 @@ struct StreamView: View {
                             }
                             StreamToolbarButton(
                                 image: Image(systemName: "person.2"),
-                                role: .default
+                                role: .default,
+                                shouldShowBadge: !raisedHandsStore.newRaisedHands.isEmpty
                             ) {
                                 isShowingParticipants = true
                             }
