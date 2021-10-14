@@ -15,16 +15,16 @@ exports.handler = async function (context, event, callback) {
 
     // Get playerStreamerSid and mediaProcessorSid from stream document
     const streamDocument = await syncClient.documents(`stream-${room.sid}`).fetch();
-    const { playerStreamerSid, mediaProcessorSid } = streamDocument.data;
+    const { player_streamer_sid, media_processor_sid } = streamDocument.data;
 
     // Stop mediaProcessor
-    await axiosClient(`MediaProcessors/${mediaProcessorSid}`, {
+    await axiosClient(`MediaProcessors/${media_processor_sid}`, {
       method: 'post',
       data: 'Status=ENDED',
     });
 
     // Stop playerStreamer
-    await axiosClient(`PlayerStreamers/${playerStreamerSid}`, {
+    await axiosClient(`PlayerStreamers/${player_streamer_sid}`, {
       method: 'post',
       data: 'Status=ENDED',
     });

@@ -109,8 +109,8 @@ module.exports.handler = async (context, event, callback) => {
     streamDocument = await syncClient.documents.create({
       uniqueName: `stream-${room.sid}`,
       data: {
-        playerStreamerSid: playerStreamer.data.sid,
-        mediaProcessorSid: mediaProcessor.data.sid,
+        player_streamer_sid: playerStreamer.data.sid,
+        media_processor_sid: mediaProcessor.data.sid,
       },
     });
   } catch (e) {
