@@ -27,5 +27,9 @@ module.exports.handler = async (context, event, callback) => {
   }
 
   response.setStatusCode(200);
+  response.setBody({
+    sent: true,
+  });
+
   return callback(null, response);
 };
