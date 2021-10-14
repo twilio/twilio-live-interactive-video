@@ -3,6 +3,7 @@ node_modules/
 .twilio-functions
 .twiliodeployinfo
 assets/
+.DS_Store
 
 # iOS
 xcuserdata/
