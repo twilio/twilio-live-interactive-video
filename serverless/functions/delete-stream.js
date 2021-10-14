@@ -7,41 +7,42 @@ exports.handler = async function (context, event, callback) {
   const client = context.getTwilioClient();
   const syncClient = client.sync.services(context.SYNC_SERVICE_SID);
 
-  const { StatusCallbackEvent, RoomSid } = event;
+  const { room_name } = event;
 
-  if (StatusCallbackEvent === 'room-ended') {
-    try {
-      // Get playerStreamerSid and mediaProcessorSid from stream document
-      const streamDocument = await syncClient.documents(`stream-${RoomSid}`).fetch();
-      const { playerStreamerSid, mediaProcessorSid } = streamDocument.data;
+  try {
+    // End room
+    const room = await client.video.rooms(room_name).update({ status: 'completed' });
 
-      // Stop mediaProcessor
-      await axiosClient(`MediaProcessors/${mediaProcessorSid}`, {
-        method: 'post',
-        data: 'Status=ENDED',
-      });
+    // Get playerStreamerSid and mediaProcessorSid from stream document
+    const streamDocument = await syncClient.documents(`stream-${room.sid}`).fetch();
+    const { playerStreamerSid, mediaProcessorSid } = streamDocument.data;
 
-      // Stop playerStreamer
-      await axiosClient(`PlayerStreamers/${playerStreamerSid}`, {
-        method: 'post',
-        data: 'Status=ENDED',
-      });
+    // Stop mediaProcessor
+    await axiosClient(`MediaProcessors/${mediaProcessorSid}`, {
+      method: 'post',
+      data: 'Status=ENDED',
+    });
 
-      // delete stream document
-      await syncClient.documents(`stream-${RoomSid}`).remove();
+    // Stop playerStreamer
+    await axiosClient(`PlayerStreamers/${playerStreamerSid}`, {
+      method: 'post',
+      data: 'Status=ENDED',
+    });
 
-      console.log('deleted: ', RoomSid);
-    } catch (e) {
-      console.log(e);
-      response.setStatusCode(500);
-      response.setBody({
-        error: {
-          message: 'error deleting stream',
-          explanation: e.message,
-        },
-      });
-      return callback(null, response);
-    }
+    // delete stream document
+    await syncClient.documents(`stream-${room.sid}`).remove();
+
+    console.log('deleted: ', room_name);
+  } catch (e) {
+    console.log(e);
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error deleting stream',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
   }
 
   response.setBody({
