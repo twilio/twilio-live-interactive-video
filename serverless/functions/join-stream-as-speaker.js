@@ -1,6 +1,5 @@
 /* global Twilio Runtime */
 'use strict';
-const querystring = require('querystring');
 
 const AccessToken = Twilio.jwt.AccessToken;
 const VideoGrant = AccessToken.VideoGrant;
@@ -11,9 +10,6 @@ const MAX_ALLOWED_SESSION_DURATION = 14400;
 module.exports.handler = async (context, event, callback) => {
   const { ACCOUNT_SID, TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, CONVERSATIONS_SERVICE_SID, SYNC_SERVICE_SID } =
     context;
-
-  const common = require(Runtime.getAssets()['/common.js'].path);
-  const { axiosClient } = common(context, event, callback);
 
   const { user_identity, event_name } = event;
 
@@ -42,22 +38,19 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  let room, playerStreamer, mediaProcessor, streamDocument, conversation, raisedHandsMap;
+  let room, conversation;
 
   const client = context.getTwilioClient();
   const syncClient = client.sync.services(context.SYNC_SERVICE_SID);
 
   try {
-    room = await client.video.rooms.create({
-      uniqueName: event_name,
-      type: 'group',
-    });
+    // See if a room already exists
+    room = await client.video.rooms(event_name).fetch();
   } catch (e) {
-    console.error(e);
     response.setStatusCode(500);
     response.setBody({
       error: {
-        message: 'error creating room',
+        message: 'error finding room',
         explanation: e.message,
       },
     });
@@ -65,100 +58,35 @@ module.exports.handler = async (context, event, callback) => {
   }
 
   try {
-    // Create playerStreamer
-    playerStreamer = await axiosClient('PlayerStreamers', {
-      method: 'post',
-      data: 'Video=true',
-    });
-
-    // Create mediaProcessor
-    mediaProcessor = await axiosClient('MediaProcessors', {
-      method: 'post',
-      data: querystring.stringify({
-        Extension: context.MEDIA_EXTENSION,
-        ExtensionContext: JSON.stringify({
-          room: { name: room.sid },
-          outputs: [playerStreamer.data.sid],
-        }),
-      }),
-    });
-
-    console.log(
-      'created stream: ',
-      JSON.stringify({
-        stream_url: playerStreamer.data.playback_url,
-        playerStreamerSid: playerStreamer.data.sid,
-        mediaProcessorSid: mediaProcessor.data.sid,
-      })
-    );
+    // Reset the viewers hand_raised and speaker_invite status
+    syncClient.documents(`viewer-${room.sid}-${user_identity}`).update({ hand_raised: false, speaker_invite: false });
   } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error creating stream',
-        explanation: e.message,
-      },
-    });
-
-    return callback(null, response);
-  }
-
-  // Create stream document
-  try {
-    streamDocument = await syncClient.documents.create({
-      uniqueName: `stream-${room.sid}`,
-      data: {
-        playerStreamerSid: playerStreamer.data.sid,
-        mediaProcessorSid: mediaProcessor.data.sid,
-      },
-    });
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error creating stream document',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
-
-  // Create raised hands map
-  try {
-    raisedHandsMap = await syncClient.syncMaps.create({
-      uniqueName: `raised_hands-${room.sid}`,
-    });
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error creating raised hands map',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
+    // Ignore 404 errors. It is possible that the user may not have a viewer document
+    if (e.code !== 20404) {
+      console.error(e);
+      response.setStatusCode(500);
+      response.setBody({
+        error: {
+          message: 'error updating viewer document',
+          explanation: e.message,
+        },
+      });
+      return callback(null, response);
+    }
   }
 
   const conversationsClient = client.conversations.services(CONVERSATIONS_SERVICE_SID);
 
   try {
-    // Here we add a timer to close the conversation after the maximum length of a room (24 hours).
-    // This helps to clean up old conversations since there is a limit that a single participant
-    // can not be added to more than 1,000 open conversations.
-    conversation = await conversationsClient.conversations.create({
-      uniqueName: room.sid,
-      'timers.closed': 'P1D',
-    });
+    // Find conversation
+    conversation = await conversationsClient.conversations(room.sid).fetch();
   } catch (e) {
     console.error(e);
     response.setStatusCode(500);
     response.setBody({
       error: {
-        message: 'error creating conversation',
-        explanation: 'Something went wrong when creating a conversation.',
+        message: 'error finding conversation',
+        explanation: 'Something went wrong when finding a conversation.',
       },
     });
     return callback(null, response);

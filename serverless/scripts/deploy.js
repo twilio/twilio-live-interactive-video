@@ -130,13 +130,20 @@ async function deployFunctions() {
     deployConfig.serviceName = `${constants.SERVICE_NAME}-${getRandomInt(4)}`;
   }
 
-  return serverlessClient.deployProject(deployConfig);
+  const { domain, serviceSid } = await serverlessClient.deployProject(deployConfig);
+
+  // Make functions editable in console
+  await client.serverless.services(serviceSid).update({ includeCredentials: true, uiEditable: true });
+
+  // Add webhookUrl for sync service
+  await client.sync
+    .services(deployConfig.env.SYNC_SERVICE_SID)
+    .update({ webhookUrl: `https://${domain}/sync-webhook` });
 }
 
 async function deploy() {
   await deployFunctions();
   cli.action.stop();
-  console.log('\n');
   await viewApp();
 }
 
