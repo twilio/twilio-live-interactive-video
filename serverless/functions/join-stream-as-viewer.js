@@ -61,15 +61,9 @@ module.exports.handler = async (context, event, callback) => {
     viewerDocument = await syncClient.documents.create({
       uniqueName: `viewer-${room.sid}-${user_identity}`,
       data: {
-        hand_raised: false,
         speaker_invite: false,
       },
     });
-    // Give viewer permissions to write to viewer document
-    await syncClient
-      .documents(viewerDocument.sid)
-      .documentPermissions(user_identity)
-      .update({ read: true, write: true, manage: false });
   } catch (e) {
     // Ignore "Unique name already exists" error
     if (e.code !== 54301) {
