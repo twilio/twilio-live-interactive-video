@@ -134,11 +134,6 @@ async function deployFunctions() {
 
   // Make functions editable in console
   await client.serverless.services(serviceSid).update({ includeCredentials: true, uiEditable: true });
-
-  // Add webhookUrl for sync service
-  await client.sync
-    .services(deployConfig.env.SYNC_SERVICE_SID)
-    .update({ webhookUrl: `https://${domain}/sync-webhook` });
 }
 
 async function deploy() {
