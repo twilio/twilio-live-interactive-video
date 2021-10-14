@@ -50,3 +50,13 @@ This URL is for demo purposes only. It will expire on Tue Oct 19 2021 14:58:20 G
 ```
 
 If you make any changes to the application, then you can run `npm run serverless:deploy -- --override` again and subsequent deploys will override your existing app.
+
+### Use the app
+
+When you visit the URL for your deployed live streaming application, you'll be able to create and join a Twilio Video Room.
+
+![View of the application's landing page](https://twilio-cms-prod.s3.amazonaws.com/images/Screen_Shot_2021-09-07_at_5.05.14_PM.width-1000.png)
+
+When you have created and joined a Video Room, you can retrieve the audience URL for streaming the room by going to **More -> About** in the menu bar at the bottom of the application. You will then see the **Stream Player URL**, which you can visit to view the audience stream for the Video Room.
+
+![View of the More -> About menu bar](https://twilio-cms-prod.s3.amazonaws.com/images/Screen_Shot_2021-09-07_at_5.19.22_PM.width-1000.png)
