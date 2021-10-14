@@ -75,6 +75,25 @@ module.exports.handler = async (context, event, callback) => {
     }
   }
 
+  // Lower the participant's hand
+  try {
+    const raisedHandsMapName = `raised_hands-${room.sid}`;
+    await syncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
+  } catch (e) {
+    // Ignore 404 errors. It is possible that the user may not have a key in the raised hands map
+    if (e.code !== 20404) {
+      console.error(e);
+      response.setStatusCode(500);
+      response.setBody({
+        error: {
+          message: 'error updating raised hands map',
+          explanation: e.message,
+        },
+      });
+      return callback(null, response);
+    }
+  }
+
   const conversationsClient = client.conversations.services(CONVERSATIONS_SERVICE_SID);
 
   try {

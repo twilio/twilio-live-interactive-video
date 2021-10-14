@@ -101,10 +101,10 @@ struct StreamView: View {
                             }
                             .alert(isPresented: $streamManager.haveSpeakerInvite) {
                                 Alert(
-                                    title: Text("Speaker invitation"),
-                                    message: Text("Would you like to join speakers?"),
-                                    primaryButton: .default(Text("Join")) { streamManager.moveToSpeakers() },
-                                    secondaryButton: .destructive(Text("Cancel"))
+                                    title: Text("It’s your time to shine! ✨"),
+                                    message: Text("The host has invited you to join as a Speaker. Your audio and video will be shared."),
+                                    primaryButton: .default(Text("Join now")) { streamManager.moveToSpeakers() },
+                                    secondaryButton: .destructive(Text("Never mind")) // TODO: Call raised hands API
                                 )
                             }
                         }
