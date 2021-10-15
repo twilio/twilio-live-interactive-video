@@ -6,7 +6,7 @@ import Foundation
 
 struct DeleteStreamRequest: APIRequest {
     struct Parameters: Encodable {
-        let roomName: String
+        let streamName: String
     }
 
     struct Response: Decodable {
@@ -17,7 +17,7 @@ struct DeleteStreamRequest: APIRequest {
     let parameters: Parameters
     let responseType = Response.self
     
-    init(roomName: String) {
-        parameters = Parameters(roomName: roomName)
+    init(streamName: String) {
+        parameters = Parameters(streamName: streamName)
     }
 }

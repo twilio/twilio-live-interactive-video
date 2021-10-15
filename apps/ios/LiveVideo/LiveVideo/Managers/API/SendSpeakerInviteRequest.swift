@@ -10,9 +10,8 @@ struct SendSpeakerInviteRequest: APIRequest {
         let roomSid: String
     }
 
-    // TODO: null response?
     struct Response: Decodable {
-        let success: Bool
+        let sent: Bool
     }
 
     let path = "send-speaker-invite"

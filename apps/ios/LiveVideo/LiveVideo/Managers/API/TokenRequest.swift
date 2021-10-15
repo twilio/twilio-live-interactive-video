@@ -7,7 +7,7 @@ import Foundation
 struct TokenRequest: APIRequest {
     struct Parameters: Encodable {
         let userIdentity: String
-        let eventName: String
+        let streamName: String
     }
 
     struct Response: Decodable {
@@ -24,8 +24,8 @@ struct TokenRequest: APIRequest {
     let parameters: Parameters
     let responseType = Response.self
     
-    init(userIdentity: String, eventName: String, role: StreamConfig.Role) {
-        parameters = Parameters(userIdentity: userIdentity, eventName: eventName)
+    init(userIdentity: String, streamName: String, role: StreamConfig.Role) {
+        parameters = Parameters(userIdentity: userIdentity, streamName: streamName)
         path = role.path
     }
 }

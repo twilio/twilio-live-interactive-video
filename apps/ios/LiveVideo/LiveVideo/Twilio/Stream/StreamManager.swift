@@ -96,7 +96,7 @@ class StreamManager: ObservableObject {
         state = .disconnected
         
         if config.role == .host {
-            let request = DeleteStreamRequest(roomName: config.streamName)
+            let request = DeleteStreamRequest(streamName: config.streamName)
             api.request(request) // TODO: Make sure others receive the right error and quit correctly
         }
     }
@@ -118,7 +118,7 @@ class StreamManager: ObservableObject {
     }
 
     private func fetchToken() {
-        let request = TokenRequest(userIdentity: config.userIdentity, eventName: config.streamName, role: config.role)
+        let request = TokenRequest(userIdentity: config.userIdentity, streamName: config.streamName, role: config.role)
         
         api?.request(request) { [weak self] result in
             switch result {
