@@ -59,7 +59,7 @@ module.exports.handler = async (context, event, callback) => {
 
   try {
     // Reset the viewers hand_raised and speaker_invite status
-    await syncClient.documents(`viewer-${room.sid}-${user_identity}`).update({ speaker_invite: false });
+    await syncClient.documents(`viewer-${room.sid}-${user_identity}`).update({ data: { speaker_invite: false } });
   } catch (e) {
     // Ignore 404 errors. It is possible that the user may not have a viewer document
     if (e.code !== 20404) {
