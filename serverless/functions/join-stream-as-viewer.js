@@ -56,13 +56,11 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
+  const viewerDocumentName = `viewer-${room.sid}-${user_identity}`;
   // Create viewer document
   try {
     viewerDocument = await syncClient.documents.create({
-      uniqueName: `viewer-${room.sid}-${user_identity}`,
-      data: {
-        speaker_invite: false,
-      },
+      uniqueName: viewerDocumentName,
     });
   } catch (e) {
     // Ignore "Unique name already exists" error
@@ -71,12 +69,31 @@ module.exports.handler = async (context, event, callback) => {
       response.setStatusCode(500);
       response.setBody({
         error: {
-          message: 'error creating stream document',
+          message: 'error creating viewer document',
           explanation: e.message,
         },
       });
       return callback(null, response);
     }
+  }
+
+  // Update viewer document to set speaker_invite to false.
+  // This is done outside of the viewer document creation to account
+  // for viewers that may already have a viewer document
+  try {
+    await syncClient.documents(viewerDocument.sid).update({
+      data: { speaker_invite: false },
+    });
+  } catch (e) {
+    console.error(e);
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error updating viewer  document',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
   }
 
   try {
