@@ -4,7 +4,7 @@
 
 import Foundation
 
-struct TokenRequest: APIRequest {
+struct CreateOrJoinStreamRequest: APIRequest {
     struct Parameters: Encodable {
         let userIdentity: String
         let streamName: String

@@ -131,7 +131,11 @@ class StreamManager: ObservableObject {
     }
 
     private func fetchToken() {
-        let request = TokenRequest(userIdentity: config.userIdentity, streamName: config.streamName, role: config.role)
+        let request = CreateOrJoinStreamRequest(
+            userIdentity: config.userIdentity,
+            streamName: config.streamName,
+            role: config.role
+        )
         
         api?.request(request) { [weak self] result in
             switch result {
