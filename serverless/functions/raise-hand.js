@@ -63,7 +63,7 @@ module.exports.handler = async (context, event, callback) => {
   const raisedHandsMapName = `raised_hands-${room.sid}`;
   try {
     if (hand_raised) {
-      syncClient.syncMaps(raisedHandsMapName).syncMapItems.create({ key: user_identity, data: {} });
+      await syncClient.syncMaps(raisedHandsMapName).syncMapItems.create({ key: user_identity, data: {} });
     } else {
       await syncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
     }
