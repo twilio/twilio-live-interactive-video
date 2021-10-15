@@ -60,19 +60,26 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
+  const raisedHandsMapName = `raised_hands-${room.sid}`;
   try {
-    const raisedHandsMapName = `raised_hands-${room.sid}`;
-    await syncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
+    if (hand_raised) {
+      syncClient.syncMaps(raisedHandsMapName).syncMapItems.create({ key: user_identity, data: {} });
+    } else {
+      await syncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
+    }
   } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error updating raised hands map',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
+    // Ignore errors relating to removing a syncMapItem that doesn't exist (20404), or creating one that already does exist (54301)
+    if (e.code !== 20404 || e.code !== 54301) {
+      console.error(e);
+      response.setStatusCode(500);
+      response.setBody({
+        error: {
+          message: 'error updating raised hands map',
+          explanation: e.message,
+        },
+      });
+      return callback(null, response);
+    }
   }
 
   response.setStatusCode(200);
