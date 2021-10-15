@@ -50,6 +50,7 @@
 		DC5F458F26CEBEC8009C5C79 /* AppInfoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F458E26CEBEC8009C5C79 /* AppInfoStore.swift */; };
 		DC5F459426CEC1FF009C5C79 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F459326CEC1FF009C5C79 /* UserDefaultsManager.swift */; };
 		DC5F459626CEC247009C5C79 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F459526CEC246009C5C79 /* UserDefaultsKeys.swift */; };
+		DC6404D22719E549004730C6 /* RaiseHandRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6404D12719E549004730C6 /* RaiseHandRequest.swift */; };
 		DCB4497426F5496400B52774 /* SpeakerSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */; };
 		DCB4497626F65A7000B52774 /* SpeakerVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */; };
 		DCC1D62626D9396400892038 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC1D62526D9396400892038 /* StreamManager.swift */; };
@@ -131,6 +132,7 @@
 		DC5F458E26CEBEC8009C5C79 /* AppInfoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoStore.swift; sourceTree = "<group>"; };
 		DC5F459326CEC1FF009C5C79 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		DC5F459526CEC246009C5C79 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
+		DC6404D12719E549004730C6 /* RaiseHandRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaiseHandRequest.swift; sourceTree = "<group>"; };
 		DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerSettingsManager.swift; sourceTree = "<group>"; };
 		DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoViewModel.swift; sourceTree = "<group>"; };
 		DCC1D62526D9396400892038 /* StreamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamManager.swift; sourceTree = "<group>"; };
@@ -418,6 +420,7 @@
 				DCC48F7A26D8288B00EE49EF /* APIErrorResponse.swift */,
 				DCC48F7C26D8288B00EE49EF /* APIRequest.swift */,
 				DC175F3F2718852A00D9D1FE /* DeleteStream.swift */,
+				DC6404D12719E549004730C6 /* RaiseHandRequest.swift */,
 				DC175F38270F673600D9D1FE /* SendSpeakerInviteRequest.swift */,
 				DC1ED12D26E94B5900FFA769 /* TokenRequest.swift */,
 			);
@@ -603,6 +606,7 @@
 				DC44BB412703C8DD00DB656D /* SceneDelegate.swift in Sources */,
 				DC1ED11A26E92DEA00FFA769 /* RoomManager.swift in Sources */,
 				DC4AA66526D1456100E677D5 /* AuthManager.swift in Sources */,
+				DC6404D22719E549004730C6 /* RaiseHandRequest.swift in Sources */,
 				DC1ED0FD26E14D0B00FFA769 /* StreamToolbar.swift in Sources */,
 				DC1ED0F926E1440200FFA769 /* StreamStatusView.swift in Sources */,
 				DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */,

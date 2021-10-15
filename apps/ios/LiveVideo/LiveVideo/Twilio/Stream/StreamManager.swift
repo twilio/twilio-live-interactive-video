@@ -23,7 +23,20 @@ class StreamManager: ObservableObject {
     }
     @Published var isHandRaised = false {
         didSet {
-            viewerStore.isHandRaised = isHandRaised
+            let request = RaiseHandRequest(
+                userIdentity: config.userIdentity,
+                streamName: config.streamName,
+                handRaised: isHandRaised
+            )
+            
+            api.request(request) { [weak self] result in
+                switch result {
+                case .success:
+                    break
+                case let .failure(error):
+                    self?.handleError(error)
+                }
+            }
         }
     }
     @Published var config: StreamConfig!
