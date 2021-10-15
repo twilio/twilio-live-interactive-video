@@ -81,7 +81,7 @@ module.exports.handler = async (context, event, callback) => {
   // This is done outside of the viewer document creation to account
   // for viewers that may already have a viewer document
   try {
-    await syncClient.documents(viewerDocument.sid).update({
+    await syncClient.documents(viewerDocumentName).update({
       data: { speaker_invite: false },
     });
   } catch (e) {
