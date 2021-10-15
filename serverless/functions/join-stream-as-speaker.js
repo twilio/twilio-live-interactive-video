@@ -77,7 +77,7 @@ module.exports.handler = async (context, event, callback) => {
 
   // Lower the participant's hand
   try {
-    const raisedHandsMapName = `raised_hands-${room_sid}`;
+    const raisedHandsMapName = `raised_hands-${room.sid}`;
     await syncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
   } catch (e) {
     // Ignore 404 errors. It is possible that the user may not have a key in the raised hands map
