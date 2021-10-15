@@ -165,12 +165,12 @@ class StreamManager: ObservableObject {
         let stores: [SyncStoring]
         
         if let viewerDocumentName = viewerDocumentName {
-            viewerStore.documentName = viewerDocumentName
-            raisedHandsStore.mapName = raisedHandsMapName
+            viewerStore.uniqueName = viewerDocumentName
+            raisedHandsStore.uniqueName = raisedHandsMapName
 
             stores = [viewerStore, raisedHandsStore]
         } else {
-            raisedHandsStore.mapName = raisedHandsMapName
+            raisedHandsStore.uniqueName = raisedHandsMapName
 
             stores = [raisedHandsStore]
         }

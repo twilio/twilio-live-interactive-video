@@ -5,7 +5,6 @@
 import Combine
 import TwilioSyncClient
 
-/// Coordinate connection and errors with client and sync objects.
 class SyncManager: NSObject {
     let errorPublisher = PassthroughSubject<Error, Never>()
     var isConnected: Bool { client?.connectionState == .connected }
@@ -60,5 +59,5 @@ class SyncManager: NSObject {
 }
 
 extension SyncManager: TwilioSyncClientDelegate {
-    // TODO: Ask Sync team if I need to handle error
+    // TODO: Ask sync team if I need to handle error
 }

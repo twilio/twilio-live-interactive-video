@@ -68,7 +68,7 @@ struct ParticipantsView: View {
             }
         }
         .onAppear {
-            raisedHandsStore.newRaisedHands.removeAll()
+            raisedHandsStore.haveNew = false
         }
     }
 }

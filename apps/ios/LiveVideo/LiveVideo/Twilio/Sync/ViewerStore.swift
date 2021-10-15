@@ -5,15 +5,14 @@
 import Combine
 import TwilioSyncClient
 
-// TODO: Maybe change unique name
 class ViewerStore: NSObject, SyncStoring, ObservableObject {
     let speakerInvitePublisher = PassthroughSubject<Void, Never>()
-    var documentName: String! // TODO: Maybe rename
+    var uniqueName: String!
     var errorHandler: ((Error) -> Void)?
     private var document: TWSDocument?
     
     func connect(client: TwilioSyncClient, completion: @escaping (Error?) -> Void) {
-        guard let options = TWSOpenOptions.open(withSidOrUniqueName: documentName) else { return }
+        guard let options = TWSOpenOptions.open(withSidOrUniqueName: uniqueName) else { return }
         
         client.openDocument(with: options, delegate: self) { [weak self] result, document in
             guard let document = document else {
@@ -28,11 +27,6 @@ class ViewerStore: NSObject, SyncStoring, ObservableObject {
     
     func disconnect() {
         document = nil
-    }
-    
-    private func handleError(_ error: Error) {
-        disconnect()
-        errorHandler?(error)
     }
 }
 
@@ -49,6 +43,7 @@ extension ViewerStore: TWSDocumentDelegate {
     }
     
     func onDocument(_ document: TWSDocument, errorOccurred error: TWSError) {
-        handleError(error)
+        disconnect()
+        errorHandler?(error)
     }
 }

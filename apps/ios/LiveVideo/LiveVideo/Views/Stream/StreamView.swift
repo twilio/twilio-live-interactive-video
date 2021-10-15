@@ -73,7 +73,7 @@ struct StreamView: View {
                             StreamToolbarButton(
                                 image: Image(systemName: "person.2"),
                                 role: .default,
-                                shouldShowBadge: !raisedHandsStore.newRaisedHands.isEmpty
+                                shouldShowBadge: raisedHandsStore.haveNew
                             ) {
                                 isShowingParticipants = true
                             }
