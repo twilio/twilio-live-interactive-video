@@ -112,7 +112,7 @@ module.exports.handler = async (context, event, callback) => {
 
   let playbackGrant;
   try {
-    playbackGrant = await getPlaybackGrant(streamDocument.data.playerStreamerSid);
+    playbackGrant = await getPlaybackGrant(streamDocument.data.player_streamer_sid);
   } catch (e) {
     console.error(e);
     response.setStatusCode(500);
