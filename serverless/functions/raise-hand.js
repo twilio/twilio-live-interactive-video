@@ -2,7 +2,7 @@
 'use strict';
 
 module.exports.handler = async (context, event, callback) => {
-  const { user_identity, room_sid, hand_raised } = event;
+  const { user_identity, stream_name, hand_raised } = event;
 
   if (!user_identity) {
     response.setStatusCode(400);
@@ -15,12 +15,12 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  if (!room_sid) {
+  if (!stream_name) {
     response.setStatusCode(400);
     response.setBody({
       error: {
-        message: 'missing room_sid',
-        explanation: 'The room_sid parameter is missing.',
+        message: 'missing stream_name',
+        explanation: 'The stream_name parameter is missing.',
       },
     });
     return callback(null, response);
@@ -43,16 +43,26 @@ module.exports.handler = async (context, event, callback) => {
   const client = context.getTwilioClient();
   const syncClient = client.sync.services(context.SYNC_SERVICE_SID);
 
-  try {
-    const raisedHandsMapName = `raised_hands-${room_sid}`;
+  let room;
 
-    if (hand_raised) {
-      // Add to map
-      await syncClient.syncMaps(raisedHandsMapName).syncMapItems.create({ key: user_identity, data: {} });
-    } else {
-      // Remove from map
-      await syncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
-    }
+  try {
+    // See if a room already exists
+    room = await client.video.rooms(stream_name).fetch();
+  } catch (e) {
+    console.error(e);
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error finding room',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  try {
+    const raisedHandsMapName = `raised_hands-${room.sid}`;
+    await syncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
   } catch (e) {
     console.error(e);
     response.setStatusCode(500);
