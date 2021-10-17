@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
 import { Player as TwilioPlayer } from '@twilio/player-sdk';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import PlayerMenuBar from './PlayerMenuBar/PlayerMenuBar';
+import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
+import { useAppState } from '../../state';
 
 TwilioPlayer.telemetry.subscribe(data => {
   const method = data.name === 'error' ? 'error' : 'log';
@@ -25,42 +26,21 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function Player() {
   const classes = useStyles();
-  const { URLRoomName } = useParams();
   const videoElRef = useRef<HTMLVideoElement>(null!);
+  const { player, disconnect } = usePlayerContext();
+  const { preJoinState } = useAppState();
 
   useEffect(() => {
-    if (URLRoomName) {
-      const { protocol, host } = window.location;
-
-      fetch('/stream-token', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({ room_name: URLRoomName, user_identity: 'Player' }),
-      })
-        .then(res => res.json())
-        .then(res =>
-          TwilioPlayer.connect(res.token, {
-            playerWasmAssetsPath: `${protocol}//${host}/player`,
-          })
-        )
-        .then(player => {
-          player.attach(videoElRef.current!);
-          player.play();
-          player.on(TwilioPlayer.Event.TimedMetadataReceived, metadata =>
-            console.log('Received timed metadata: ', metadata)
-          );
-        });
-    }
-  }, [URLRoomName]);
+    player!.attach(videoElRef.current);
+    player!.play();
+  }, [player]);
 
   return (
-    <div style={{ height: '100%' }}>
+    <div style={{ height: '100vh' }}>
       <div className={classes.container}>
         <video className={classes.video} ref={videoElRef}></video>
       </div>
-      <PlayerMenuBar roomName={URLRoomName} />
+      <PlayerMenuBar roomName={preJoinState.eventName} disconnect={disconnect} />
     </div>
   );
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Typography, Grid, Hidden, Button } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,9 +29,8 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function PlayerMenuBar({ roomName }: { roomName?: string }) {
+export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: string; disconnect: () => void }) {
   const classes = useStyles();
-  const history = useHistory();
 
   return (
     <footer className={classes.container}>
@@ -45,7 +43,7 @@ export default function PlayerMenuBar({ roomName }: { roomName?: string }) {
         <Hidden smDown>
           <Grid style={{ flex: 1 }}>
             <Grid container justifyContent="flex-end">
-              <Button onClick={() => history.replace('/')} className={classes.button}>
+              <Button onClick={disconnect} className={classes.button}>
                 Leave Stream
               </Button>
             </Grid>
