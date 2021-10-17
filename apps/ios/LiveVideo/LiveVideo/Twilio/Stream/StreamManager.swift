@@ -5,6 +5,9 @@
 import Combine
 import TwilioPlayer
 
+/// Connects to a stream and can reconnect as speaker or viewer to change role.
+///
+/// Internally coordinates `RoomManager`, `PlayerManager`, and `SyncManager` connections.
 class StreamManager: ObservableObject {
     enum State {
         case disconnected
@@ -13,21 +16,21 @@ class StreamManager: ObservableObject {
         case changingRole
     }
 
+    let errorPublisher = PassthroughSubject<Error, Never>()
     @Published var state = State.disconnected
     @Published var player: Player?
-    let errorPublisher = PassthroughSubject<Error, Never>()
     var config: StreamConfig!
-    private var api: API!
-    private var playerManager: PlayerManager!
     private var roomManager: RoomManager!
+    private var playerManager: PlayerManager!
     private var syncManager: SyncManager!
+    private var api: API!
     private var subscriptions = Set<AnyCancellable>()
 
     func configure(
         roomManager: RoomManager,
         playerManager: PlayerManager,
-        api: API,
-        syncManager: SyncManager
+        syncManager: SyncManager,
+        api: API
     ) {
         self.roomManager = roomManager
         self.playerManager = playerManager
@@ -58,10 +61,12 @@ class StreamManager: ObservableObject {
     }
     
     func connect() {
-        guard api != nil else { return } // TODO: Explain more
+        guard api != nil else {
+            return /// When not configured do nothing so `PreviewProvider` doesn't crash.
+        }
 
         state = .connecting
-        internalConnect()
+        privateConnect()
     }
     
     func disconnect() {
@@ -77,21 +82,21 @@ class StreamManager: ObservableObject {
         }
     }
     
-    func moveToSpeakers() {
+    /// Change role from viewer to speaker or speaker to viewer.
+    ///
+    /// - Note: The user that created the stream is the host. There is only one host and the host cannot change. When the host leaves the stream ends.
+    func changeRole(to role: StreamConfig.Role) {
+        guard role != .host && config.role != .host else {
+            fatalError("The host cannot change.")
+        }
+        
         disconnect()
-        config.role = .speaker
+        config.role = role
         state = .changingRole
-        internalConnect()
+        privateConnect()
     }
-
-    func moveToViewers() {
-        disconnect()
-        config.role = .viewer
-        state = .changingRole
-        internalConnect()
-    }
-    
-    private func internalConnect() {
+        
+    private func privateConnect() {
         let request = CreateOrJoinStreamRequest(
             userIdentity: config.userIdentity,
             streamName: config.streamName,
@@ -117,8 +122,6 @@ class StreamManager: ObservableObject {
 
                     switch config.role {
                     case .host, .speaker:
-                        self?.roomManager.localParticipant.isCameraOn = true // TODO: Move and turn off on disconnect
-                        self?.roomManager.localParticipant.isMicOn = true
                         self?.roomManager.connect(roomName: config.streamName, accessToken: response.token)
                     case .viewer:
                         self?.playerManager.connect(accessToken: response.token)

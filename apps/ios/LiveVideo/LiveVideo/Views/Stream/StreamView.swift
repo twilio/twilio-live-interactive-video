@@ -5,7 +5,7 @@
 import SwiftUI
 
 struct StreamView: View {
-    @EnvironmentObject var streamViewModel: StreamViewModel
+    @EnvironmentObject var viewModel: StreamViewModel
     @EnvironmentObject var streamManager: StreamManager
     @EnvironmentObject var speakerSettingsManager: SpeakerSettingsManager
     @EnvironmentObject var raisedHandsStore: RaisedHandsStore
@@ -22,8 +22,8 @@ struct StreamView: View {
                     VStack(spacing: 0) {
                         StreamStatusView(streamName: streamManager.config.streamName, streamState: $streamManager.state)
                             .padding([.horizontal, .bottom], 6)
-                            .alert(isPresented: $streamViewModel.showError) {
-                                if let error = streamViewModel.error as? LiveVideoError, error.isStreamEndedByHostError {
+                            .alert(isPresented: $viewModel.showError) {
+                                if let error = viewModel.error as? LiveVideoError, error.isStreamEndedByHostError {
                                     return Alert(
                                         title: Text("Event is no longer available"),
                                         message: Text("This event has been ended by the host."),
@@ -32,7 +32,7 @@ struct StreamView: View {
                                         }
                                     )
                                 } else {
-                                    return Alert(error: streamViewModel.error!) {
+                                    return Alert(error: viewModel.error!) {
                                         presentationMode.wrappedValue.dismiss()
                                     }
                                 }
@@ -82,7 +82,7 @@ struct StreamView: View {
                             if streamManager.config.role != .host {
                                 Menu {
                                     Button("Move to Viewers") {
-                                        streamManager.moveToViewers()
+                                        streamManager.changeRole(to: .viewer)
                                     }
                                 } label: {
                                     StreamToolbarButton(
@@ -95,17 +95,17 @@ struct StreamView: View {
                             }
                         case .viewer:
                             StreamToolbarButton(
-                                image: Image(systemName: streamViewModel.isHandRaised ? "hand.raised" : "hand.raised.slash"),
+                                image: Image(systemName: viewModel.isHandRaised ? "hand.raised" : "hand.raised.slash"),
                                 role: .default
                             ) {
-                                streamViewModel.isHandRaised.toggle()
+                                viewModel.isHandRaised.toggle()
                             }
-                            .alert(isPresented: $streamViewModel.haveSpeakerInvite) {
+                            .alert(isPresented: $viewModel.haveSpeakerInvite) {
                                 Alert(
                                     title: Text("It’s your time to shine! ✨"),
                                     message: Text("The host has invited you to join as a Speaker. Your audio and video will be shared."),
-                                    primaryButton: .default(Text("Join now")) { streamManager.moveToSpeakers() },
-                                    secondaryButton: .destructive(Text("Never mind")) // TODO: Call raised hands API
+                                    primaryButton: .default(Text("Join now")) { streamManager.changeRole(to: .speaker) },
+                                    secondaryButton: .destructive(Text("Never mind")) { viewModel.isHandRaised = false }
                                 )
                             }
                         }
@@ -137,39 +137,45 @@ struct StreamView: View {
     }
 }
 
-//struct StreamView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        return Group {
-//            StreamView(config: .constant(StreamConfig(role: .host)))
-//                .previewDisplayName("Speaker")
-//                .environmentObject(StreamManager())
-//                .environmentObject(SpeakerGridViewModel(speakerCount: 6))
-//
-//            Group {
-//                StreamView(config: .constant(StreamConfig(role: .viewer)))
-//                    .previewDisplayName("Viewer")
-//                    .environmentObject(StreamManager())
-//                StreamView(config: .constant(StreamConfig(role: .viewer)))
-//                    .previewDisplayName("Joining")
-//                    .environmentObject(StreamManager(state: .connecting))
-//            }
-//            .environmentObject(SpeakerGridViewModel())
-//        }
-//        .environmentObject(SpeakerSettingsManager())
-//    }
-//}
+struct StreamView_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            Group {
+                StreamView()
+                    .previewDisplayName("Host")
+                    .environmentObject(StreamManager(config: .stub(role: .host)))
+                StreamView()
+                    .previewDisplayName("Speaker")
+                    .environmentObject(StreamManager(config: .stub(role: .speaker)))
+            }
+            .environmentObject(SpeakerGridViewModel(speakerCount: 6))
 
-private extension StreamManager {
-    convenience init(state: StreamManager.State = .connected) {
+            Group {
+                StreamView()
+                    .previewDisplayName("Viewer")
+                    .environmentObject(StreamManager(config: .stub(role: .viewer)))
+                StreamView()
+                    .previewDisplayName("Joining")
+                    .environmentObject(StreamManager(config: .stub(role: .viewer), state: .connecting))
+            }
+            .environmentObject(SpeakerGridViewModel())
+        }
+        .environmentObject(SpeakerSettingsManager())
+        .environmentObject(RaisedHandsStore())
+        .environmentObject(StreamViewModel())
+    }
+}
+
+extension StreamManager {
+    convenience init(config: StreamConfig = .stub(), state: StreamManager.State = .connected) {
         self.init()
+        self.config = config
         self.state = state
     }
 }
 
-private extension StreamConfig {
-    init(role: Role) {
-        streamName = "Demo"
-        userIdentity = "Alice"
-        self.role = role
+extension StreamConfig {
+    static func stub(streamName: String = "Demo", userIdentity: String = "Alice", role: Role = .host) -> Self {
+        StreamConfig(streamName: streamName, userIdentity: userIdentity, role: role)
     }
 }

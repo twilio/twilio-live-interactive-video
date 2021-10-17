@@ -13,7 +13,7 @@ struct ParticipantsView: View {
     var body: some View {
         NavigationView {
             List {
-                Section(header: Text("Viewers")) {
+                Section(header: Text("Raised hands")) {
                     ForEach(raisedHandsStore.raisedHands) { participant in
                         HStack {
                             Text("\(participant.userIdentity) 🖐")
@@ -61,11 +61,28 @@ struct ParticipantsView: View {
 
 struct ParticipantsView_Previews: PreviewProvider {
     static var previews: some View {
-        let raisedHandsStore = RaisedHandsStore()
-        raisedHandsStore.raisedHands = [RaisedHandsStore.RaisedHand()]
-        
-        return ParticipantsView()
-            .environmentObject(raisedHandsStore)
+        return Group {
+            ParticipantsView()
+                .previewDisplayName("No Raised Hands")
+                .environmentObject(RaisedHandsStore())
+                .environmentObject(StreamManager())
+            ParticipantsView()
+                .previewDisplayName("Host")
+                .environmentObject(RaisedHandsStore(raisedHands: [.init()]))
+                .environmentObject(StreamManager(config: .stub(role: .host)))
+            ParticipantsView()
+                .previewDisplayName("Speaker")
+                .environmentObject(RaisedHandsStore(raisedHands: [.init()]))
+                .environmentObject(StreamManager(config: .stub(role: .speaker)))
+        }
+        .environmentObject(ParticipantsViewModel())
+    }
+}
+
+private extension RaisedHandsStore {
+    convenience init(raisedHands: [RaisedHand] = []) {
+        self.init()
+        self.raisedHands = raisedHands
     }
 }
 

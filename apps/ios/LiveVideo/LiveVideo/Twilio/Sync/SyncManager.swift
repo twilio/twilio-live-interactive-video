@@ -77,5 +77,5 @@ class SyncManager: NSObject {
 }
 
 extension SyncManager: TwilioSyncClientDelegate {
-    // TODO: Ask sync team if I need to handle error
+
 }

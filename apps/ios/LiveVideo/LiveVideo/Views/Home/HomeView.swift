@@ -6,13 +6,13 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var authManager: AuthManager
+    @EnvironmentObject var streamManager: StreamManager
     @State private var showSettings = false
     @State private var showCreateStream = false
     @State private var showJoinStream = false
     @State private var showStream = false
     @State private var signOut = false
     @State private var streamConfig: StreamConfig?
-    @EnvironmentObject var streamManager: StreamManager
 
     var body: some View {
         NavigationView {

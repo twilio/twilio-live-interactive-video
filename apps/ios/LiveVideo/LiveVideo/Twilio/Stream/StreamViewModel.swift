@@ -8,6 +8,10 @@ import TwilioPlayer
 class StreamViewModel: ObservableObject {
     @Published var isHandRaised = false {
         didSet {
+            guard streamManager.state == .connected else {
+                return
+            }
+            
             let request = RaiseHandRequest(
                 userIdentity: streamManager.config.userIdentity,
                 streamName: streamManager.config.streamName,
@@ -34,17 +38,46 @@ class StreamViewModel: ObservableObject {
     private var streamManager: StreamManager!
     private var api: API!
     private var viewerStore: ViewerStore!
+    private var speakerSettingsManager: SpeakerSettingsManager!
     private var subscriptions = Set<AnyCancellable>()
 
     func configure(
         streamManager: StreamManager,
+        speakerSettingsManager: SpeakerSettingsManager,
         api: API,
         viewerStore: ViewerStore
     ) {
         self.streamManager = streamManager
+        self.speakerSettingsManager = speakerSettingsManager
         self.api = api
         self.viewerStore = viewerStore
-        
+
+        streamManager.$state
+            .sink { [weak self] state in
+                guard let self = self, streamManager.config != nil else {
+                    return
+                }
+                
+                switch state {
+                case .connecting, .changingRole:
+                    switch streamManager.config.role {
+                    case .host, .speaker:
+                        self.speakerSettingsManager.isMicOn = true
+                        self.speakerSettingsManager.isCameraOn = true
+                    case .viewer:
+                        self.speakerSettingsManager.isMicOn = false
+                        self.speakerSettingsManager.isCameraOn = false
+                        self.isHandRaised = false
+                    }
+                case .disconnected:
+                    self.speakerSettingsManager.isMicOn = false
+                    self.speakerSettingsManager.isCameraOn = false
+                case .connected:
+                    break
+                }
+            }
+            .store(in: &subscriptions)
+
         streamManager.errorPublisher
             .sink { [weak self] error in self?.error = error }
             .store(in: &subscriptions)
@@ -55,7 +88,7 @@ class StreamViewModel: ObservableObject {
             }
             .store(in: &subscriptions)
     }
-    
+
     private func handleError(_ error: Error) {
         streamManager.disconnect()
         self.error = error
