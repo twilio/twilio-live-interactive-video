@@ -1,5 +1,11 @@
 import React, { createContext, useContext, useReducer, useState } from 'react';
 import { RecordingRules, RoomType } from '../types';
+import {
+  initialPreJoinState,
+  preJoinScreenReducer,
+  preJoinStateType,
+  preJoinActionTypes,
+} from './preJoinState/prejoinReducer';
 import { TwilioError } from 'twilio-video';
 import { settingsReducer, initialSettings, Settings, SettingsAction } from './settings/settingsReducer';
 import useActiveSinkId from './useActiveSinkId/useActiveSinkId';
@@ -22,6 +28,8 @@ export interface StateContextType {
   dispatchSetting: React.Dispatch<SettingsAction>;
   roomType?: RoomType;
   updateRecordingRules(room_sid: string, rules: RecordingRules): Promise<object>;
+  preJoinState: preJoinStateType;
+  preJoinDispatch: React.Dispatch<preJoinActionTypes>;
 }
 
 export const StateContext = createContext<StateContextType>(null!);
@@ -41,6 +49,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
   const [activeSinkId, setActiveSinkId] = useActiveSinkId();
   const [settings, dispatchSetting] = useReducer(settingsReducer, initialSettings);
   const [roomType, setRoomType] = useState<RoomType>();
+  const [preJoinState, preJoinDispatch] = useReducer(preJoinScreenReducer, initialPreJoinState);
 
   let contextValue = {
     error,
@@ -51,6 +60,8 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
     settings,
     dispatchSetting,
     roomType,
+    preJoinState,
+    preJoinDispatch,
   } as StateContextType;
 
   if (process.env.REACT_APP_SET_AUTH === 'firebase') {

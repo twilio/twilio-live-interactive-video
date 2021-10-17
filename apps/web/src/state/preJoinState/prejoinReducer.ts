@@ -1,5 +1,4 @@
 import { produce } from 'immer';
-import CreateOrJoinScreen from './CreateOrJoinScreen/CreateOrJoinScreen';
 
 export enum ActiveScreen {
   ParticipantNameScreen,
@@ -10,29 +9,32 @@ export enum ActiveScreen {
   DeviceSelectionScreen,
 }
 
-export type actionTypes =
+export type preJoinActionTypes =
   | { type: 'set-active-screen'; activeScreen: ActiveScreen }
   | { type: 'set-name'; name: string }
-  | { type: 'set-participant-type'; participantType: stateType['participantType'] }
-  | { type: 'set-event-name'; eventName: string };
+  | { type: 'set-participant-type'; participantType: preJoinStateType['participantType'] }
+  | { type: 'set-event-name'; eventName: string }
+  | { type: 'set-is-loading'; isLoading: boolean };
 
-export interface stateType {
+export interface preJoinStateType {
   activeScreen: ActiveScreen;
   participantType: 'host' | 'speaker' | 'viewer' | null;
   name: string;
   eventName: string;
   mediaError: Error | null;
+  isLoading: boolean;
 }
 
-export const initialState: stateType = {
+export const initialPreJoinState: preJoinStateType = {
   activeScreen: ActiveScreen.ParticipantNameScreen,
   participantType: null,
   name: '',
   eventName: '',
   mediaError: null,
+  isLoading: false,
 };
 
-export const preJoinScreenReducer = produce((draft: stateType, action: actionTypes) => {
+export const preJoinScreenReducer = produce((draft: preJoinStateType, action: preJoinActionTypes) => {
   switch (action.type) {
     case 'set-name':
       draft.name = action.name;
@@ -44,6 +46,10 @@ export const preJoinScreenReducer = produce((draft: stateType, action: actionTyp
 
     case 'set-active-screen':
       draft.activeScreen = action.activeScreen;
+      break;
+
+    case 'set-is-loading':
+      draft.isLoading = action.isLoading;
       break;
 
     case 'set-participant-type':
