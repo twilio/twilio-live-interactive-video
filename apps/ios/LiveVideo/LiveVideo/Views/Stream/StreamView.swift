@@ -5,6 +5,7 @@
 import SwiftUI
 
 struct StreamView: View {
+    @EnvironmentObject var streamViewModel: StreamViewModel
     @EnvironmentObject var streamManager: StreamManager
     @EnvironmentObject var speakerSettingsManager: SpeakerSettingsManager
     @EnvironmentObject var raisedHandsStore: RaisedHandsStore
@@ -21,8 +22,8 @@ struct StreamView: View {
                     VStack(spacing: 0) {
                         StreamStatusView(streamName: streamManager.config.streamName, streamState: $streamManager.state)
                             .padding([.horizontal, .bottom], 6)
-                            .alert(isPresented: $streamManager.showError) {
-                                if let error = streamManager.error as? LiveVideoError, error.isStreamEndedByHostError {
+                            .alert(isPresented: $streamViewModel.showError) {
+                                if let error = streamViewModel.error as? LiveVideoError, error.isStreamEndedByHostError {
                                     return Alert(
                                         title: Text("Event is no longer available"),
                                         message: Text("This event has been ended by the host."),
@@ -31,7 +32,7 @@ struct StreamView: View {
                                         }
                                     )
                                 } else {
-                                    return Alert(error: streamManager.error!) {
+                                    return Alert(error: streamViewModel.error!) {
                                         presentationMode.wrappedValue.dismiss()
                                     }
                                 }
@@ -94,12 +95,12 @@ struct StreamView: View {
                             }
                         case .viewer:
                             StreamToolbarButton(
-                                image: Image(systemName: streamManager.isHandRaised ? "hand.raised" : "hand.raised.slash"),
+                                image: Image(systemName: streamViewModel.isHandRaised ? "hand.raised" : "hand.raised.slash"),
                                 role: .default
                             ) {
-                                streamManager.isHandRaised.toggle()
+                                streamViewModel.isHandRaised.toggle()
                             }
-                            .alert(isPresented: $streamManager.haveSpeakerInvite) {
+                            .alert(isPresented: $streamViewModel.haveSpeakerInvite) {
                                 Alert(
                                     title: Text("It’s your time to shine! ✨"),
                                     message: Text("The host has invited you to join as a Speaker. Your audio and video will be shared."),

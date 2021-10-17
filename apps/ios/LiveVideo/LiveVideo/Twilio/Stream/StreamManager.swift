@@ -12,58 +12,27 @@ class StreamManager: ObservableObject {
         case connected
         case changingRole
     }
-    
+
     @Published var state = State.disconnected
     @Published var player: Player?
-    @Published var showError = false
-    @Published var error: Error? {
-        didSet {
-            showError = error != nil
-        }
-    }
-    @Published var isHandRaised = false {
-        didSet {
-            let request = RaiseHandRequest(
-                userIdentity: config.userIdentity,
-                streamName: config.streamName,
-                handRaised: isHandRaised
-            )
-            
-            api.request(request) { [weak self] result in
-                switch result {
-                case .success:
-                    break
-                case let .failure(error):
-                    self?.handleError(error)
-                }
-            }
-        }
-    }
-    @Published var config: StreamConfig!
-    @Published var haveSpeakerInvite = false
-    var roomSID: String? { roomManager.room?.sid }
+    let errorPublisher = PassthroughSubject<Error, Never>()
+    var config: StreamConfig!
     private var api: API!
     private var playerManager: PlayerManager!
     private var roomManager: RoomManager!
     private var syncManager: SyncManager!
-    private var viewerStore: ViewerStore!
-    private var raisedHandsStore: RaisedHandsStore!
     private var subscriptions = Set<AnyCancellable>()
 
     func configure(
         roomManager: RoomManager,
         playerManager: PlayerManager,
         api: API,
-        syncManager: SyncManager,
-        viewerStore: ViewerStore,
-        raisedHandsStore: RaisedHandsStore
+        syncManager: SyncManager
     ) {
         self.roomManager = roomManager
         self.playerManager = playerManager
         self.syncManager = syncManager
         self.api = api
-        self.viewerStore = viewerStore
-        self.raisedHandsStore = raisedHandsStore
         
         roomManager.roomConnectPublisher
             .sink { [weak self] in self?.state = .connected }
@@ -85,120 +54,85 @@ class StreamManager: ObservableObject {
             .sink { [weak self] error in self?.handleError(error) }
             .store(in: &subscriptions)
 
-        viewerStore.speakerInvitePublisher
-            .sink { [weak self] in
-                self?.haveSpeakerInvite = true
-            }
-            .store(in: &subscriptions)
-
         playerManager.delegate = self
     }
     
     func connect() {
         guard api != nil else { return } // TODO: Explain more
-        
+
         state = .connecting
-        fetchToken()
+        internalConnect()
     }
     
     func disconnect() {
         roomManager.disconnect()
-        playerManager?.disconnect()
+        playerManager.disconnect()
         syncManager.disconnect()
         player = nil
         state = .disconnected
         
         if config.role == .host {
             let request = DeleteStreamRequest(streamName: config.streamName)
-            api.request(request) // TODO: Make sure others receive the right error and quit correctly
+            api.request(request)
         }
     }
     
     func moveToSpeakers() {
-        state = .changingRole
-        playerManager?.disconnect()
-        syncManager.disconnect()
+        disconnect()
         config.role = .speaker
-        fetchToken()
-    }
-    
-    func moveToViewers() {
         state = .changingRole
-        roomManager.disconnect()
-        syncManager.disconnect()
-        config.role = .viewer
-        fetchToken()
+        internalConnect()
     }
 
-    private func fetchToken() {
+    func moveToViewers() {
+        disconnect()
+        config.role = .viewer
+        state = .changingRole
+        internalConnect()
+    }
+    
+    private func internalConnect() {
         let request = CreateOrJoinStreamRequest(
             userIdentity: config.userIdentity,
             streamName: config.streamName,
             role: config.role
         )
         
-        api?.request(request) { [weak self] result in
+        api.request(request) { [weak self] result in
             switch result {
             case let .success(response):
-                self?.connectSync(
+                self?.syncManager.connect(
                     token: response.token,
-                    viewerDocumentName: response.syncObjectNames.viewerDocument,
-                    raisedHandsMapName: response.syncObjectNames.raisedHandsMap
-                )
+                    raisedHandsMapName: response.syncObjectNames.raisedHandsMap,
+                    viewerDocumentName: response.syncObjectNames.viewerDocument
+                ) { error in
+                    guard let config = self?.config else {
+                        return
+                    }
+                    
+                    if let error = error {
+                        self?.handleError(error)
+                        return
+                    }
+
+                    switch config.role {
+                    case .host, .speaker:
+                        self?.roomManager.localParticipant.isCameraOn = true // TODO: Move and turn off on disconnect
+                        self?.roomManager.localParticipant.isMicOn = true
+                        self?.roomManager.connect(roomName: config.streamName, accessToken: response.token)
+                    case .viewer:
+                        self?.playerManager.connect(accessToken: response.token)
+                    }
+                }
             case let .failure(error):
                 self?.handleError(error)
             }
         }
     }
     
-    private func connectSync(
-        token: String,
-        viewerDocumentName: String?,
-        raisedHandsMapName: String
-    ) {
-//        guard !syncManager.isConnected else {
-//            // Sync is already connected because the user was already connected to the stream as a different role
-//            connectRoomOrPlayer(token: token)
-//            return
-//        }
-        
-        let stores: [SyncStoring]
-        
-        if let viewerDocumentName = viewerDocumentName {
-            viewerStore.uniqueName = viewerDocumentName
-            raisedHandsStore.uniqueName = raisedHandsMapName
-
-            stores = [viewerStore, raisedHandsStore]
-        } else {
-            raisedHandsStore.uniqueName = raisedHandsMapName
-
-            stores = [raisedHandsStore]
-        }
-        
-        syncManager.connect(token: token, stores: stores) { [weak self] error in
-            if let error = error {
-                self?.handleError(error)
-                return
-            }
-            
-            self?.connectRoomOrPlayer(token: token)
-        }
-    }
-    
-    private func connectRoomOrPlayer(token: String) {
-        switch self.config.role {
-        case .host, .speaker:
-            roomManager.localParticipant.isCameraOn = true // TODO: Move
-            roomManager.localParticipant.isMicOn = true
-            roomManager.connect(roomName: config.streamName, accessToken: token)
-        case .viewer:
-            playerManager?.connect(accessToken: token)
-        }
-    }
-
     private func handleError(_ error: Error) {
         disconnect()
-        self.error = error
+        errorPublisher.send(error)
     }
 }
 

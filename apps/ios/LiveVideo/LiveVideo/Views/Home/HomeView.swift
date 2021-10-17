@@ -67,12 +67,12 @@ struct HomeView: View {
                     JoinStreamView(streamConfig: $streamConfig, mode: .join)
                 }
             )
-            .fullScreenCover(isPresented: $authManager.isSignedOut, content: {
+            .fullScreenCover(isPresented: $authManager.isSignedOut) {
                 SignInView()
-            })
-            .fullScreenCover(isPresented: $showStream, content: {
+            }
+            .fullScreenCover(isPresented: $showStream) {
                 StreamView()
-            })
+            }
         }
     }
 }

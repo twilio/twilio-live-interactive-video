@@ -19,9 +19,10 @@ class RoomManager: NSObject {
     let remoteParticipantChangePublisher = PassthroughSubject<RemoteParticipantManager, Never>()
     // MARK: -
 
+    var roomSID: String? { room?.sid }
     private(set) var localParticipant: LocalParticipantManager!
     private(set) var remoteParticipants: [RemoteParticipantManager] = []
-    private(set) var room: Room? // Just for room SID
+    private var room: Room?
 
     func configure(localParticipant: LocalParticipantManager) {
         self.localParticipant = localParticipant

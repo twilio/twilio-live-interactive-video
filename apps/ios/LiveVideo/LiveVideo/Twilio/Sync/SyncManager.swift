@@ -7,11 +7,30 @@ import TwilioSyncClient
 
 class SyncManager: NSObject {
     let errorPublisher = PassthroughSubject<Error, Never>()
-    var isConnected: Bool { client?.connectionState == .connected }
     private var client: TwilioSyncClient?
+    private var raisedHandsStore: RaisedHandsStore
+    private var viewerStore: ViewerStore
     private var stores: [SyncStoring] = []
 
-    func connect(token: String, stores: [SyncStoring], completion: @escaping (Error?) -> Void) {
+    init(raisedHandsStore: RaisedHandsStore, viewerStore: ViewerStore) {
+        self.raisedHandsStore = raisedHandsStore
+        self.viewerStore = viewerStore
+    }
+    
+    func connect(
+        token: String,
+        raisedHandsMapName: String,
+        viewerDocumentName: String?,
+        completion: @escaping (Error?) -> Void
+    ) {
+        raisedHandsStore.uniqueName = raisedHandsMapName
+        stores.append(raisedHandsStore)
+        
+        if let viewerDocumentName = viewerDocumentName {
+            viewerStore.uniqueName = viewerDocumentName
+            stores.append(viewerStore)
+        }
+        
         TwilioSyncClient.syncClient(
             withToken: token,
             properties: nil,
@@ -23,11 +42,10 @@ class SyncManager: NSObject {
             }
 
             self?.client = client
-            self?.stores = stores
 
             var connectedStoreCount = 0
             
-            stores.forEach { store in
+            self?.stores.forEach { store in
                 store.errorHandler = { error in
                     self?.disconnect()
                     self?.errorPublisher.send(error)
@@ -42,7 +60,7 @@ class SyncManager: NSObject {
                     
                     connectedStoreCount += 1
                     
-                    if connectedStoreCount == stores.count {
+                    if connectedStoreCount == self?.stores.count {
                         completion(nil)
                     }
                 }

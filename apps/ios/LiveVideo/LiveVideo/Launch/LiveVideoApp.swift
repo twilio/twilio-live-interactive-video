@@ -8,6 +8,8 @@ import SwiftUI
 struct LiveVideoApp: App {
     @UIApplicationDelegateAdaptor var delegate: AppDelegate
     @StateObject private var authManager = AuthManager()
+    @StateObject private var streamViewModel = StreamViewModel()
+    @StateObject private var participantsViewModel = ParticipantsViewModel()
     @StateObject private var streamManager = StreamManager()
     @StateObject private var speakerSettingsManager = SpeakerSettingsManager()
     @StateObject private var speakerGridViewModel = SpeakerGridViewModel()
@@ -19,6 +21,8 @@ struct LiveVideoApp: App {
         WindowGroup {
             HomeView()
                 .environmentObject(authManager)
+                .environmentObject(streamViewModel)
+                .environmentObject(participantsViewModel)
                 .environmentObject(streamManager)
                 .environmentObject(speakerGridViewModel)
                 .environmentObject(speakerSettingsManager)
@@ -28,15 +32,15 @@ struct LiveVideoApp: App {
                     let localParticipant = LocalParticipantManager(authManager: authManager)
                     let roomManager = RoomManager()
                     roomManager.configure(localParticipant: localParticipant)
-                    let syncManager = SyncManager()
+                    let syncManager = SyncManager(raisedHandsStore: raisedHandsStore, viewerStore: viewerStore)
                     streamManager.configure(
                         roomManager: roomManager,
                         playerManager: PlayerManager(),
                         api: api,
-                        syncManager: syncManager,
-                        viewerStore: viewerStore,
-                        raisedHandsStore: raisedHandsStore
+                        syncManager: syncManager
                     )
+                    streamViewModel.configure(streamManager: streamManager, api: api, viewerStore: viewerStore)
+                    participantsViewModel.configure(api: api, roomManager: roomManager)
                     speakerSettingsManager.configure(localParticipant: localParticipant)
                     speakerGridViewModel.configure(roomManager: roomManager)
                 }

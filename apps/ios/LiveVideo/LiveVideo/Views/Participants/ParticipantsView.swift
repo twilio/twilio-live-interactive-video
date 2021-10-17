@@ -5,17 +5,10 @@
 import SwiftUI
 
 struct ParticipantsView: View {
+    @EnvironmentObject var viewModel: ParticipantsViewModel
     @EnvironmentObject var raisedHandsStore: RaisedHandsStore
     @EnvironmentObject var streamManager: StreamManager
-    @EnvironmentObject var api: API
     @Environment(\.presentationMode) var presentationMode
-    @State private var error: Error? {
-        didSet {
-            showError = error != nil
-        }
-    }
-    @State private var showError = false
-    @State private var showSpeakerInviteConfirmation = false
 
     var body: some View {
         NavigationView {
@@ -24,7 +17,7 @@ struct ParticipantsView: View {
                     ForEach(raisedHandsStore.raisedHands) { participant in
                         HStack {
                             Text("\(participant.userIdentity) 🖐")
-                                .alert(isPresented: $showSpeakerInviteConfirmation) {
+                                .alert(isPresented: $viewModel.showSpeakerInviteSent) {
                                     Alert(
                                         title: Text("Invitation sent"),
                                         message: Text("You invited \(participant.userIdentity) to be a speaker. They’ll be able to share audio and video."),
@@ -35,18 +28,11 @@ struct ParticipantsView: View {
                             
                             if streamManager.config.role == .host {
                                 Button("Invite to speak") {
-                                    let request = SendSpeakerInviteRequest(
-                                        userIdentity: participant.userIdentity,
-                                        roomSID: streamManager.roomSID!
-                                    )
-
-                                    // TODO: Need view model to show error
-                                    api.request(request)
-                                    showSpeakerInviteConfirmation = true
+                                    viewModel.sendSpeakerInvite(userIdentity: participant.userIdentity)
                                 }
                                 .foregroundColor(.backgroundPrimary)
-                                .alert(isPresented: $showError) {
-                                    Alert(error: error!) {
+                                .alert(isPresented: $viewModel.showError) {
+                                    Alert(error: viewModel.error!) {
                                         presentationMode.wrappedValue.dismiss()
                                     }
                                 }
