@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent } from 'react';
+import { preJoinActionTypes, ActiveScreen, preJoinStateType } from '../../../state/preJoinState/prejoinReducer';
 import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } from '@material-ui/core';
-import { actionTypes, ActiveScreen, stateType } from '../prejoinReducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -28,11 +28,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface JoinEventScreenProps {
-  state: stateType;
-  dispatch: React.Dispatch<actionTypes>;
+  state: preJoinStateType;
+  dispatch: React.Dispatch<preJoinActionTypes>;
+  connect: () => void;
 }
 
-export default function JoinEventScreen({ state, dispatch }: JoinEventScreenProps) {
+export default function JoinEventScreen({ state, dispatch, connect }: JoinEventScreenProps) {
   const classes = useStyles();
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +45,7 @@ export default function JoinEventScreen({ state, dispatch }: JoinEventScreenProp
     if (state.participantType === 'speaker') {
       dispatch({ type: 'set-active-screen', activeScreen: ActiveScreen.DeviceSelectionScreen });
     } else {
-      console.log('connect as viewer!', state);
+      connect();
     }
   };
 
@@ -78,7 +79,7 @@ export default function JoinEventScreen({ state, dispatch }: JoinEventScreenProp
             disabled={!state.eventName}
             className={classes.continueButton}
           >
-            Continue
+            {state.participantType === 'speaker' ? 'Continue' : 'Join'}
           </Button>
         </Grid>
       </form>

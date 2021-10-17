@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent } from 'react';
 import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } from '@material-ui/core';
-import { actionTypes, ActiveScreen, stateType } from '../prejoinReducer';
+import { preJoinActionTypes, ActiveScreen, preJoinStateType } from '../../../state/preJoinState/prejoinReducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -28,8 +28,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface CreateNewEventScreenProps {
-  state: stateType;
-  dispatch: React.Dispatch<actionTypes>;
+  state: preJoinStateType;
+  dispatch: React.Dispatch<preJoinActionTypes>;
 }
 
 export default function CreateNewEventScreen({ state, dispatch }: CreateNewEventScreenProps) {

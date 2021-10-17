@@ -1,15 +1,13 @@
 import React from 'react';
 import { makeStyles, Typography, Grid, Button, Theme, Hidden } from '@material-ui/core';
-import CircularProgress from '@material-ui/core/CircularProgress';
+
 import LocalVideoPreview from './LocalVideoPreview/LocalVideoPreview';
+import { preJoinActionTypes, ActiveScreen, preJoinStateType } from '../../../state/preJoinState/prejoinReducer';
 import SettingsMenu from './SettingsMenu/SettingsMenu';
 
 import ToggleAudioButton from '../../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleVideoButton from '../../Buttons/ToggleVideoButton/ToggleVideoButton';
-import { useAppState } from '../../../state';
-import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
-import { actionTypes, ActiveScreen, stateType } from '../prejoinReducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -32,6 +30,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   joinButtons: {
     display: 'flex',
     justifyContent: 'space-between',
+    '& button': {
+      padding: '0.3em 0.7em',
+    },
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column-reverse',
       width: '100%',
@@ -54,39 +55,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface DeviceSelectionScreenProps {
-  state: stateType;
-  dispatch: React.Dispatch<actionTypes>;
+  state: preJoinStateType;
+  dispatch: React.Dispatch<preJoinActionTypes>;
+  connect: () => void;
 }
 
-export default function DeviceSelectionScreen({ state, dispatch }: DeviceSelectionScreenProps) {
+export default function DeviceSelectionScreen({ state, dispatch, connect }: DeviceSelectionScreenProps) {
   const classes = useStyles();
-  const { getToken, isFetching } = useAppState();
-  const { connect: chatConnect } = useChatContext();
-  const { connect: videoConnect, isAcquiringLocalTracks, isConnecting } = useVideoContext();
-  const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
-
-  const handleJoin = () => {
-    console.log('join!', state);
-    // getToken(name, roomName).then(({ token }) => {
-    //   videoConnect(token);
-    //   process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-    // });
-  };
-
-  if (isFetching || isConnecting) {
-    return (
-      <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
-        <div>
-          <CircularProgress variant="indeterminate" />
-        </div>
-        <div>
-          <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }}>
-            Joining Meeting
-          </Typography>
-        </div>
-      </Grid>
-    );
-  }
+  const { isAcquiringLocalTracks } = useVideoContext();
 
   return (
     <>
@@ -101,8 +77,8 @@ export default function DeviceSelectionScreen({ state, dispatch }: DeviceSelecti
           </div>
           <div className={classes.mobileButtonBar}>
             <Hidden mdUp>
-              <ToggleAudioButton className={classes.mobileButton} disabled={disableButtons} />
-              <ToggleVideoButton className={classes.mobileButton} disabled={disableButtons} />
+              <ToggleAudioButton className={classes.mobileButton} disabled={isAcquiringLocalTracks} />
+              <ToggleVideoButton className={classes.mobileButton} disabled={isAcquiringLocalTracks} />
             </Hidden>
             <SettingsMenu mobileButtonClass={classes.mobileButton} />
           </div>
@@ -111,8 +87,8 @@ export default function DeviceSelectionScreen({ state, dispatch }: DeviceSelecti
           <Grid container direction="column" justifyContent="space-between" style={{ height: '100%' }}>
             <div>
               <Hidden smDown>
-                <ToggleAudioButton className={classes.deviceButton} disabled={disableButtons} />
-                <ToggleVideoButton className={classes.deviceButton} disabled={disableButtons} />
+                <ToggleAudioButton className={classes.deviceButton} disabled={isAcquiringLocalTracks} />
+                <ToggleVideoButton className={classes.deviceButton} disabled={isAcquiringLocalTracks} />
               </Hidden>
             </div>
             <div className={classes.joinButtons}>
@@ -131,14 +107,8 @@ export default function DeviceSelectionScreen({ state, dispatch }: DeviceSelecti
               >
                 Go Back
               </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                data-cy-join-now
-                onClick={handleJoin}
-                disabled={disableButtons}
-              >
-                Join Now
+              <Button variant="contained" color="primary" data-cy-join-now onClick={connect}>
+                {state.participantType === 'host' ? 'Create Event' : 'Join Event'}
               </Button>
             </div>
           </Grid>
