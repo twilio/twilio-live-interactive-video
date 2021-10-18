@@ -2,13 +2,15 @@
 'use strict';
 
 const AccessToken = Twilio.jwt.AccessToken;
+const SyncGrant = AccessToken.SyncGrant;
+const ChatGrant = AccessToken.ChatGrant;
 const MAX_ALLOWED_SESSION_DURATION = 14400;
 
 module.exports.handler = async (context, event, callback) => {
   const common = require(Runtime.getAssets()['/common.js'].path);
   const { getPlaybackGrant } = common(context, event, callback);
 
-  const { user_identity, room_name } = event;
+  const { user_identity, stream_name } = event;
 
   let response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
@@ -24,30 +26,71 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  if (!room_name) {
+  if (!stream_name) {
     response.setStatusCode(400);
     response.setBody({
       error: {
-        message: 'missing room_name',
-        explanation: 'The room_name parameter is missing.',
+        message: 'missing stream_name',
+        explanation: 'The stream_name parameter is missing.',
       },
     });
     return callback(null, response);
   }
 
-  let room, streamDocument;
+  let room, streamDocument, viewerDocument;
 
   const client = context.getTwilioClient();
   const syncClient = client.sync.services(context.SYNC_SERVICE_SID);
 
   try {
     // See if a room already exists
-    room = await client.video.rooms(room_name).fetch();
+    room = await client.video.rooms(stream_name).fetch();
   } catch (e) {
+    console.error(e);
     response.setStatusCode(500);
     response.setBody({
       error: {
         message: 'error finding room',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  const viewerDocumentName = `viewer-${room.sid}-${user_identity}`;
+  // Create viewer document
+  try {
+    viewerDocument = await syncClient.documents.create({
+      uniqueName: viewerDocumentName,
+    });
+  } catch (e) {
+    // Ignore "Unique name already exists" error
+    if (e.code !== 54301) {
+      console.error(e);
+      response.setStatusCode(500);
+      response.setBody({
+        error: {
+          message: 'error creating viewer document',
+          explanation: e.message,
+        },
+      });
+      return callback(null, response);
+    }
+  }
+
+  // Update viewer document to set speaker_invite to false.
+  // This is done outside of the viewer document creation to account
+  // for viewers that may already have a viewer document
+  try {
+    await syncClient.documents(viewerDocumentName).update({
+      data: { speaker_invite: false },
+    });
+  } catch (e) {
+    console.error(e);
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error updating viewer  document',
         explanation: e.message,
       },
     });
@@ -70,7 +113,7 @@ module.exports.handler = async (context, event, callback) => {
 
   let playbackGrant;
   try {
-    playbackGrant = await getPlaybackGrant(streamDocument.data.playerStreamerSid);
+    playbackGrant = await getPlaybackGrant(streamDocument.data.player_streamer_sid);
   } catch (e) {
     console.error(e);
     response.setStatusCode(500);
@@ -88,6 +131,10 @@ module.exports.handler = async (context, event, callback) => {
     ttl: MAX_ALLOWED_SESSION_DURATION,
   });
 
+  // Add chat grant to token
+  const chatGrant = new ChatGrant({ serviceSid: context.CONVERSATIONS_SERVICE_SID });
+  token.addGrant(chatGrant);
+
   // Add participant's identity to token
   token.identity = event.user_identity;
 
@@ -98,10 +145,19 @@ module.exports.handler = async (context, event, callback) => {
     toPayload: () => playbackGrant,
   });
 
+  // Add sync grant to token
+  const syncGrant = new SyncGrant({ serviceSid: context.SYNC_SERVICE_SID });
+  token.addGrant(syncGrant);
+
   // Return token
   response.setStatusCode(200);
   response.setBody({
     token: token.toJwt(),
+    sync_object_names: {
+      raised_hands_map: `raised_hands-${room.sid}`,
+      viewer_document: `viewer-${room.sid}-${user_identity}`,
+    },
+    room_sid: room.sid,
   });
 
   callback(null, response);
