@@ -9,32 +9,36 @@ export enum ActiveScreen {
   DeviceSelectionScreen,
 }
 
-export type preJoinActionTypes =
+export type appActionTypes =
   | { type: 'set-active-screen'; activeScreen: ActiveScreen }
   | { type: 'set-name'; name: string }
-  | { type: 'set-participant-type'; participantType: preJoinStateType['participantType'] }
+  | { type: 'set-participant-type'; participantType: appStateTypes['participantType'] }
   | { type: 'set-event-name'; eventName: string }
-  | { type: 'set-is-loading'; isLoading: boolean };
+  | { type: 'set-is-loading'; isLoading: boolean }
+  | { type: 'set-has-speaker-invite'; hasSpeakerInvite: boolean }
+  | { type: 'reset-state' };
 
-export interface preJoinStateType {
+export interface appStateTypes {
   activeScreen: ActiveScreen;
   participantType: 'host' | 'speaker' | 'viewer' | null;
   name: string;
   eventName: string;
   mediaError: Error | null;
   isLoading: boolean;
+  hasSpeakerInvite: boolean;
 }
 
-export const initialPreJoinState: preJoinStateType = {
+export const initialAppState: appStateTypes = {
   activeScreen: ActiveScreen.ParticipantNameScreen,
   participantType: null,
   name: '',
   eventName: '',
   mediaError: null,
   isLoading: false,
+  hasSpeakerInvite: false,
 };
 
-export const preJoinScreenReducer = produce((draft: preJoinStateType, action: preJoinActionTypes) => {
+export const appReducer = produce((draft: appStateTypes, action: appActionTypes) => {
   switch (action.type) {
     case 'set-name':
       draft.name = action.name;
@@ -51,6 +55,14 @@ export const preJoinScreenReducer = produce((draft: preJoinStateType, action: pr
     case 'set-is-loading':
       draft.isLoading = action.isLoading;
       break;
+
+    case 'set-has-speaker-invite':
+      draft.activeScreen = ActiveScreen.DeviceSelectionScreen;
+      draft.hasSpeakerInvite = action.hasSpeakerInvite;
+      break;
+
+    case 'reset-state':
+      return initialAppState;
 
     case 'set-participant-type':
       draft.participantType = action.participantType;

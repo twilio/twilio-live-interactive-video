@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { makeStyles, Theme, Typography } from '@material-ui/core';
 import Swoosh from './swoosh';
 import VideoLogo from './VideoLogo';
@@ -14,6 +15,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     background: 'rgb(40, 42, 43)',
     height: '100%',
+  },
+  transparentBackground: {
+    background: 'rgba(0, 0, 0, 0.8)',
+    position: 'fixed',
+    height: 'auto',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: `${theme.footerHeight}px`,
+    zIndex: 100,
+    '& $twilioLogo': {
+      display: 'none',
+    },
   },
   container: {
     position: 'relative',
@@ -91,6 +105,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface IntroContainerProps {
   children: React.ReactNode;
+  transparentBackground?: boolean;
 }
 
 const IntroContainer = (props: IntroContainerProps) => {
@@ -99,7 +114,7 @@ const IntroContainer = (props: IntroContainerProps) => {
   const location = useLocation();
 
   return (
-    <div className={classes.background}>
+    <div className={clsx(classes.background, { [classes.transparentBackground]: props.transparentBackground })}>
       <TwilioLogo className={classes.twilioLogo} />
       {user && location.pathname !== '/login' && <UserMenu />}
       <div className={classes.container}>

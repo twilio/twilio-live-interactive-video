@@ -17,6 +17,7 @@ import { PlayerProvider } from './components/PlayerProvider';
 import { VideoProvider } from './components/VideoProvider';
 import useConnectionOptions from './utils/useConnectionOptions/useConnectionOptions';
 import UnsupportedBrowserWarning from './components/UnsupportedBrowserWarning/UnsupportedBrowserWarning';
+import { SyncProvider } from './components/SyncProvider';
 
 // Here we redirect the user to a URL with a hash. This maintains backwards-compatibilty with URLs
 // like https://my-twilio-video-app.com/room/test-room, which will be redirected to https://my-twilio-video-app.com/#/room/test-room
@@ -33,7 +34,9 @@ const VideoApp = () => {
       <ErrorDialog dismissError={() => setError(null)} error={error} />
       <PlayerProvider>
         <ChatProvider>
-          <App />
+          <SyncProvider>
+            <App />
+          </SyncProvider>
         </ChatProvider>
       </PlayerProvider>
     </VideoProvider>

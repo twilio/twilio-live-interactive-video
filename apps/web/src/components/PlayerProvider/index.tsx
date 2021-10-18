@@ -2,6 +2,8 @@ import React, { createContext, useCallback, useState } from 'react';
 import { Player as TwilioPlayer } from '@twilio/player-sdk';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
+TwilioPlayer.setLogLevel(TwilioPlayer.LogLevel.Error);
+
 type PlayerContextType = {
   player: TwilioPlayer | undefined;
   connect: (token: string) => Promise<void>;
@@ -35,6 +37,7 @@ export const PlayerProvider: React.FC = ({ children }) => {
   );
 
   const disconnect = () => {
+    console.log('ddd', player);
     if (player) {
       player.disconnect();
       setPlayer(undefined);

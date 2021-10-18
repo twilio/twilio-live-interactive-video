@@ -41,3 +41,15 @@ export const joinStreamAsViewer = (user_identity: string, stream_name: string) =
     user_identity,
     stream_name,
   });
+
+export const raiseHand = (user_identity: string, stream_name: string, hand_raised: boolean) =>
+  apiClient.post('raise-hand', {
+    user_identity,
+    stream_name,
+    hand_raised,
+  });
+
+export const deleteStream = (stream_name: string) =>
+  apiClient.post('delete-stream', {
+    stream_name,
+  });

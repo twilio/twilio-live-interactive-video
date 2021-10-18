@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent } from 'react';
-import { preJoinActionTypes, ActiveScreen, preJoinStateType } from '../../../state/preJoinState/prejoinReducer';
+import { appActionTypes, ActiveScreen, appStateTypes } from '../../../state/appState/appReducer';
 import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -28,8 +28,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface JoinEventScreenProps {
-  state: preJoinStateType;
-  dispatch: React.Dispatch<preJoinActionTypes>;
+  state: appStateTypes;
+  dispatch: React.Dispatch<appActionTypes>;
   connect: () => void;
 }
 

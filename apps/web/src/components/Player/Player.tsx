@@ -28,7 +28,7 @@ export default function Player() {
   const classes = useStyles();
   const videoElRef = useRef<HTMLVideoElement>(null!);
   const { player, disconnect } = usePlayerContext();
-  const { preJoinState } = useAppState();
+  const { appState } = useAppState();
 
   useEffect(() => {
     player!.attach(videoElRef.current);
@@ -40,7 +40,7 @@ export default function Player() {
       <div className={classes.container}>
         <video className={classes.video} ref={videoElRef}></video>
       </div>
-      <PlayerMenuBar roomName={preJoinState.eventName} disconnect={disconnect} />
+      <PlayerMenuBar roomName={appState.eventName} disconnect={disconnect} />
     </div>
   );
 }

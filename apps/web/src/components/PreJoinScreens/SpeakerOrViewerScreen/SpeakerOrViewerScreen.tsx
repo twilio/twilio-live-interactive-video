@@ -1,5 +1,5 @@
 import React from 'react';
-import { preJoinActionTypes, ActiveScreen, preJoinStateType } from '../../../state/preJoinState/prejoinReducer';
+import { appActionTypes, ActiveScreen, appStateTypes } from '../../../state/appState/appReducer';
 import { Typography, makeStyles, Grid, Button, Theme } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -28,8 +28,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface SpeakerOrViewerScreenProps {
-  state: preJoinStateType;
-  dispatch: React.Dispatch<preJoinActionTypes>;
+  state: appStateTypes;
+  dispatch: React.Dispatch<appActionTypes>;
 }
 
 export default function SpeakerOrViewerScreen({ state, dispatch }: SpeakerOrViewerScreenProps) {

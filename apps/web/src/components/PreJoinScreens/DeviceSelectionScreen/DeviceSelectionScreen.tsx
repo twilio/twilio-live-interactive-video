@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles, Typography, Grid, Button, Theme, Hidden } from '@material-ui/core';
 
 import LocalVideoPreview from './LocalVideoPreview/LocalVideoPreview';
-import { preJoinActionTypes, ActiveScreen, preJoinStateType } from '../../../state/preJoinState/prejoinReducer';
+import { appActionTypes, ActiveScreen, appStateTypes } from '../../../state/appState/appReducer';
 import SettingsMenu from './SettingsMenu/SettingsMenu';
 
 import ToggleAudioButton from '../../Buttons/ToggleAudioButton/ToggleAudioButton';
@@ -55,14 +55,26 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface DeviceSelectionScreenProps {
-  state: preJoinStateType;
-  dispatch: React.Dispatch<preJoinActionTypes>;
+  state: appStateTypes;
+  dispatch: React.Dispatch<appActionTypes>;
   connect: () => void;
 }
 
 export default function DeviceSelectionScreen({ state, dispatch, connect }: DeviceSelectionScreenProps) {
   const classes = useStyles();
   const { isAcquiringLocalTracks } = useVideoContext();
+
+  function handleGoBack() {
+    if (state.hasSpeakerInvite) {
+      dispatch({ type: 'set-has-speaker-invite', hasSpeakerInvite: false });
+    } else {
+      dispatch({
+        type: 'set-active-screen',
+        activeScreen:
+          state.participantType === 'host' ? ActiveScreen.CreateNewEventScreen : ActiveScreen.JoinEventNameScreen,
+      });
+    }
+  }
 
   return (
     <>
@@ -92,19 +104,7 @@ export default function DeviceSelectionScreen({ state, dispatch, connect }: Devi
               </Hidden>
             </div>
             <div className={classes.joinButtons}>
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={() =>
-                  dispatch({
-                    type: 'set-active-screen',
-                    activeScreen:
-                      state.participantType === 'host'
-                        ? ActiveScreen.CreateNewEventScreen
-                        : ActiveScreen.JoinEventNameScreen,
-                  })
-                }
-              >
+              <Button variant="outlined" color="primary" onClick={handleGoBack}>
                 Go Back
               </Button>
               <Button variant="contained" color="primary" data-cy-join-now onClick={connect}>

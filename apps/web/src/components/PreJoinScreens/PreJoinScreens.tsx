@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ActiveScreen } from '../../state/preJoinState/prejoinReducer';
+import { ActiveScreen } from '../../state/appState/appReducer';
 import { createStream, joinStreamAsSpeaker, joinStreamAsViewer } from '../../state/api/api';
 import CreateNewEventScreen from './CreateNewEventScreen/CreateNewEventScreen';
 import CreateOrJoinScreen from './CreateOrJoinScreen/CreateOrJoinScreen';
@@ -14,22 +14,33 @@ import { useAppState } from '../../state';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import useSyncContext from '../../hooks/useSyncContext/useSyncContext';
 
 export default function PreJoinScreens() {
   const { getAudioAndVideoTracks } = useVideoContext();
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect } = useVideoContext();
-  const { connect: playerConnect } = usePlayerContext();
+  const { connect: playerConnect, disconnect: playerDisconnect } = usePlayerContext();
+  const { connect: syncConnect, registerViewerDocument } = useSyncContext();
   const [mediaError, setMediaError] = useState<Error>();
-  const { preJoinState, preJoinDispatch } = useAppState();
+  const { appState, appDispatch } = useAppState();
 
   async function connect() {
-    preJoinDispatch({ type: 'set-is-loading', isLoading: true });
+    appDispatch({ type: 'set-is-loading', isLoading: true });
 
     try {
-      switch (preJoinState.participantType) {
+      if (appState.hasSpeakerInvite) {
+        const { data } = await joinStreamAsSpeaker(appState.name, appState.eventName);
+        await videoConnect(data.token);
+        chatConnect(data.token);
+        playerDisconnect();
+        appDispatch({ type: 'set-has-speaker-invite', hasSpeakerInvite: false });
+        return;
+      }
+
+      switch (appState.participantType) {
         case 'host': {
-          const { data } = await createStream(preJoinState.name, preJoinState.eventName);
+          const { data } = await createStream(appState.name, appState.eventName);
           await videoConnect(data.token);
           chatConnect(data.token);
 
@@ -37,7 +48,7 @@ export default function PreJoinScreens() {
         }
 
         case 'speaker': {
-          const { data } = await joinStreamAsSpeaker(preJoinState.name, preJoinState.eventName);
+          const { data } = await joinStreamAsSpeaker(appState.name, appState.eventName);
           await videoConnect(data.token);
           chatConnect(data.token);
 
@@ -45,53 +56,51 @@ export default function PreJoinScreens() {
         }
 
         case 'viewer': {
-          const { data } = await joinStreamAsViewer(preJoinState.name, preJoinState.eventName);
+          const { data } = await joinStreamAsViewer(appState.name, appState.eventName);
+          syncConnect(data.token);
           await playerConnect(data.token);
+          registerViewerDocument(data.sync_object_names.viewer_document);
           // chatConnect(response.data.token);
 
           break;
         }
       }
-      preJoinDispatch({ type: 'set-is-loading', isLoading: false });
+      appDispatch({ type: 'set-is-loading', isLoading: false });
     } catch (e) {
       console.log('Error connecting: ', e);
-      preJoinDispatch({ type: 'set-is-loading', isLoading: false });
+      appDispatch({ type: 'set-is-loading', isLoading: false });
     }
   }
 
   useEffect(() => {
-    if (preJoinState.activeScreen === ActiveScreen.DeviceSelectionScreen && !mediaError) {
+    if (appState.activeScreen === ActiveScreen.DeviceSelectionScreen && !mediaError) {
       getAudioAndVideoTracks().catch(error => {
         console.log('Error acquiring local media:');
         console.dir(error);
         setMediaError(error);
       });
     }
-  }, [getAudioAndVideoTracks, preJoinState.activeScreen, mediaError]);
+  }, [getAudioAndVideoTracks, appState.activeScreen, mediaError]);
 
   return (
-    <IntroContainer>
+    <IntroContainer transparentBackground={appState.hasSpeakerInvite}>
       <MediaErrorSnackbar error={mediaError} />
 
-      {preJoinState.isLoading ? (
+      {appState.isLoading ? (
         <LoadingScreen />
       ) : (
         {
-          [ActiveScreen.ParticipantNameScreen]: (
-            <ParticpantNameScreen state={preJoinState} dispatch={preJoinDispatch} />
-          ),
-          [ActiveScreen.CreateOrJoinScreen]: <CreateOrJoinScreen state={preJoinState} dispatch={preJoinDispatch} />,
-          [ActiveScreen.CreateNewEventScreen]: <CreateNewEventScreen state={preJoinState} dispatch={preJoinDispatch} />,
-          [ActiveScreen.SpeakerOrViewerScreen]: (
-            <SpeakerOrViewerScreen state={preJoinState} dispatch={preJoinDispatch} />
-          ),
+          [ActiveScreen.ParticipantNameScreen]: <ParticpantNameScreen state={appState} dispatch={appDispatch} />,
+          [ActiveScreen.CreateOrJoinScreen]: <CreateOrJoinScreen state={appState} dispatch={appDispatch} />,
+          [ActiveScreen.CreateNewEventScreen]: <CreateNewEventScreen state={appState} dispatch={appDispatch} />,
+          [ActiveScreen.SpeakerOrViewerScreen]: <SpeakerOrViewerScreen state={appState} dispatch={appDispatch} />,
           [ActiveScreen.JoinEventNameScreen]: (
-            <JoinEventScreen state={preJoinState} dispatch={preJoinDispatch} connect={connect} />
+            <JoinEventScreen state={appState} dispatch={appDispatch} connect={connect} />
           ),
           [ActiveScreen.DeviceSelectionScreen]: (
-            <DeviceSelectionScreen state={preJoinState} dispatch={preJoinDispatch} connect={connect} />
+            <DeviceSelectionScreen state={appState} dispatch={appDispatch} connect={connect} />
           ),
-        }[preJoinState.activeScreen]
+        }[appState.activeScreen]
       )}
     </IntroContainer>
   );
