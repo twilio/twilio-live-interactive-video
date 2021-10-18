@@ -9,8 +9,14 @@ const SyncGrant = AccessToken.SyncGrant;
 const MAX_ALLOWED_SESSION_DURATION = 14400;
 
 module.exports.handler = async (context, event, callback) => {
-  const { ACCOUNT_SID, TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, CONVERSATIONS_SERVICE_SID, SYNC_SERVICE_SID } =
-    context;
+  const {
+    ACCOUNT_SID,
+    TWILIO_API_KEY_SID,
+    TWILIO_API_KEY_SECRET,
+    CONVERSATIONS_SERVICE_SID,
+    SYNC_SERVICE_SID,
+    DOMAIN_NAME,
+  } = context;
 
   const common = require(Runtime.getAssets()['/common.js'].path);
   const { axiosClient } = common(context, event, callback);
@@ -51,6 +57,7 @@ module.exports.handler = async (context, event, callback) => {
     room = await client.video.rooms.create({
       uniqueName: stream_name,
       type: 'group',
+      statusCallback: 'https://' + DOMAIN_NAME + '/rooms-webhook',
     });
   } catch (e) {
     console.error(e);
