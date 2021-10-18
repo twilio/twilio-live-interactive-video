@@ -28,8 +28,8 @@ class StreamViewModel: ObservableObject {
             }
         }
     }
-    @Published var showError = false
     @Published var haveSpeakerInvite = false
+    @Published var showError = false
     private(set) var error: Error? {
         didSet {
             showError = error != nil

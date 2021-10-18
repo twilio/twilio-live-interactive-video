@@ -84,7 +84,7 @@ class StreamManager: ObservableObject {
     
     /// Change role from viewer to speaker or speaker to viewer.
     ///
-    /// - Note: The user that created the stream is the host. There is only one host and the host cannot change. When the host leaves the stream ends.
+    /// - Note: The user that created the stream is the host. There is only one host and the host cannot change. When the host leaves the stream ends for all users.
     func changeRole(to role: StreamConfig.Role) {
         guard role != .host && config.role != .host else {
             fatalError("The host cannot change.")

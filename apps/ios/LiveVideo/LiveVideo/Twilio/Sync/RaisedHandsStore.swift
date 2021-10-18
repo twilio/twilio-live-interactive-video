@@ -41,7 +41,7 @@ class RaisedHandsStore: NSObject, SyncStoring, ObservableObject {
             
             self.map = map
 
-            /// Only fetch the first page. Showing more than 100 raised hands is not useful.
+            /// Only fetch the first page because showing more than 100 raised hands is not useful.
             let queryOptions = TWSMapQueryOptions().withPageSize(100)
 
             map.queryItems(with: queryOptions) { result, paginator in
