@@ -3,6 +3,7 @@
 
 const AccessToken = Twilio.jwt.AccessToken;
 const SyncGrant = AccessToken.SyncGrant;
+const ChatGrant = AccessToken.ChatGrant;
 const MAX_ALLOWED_SESSION_DURATION = 14400;
 
 module.exports.handler = async (context, event, callback) => {
@@ -130,6 +131,10 @@ module.exports.handler = async (context, event, callback) => {
     ttl: MAX_ALLOWED_SESSION_DURATION,
   });
 
+  // Add chat grant to token
+  const chatGrant = new ChatGrant({ serviceSid: context.CONVERSATIONS_SERVICE_SID });
+  token.addGrant(chatGrant);
+
   // Add participant's identity to token
   token.identity = event.user_identity;
 
@@ -152,6 +157,7 @@ module.exports.handler = async (context, event, callback) => {
       raised_hands_map: `raised_hands-${room.sid}`,
       viewer_document: `viewer-${room.sid}-${user_identity}`,
     },
+    room_sid: room.sid,
   });
 
   callback(null, response);

@@ -68,8 +68,8 @@ module.exports.handler = async (context, event, callback) => {
       await syncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
     }
   } catch (e) {
-    // Ignore errors relating to removing a syncMapItem that doesn't exist (20404), or creating one that already does exist (54301)
-    if (e.code !== 20404 || e.code !== 54301) {
+    // Ignore errors relating to removing a syncMapItem that doesn't exist (20404), or creating one that already does exist (54208)
+    if (e.code !== 20404 && e.code !== 54208) {
       console.error(e);
       response.setStatusCode(500);
       response.setBody({
