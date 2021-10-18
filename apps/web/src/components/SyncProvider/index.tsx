@@ -1,11 +1,12 @@
-import React, { createContext, useRef } from 'react';
-import SyncClient from 'twilio-sync';
-import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import React, { createContext, useRef, useState } from 'react';
+import SyncClient, { SyncMap } from 'twilio-sync';
 import { useAppState } from '../../state';
 
 type SyncContextType = {
   connect: (token: string) => void;
   registerViewerDocument: (token: string) => Promise<void>;
+  raisedHandsMap: SyncMap | undefined;
+  registerRaisedHandsMap: (token: string) => Promise<void>;
 };
 
 export const SyncContext = createContext<SyncContextType>(null!);
@@ -13,6 +14,7 @@ export const SyncContext = createContext<SyncContextType>(null!);
 export const SyncProvider: React.FC = ({ children }) => {
   // const { connect: videoConnect, onError } = useVideoContext();
   const { appDispatch } = useAppState();
+  const [raisedHandsMap, setRaisedHandsMap] = useState<SyncMap>();
 
   const syncClientRef = useRef<SyncClient>();
 
@@ -30,5 +32,15 @@ export const SyncProvider: React.FC = ({ children }) => {
     });
   }
 
-  return <SyncContext.Provider value={{ connect, registerViewerDocument }}>{children}</SyncContext.Provider>;
+  function registerRaisedHandsMap(raisedHandsMapName: string) {
+    return syncClientRef.current!.map(raisedHandsMapName).then(map => {
+      setRaisedHandsMap(map);
+    });
+  }
+
+  return (
+    <SyncContext.Provider value={{ connect, registerViewerDocument, raisedHandsMap, registerRaisedHandsMap }}>
+      {children}
+    </SyncContext.Provider>
+  );
 };

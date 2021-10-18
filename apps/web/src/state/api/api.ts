@@ -49,6 +49,12 @@ export const raiseHand = (user_identity: string, stream_name: string, hand_raise
     hand_raised,
   });
 
+export const sendSpeakerInvite = (user_identity: string, room_sid: string) =>
+  apiClient.post('send-speaker-invite', {
+    user_identity,
+    room_sid,
+  });
+
 export const deleteStream = (stream_name: string) =>
   apiClient.post('delete-stream', {
     stream_name,

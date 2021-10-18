@@ -21,7 +21,7 @@ export default function PreJoinScreens() {
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect } = useVideoContext();
   const { connect: playerConnect, disconnect: playerDisconnect } = usePlayerContext();
-  const { connect: syncConnect, registerViewerDocument } = useSyncContext();
+  const { connect: syncConnect, registerViewerDocument, registerRaisedHandsMap } = useSyncContext();
   const [mediaError, setMediaError] = useState<Error>();
   const { appState, appDispatch } = useAppState();
 
@@ -33,6 +33,7 @@ export default function PreJoinScreens() {
         const { data } = await joinStreamAsSpeaker(appState.name, appState.eventName);
         await videoConnect(data.token);
         chatConnect(data.token);
+        registerRaisedHandsMap(data.sync_object_names.raised_hands_map);
         playerDisconnect();
         appDispatch({ type: 'set-has-speaker-invite', hasSpeakerInvite: false });
         return;
@@ -41,7 +42,9 @@ export default function PreJoinScreens() {
       switch (appState.participantType) {
         case 'host': {
           const { data } = await createStream(appState.name, appState.eventName);
+          syncConnect(data.token);
           await videoConnect(data.token);
+          registerRaisedHandsMap(data.sync_object_names.raised_hands_map);
           chatConnect(data.token);
 
           break;
@@ -49,7 +52,9 @@ export default function PreJoinScreens() {
 
         case 'speaker': {
           const { data } = await joinStreamAsSpeaker(appState.name, appState.eventName);
+          syncConnect(data.token);
           await videoConnect(data.token);
+          registerRaisedHandsMap(data.token);
           chatConnect(data.token);
 
           break;

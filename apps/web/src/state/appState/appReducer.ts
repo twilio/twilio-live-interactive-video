@@ -16,7 +16,8 @@ export type appActionTypes =
   | { type: 'set-event-name'; eventName: string }
   | { type: 'set-is-loading'; isLoading: boolean }
   | { type: 'set-has-speaker-invite'; hasSpeakerInvite: boolean }
-  | { type: 'reset-state' };
+  | { type: 'reset-state' }
+  | { type: 'set-is-participant-window-open'; isParticipantWindowOpen: boolean };
 
 export interface appStateTypes {
   activeScreen: ActiveScreen;
@@ -26,6 +27,7 @@ export interface appStateTypes {
   mediaError: Error | null;
   isLoading: boolean;
   hasSpeakerInvite: boolean;
+  isParticipantWindowOpen: boolean;
 }
 
 export const initialAppState: appStateTypes = {
@@ -36,6 +38,7 @@ export const initialAppState: appStateTypes = {
   mediaError: null,
   isLoading: false,
   hasSpeakerInvite: false,
+  isParticipantWindowOpen: false,
 };
 
 export const appReducer = produce((draft: appStateTypes, action: appActionTypes) => {
@@ -57,12 +60,18 @@ export const appReducer = produce((draft: appStateTypes, action: appActionTypes)
       break;
 
     case 'set-has-speaker-invite':
-      draft.activeScreen = ActiveScreen.DeviceSelectionScreen;
       draft.hasSpeakerInvite = action.hasSpeakerInvite;
+      if (action.hasSpeakerInvite) {
+        draft.activeScreen = ActiveScreen.DeviceSelectionScreen;
+      }
       break;
 
     case 'reset-state':
       return initialAppState;
+
+    case 'set-is-participant-window-open':
+      draft.isParticipantWindowOpen = action.isParticipantWindowOpen;
+      break;
 
     case 'set-participant-type':
       draft.participantType = action.participantType;

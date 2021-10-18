@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { Typography, Grid, Hidden, Button } from '@material-ui/core';
+import { Typography, Grid, Button } from '@material-ui/core';
 import { useAppState } from '../../../state';
 import { raiseHand } from '../../../state/api/api';
 
@@ -42,7 +42,7 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
       lastClickTimeRef.current = Date.now();
       raiseHand(appState.name, appState.eventName, !isHandRaised).then(() => setIsHandRaised(!isHandRaised));
     }
-  }, [isHandRaised]);
+  }, [isHandRaised, appState.name, appState.eventName]);
 
   return (
     <footer className={classes.container}>
