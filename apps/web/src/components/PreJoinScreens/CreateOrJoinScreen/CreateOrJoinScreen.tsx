@@ -1,7 +1,10 @@
 import React from 'react';
-import { Typography, makeStyles, Grid, Button, Theme, Paper } from '@material-ui/core';
+import clsx from 'clsx';
+import { Typography, makeStyles, Button, Theme, Paper } from '@material-ui/core';
 import { appActionTypes, ActiveScreen, appStateTypes } from '../../../state/appState/appReducer';
+import BackArrowIcon from '../../../icons/BackArrowIcon';
 import CreateEventIcon from '../../../icons/CreateEventIcon';
+import JoinEventIcon from '../../../icons/JoinEventIcon';
 import RightArrowIcon from '../../../icons/RightArrowIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -9,16 +12,37 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: '1em',
     fontWeight: 'bold',
   },
-  actionsContainer: {
+  paperContainer: {
     display: 'flex',
     flexDirection: 'column',
+    height: '55%',
+    justifyContent: 'space-around',
   },
   paper: {
-    width: '464px',
-    height: '72px',
+    width: '465px',
+    height: '70px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    cursor: 'pointer',
+  },
+  innerPaperContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  disabledPaper: {
+    pointerEvents: 'none',
+    opacity: 0.2,
+  },
+  bodyTypography: {
+    color: '#606B85',
+    fontWeight: 'bold',
+  },
+  leftIcon: {
+    margin: '0 1em 0',
+  },
+  rightArrowIcon: {
+    margin: '0.5em 1em 0 0',
   },
   inputContainer: {
     display: 'flex',
@@ -34,7 +58,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   textFieldContainer: {
     width: '100%',
   },
-  continueButton: {
+  backButton: {
+    marginTop: '2em',
+    fontWeight: 'bold',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
@@ -51,55 +77,66 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
 
   return (
     <>
-      <Typography variant="h4" className={classes.gutterBottom}>
-        Create or Join?
+      <Typography variant="h5" className={classes.gutterBottom}>
+        Create or join?
       </Typography>
       <Typography variant="body2" className={classes.gutterBottom} style={{ color: '#606B85' }}>
         Create your own event or join one that's already happening.
       </Typography>
 
-      <Grid container justifyContent="space-between">
-        <Grid item xs={12} style={{ marginTop: '10px' }}>
+      <div className={classes.paperContainer}>
+        <div>
           <Paper
-            variant="outlined"
             onClick={() => dispatch({ type: 'set-participant-type', participantType: 'host' })}
-            // disabled={!state.participantName}
-            className={classes.paper}
+            className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
+            elevation={1}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '50%' }}>
-              <CreateEventIcon />
-              <Typography variant="body2" style={{ color: '#606B85', fontWeight: 'bold' }}>
-                Create a New Event
+            <div className={classes.innerPaperContainer}>
+              <div className={classes.leftIcon}>
+                <CreateEventIcon />
+              </div>
+              <Typography variant="body2" className={classes.bodyTypography}>
+                Create a new event
               </Typography>
             </div>
-            <div style={{ margin: '0.5em 1em 0 0' }}>
+            <div className={classes.rightArrowIcon}>
               <RightArrowIcon />
             </div>
           </Paper>
-        </Grid>
-        <Grid item xs={12}>
-          <Button
+        </div>
+
+        <div>
+          <Paper
             onClick={() => dispatch({ type: 'set-participant-type', participantType: null })}
-            variant="contained"
+            elevation={1}
             color="primary"
-            disabled={!state.participantName}
-            className={classes.continueButton}
+            className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
           >
-            Join an Event
-          </Button>
-        </Grid>
-        <Grid item xs={12}>
-          <Button
-            onClick={() => dispatch({ type: 'set-active-screen', activeScreen: ActiveScreen.ParticipantNameScreen })}
-            variant="contained"
-            color="primary"
-            disabled={!state.participantName}
-            className={classes.continueButton}
-          >
-            Go Back
-          </Button>
-        </Grid>
-      </Grid>
+            <div className={classes.innerPaperContainer}>
+              <div className={classes.leftIcon}>
+                <JoinEventIcon />
+              </div>
+              <Typography variant="body2" className={classes.bodyTypography}>
+                Join an event
+              </Typography>
+            </div>
+            <div className={classes.rightArrowIcon}>
+              <RightArrowIcon />
+            </div>
+          </Paper>
+        </div>
+      </div>
+
+      <Button
+        startIcon={<BackArrowIcon />}
+        onClick={() => dispatch({ type: 'set-active-screen', activeScreen: ActiveScreen.ParticipantNameScreen })}
+        variant="outlined"
+        disabled={!state.participantName}
+        className={classes.backButton}
+        size="small"
+      >
+        Go back
+      </Button>
     </>
   );
 }
