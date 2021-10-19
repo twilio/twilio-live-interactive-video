@@ -3,7 +3,7 @@
 //
 
 import AVFoundation
-import TwilioPlayer
+import TwilioLivePlayer
 
 protocol PlayerManagerDelegate: AnyObject {
     func playerManagerDidConnect(_ playerManager: PlayerManager)

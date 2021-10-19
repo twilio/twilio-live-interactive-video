@@ -3,7 +3,7 @@
 //
 
 import Combine
-import TwilioPlayer
+import TwilioLivePlayer
 
 /// Connects to a stream and can reconnect as speaker or viewer to change role.
 ///

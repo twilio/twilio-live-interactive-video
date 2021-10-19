@@ -3,7 +3,7 @@
 //
 
 import Combine
-import TwilioPlayer
+import TwilioLivePlayer
 
 class StreamViewModel: ObservableObject {
     @Published var isHandRaised = false {

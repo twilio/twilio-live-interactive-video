@@ -34,6 +34,7 @@
 		DC4AA66226D0493E00E677D5 /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA66126D0493E00E677D5 /* PrimaryButtonStyle.swift */; };
 		DC4AA66526D1456100E677D5 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA66426D1456100E677D5 /* AuthManager.swift */; };
 		DC4AA66826D175A600E677D5 /* SwiftyUserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = DC4AA66726D175A600E677D5 /* SwiftyUserDefaults */; };
+		DC4F45E7271F5A3700BE730B /* TwilioLivePlayer in Frameworks */ = {isa = PBXBuildFile; productRef = DC4F45E6271F5A3700BE730B /* TwilioLivePlayer */; };
 		DC504A7526F0F18700C37EC9 /* SpeakerGridViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC504A7426F0F18600C37EC9 /* SpeakerGridViewModel.swift */; };
 		DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC504A7626F1468E00C37EC9 /* SpeakerVideoView.swift */; };
 		DC5F453926CC061A009C5C79 /* LiveVideoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */; };
@@ -59,7 +60,6 @@
 		DCC1D62826D9568700892038 /* StreamConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC1D62726D9568700892038 /* StreamConfig.swift */; };
 		DCC1D62A26D9643400892038 /* FormStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC1D62926D9643400892038 /* FormStack.swift */; };
 		DCC1D62C26D97BB200892038 /* ErrorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC1D62B26D97BB200892038 /* ErrorAlert.swift */; };
-		DCC48F7126D805C300EE49EF /* TwilioPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = DCC48F7026D805C300EE49EF /* TwilioPlayer */; };
 		DCC48F7426D80BC300EE49EF /* JoinStreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC48F7326D80BC300EE49EF /* JoinStreamView.swift */; };
 		DCC48F7726D8116C00EE49EF /* StreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC48F7626D8116C00EE49EF /* StreamView.swift */; };
 		DCC48F8926D8288B00EE49EF /* APIErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC48F7A26D8288B00EE49EF /* APIErrorResponse.swift */; };
@@ -159,9 +159,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCC48F9826D828E500EE49EF /* Alamofire in Frameworks */,
+				DC4F45E7271F5A3700BE730B /* TwilioLivePlayer in Frameworks */,
 				DC5F458D26CEBCC9009C5C79 /* TwilioVideo in Frameworks */,
 				DC175F30270E238F00D9D1FE /* TwilioSyncClient in Frameworks */,
-				DCC48F7126D805C300EE49EF /* TwilioPlayer in Frameworks */,
 				DC4AA66826D175A600E677D5 /* SwiftyUserDefaults in Frameworks */,
 				DC5F458626CEA6CE009C5C79 /* InAppSettingsKit in Frameworks */,
 			);
@@ -480,9 +480,9 @@
 				DC5F458526CEA6CE009C5C79 /* InAppSettingsKit */,
 				DC5F458C26CEBCC9009C5C79 /* TwilioVideo */,
 				DC4AA66726D175A600E677D5 /* SwiftyUserDefaults */,
-				DCC48F7026D805C300EE49EF /* TwilioPlayer */,
 				DCC48F9726D828E500EE49EF /* Alamofire */,
 				DC175F2F270E238F00D9D1FE /* TwilioSyncClient */,
+				DC4F45E6271F5A3700BE730B /* TwilioLivePlayer */,
 			);
 			productName = LiveVideo;
 			productReference = DC5F453526CC061A009C5C79 /* LiveVideo.app */;
@@ -559,9 +559,9 @@
 				DC5F458426CEA6CE009C5C79 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */,
 				DC5F458B26CEBCC8009C5C79 /* XCRemoteSwiftPackageReference "twilio-video-ios" */,
 				DC4AA66626D175A600E677D5 /* XCRemoteSwiftPackageReference "SwiftyUserDefaults" */,
-				DCC48F6F26D805C300EE49EF /* XCRemoteSwiftPackageReference "twilio-player-ios-internal-package" */,
 				DCC48F9626D828E500EE49EF /* XCRemoteSwiftPackageReference "Alamofire" */,
 				DC175F2E270E238F00D9D1FE /* XCRemoteSwiftPackageReference "twilio-sync-ios" */,
+				DC4F45E5271F5A3700BE730B /* XCRemoteSwiftPackageReference "twilio-live-player-ios" */,
 			);
 			productRefGroup = DC5F453626CC061A009C5C79 /* Products */;
 			projectDirPath = "";
@@ -996,6 +996,14 @@
 				minimumVersion = 5.3.0;
 			};
 		};
+		DC4F45E5271F5A3700BE730B /* XCRemoteSwiftPackageReference "twilio-live-player-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twilio/twilio-live-player-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		DC5F458426CEA6CE009C5C79 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/futuretap/InAppSettingsKit";
@@ -1010,14 +1018,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 4.4.0;
-			};
-		};
-		DCC48F6F26D805C300EE49EF /* XCRemoteSwiftPackageReference "twilio-player-ios-internal-package" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@github.com:twilio/twilio-player-ios-internal-package.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = "1.0.0-rc33";
 			};
 		};
 		DCC48F9626D828E500EE49EF /* XCRemoteSwiftPackageReference "Alamofire" */ = {
@@ -1041,6 +1041,11 @@
 			package = DC4AA66626D175A600E677D5 /* XCRemoteSwiftPackageReference "SwiftyUserDefaults" */;
 			productName = SwiftyUserDefaults;
 		};
+		DC4F45E6271F5A3700BE730B /* TwilioLivePlayer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC4F45E5271F5A3700BE730B /* XCRemoteSwiftPackageReference "twilio-live-player-ios" */;
+			productName = TwilioLivePlayer;
+		};
 		DC5F458526CEA6CE009C5C79 /* InAppSettingsKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DC5F458426CEA6CE009C5C79 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */;
@@ -1050,11 +1055,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DC5F458B26CEBCC8009C5C79 /* XCRemoteSwiftPackageReference "twilio-video-ios" */;
 			productName = TwilioVideo;
-		};
-		DCC48F7026D805C300EE49EF /* TwilioPlayer */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DCC48F6F26D805C300EE49EF /* XCRemoteSwiftPackageReference "twilio-player-ios-internal-package" */;
-			productName = TwilioPlayer;
 		};
 		DCC48F9726D828E500EE49EF /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
