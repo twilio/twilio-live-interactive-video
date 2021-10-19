@@ -6,6 +6,7 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var authManager: AuthManager
+    @EnvironmentObject var streamManager: StreamManager
     @State private var showSettings = false
     @State private var showCreateStream = false
     @State private var showJoinStream = false
@@ -50,6 +51,7 @@ struct HomeView: View {
                 isPresented: $showCreateStream,
                 onDismiss: {
                     showStream = streamConfig != nil
+                    streamManager.config = streamConfig
                 },
                 content: {
                     JoinStreamView(streamConfig: $streamConfig, mode: .create)
@@ -59,17 +61,18 @@ struct HomeView: View {
                 isPresented: $showJoinStream,
                 onDismiss: {
                     showStream = streamConfig != nil
+                    streamManager.config = streamConfig
                 },
                 content: {
                     JoinStreamView(streamConfig: $streamConfig, mode: .join)
                 }
             )
-            .fullScreenCover(isPresented: $authManager.isSignedOut, content: {
+            .fullScreenCover(isPresented: $authManager.isSignedOut) {
                 SignInView()
-            })
-            .fullScreenCover(isPresented: $showStream, content: {
-                StreamView(config: $streamConfig)
-            })
+            }
+            .fullScreenCover(isPresented: $showStream) {
+                StreamView()
+            }
         }
     }
 }

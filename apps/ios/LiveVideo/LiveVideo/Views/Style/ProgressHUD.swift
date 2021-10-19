@@ -5,7 +5,7 @@
 import SwiftUI
 
 struct ProgressHUD: View {
-    let title: String
+    var title: String?
     
     var body: some View {
         ZStack {
@@ -15,9 +15,12 @@ struct ProgressHUD: View {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: .green))
                     .scaleEffect(2)
-                Text(title)
-                    .foregroundColor(.white)
-                    .font(.system(size: 24, weight: .bold))
+                
+                if let title = title {
+                    Text(title)
+                        .foregroundColor(.white)
+                        .font(.system(size: 24, weight: .bold))
+                }
             }
         }
         .ignoresSafeArea()

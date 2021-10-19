@@ -3,7 +3,7 @@
 //
 
 import AVFoundation
-import TwilioPlayer
+import TwilioLivePlayer
 
 protocol PlayerManagerDelegate: AnyObject {
     func playerManagerDidConnect(_ playerManager: PlayerManager)
@@ -14,22 +14,9 @@ class PlayerManager: NSObject {
     weak var delegate: PlayerManagerDelegate?
     private(set) var player: Player?
     private let audioSession = AVAudioSession.sharedInstance()
-    private var accessToken: String!
-    
-    func configure(accessToken: String) {
-        self.accessToken = accessToken
-    }
-    
-    func connect() {
-        if player != nil {
-            play() // The player should be paused so start playing again
-        } else {
-            player = Player.connect(accessToken: accessToken, delegate: self)
-        }
-    }
-    
-    func pause() {
-        player?.pause()
+
+    func connect(accessToken: String) {
+        player = Player.connect(accessToken: accessToken, delegate: self)
     }
     
     func disconnect() {
