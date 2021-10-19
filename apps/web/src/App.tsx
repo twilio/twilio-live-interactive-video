@@ -3,13 +3,16 @@ import { styled, Theme } from '@material-ui/core/styles';
 
 import MenuBar from './components/MenuBar/MenuBar';
 import MobileTopMenuBar from './components/MobileTopMenuBar/MobileTopMenuBar';
+import Player from './components/Player/Player';
 import PreJoinScreens from './components/PreJoinScreens/PreJoinScreens';
 import ReconnectingNotification from './components/ReconnectingNotification/ReconnectingNotification';
 import RecordingNotifications from './components/RecordingNotifications/RecordingNotifications';
 import Room from './components/Room/Room';
 
 import useHeight from './hooks/useHeight/useHeight';
+import usePlayerContext from './hooks/usePlayerContext/usePlayerContext';
 import useRoomState from './hooks/useRoomState/useRoomState';
+import { useAppState } from './state';
 
 const Container = styled('div')({
   display: 'grid',
@@ -27,6 +30,8 @@ const Main = styled('main')(({ theme }: { theme: Theme }) => ({
 
 export default function App() {
   const roomState = useRoomState();
+  const { player } = usePlayerContext();
+  const { appState } = useAppState();
 
   // Here we would like the height of the main container to be the height of the viewport.
   // On some mobile browsers, 'height: 100vh' sets the height equal to that of the screen,
@@ -37,9 +42,9 @@ export default function App() {
 
   return (
     <Container style={{ height }}>
-      {roomState === 'disconnected' ? (
-        <PreJoinScreens />
-      ) : (
+      {((roomState === 'disconnected' && !player) || appState.hasSpeakerInvite) && <PreJoinScreens />}
+
+      {roomState !== 'disconnected' && (
         <Main>
           <ReconnectingNotification />
           <RecordingNotifications />
@@ -48,6 +53,8 @@ export default function App() {
           <MenuBar />
         </Main>
       )}
+
+      {player && <Player />}
     </Container>
   );
 }

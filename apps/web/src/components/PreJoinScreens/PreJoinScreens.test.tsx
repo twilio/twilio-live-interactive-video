@@ -4,7 +4,7 @@ import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen
 import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
 import { mount, shallow } from 'enzyme';
 import PreJoinScreens from './PreJoinScreens';
-import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
+import RoomNameScreen from './JoinEventScreen/JoinEventScreen';
 import { useParams } from 'react-router-dom';
 import { useAppState } from '../../state';
 import { useHistory, useLocation } from 'react-router-dom';
