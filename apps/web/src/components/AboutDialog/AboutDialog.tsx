@@ -10,8 +10,6 @@ import Divider from '@material-ui/core/Divider';
 import { version as appVersion } from '../../../package.json';
 import Video from 'twilio-video';
 import { useAppState } from '../../state';
-import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-import { Link } from '@material-ui/core';
 
 interface AboutDialogProps {
   open: boolean;
@@ -20,21 +18,12 @@ interface AboutDialogProps {
 
 function AboutDialog({ open, onClose }: PropsWithChildren<AboutDialogProps>) {
   const { roomType } = useAppState();
-  const { room } = useVideoContext();
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="xs">
       <DialogTitle>About</DialogTitle>
       <Divider />
       <DialogContent>
-        {room && (
-          <DialogContentText>
-            Stream Player URL:{' '}
-            <Link href={`${window.location.origin}/#/player/${room.name}`} target="_blank" rel="noopener">
-              {`${window.location.origin}/#/player/${room.name}`}
-            </Link>
-          </DialogContentText>
-        )}
         <DialogContentText>Browser supported: {String(Video.isSupported)}</DialogContentText>
         <DialogContentText>SDK Version: {Video.version}</DialogContentText>
         <DialogContentText>App Version: {appVersion}</DialogContentText>

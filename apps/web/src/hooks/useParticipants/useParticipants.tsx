@@ -35,5 +35,5 @@ export default function useParticipants() {
     }
   }, [room]);
 
-  return participants;
+  return participants.filter(p => !p.identity.includes('video-composer-'));
 }

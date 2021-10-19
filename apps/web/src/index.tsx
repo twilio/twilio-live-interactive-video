@@ -13,12 +13,13 @@ import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import theme from './theme';
 import './types';
 import { ChatProvider } from './components/ChatProvider';
+import { PlayerProvider } from './components/PlayerProvider';
 import { VideoProvider } from './components/VideoProvider';
-import Player from './components/Player/Player';
 import useConnectionOptions from './utils/useConnectionOptions/useConnectionOptions';
 import UnsupportedBrowserWarning from './components/UnsupportedBrowserWarning/UnsupportedBrowserWarning';
+import { SyncProvider } from './components/SyncProvider';
 
-// Here we redirect the user to a URL with a hash. This maintains backwards-compatibilty with URLs
+// Here we redirect the user to a URL with a hash. This maintains backwards-compatibility with URLs
 // like https://my-twilio-video-app.com/room/test-room, which will be redirected to https://my-twilio-video-app.com/#/room/test-room
 if (!window.location.hash) {
   window.history.replaceState(null, '', '/#' + window.location.pathname + window.location.search);
@@ -31,9 +32,13 @@ const VideoApp = () => {
   return (
     <VideoProvider options={connectionOptions} onError={setError}>
       <ErrorDialog dismissError={() => setError(null)} error={error} />
-      <ChatProvider>
-        <App />
-      </ChatProvider>
+      <PlayerProvider>
+        <ChatProvider>
+          <SyncProvider>
+            <App />
+          </SyncProvider>
+        </ChatProvider>
+      </PlayerProvider>
     </VideoProvider>
   );
 };
@@ -48,11 +53,8 @@ ReactDOM.render(
             <PrivateRoute exact path="/">
               <VideoApp />
             </PrivateRoute>
-            <PrivateRoute path="/room/:URLRoomName">
+            <PrivateRoute path="/:ViewerType/:EventName">
               <VideoApp />
-            </PrivateRoute>
-            <PrivateRoute path="/player/:URLRoomName">
-              <Player />
             </PrivateRoute>
             <Route path="/login">
               <LoginPage />
