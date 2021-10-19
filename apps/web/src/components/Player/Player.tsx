@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Player as TwilioPlayer } from '@twilio/player-sdk';
 import PlayerMenuBar from './PlayerMenuBar/PlayerMenuBar';
 import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import { useAppState } from '../../state';
+import { useEnqueueSnackbar } from '../../hooks/useSnackbar/useSnackbar';
 
 TwilioPlayer.telemetry.subscribe(data => {
   const method = data.name === 'error' ? 'error' : 'log';
@@ -28,26 +29,26 @@ export default function Player() {
   const classes = useStyles();
   const videoElRef = useRef<HTMLVideoElement>(null!);
   const { player, disconnect } = usePlayerContext();
-  const { appState, appDispatch } = useAppState();
+  const { appState } = useAppState();
+  const enqueueSnackbar = useEnqueueSnackbar();
+  const [welcomeMessageDisplayed, setWelcomeMessageDisplayed] = useState(false);
 
   useEffect(() => {
     if (player) {
       player.attach(videoElRef.current);
       player.play();
 
-      const handleEnded = (state: TwilioPlayer.State) => {
-        if (state === TwilioPlayer.State.Ended) {
-          disconnect();
-          appDispatch({ type: 'reset-state' });
-        }
-      };
-
-      player.on(TwilioPlayer.Event.StateChanged, handleEnded);
-      return () => {
-        player.off(TwilioPlayer.Event.StateChanged, handleEnded);
-      };
+      if (!welcomeMessageDisplayed) {
+        setWelcomeMessageDisplayed(true);
+        enqueueSnackbar({
+          headline: 'Welcome!',
+          message:
+            "You're now in the audience - you'll be unable to share audio or video. Raise your hand anytime to request to speak.",
+          variant: 'info',
+        });
+      }
     }
-  }, [player, disconnect, appDispatch]);
+  }, [player, enqueueSnackbar, welcomeMessageDisplayed]);
 
   return (
     <div style={{ height: '100vh' }}>
