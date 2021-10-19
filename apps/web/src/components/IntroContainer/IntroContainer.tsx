@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   innerContainer: {
     display: 'flex',
     width: '888px',
-    height: '379px',
+    height: '400px',
     borderRadius: '8px',
     boxShadow: '0px 2px 4px 0px rgba(40, 42, 43, 0.3)',
     overflow: 'hidden',
@@ -95,6 +95,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   title: {
     color: 'white',
+    fontWeight: 'bold',
     [theme.breakpoints.down('sm')]: {
       margin: 0,
       fontSize: '1.1rem',
