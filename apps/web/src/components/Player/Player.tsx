@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { Player as TwilioPlayer } from '@twilio/player-sdk';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { Player as TwilioPlayer } from '@twilio/player-sdk';
 import PlayerMenuBar from './PlayerMenuBar/PlayerMenuBar';
 import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import { useAppState } from '../../state';
@@ -28,12 +28,26 @@ export default function Player() {
   const classes = useStyles();
   const videoElRef = useRef<HTMLVideoElement>(null!);
   const { player, disconnect } = usePlayerContext();
-  const { appState } = useAppState();
+  const { appState, appDispatch } = useAppState();
 
   useEffect(() => {
-    player!.attach(videoElRef.current);
-    player!.play();
-  }, [player]);
+    if (player) {
+      player.attach(videoElRef.current);
+      player.play();
+
+      const handleEnded = (state: TwilioPlayer.State) => {
+        if (state === TwilioPlayer.State.Ended) {
+          disconnect();
+          appDispatch({ type: 'reset-state' });
+        }
+      };
+
+      player.on(TwilioPlayer.Event.StateChanged, handleEnded);
+      return () => {
+        player.off(TwilioPlayer.Event.StateChanged, handleEnded);
+      };
+    }
+  }, [player, disconnect, appDispatch]);
 
   return (
     <div style={{ height: '100vh' }}>

@@ -38,7 +38,9 @@ export const PlayerProvider: React.FC = ({ children }) => {
 
   const disconnect = () => {
     if (player) {
-      player.disconnect();
+      if (player.state !== TwilioPlayer.State.Ended) {
+        player.disconnect();
+      }
       setPlayer(undefined);
     }
   };
