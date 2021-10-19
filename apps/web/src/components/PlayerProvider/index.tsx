@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useState } from 'react';
 import { Player as TwilioPlayer } from '@twilio/player-sdk';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import { useAppState } from '../../state';
 
 TwilioPlayer.setLogLevel(TwilioPlayer.LogLevel.Error);
 
@@ -15,6 +16,7 @@ export const PlayerContext = createContext<PlayerContextType>(null!);
 export const PlayerProvider: React.FC = ({ children }) => {
   const { onError } = useVideoContext();
   const [player, setPlayer] = useState<TwilioPlayer>();
+  const { appDispatch } = useAppState();
 
   const connect = useCallback(
     (token: string) => {
@@ -25,6 +27,12 @@ export const PlayerProvider: React.FC = ({ children }) => {
       })
         .then(newPlayer => {
           setPlayer(newPlayer);
+          newPlayer.on(TwilioPlayer.Event.StateChanged, (state: TwilioPlayer.State) => {
+            if (state === TwilioPlayer.State.Ended) {
+              setPlayer(undefined);
+              appDispatch({ type: 'reset-state' });
+            }
+          });
           // @ts-ignore
           window.twilioPlayer = newPlayer;
         })
@@ -33,7 +41,7 @@ export const PlayerProvider: React.FC = ({ children }) => {
           onError(new Error('There was a problem connecting to the Twilio Live Stream.'));
         });
     },
-    [onError]
+    [onError, appDispatch]
   );
 
   const disconnect = () => {
