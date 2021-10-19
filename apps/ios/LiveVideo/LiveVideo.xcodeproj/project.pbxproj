@@ -42,6 +42,7 @@
 		DC5F458F26CEBEC8009C5C79 /* AppInfoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F458E26CEBEC8009C5C79 /* AppInfoStore.swift */; };
 		DC5F459426CEC1FF009C5C79 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F459326CEC1FF009C5C79 /* UserDefaultsManager.swift */; };
 		DC5F459626CEC247009C5C79 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F459526CEC246009C5C79 /* UserDefaultsKeys.swift */; };
+		DC6404DA271E217C004730C6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC6404D9271E217B004730C6 /* LaunchScreen.storyboard */; };
 		DCB4497426F5496400B52774 /* SpeakerSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */; };
 		DCB4497626F65A7000B52774 /* SpeakerVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */; };
 		DCC1D62626D9396400892038 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC1D62526D9396400892038 /* StreamManager.swift */; };
@@ -117,6 +118,7 @@
 		DC5F458E26CEBEC8009C5C79 /* AppInfoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoStore.swift; sourceTree = "<group>"; };
 		DC5F459326CEC1FF009C5C79 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		DC5F459526CEC246009C5C79 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
+		DC6404D9271E217B004730C6 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerSettingsManager.swift; sourceTree = "<group>"; };
 		DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoViewModel.swift; sourceTree = "<group>"; };
 		DCC1D62526D9396400892038 /* StreamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamManager.swift; sourceTree = "<group>"; };
@@ -310,6 +312,7 @@
 				DC4AA65226D0118200E677D5 /* Views */,
 				DC5F458926CEB413009C5C79 /* InAppSettings.bundle */,
 				DC5F453C26CC061F009C5C79 /* Assets.xcassets */,
+				DC6404D9271E217B004730C6 /* LaunchScreen.storyboard */,
 				DC5F454126CC061F009C5C79 /* Info.plist */,
 				DC5F453E26CC061F009C5C79 /* Preview Content */,
 			);
@@ -533,6 +536,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC5F454026CC061F009C5C79 /* Preview Assets.xcassets in Resources */,
+				DC6404DA271E217C004730C6 /* LaunchScreen.storyboard in Resources */,
 				DC5F458A26CEB413009C5C79 /* InAppSettings.bundle in Resources */,
 				DC5F453D26CC061F009C5C79 /* Assets.xcassets in Resources */,
 			);
@@ -771,7 +775,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.LiveVideo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -794,7 +798,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.LiveVideo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
