@@ -5,6 +5,7 @@
 import Combine
 import TwilioSyncClient
 
+/// Consolidates configuration and error handling for stores that are backed by [Twilio Sync](https://www.twilio.com/sync).
 class SyncManager: NSObject {
     let errorPublisher = PassthroughSubject<Error, Never>()
     private var client: TwilioSyncClient?
@@ -16,7 +17,13 @@ class SyncManager: NSObject {
         self.raisedHandsStore = raisedHandsStore
         self.viewerStore = viewerStore
     }
-    
+
+    /// Connects all sync stores that have a configuration.
+    ///
+    /// - Parameter token: An access token with sync grant.
+    /// - Parameter raisedHandsMapName: The unique name for the raised hands map.
+    /// - Parameter viewerDocumentName: The unique name for the viewer document.
+    /// - Parameter completion: Called when all configured stores are synchronnized or an error is encountered.
     func connect(
         token: String,
         raisedHandsMapName: String,
