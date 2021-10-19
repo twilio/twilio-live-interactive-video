@@ -4,7 +4,18 @@ import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } fr
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
+    fontWeight: 'bold',
     marginBottom: '1em',
+  },
+  welcome: {
+    color: '#606B85',
+    marginBottom: '0.3em',
+    fontWeight: 'bold',
+  },
+  askName: {
+    fontWeight: 'bold',
+    marginBottom: '2.3em',
+    color: '#606B85',
   },
   inputContainer: {
     display: 'flex',
@@ -46,14 +57,22 @@ export default function ParticipantNameScreen({ state, dispatch }: ParticipantNa
 
   return (
     <>
-      <Typography variant="h5" className={classes.gutterBottom}>
-        Welcome to Twilio Live Events
+      <Typography variant="h5" className={classes.welcome}>
+        Welcome to:
       </Typography>
-      <Typography variant="body1">What's your name?</Typography>
+      <Typography variant="h4" className={classes.gutterBottom}>
+        Twilio Live Video Events
+      </Typography>
+      <Typography variant="body1" className={classes.askName}>
+        What's your name?
+      </Typography>
       <form onSubmit={handleSubmit}>
         <div className={classes.inputContainer}>
           <div className={classes.textFieldContainer}>
-            <InputLabel shrink htmlFor="input-user-name">
+            <InputLabel
+              htmlFor="input-user-name"
+              style={{ fontWeight: 'bold', fontSize: '0.8rem', marginBottom: '0.5em' }}
+            >
               Full Name
             </InputLabel>
             <TextField

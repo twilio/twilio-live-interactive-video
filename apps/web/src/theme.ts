@@ -70,7 +70,10 @@ export default createTheme({
     MuiTypography: {
       body1: {
         color: 'rgb(40, 42, 43)',
-        fontSize: '0.9rem',
+        fontSize: '1rem',
+      },
+      h4: {
+        fontSize: '1.8rem',
       },
     },
     MuiInputBase: {
