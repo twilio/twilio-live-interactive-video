@@ -2,6 +2,7 @@ import { Room, TwilioError } from 'twilio-video';
 import { useEffect } from 'react';
 
 import { Callback } from '../../../types';
+import { useEnqueueSnackbar } from '../../../hooks/useSnackbar/useSnackbar';
 
 export default function useHandleRoomDisconnection(
   room: Room | null,
@@ -11,10 +12,18 @@ export default function useHandleRoomDisconnection(
   isSharingScreen: boolean,
   toggleScreenShare: () => void
 ) {
+  const enqueueSnackbar = useEnqueueSnackbar();
   useEffect(() => {
     if (room) {
       const onDisconnected = (_: Room, error: TwilioError) => {
-        if (error) {
+        console.log('disconnect', error);
+        if (error?.code === 53118) {
+          enqueueSnackbar({
+            headline: 'Event has ended',
+            message: 'The event has been ended by the host.',
+            variant: 'error',
+          });
+        } else if (error) {
           onError(error);
         }
 
@@ -30,5 +39,13 @@ export default function useHandleRoomDisconnection(
         room.off('disconnected', onDisconnected);
       };
     }
-  }, [room, onError, removeLocalAudioTrack, removeLocalVideoTrack, isSharingScreen, toggleScreenShare]);
+  }, [
+    room,
+    onError,
+    removeLocalAudioTrack,
+    removeLocalVideoTrack,
+    isSharingScreen,
+    toggleScreenShare,
+    enqueueSnackbar,
+  ]);
 }

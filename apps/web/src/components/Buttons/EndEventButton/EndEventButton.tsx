@@ -26,9 +26,9 @@ export default function EndCallButton(props: { className?: string }) {
   const { appState, appDispatch } = useAppState();
 
   async function disconnect() {
-    await deleteStream(appState.eventName);
     room!.disconnect();
     appDispatch({ type: 'reset-state' });
+    await deleteStream(appState.eventName);
   }
 
   return (
