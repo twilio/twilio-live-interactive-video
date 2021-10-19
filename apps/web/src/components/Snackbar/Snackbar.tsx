@@ -7,14 +7,6 @@ import MUISnackbar from '@material-ui/core/Snackbar';
 import WarningIcon from '../../icons/WarningIcon';
 import InfoIcon from '../../icons/InfoIcon';
 
-interface SnackbarProps {
-  headline: string;
-  message: string | React.ReactNode;
-  variant?: 'error' | 'warning' | 'info';
-  open: boolean;
-  handleClose?: () => void;
-}
-
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     display: 'flex',
@@ -52,9 +44,60 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function Snackbar({ headline, message, variant, open, handleClose }: SnackbarProps) {
+interface SnackbarImplProps {
+  headline: string;
+  message: string | React.ReactNode;
+  variant?: 'error' | 'warning' | 'info';
+  handleClose?: () => void;
+}
+
+export function SnackbarImpl({ headline, message, variant, handleClose }: SnackbarImplProps) {
   const classes = useStyles();
 
+  return (
+    <div
+      className={clsx(classes.container, {
+        [classes.error]: variant === 'error',
+        [classes.warning]: variant === 'warning',
+        [classes.info]: variant === 'info',
+      })}
+    >
+      <div className={classes.contentContainer}>
+        <div className={classes.iconContainer}>
+          {variant === 'warning' && <WarningIcon />}
+          {variant === 'error' && <ErrorIcon />}
+          {variant === 'info' && <InfoIcon />}
+        </div>
+        <div>
+          <Typography variant="body1" className={classes.headline} component="span">
+            {headline}
+          </Typography>
+          <Typography variant="body1" component="span">
+            {' '}
+            {message}
+          </Typography>
+        </div>
+      </div>
+      <div>
+        {handleClose && (
+          <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        )}
+      </div>
+    </div>
+  );
+}
+
+interface SnackbarProps {
+  headline: string;
+  message: string | React.ReactNode;
+  variant?: 'error' | 'warning' | 'info';
+  open: boolean;
+  handleClose?: () => void;
+}
+
+export default function Snackbar({ headline, message, variant, open, handleClose }: SnackbarProps) {
   const handleOnClose = (_: React.SyntheticEvent | React.MouseEvent, reason?: string) => {
     if (reason === 'clickaway') {
       return;
@@ -73,37 +116,7 @@ export default function Snackbar({ headline, message, variant, open, handleClose
       onClose={handleOnClose}
       autoHideDuration={10000}
     >
-      <div
-        className={clsx(classes.container, {
-          [classes.error]: variant === 'error',
-          [classes.warning]: variant === 'warning',
-          [classes.info]: variant === 'info',
-        })}
-      >
-        <div className={classes.contentContainer}>
-          <div className={classes.iconContainer}>
-            {variant === 'warning' && <WarningIcon />}
-            {variant === 'error' && <ErrorIcon />}
-            {variant === 'info' && <InfoIcon />}
-          </div>
-          <div>
-            <Typography variant="body1" className={classes.headline} component="span">
-              {headline}
-            </Typography>
-            <Typography variant="body1" component="span">
-              {' '}
-              {message}
-            </Typography>
-          </div>
-        </div>
-        <div>
-          {handleClose && (
-            <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          )}
-        </div>
-      </div>
+      <SnackbarImpl headline={headline} message={message} variant={variant} handleClose={handleClose} />
     </MUISnackbar>
   );
 }

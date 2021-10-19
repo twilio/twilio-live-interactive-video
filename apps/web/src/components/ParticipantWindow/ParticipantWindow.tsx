@@ -7,6 +7,7 @@ import { useRaisedHandsMap } from '../../hooks/useRaisedHandsMap/useRaisedHandsM
 import { RaisedHand } from './RaisedHand/RaisedHand';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { sendSpeakerInvite } from '../../state/api/api';
+import { useEnqueueSnackbar } from '../../hooks/useSnackbar/useSnackbar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,12 +37,18 @@ export default function ParticipantWindow() {
   const { appState } = useAppState();
   const raisedHands = useRaisedHandsMap();
   const { room } = useVideoContext();
+  const enqueueSnackbar = useEnqueueSnackbar();
 
   const handleInvite = useCallback(
     (raisedHand: string) => {
       sendSpeakerInvite(raisedHand, room!.sid);
+      enqueueSnackbar({
+        headline: 'Invite Sent',
+        message: `You invited ${raisedHand} to be a speaker. They will now be able to share audio and video.`,
+        variant: 'info',
+      });
     },
-    [room]
+    [room, enqueueSnackbar]
   );
 
   return (
