@@ -4,6 +4,8 @@ import { Typography, Grid, Button } from '@material-ui/core';
 import { useAppState } from '../../../state';
 import { raiseHand } from '../../../state/api/api';
 import { useEnqueueSnackbar } from '../../../hooks/useSnackbar/useSnackbar';
+import LowerHandIcon from '../../../icons/LowerHandIcon';
+import RaiseHandIcon from '../../../icons/RaiseHandIcon';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -63,7 +65,9 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
         </Grid>
         <Grid item>
           <Grid container justifyContent="center">
-            <Button onClick={handleRaiseHand}>{isHandRaised ? 'Lower Hand' : 'Raise Hand'}</Button>
+            <Button onClick={handleRaiseHand} startIcon={isHandRaised ? <LowerHandIcon /> : <RaiseHandIcon />}>
+              {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
+            </Button>
           </Grid>
         </Grid>
 
