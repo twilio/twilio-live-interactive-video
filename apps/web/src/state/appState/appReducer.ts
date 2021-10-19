@@ -70,7 +70,11 @@ export const appReducer = produce((draft: appStateTypes, action: appActionTypes)
       break;
 
     case 'reset-state':
-      return initialAppState;
+      // Don't reset state while transitioning to a room
+      if (!draft.hasSpeakerInvite) {
+        return initialAppState;
+      }
+      break;
 
     case 'set-is-participant-window-open':
       draft.isParticipantWindowOpen = action.isParticipantWindowOpen;
