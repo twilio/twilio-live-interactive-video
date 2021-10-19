@@ -37,8 +37,6 @@ export default function ParticipantWindow() {
   const raisedHands = useRaisedHandsMap();
   const { room } = useVideoContext();
 
-  console.log('hands!', raisedHands);
-
   const handleInvite = useCallback(
     (raisedHand: string) => {
       sendSpeakerInvite(raisedHand, room!.sid);

@@ -85,7 +85,7 @@ export default function DeviceSelectionScreen({ state, dispatch, connect }: Devi
       <Grid container justifyContent="center">
         <Grid item md={7} sm={12} xs={12}>
           <div className={classes.localPreviewContainer}>
-            <LocalVideoPreview identity={state.name} />
+            <LocalVideoPreview identity={state.participantName} />
           </div>
           <div className={classes.mobileButtonBar}>
             <Hidden mdUp>

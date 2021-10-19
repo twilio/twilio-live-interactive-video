@@ -12,7 +12,6 @@ type SyncContextType = {
 export const SyncContext = createContext<SyncContextType>(null!);
 
 export const SyncProvider: React.FC = ({ children }) => {
-  // const { connect: videoConnect, onError } = useVideoContext();
   const { appDispatch } = useAppState();
   const [raisedHandsMap, setRaisedHandsMap] = useState<SyncMap>();
 

@@ -40,9 +40,9 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
   const handleRaiseHand = useCallback(() => {
     if (Date.now() - lastClickTimeRef.current > 500) {
       lastClickTimeRef.current = Date.now();
-      raiseHand(appState.name, appState.eventName, !isHandRaised).then(() => setIsHandRaised(!isHandRaised));
+      raiseHand(appState.participantName, appState.eventName, !isHandRaised).then(() => setIsHandRaised(!isHandRaised));
     }
-  }, [isHandRaised, appState.name, appState.eventName]);
+  }, [isHandRaised, appState.participantName, appState.eventName]);
 
   return (
     <footer className={classes.container}>

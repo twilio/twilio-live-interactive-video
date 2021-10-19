@@ -27,16 +27,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface ParticpantNameScreenProps {
+interface ParticipantNameScreenProps {
   state: appStateTypes;
   dispatch: React.Dispatch<appActionTypes>;
 }
 
-export default function ParticpantNameScreen({ state, dispatch }: ParticpantNameScreenProps) {
+export default function ParticipantNameScreen({ state, dispatch }: ParticipantNameScreenProps) {
   const classes = useStyles();
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'set-name', name: event.target.value });
+    dispatch({ type: 'set-participant-name', participantName: event.target.value });
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -61,7 +61,7 @@ export default function ParticpantNameScreen({ state, dispatch }: ParticpantName
               variant="outlined"
               fullWidth
               size="small"
-              value={state.name}
+              value={state.participantName}
               onChange={handleNameChange}
             />
           </div>
@@ -71,7 +71,7 @@ export default function ParticpantNameScreen({ state, dispatch }: ParticpantName
             variant="contained"
             type="submit"
             color="primary"
-            disabled={!state.name}
+            disabled={!state.participantName}
             className={classes.continueButton}
           >
             Continue

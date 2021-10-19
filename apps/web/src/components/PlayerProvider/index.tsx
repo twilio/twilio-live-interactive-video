@@ -37,7 +37,6 @@ export const PlayerProvider: React.FC = ({ children }) => {
   );
 
   const disconnect = () => {
-    console.log('ddd', player);
     if (player) {
       player.disconnect();
       setPlayer(undefined);

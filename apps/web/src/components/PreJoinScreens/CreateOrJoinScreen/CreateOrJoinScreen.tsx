@@ -47,7 +47,7 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
           onClick={() => dispatch({ type: 'set-participant-type', participantType: 'host' })}
           variant="contained"
           color="primary"
-          disabled={!state.name}
+          disabled={!state.participantName}
           className={classes.continueButton}
         >
           Create a New Event
@@ -56,7 +56,7 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
           onClick={() => dispatch({ type: 'set-participant-type', participantType: null })}
           variant="contained"
           color="primary"
-          disabled={!state.name}
+          disabled={!state.participantName}
           className={classes.continueButton}
         >
           Join an Event
@@ -65,7 +65,7 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
           onClick={() => dispatch({ type: 'set-active-screen', activeScreen: ActiveScreen.ParticipantNameScreen })}
           variant="contained"
           color="primary"
-          disabled={!state.name}
+          disabled={!state.participantName}
           className={classes.continueButton}
         >
           Go Back

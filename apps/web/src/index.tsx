@@ -19,7 +19,7 @@ import useConnectionOptions from './utils/useConnectionOptions/useConnectionOpti
 import UnsupportedBrowserWarning from './components/UnsupportedBrowserWarning/UnsupportedBrowserWarning';
 import { SyncProvider } from './components/SyncProvider';
 
-// Here we redirect the user to a URL with a hash. This maintains backwards-compatibilty with URLs
+// Here we redirect the user to a URL with a hash. This maintains backwards-compatibility with URLs
 // like https://my-twilio-video-app.com/room/test-room, which will be redirected to https://my-twilio-video-app.com/#/room/test-room
 if (!window.location.hash) {
   window.history.replaceState(null, '', '/#' + window.location.pathname + window.location.search);

@@ -8,7 +8,7 @@ import JoinEventScreen from './JoinEventScreen/JoinEventScreen';
 import IntroContainer from '../IntroContainer/IntroContainer';
 import { LoadingScreen } from './LoadingScreen/LoadingScreen';
 import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
-import ParticpantNameScreen from './ParticipantNameScreen/ParticipantNameScreen';
+import ParticipantNameScreen from './ParticipantNameScreen/ParticipantNameScreen';
 import SpeakerOrViewerScreen from './SpeakerOrViewerScreen/SpeakerOrViewerScreen';
 import { useAppState } from '../../state';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
@@ -30,7 +30,7 @@ export default function PreJoinScreens() {
 
     try {
       if (appState.hasSpeakerInvite) {
-        const { data } = await joinStreamAsSpeaker(appState.name, appState.eventName);
+        const { data } = await joinStreamAsSpeaker(appState.participantName, appState.eventName);
         await videoConnect(data.token);
         chatConnect(data.token);
         registerRaisedHandsMap(data.sync_object_names.raised_hands_map);
@@ -41,7 +41,7 @@ export default function PreJoinScreens() {
 
       switch (appState.participantType) {
         case 'host': {
-          const { data } = await createStream(appState.name, appState.eventName);
+          const { data } = await createStream(appState.participantName, appState.eventName);
           syncConnect(data.token);
           await videoConnect(data.token);
           registerRaisedHandsMap(data.sync_object_names.raised_hands_map);
@@ -51,7 +51,7 @@ export default function PreJoinScreens() {
         }
 
         case 'speaker': {
-          const { data } = await joinStreamAsSpeaker(appState.name, appState.eventName);
+          const { data } = await joinStreamAsSpeaker(appState.participantName, appState.eventName);
           syncConnect(data.token);
           await videoConnect(data.token);
           registerRaisedHandsMap(data.token);
@@ -61,11 +61,11 @@ export default function PreJoinScreens() {
         }
 
         case 'viewer': {
-          const { data } = await joinStreamAsViewer(appState.name, appState.eventName);
+          const { data } = await joinStreamAsViewer(appState.participantName, appState.eventName);
           syncConnect(data.token);
           await playerConnect(data.token);
           registerViewerDocument(data.sync_object_names.viewer_document);
-          // chatConnect(response.data.token);
+          // chatConnect(data.token);
 
           break;
         }
@@ -95,7 +95,7 @@ export default function PreJoinScreens() {
         <LoadingScreen />
       ) : (
         {
-          [ActiveScreen.ParticipantNameScreen]: <ParticpantNameScreen state={appState} dispatch={appDispatch} />,
+          [ActiveScreen.ParticipantNameScreen]: <ParticipantNameScreen state={appState} dispatch={appDispatch} />,
           [ActiveScreen.CreateOrJoinScreen]: <CreateOrJoinScreen state={appState} dispatch={appDispatch} />,
           [ActiveScreen.CreateNewEventScreen]: <CreateNewEventScreen state={appState} dispatch={appDispatch} />,
           [ActiveScreen.SpeakerOrViewerScreen]: <SpeakerOrViewerScreen state={appState} dispatch={appDispatch} />,

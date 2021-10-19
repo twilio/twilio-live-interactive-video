@@ -49,7 +49,7 @@ export default function SpeakerOrViewerScreen({ state, dispatch }: SpeakerOrView
           onClick={() => dispatch({ type: 'set-participant-type', participantType: 'speaker' })}
           variant="contained"
           color="primary"
-          disabled={!state.name}
+          disabled={!state.participantName}
           className={classes.continueButton}
         >
           Join as Speaker
@@ -58,7 +58,7 @@ export default function SpeakerOrViewerScreen({ state, dispatch }: SpeakerOrView
           onClick={() => dispatch({ type: 'set-participant-type', participantType: 'viewer' })}
           variant="contained"
           color="primary"
-          disabled={!state.name}
+          disabled={!state.participantName}
           className={classes.continueButton}
         >
           Join as Viewer
@@ -67,7 +67,7 @@ export default function SpeakerOrViewerScreen({ state, dispatch }: SpeakerOrView
           onClick={() => dispatch({ type: 'set-active-screen', activeScreen: ActiveScreen.CreateOrJoinScreen })}
           variant="contained"
           color="primary"
-          disabled={!state.name}
+          disabled={!state.participantName}
           className={classes.continueButton}
         >
           Go Back

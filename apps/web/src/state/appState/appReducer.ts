@@ -11,7 +11,7 @@ export enum ActiveScreen {
 
 export type appActionTypes =
   | { type: 'set-active-screen'; activeScreen: ActiveScreen }
-  | { type: 'set-name'; name: string }
+  | { type: 'set-participant-name'; participantName: string }
   | { type: 'set-participant-type'; participantType: appStateTypes['participantType'] }
   | { type: 'set-event-name'; eventName: string }
   | { type: 'set-is-loading'; isLoading: boolean }
@@ -22,7 +22,7 @@ export type appActionTypes =
 export interface appStateTypes {
   activeScreen: ActiveScreen;
   participantType: 'host' | 'speaker' | 'viewer' | null;
-  name: string;
+  participantName: string;
   eventName: string;
   mediaError: Error | null;
   isLoading: boolean;
@@ -33,7 +33,7 @@ export interface appStateTypes {
 export const initialAppState: appStateTypes = {
   activeScreen: ActiveScreen.ParticipantNameScreen,
   participantType: null,
-  name: '',
+  participantName: '',
   eventName: '',
   mediaError: null,
   isLoading: false,
@@ -43,8 +43,8 @@ export const initialAppState: appStateTypes = {
 
 export const appReducer = produce((draft: appStateTypes, action: appActionTypes) => {
   switch (action.type) {
-    case 'set-name':
-      draft.name = action.name;
+    case 'set-participant-name':
+      draft.participantName = action.participantName;
       break;
 
     case 'set-event-name':
