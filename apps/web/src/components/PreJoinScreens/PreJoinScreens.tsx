@@ -36,6 +36,7 @@ export default function PreJoinScreens() {
         registerRaisedHandsMap(data.sync_object_names.raised_hands_map);
         playerDisconnect();
         appDispatch({ type: 'set-has-speaker-invite', hasSpeakerInvite: false });
+        appDispatch({ type: 'set-is-loading', isLoading: false });
         return;
       }
 
@@ -46,7 +47,6 @@ export default function PreJoinScreens() {
           await videoConnect(data.token);
           registerRaisedHandsMap(data.sync_object_names.raised_hands_map);
           chatConnect(data.token);
-
           break;
         }
 
@@ -54,9 +54,8 @@ export default function PreJoinScreens() {
           const { data } = await joinStreamAsSpeaker(appState.participantName, appState.eventName);
           syncConnect(data.token);
           await videoConnect(data.token);
-          registerRaisedHandsMap(data.token);
+          registerRaisedHandsMap(data.sync_object_names.raised_hands_map);
           chatConnect(data.token);
-
           break;
         }
 
@@ -66,7 +65,6 @@ export default function PreJoinScreens() {
           await playerConnect(data.token);
           registerViewerDocument(data.sync_object_names.viewer_document);
           // chatConnect(data.token);
-
           break;
         }
       }

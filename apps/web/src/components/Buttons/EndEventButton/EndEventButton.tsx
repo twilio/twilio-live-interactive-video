@@ -26,16 +26,14 @@ export default function EndCallButton(props: { className?: string }) {
   const { appState, appDispatch } = useAppState();
 
   async function disconnect() {
-    if (appState.participantType === 'host') {
-      await deleteStream(appState.eventName);
-    }
+    await deleteStream(appState.eventName);
     room!.disconnect();
     appDispatch({ type: 'reset-state' });
   }
 
   return (
     <Button onClick={disconnect} className={clsx(classes.button, props.className)} data-cy-disconnect>
-      {appState.participantType === 'host' ? 'End Event' : 'Leave Event'}
+      End Event
     </Button>
   );
 }

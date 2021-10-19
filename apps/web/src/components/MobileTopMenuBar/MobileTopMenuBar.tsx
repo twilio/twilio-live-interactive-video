@@ -1,7 +1,6 @@
 import { Grid, makeStyles, Theme, Typography } from '@material-ui/core';
 import React from 'react';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
 import Menu from '../MenuBar/Menu/Menu';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -13,11 +12,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       display: 'flex',
     },
-  },
-  endCallButton: {
-    height: '28px',
-    fontSize: '0.85rem',
-    padding: '0 0.6em',
   },
   settingsButton: {
     [theme.breakpoints.down('sm')]: {
@@ -38,7 +32,6 @@ export default function MobileTopMenuBar() {
     <Grid container alignItems="center" justifyContent="space-between" className={classes.container}>
       <Typography variant="subtitle1">{room!.name}</Typography>
       <div>
-        <EndCallButton className={classes.endCallButton} />
         <Menu buttonClassName={classes.settingsButton} />
       </div>
     </Grid>
