@@ -9,6 +9,7 @@ extension Color {
     static var background: Color { Color("Background") }
     static var backgroundBrandStronger: Color { Color("BackgroundBrandStronger") }
     static var backgroundDestructive: Color { Color("BackgroundDestructive") }
+    static var backgroundHighlight: Color { Color("BackgroundHighlight") }
     static var backgroundLiveBadge: Color { Color("BackgroundLiveBadge") }
     static var backgroundPrimary: Color { Color("BackgroundPrimary") }
     static var backgroundPrimaryWeak: Color { Color("BackgroundPrimaryWeak") }

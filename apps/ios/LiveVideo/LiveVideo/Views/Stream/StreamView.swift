@@ -60,20 +60,17 @@ struct StreamView: View {
                         switch streamManager.config.role {
                         case .host, .speaker:
                             StreamToolbarButton(
-                                image: Image(systemName: speakerSettingsManager.isMicOn ? "mic" : "mic.slash"),
-                                role: .default
+                                image: Image(systemName: speakerSettingsManager.isMicOn ? "mic" : "mic.slash")
                             ) {
                                 speakerSettingsManager.isMicOn.toggle()
                             }
                             StreamToolbarButton(
-                                image: Image(systemName: speakerSettingsManager.isCameraOn ? "video" : "video.slash"),
-                                role: .default
+                                image: Image(systemName: speakerSettingsManager.isCameraOn ? "video" : "video.slash")
                             ) {
                                 speakerSettingsManager.isCameraOn.toggle()
                             }
                             StreamToolbarButton(
                                 image: Image(systemName: "person.2"),
-                                role: .default,
                                 shouldShowBadge: raisedHandsStore.haveNew
                             ) {
                                 isShowingParticipants = true
@@ -86,8 +83,7 @@ struct StreamView: View {
                                     }
                                 } label: {
                                     StreamToolbarButton(
-                                        image: Image(systemName: "ellipsis"),
-                                        role: .default
+                                        image: Image(systemName: "ellipsis")
                                     ) {
 
                                     }
@@ -95,8 +91,8 @@ struct StreamView: View {
                             }
                         case .viewer:
                             StreamToolbarButton(
-                                image: Image(systemName: viewModel.isHandRaised ? "hand.raised" : "hand.raised.slash"),
-                                role: .default
+                                image: Image(systemName: "hand.raised"),
+                                role: viewModel.isHandRaised ? .highlight : .default
                             ) {
                                 viewModel.isHandRaised.toggle()
                             }
