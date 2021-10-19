@@ -12,6 +12,7 @@ import ParticipantNameScreen from './ParticipantNameScreen/ParticipantNameScreen
 import SpeakerOrViewerScreen from './SpeakerOrViewerScreen/SpeakerOrViewerScreen';
 import { useAppState } from '../../state';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
+import { useEnqueueSnackbar } from '../../hooks/useSnackbar/useSnackbar';
 import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useSyncContext from '../../hooks/useSyncContext/useSyncContext';
@@ -24,6 +25,7 @@ export default function PreJoinScreens() {
   const { connect: syncConnect, registerViewerDocument, registerRaisedHandsMap } = useSyncContext();
   const [mediaError, setMediaError] = useState<Error>();
   const { appState, appDispatch } = useAppState();
+  const enqueueSnackbar = useEnqueueSnackbar();
 
   async function connect() {
     appDispatch({ type: 'set-is-loading', isLoading: true });
@@ -70,8 +72,28 @@ export default function PreJoinScreens() {
       }
       appDispatch({ type: 'set-is-loading', isLoading: false });
     } catch (e) {
-      console.log('Error connecting: ', e);
+      console.log('Error connecting: ', e.toJSON ? e.toJSON() : e);
       appDispatch({ type: 'set-is-loading', isLoading: false });
+
+      if (e.response?.data?.error?.explanation === 'Room exists') {
+        enqueueSnackbar({
+          headline: 'Error',
+          message: 'An event already exists with that name. Try creating an event with a different name.',
+          variant: 'error',
+        });
+      } else if (e.response?.data?.error?.message === 'error finding room') {
+        enqueueSnackbar({
+          headline: 'Error',
+          message: 'Event cannot be found. Please check the event name and try again.',
+          variant: 'error',
+        });
+      } else {
+        enqueueSnackbar({
+          headline: 'Error',
+          message: 'There was an error while connecting to the event.',
+          variant: 'error',
+        });
+      }
     }
   }
 
