@@ -35,8 +35,8 @@ export default function PreJoinScreens() {
         chatConnect(data.token);
         registerRaisedHandsMap(data.sync_object_names.raised_hands_map);
         playerDisconnect();
-        appDispatch({ type: 'set-has-speaker-invite', hasSpeakerInvite: false });
         appDispatch({ type: 'set-is-loading', isLoading: false });
+        appDispatch({ type: 'set-has-speaker-invite', hasSpeakerInvite: false });
         return;
       }
 
