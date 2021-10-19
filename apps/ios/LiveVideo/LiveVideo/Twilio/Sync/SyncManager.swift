@@ -47,8 +47,7 @@ class SyncManager: NSObject {
             
             self?.stores.forEach { store in
                 store.errorHandler = { error in
-                    self?.disconnect()
-                    self?.errorPublisher.send(error)
+                    self?.handleError(error)
                 }
                 
                 store.connect(client: client) { error in
@@ -74,8 +73,27 @@ class SyncManager: NSObject {
         stores.forEach { $0.disconnect() }
         stores = []
     }
+    
+    private func handleError(_ error: Error) {
+        disconnect()
+        errorPublisher.send(error)
+    }
 }
 
 extension SyncManager: TwilioSyncClientDelegate {
-
+    func syncClient(_ client: TwilioSyncClient, connectionStateChanged state: TWSClientConnectionState) {
+        switch state {
+        case .unknown, .disconnected, .connected, .connecting, .denied, .error:
+            break
+        case .fatalError:
+            handleError(LiveVideoError.syncClientConnectionFatalError)
+        @unknown default:
+            break
+        }
+    }
+    
+    func syncClientTokenExpired(_ client: TwilioSyncClient) {
+        /// Should never happen because streams are not long living.
+        handleError(LiveVideoError.syncTokenExpired)
+    }
 }
