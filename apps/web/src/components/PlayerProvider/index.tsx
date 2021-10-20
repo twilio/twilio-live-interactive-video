@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useState } from 'react';
 import { Player as TwilioPlayer } from '@twilio/player-sdk';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../state';
@@ -19,6 +19,7 @@ export const PlayerProvider: React.FC = ({ children }) => {
   const [player, setPlayer] = useState<TwilioPlayer>();
   const { appDispatch } = useAppState();
   const enqueueSnackbar = useEnqueueSnackbar();
+  const { appState } = useAppState();
 
   const connect = useCallback(
     (token: string) => {
@@ -29,17 +30,6 @@ export const PlayerProvider: React.FC = ({ children }) => {
       })
         .then(newPlayer => {
           setPlayer(newPlayer);
-          newPlayer.on(TwilioPlayer.Event.StateChanged, (state: TwilioPlayer.State) => {
-            if (state === TwilioPlayer.State.Ended) {
-              setPlayer(undefined);
-              enqueueSnackbar({
-                headline: 'Event has ended',
-                message: 'The event has been ended by the host.',
-                variant: 'error',
-              });
-              appDispatch({ type: 'reset-state' });
-            }
-          });
           // @ts-ignore
           window.twilioPlayer = newPlayer;
         })
@@ -48,7 +38,7 @@ export const PlayerProvider: React.FC = ({ children }) => {
           onError(new Error('There was a problem connecting to the Twilio Live Stream.'));
         });
     },
-    [onError, appDispatch, enqueueSnackbar]
+    [onError]
   );
 
   const disconnect = () => {
@@ -59,6 +49,32 @@ export const PlayerProvider: React.FC = ({ children }) => {
       setPlayer(undefined);
     }
   };
+
+  useEffect(() => {
+    if (player) {
+      const handleEnded = (state: TwilioPlayer.State) => {
+        if (state === TwilioPlayer.State.Ended) {
+          setPlayer(undefined);
+
+          if (!appState.hasSpeakerInvite) {
+            // If there is a speaker invite, the user is moving from a viewer to a speaker, so
+            // we don't show this message.
+            enqueueSnackbar({
+              headline: 'Event has ended',
+              message: 'The event has been ended by the host.',
+              variant: 'error',
+            });
+            appDispatch({ type: 'reset-state' });
+          }
+        }
+      };
+
+      player.on(TwilioPlayer.Event.StateChanged, handleEnded);
+      return () => {
+        player.off(TwilioPlayer.Event.StateChanged, handleEnded);
+      };
+    }
+  }, [player, enqueueSnackbar, appDispatch, appState]);
 
   return <PlayerContext.Provider value={{ connect, disconnect, player }}>{children}</PlayerContext.Provider>;
 };
