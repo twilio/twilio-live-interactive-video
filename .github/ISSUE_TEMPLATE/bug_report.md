@@ -24,7 +24,7 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Environment (please complete the following information):**
- - Platform: [e.g. iOS, Web] Please include all OS or Browser details if required.
+ - Platform: [e.g. iOS, Web] Please include all OS or Browser details if applicable.
  - App Version: [e.g. 0.1.0]
  - Twilio Video SDK Version: [e.g 2.1.0]
  - Twilio Live Player SDK Version: [e.g 2.1.0]
