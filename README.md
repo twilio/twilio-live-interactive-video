@@ -52,3 +52,16 @@ When you visit the URL for your deployed live streaming application, you'll be a
 When you have created and joined a Video Room, you can retrieve the audience URL for streaming the room by going to **More -> About** in the menu bar at the bottom of the application. You will then see the **Stream Player URL**, which you can visit to view the audience stream for the Video Room.
 
 ![View of the More -> About menu bar](https://twilio-cms-prod.s3.amazonaws.com/images/Screen_Shot_2021-09-07_at_5.19.22_PM.width-1000.png)
+
+### Run the iOS app
+
+#### Configure Backend URL
+
+1.  Replace `BACKEND_URL` in the [iOS app source](https://github.com/twilio/twilio-live-interactive-video/blob/main/apps/ios/LiveVideo/LiveVideo/Managers/API/API.swift) with [the URL that the app was deployed to](#deploy-the-app-to-twilio).
+
+#### Run
+
+1. Run the app.
+1. Enter any unique name in the `Full name` field.
+1. Tap `Continue`.
+1. Tap `Create Event` to host a new stream or `Join Event` to join a stream as a viewer or a speaker.
