@@ -29,12 +29,21 @@
         }
       },
       {
-        "package": "TwilioPlayer",
-        "repositoryURL": "git@github.com:twilio/twilio-player-ios-internal-package.git",
+        "package": "TwilioLivePlayer",
+        "repositoryURL": "https://github.com/twilio/twilio-live-player-ios",
         "state": {
           "branch": null,
-          "revision": "a239b2fa15391931b29033773d44901cf60bee6c",
-          "version": "1.0.0-rc33"
+          "revision": "c086f1a2bd60f7b777e0ecf7c55ebceab029757a",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "package": "TwilioSyncClient",
+        "repositoryURL": "https://github.com/twilio/twilio-sync-ios",
+        "state": {
+          "branch": null,
+          "revision": "dd300a5841544afc145feec90800ced480b7cfd2",
+          "version": "1.1.0"
         }
       },
       {

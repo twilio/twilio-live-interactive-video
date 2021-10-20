@@ -12,7 +12,7 @@ struct StreamToolbar<Content>: View where Content: View {
     }
     
     var body: some View {
-        HStack(spacing: 25) {
+        HStack(spacing: 10) {
             Spacer()
             content()
             Spacer()
@@ -24,8 +24,8 @@ struct StreamToolbar<Content>: View where Content: View {
 struct StreamToolbar_Previews: PreviewProvider {
     static var previews: some View {
         StreamToolbar {
-            StreamToolbarButton("Destructive", image: Image(systemName: "arrow.left"), role: .destructive)
-            StreamToolbarButton("Default", image: Image(systemName: "mic.slash.fill"))
+            StreamToolbarButton(image: Image(systemName: "arrow.left"), role: .destructive)
+            StreamToolbarButton(image: Image(systemName: "mic.slash.fill"))
         }
         .previewLayout(.sizeThatFits)
     }

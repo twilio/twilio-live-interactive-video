@@ -7,6 +7,8 @@ import Foundation
 enum LiveVideoError: Error {
     case backendError(message: String)
     case streamEndedByHost
+    case syncClientConnectionFatalError
+    case syncTokenExpired
 }
 
 extension LiveVideoError {
@@ -21,6 +23,8 @@ extension LiveVideoError: LocalizedError {
         switch self {
         case let .backendError(message): return message
         case .streamEndedByHost: return "Event ended by host."
+        case .syncClientConnectionFatalError: return "Sync client connection fatal error."
+        case .syncTokenExpired: return "Sync token expired."
         }
     }
 }

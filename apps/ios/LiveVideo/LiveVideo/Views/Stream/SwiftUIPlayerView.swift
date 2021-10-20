@@ -3,16 +3,16 @@
 //
 
 import SwiftUI
-import TwilioPlayer
+import TwilioLivePlayer
 
 struct SwiftUIPlayerView: UIViewRepresentable {
     @Binding var player: Player?
 
     func makeUIView(context: Context) -> PlayerView {
-        TwilioPlayer.PlayerView()
+        PlayerView()
     }
 
     func updateUIView(_ uiView: PlayerView, context: Context) {
-        uiView.player = player
+        player?.playerView = uiView
     }
 }

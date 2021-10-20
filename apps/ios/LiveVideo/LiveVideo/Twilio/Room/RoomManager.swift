@@ -19,6 +19,7 @@ class RoomManager: NSObject {
     let remoteParticipantChangePublisher = PassthroughSubject<RemoteParticipantManager, Never>()
     // MARK: -
 
+    var roomSID: String? { room?.sid }
     private(set) var localParticipant: LocalParticipantManager!
     private(set) var remoteParticipants: [RemoteParticipantManager] = []
     private var room: Room?
@@ -79,9 +80,15 @@ extension RoomManager: RoomDelegate {
     }
     
     func roomDidDisconnect(room: Room, error: Error?) {
-        guard let error = error else { return }
+        guard let error = error else {
+            return
+        }
         
-        handleError(error)
+        if (error as NSError).isRoomCompletedError {
+            handleError(LiveVideoError.streamEndedByHost)
+        } else {
+            handleError(error)
+        }
     }
     
     func participantDidConnect(room: Room, participant: RemoteParticipant) {
@@ -111,6 +118,12 @@ extension RoomManager: RoomDelegate {
 extension RoomManager: RemoteParticipantManagerDelegate {
     func participantDidChange(_ participant: RemoteParticipantManager) {
         remoteParticipantChangePublisher.send(participant)
+    }
+}
+
+private extension NSError {
+    var isRoomCompletedError: Bool {
+        domain == TwilioVideoSDK.ErrorDomain && code == TwilioVideoSDK.Error.roomRoomCompletedError.rawValue
     }
 }
 
