@@ -4,7 +4,7 @@ import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } fr
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
-    marginBottom: '2em',
+    marginBottom: '1.5em',
     fontWeight: 'bold',
   },
   inputContainer: {
@@ -51,7 +51,7 @@ export default function JoinEventScreen({ state, dispatch, connect }: JoinEventS
   };
 
   return (
-    <>
+    <div style={{ padding: '4em 0' }}>
       <Typography variant="h5" className={classes.gutterBottom}>
         Join event
       </Typography>
@@ -86,6 +86,6 @@ export default function JoinEventScreen({ state, dispatch, connect }: JoinEventS
           </Button>
         </Grid>
       </form>
-    </>
+    </div>
   );
 }

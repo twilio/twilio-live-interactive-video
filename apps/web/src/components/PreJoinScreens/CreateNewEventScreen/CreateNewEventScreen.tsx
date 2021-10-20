@@ -4,7 +4,7 @@ import { appActionTypes, ActiveScreen, appStateTypes } from '../../../state/appS
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
-    marginBottom: '1em',
+    marginBottom: '1.5em',
     fontWeight: 'bold',
   },
   inputContainer: {
@@ -46,7 +46,7 @@ export default function CreateNewEventScreen({ state, dispatch }: CreateNewEvent
   };
 
   return (
-    <>
+    <div style={{ padding: '4em 0' }}>
       <Typography variant="h5" className={classes.gutterBottom}>
         Create new event
       </Typography>
@@ -81,6 +81,6 @@ export default function CreateNewEventScreen({ state, dispatch }: CreateNewEvent
           </Button>
         </Grid>
       </form>
-    </>
+    </div>
   );
 }
