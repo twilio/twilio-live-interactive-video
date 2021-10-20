@@ -1,8 +1,6 @@
 import React, { createContext, useCallback, useState } from 'react';
 import { Player as TwilioPlayer } from '@twilio/player-sdk';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-import { useAppState } from '../../state';
-import { useEnqueueSnackbar } from '../../hooks/useSnackbar/useSnackbar';
 
 TwilioPlayer.setLogLevel(TwilioPlayer.LogLevel.Error);
 
@@ -17,8 +15,6 @@ export const PlayerContext = createContext<PlayerContextType>(null!);
 export const PlayerProvider: React.FC = ({ children }) => {
   const { onError } = useVideoContext();
   const [player, setPlayer] = useState<TwilioPlayer>();
-  const { appDispatch } = useAppState();
-  const enqueueSnackbar = useEnqueueSnackbar();
 
   const connect = useCallback(
     (token: string) => {
@@ -29,17 +25,6 @@ export const PlayerProvider: React.FC = ({ children }) => {
       })
         .then(newPlayer => {
           setPlayer(newPlayer);
-          newPlayer.on(TwilioPlayer.Event.StateChanged, (state: TwilioPlayer.State) => {
-            if (state === TwilioPlayer.State.Ended) {
-              setPlayer(undefined);
-              enqueueSnackbar({
-                headline: 'Event has ended',
-                message: 'The event has been ended by the host.',
-                variant: 'error',
-              });
-              appDispatch({ type: 'reset-state' });
-            }
-          });
           // @ts-ignore
           window.twilioPlayer = newPlayer;
         })
@@ -48,15 +33,15 @@ export const PlayerProvider: React.FC = ({ children }) => {
           onError(new Error('There was a problem connecting to the Twilio Live Stream.'));
         });
     },
-    [onError, appDispatch, enqueueSnackbar]
+    [onError]
   );
 
   const disconnect = () => {
     if (player) {
+      setPlayer(undefined);
       if (player.state !== TwilioPlayer.State.Ended) {
         player.disconnect();
       }
-      setPlayer(undefined);
     }
   };
 

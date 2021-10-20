@@ -112,7 +112,7 @@ export default function PreJoinScreens() {
       <MediaErrorSnackbar error={mediaError} />
 
       {appState.isLoading ? (
-        <LoadingScreen />
+        <LoadingScreen state={appState} />
       ) : (
         {
           [ActiveScreen.ParticipantNameScreen]: <ParticipantNameScreen state={appState} dispatch={appDispatch} />,

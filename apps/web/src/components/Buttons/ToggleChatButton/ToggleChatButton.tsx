@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import { useAppState } from '../../../state';
 
 export const ANIMATION_DURATION = 700;
 
@@ -16,7 +17,7 @@ const useStyles = makeStyles({
   circle: {
     width: '10px',
     height: '10px',
-    backgroundColor: '#5BB75B',
+    backgroundColor: '#D61F1F',
     borderRadius: '50%',
     position: 'absolute',
     top: '-3px',
@@ -28,7 +29,7 @@ const useStyles = makeStyles({
     opacity: 1,
   },
   ring: {
-    border: '3px solid #5BB75B',
+    border: '3px solid #D61F1F',
     borderRadius: '30px',
     height: '14px',
     width: '14px',
@@ -61,10 +62,15 @@ export default function ToggleChatButton() {
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const { isChatWindowOpen, setIsChatWindowOpen, conversation, hasUnreadMessages } = useChatContext();
   const { setIsBackgroundSelectionOpen } = useVideoContext();
+  const { appDispatch } = useAppState();
 
   const toggleChatWindow = () => {
     setIsChatWindowOpen(!isChatWindowOpen);
     setIsBackgroundSelectionOpen(false);
+    appDispatch({
+      type: 'set-is-participant-window-open',
+      isParticipantWindowOpen: false,
+    });
   };
 
   useEffect(() => {

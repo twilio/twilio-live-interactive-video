@@ -32,7 +32,7 @@ export default function Menu(props: { buttonClassName?: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const { isFetching, updateRecordingRules, roomType } = useAppState();
+  const { isFetching, updateRecordingRules, roomType, appDispatch } = useAppState();
   const { setIsChatWindowOpen } = useChatContext();
   const isRecording = useIsRecording();
   const { room, setIsBackgroundSelectionOpen } = useVideoContext();
@@ -108,6 +108,10 @@ export default function Menu(props: { buttonClassName?: string }) {
             onClick={() => {
               setIsBackgroundSelectionOpen(true);
               setIsChatWindowOpen(false);
+              appDispatch({
+                type: 'set-is-participant-window-open',
+                isParticipantWindowOpen: false,
+              });
               setMenuOpen(false);
             }}
           >
