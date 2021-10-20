@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { Player as TwilioPlayer } from '@twilio/player-sdk';
+import { Player as TwilioPlayer } from '@twilio/live-player-sdk';
 import PlayerMenuBar from './PlayerMenuBar/PlayerMenuBar';
 import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import { useAppState } from '../../state';

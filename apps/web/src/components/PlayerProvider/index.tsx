@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react';
-import { Player as TwilioPlayer } from '@twilio/player-sdk';
+import { Player as TwilioPlayer } from '@twilio/live-player-sdk';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../state';
 import { useEnqueueSnackbar } from '../../hooks/useSnackbar/useSnackbar';
