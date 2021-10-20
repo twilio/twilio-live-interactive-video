@@ -13,16 +13,16 @@ exports.handler = async function (context, event, callback) {
     try {
       // Get playerStreamerSid and mediaProcessorSid from stream document
       const streamDocument = await syncClient.documents(`stream-${RoomSid}`).fetch();
-      const { playerStreamerSid, mediaProcessorSid } = streamDocument.data;
+      const { player_streamer_sid, media_processor_sid } = streamDocument.data;
 
       // Stop mediaProcessor
-      await axiosClient(`MediaProcessors/${mediaProcessorSid}`, {
+      await axiosClient(`MediaProcessors/${media_processor_sid}`, {
         method: 'post',
         data: 'Status=ENDED',
       });
 
       // Stop playerStreamer
-      await axiosClient(`PlayerStreamers/${playerStreamerSid}`, {
+      await axiosClient(`PlayerStreamers/${player_streamer_sid}`, {
         method: 'post',
         data: 'Status=ENDED',
       });
@@ -30,7 +30,9 @@ exports.handler = async function (context, event, callback) {
       // delete stream document
       await syncClient.documents(`stream-${RoomSid}`).remove();
 
-      console.log('deleted: ', RoomSid);
+      console.log('Deleted stream: ', RoomSid);
+      console.log('Ended MediaProcessor: ', media_processor_sid);
+      console.log('Ended PlayerStreamer: ', player_streamer_sid);
     } catch (e) {
       console.log(e);
       response.setStatusCode(500);
