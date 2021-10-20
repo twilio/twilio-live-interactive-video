@@ -43,7 +43,7 @@ This URL is for demo purposes only. It will expire on Tue Oct 19 2021 14:58:20 G
 
 If you make any changes to this application, you can run `npm run serverless:remove` followed by `npm run serverless:deploy` to deploy the new changes to your application.
 
-### Use the app
+### Use the web app
 
 When you visit the URL for your deployed live streaming application, you'll be able to create and join a Twilio Video Room.
 
