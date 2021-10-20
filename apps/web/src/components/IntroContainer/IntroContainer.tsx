@@ -89,6 +89,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     padding: '2em 4em',
     flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    height: '100%',
     [theme.breakpoints.down('sm')]: {
       padding: '2em',
     },

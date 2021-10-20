@@ -56,7 +56,7 @@ export default function ParticipantNameScreen({ state, dispatch }: ParticipantNa
   };
 
   return (
-    <div style={{ padding: '3em 0' }}>
+    <div>
       <Typography variant="h5" className={classes.welcome}>
         Welcome to:
       </Typography>

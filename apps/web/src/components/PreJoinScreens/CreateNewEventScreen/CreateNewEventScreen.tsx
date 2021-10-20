@@ -46,7 +46,7 @@ export default function CreateNewEventScreen({ state, dispatch }: CreateNewEvent
   };
 
   return (
-    <div style={{ padding: '4em 0' }}>
+    <div>
       <Typography variant="h5" className={classes.gutterBottom}>
         Create new event
       </Typography>

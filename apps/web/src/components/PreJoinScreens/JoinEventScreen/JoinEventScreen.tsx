@@ -51,7 +51,7 @@ export default function JoinEventScreen({ state, dispatch, connect }: JoinEventS
   };
 
   return (
-    <div style={{ padding: '4em 0' }}>
+    <div>
       <Typography variant="h5" className={classes.gutterBottom}>
         Join event
       </Typography>

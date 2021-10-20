@@ -130,17 +130,18 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
           </Paper>
         </div>
       </div>
-
-      <Button
-        startIcon={<BackArrowIcon />}
-        onClick={() => dispatch({ type: 'set-active-screen', activeScreen: ActiveScreen.ParticipantNameScreen })}
-        variant="outlined"
-        disabled={!state.participantName}
-        className={classes.backButton}
-        size="small"
-      >
-        Go back
-      </Button>
+      <div>
+        <Button
+          startIcon={<BackArrowIcon />}
+          onClick={() => dispatch({ type: 'set-active-screen', activeScreen: ActiveScreen.ParticipantNameScreen })}
+          variant="outlined"
+          disabled={!state.participantName}
+          className={classes.backButton}
+          size="small"
+        >
+          Go back
+        </Button>
+      </div>
     </>
   );
 }

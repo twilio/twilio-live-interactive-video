@@ -143,16 +143,18 @@ export default function SpeakerOrViewerScreen({ state, dispatch }: SpeakerOrView
         </div>
       </div>
 
-      <Button
-        startIcon={<BackArrowIcon />}
-        onClick={() => dispatch({ type: 'set-active-screen', activeScreen: ActiveScreen.CreateOrJoinScreen })}
-        variant="outlined"
-        disabled={!state.participantName}
-        className={classes.backButton}
-        size="small"
-      >
-        Go back
-      </Button>
+      <div>
+        <Button
+          startIcon={<BackArrowIcon />}
+          onClick={() => dispatch({ type: 'set-active-screen', activeScreen: ActiveScreen.CreateOrJoinScreen })}
+          variant="outlined"
+          disabled={!state.participantName}
+          className={classes.backButton}
+          size="small"
+        >
+          Go back
+        </Button>
+      </div>
     </>
   );
 }
