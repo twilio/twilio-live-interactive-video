@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import EndCallButton from './EndCallButton';
+import EndCallButton from './EndEventButton';
 
 const mockVideoContext = {
   room: {

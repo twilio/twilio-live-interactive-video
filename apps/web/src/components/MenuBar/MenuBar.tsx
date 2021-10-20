@@ -2,7 +2,8 @@ import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
-import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
+import EndEventButton from '../Buttons/EndEventButton/EndEventButton';
+import LeaveEventButton from '../Buttons/LeaveEventButton/LeaveEventButton';
 import { isMobile } from '../../utils';
 import Menu from './Menu/Menu';
 import useRoomState from '../../hooks/useRoomState/useRoomState';
@@ -13,6 +14,7 @@ import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
 import ToggleParticipantWindowButton from '../Buttons/ToggleParticipantWindow/ToggleParticipantWindowButton';
+import { useAppState } from '../../state';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -69,6 +71,7 @@ export default function MenuBar() {
   const roomState = useRoomState();
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
+  const { appState } = useAppState();
 
   return (
     <>
@@ -98,7 +101,7 @@ export default function MenuBar() {
           <Hidden smDown>
             <Grid style={{ flex: 1 }}>
               <Grid container justifyContent="flex-end">
-                <EndCallButton />
+                {appState.participantType === 'host' ? <EndEventButton /> : <LeaveEventButton />}
               </Grid>
             </Grid>
           </Hidden>

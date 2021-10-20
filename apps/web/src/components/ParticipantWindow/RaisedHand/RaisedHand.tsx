@@ -30,7 +30,7 @@ export function RaisedHand({ name, handleInvite, isHost }: RaisedHandProps) {
 
   return (
     <div className={classes.container}>
-      <Typography variant="body1">{name}</Typography>
+      <Typography variant="body1">{name} 👋</Typography>
       <Typography
         variant="body1"
         className={clsx(classes.invite, { [classes.hide]: !isHost })}

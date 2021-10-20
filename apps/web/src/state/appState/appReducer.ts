@@ -60,14 +60,21 @@ export const appReducer = produce((draft: appStateTypes, action: appActionTypes)
       break;
 
     case 'set-has-speaker-invite':
-      draft.hasSpeakerInvite = action.hasSpeakerInvite;
-      if (action.hasSpeakerInvite) {
-        draft.activeScreen = ActiveScreen.DeviceSelectionScreen;
+      // Ignore this action when connecting to a room
+      if (!draft.isLoading) {
+        draft.hasSpeakerInvite = action.hasSpeakerInvite;
+        if (action.hasSpeakerInvite) {
+          draft.activeScreen = ActiveScreen.DeviceSelectionScreen;
+        }
       }
       break;
 
     case 'reset-state':
-      return initialAppState;
+      // Don't reset state while transitioning to a room
+      if (!draft.hasSpeakerInvite) {
+        return initialAppState;
+      }
+      break;
 
     case 'set-is-participant-window-open':
       draft.isParticipantWindowOpen = action.isParticipantWindowOpen;

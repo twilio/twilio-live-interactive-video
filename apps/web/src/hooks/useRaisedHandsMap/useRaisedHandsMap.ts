@@ -7,6 +7,11 @@ export function useRaisedHandsMap() {
 
   useEffect(() => {
     if (raisedHandsMap) {
+      // Sets the list on load. Limiting to first 100 viewers who are raising their hand
+      raisedHandsMap.getItems({ pageSize: 100 }).then(paginator => {
+        setRaisedHands(paginator.items.map(item => item.key));
+      });
+
       const handleItemAdded = (args: any) => {
         setRaisedHands(prevRaisedHands => [args.item.key, ...prevRaisedHands]);
       };
