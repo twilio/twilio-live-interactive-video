@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function VideoLogo() {
   return (
-    <svg width="144" height="144" viewBox="0 0 144 144" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="144" height="144" viewBox="0 0 144 110" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g filter="url(#filter0_d_1168:37930)">
         <path
           fillRule="evenodd"
