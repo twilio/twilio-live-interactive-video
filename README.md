@@ -41,7 +41,7 @@ Passcode: 123 456 1234 5678
 This URL is for demo purposes only. It will expire on Tue Oct 19 2021 14:58:20 GMT-0600 (Mountain Daylight Time)
 ```
 
-If you make any changes to the application, then you can run `npm run serverless:deploy -- --override` again and subsequent deploys will override your existing app.
+If you make any changes to this application, you can run `npm run serverless:remove` followed by `npm run serverless:deploy` to deploy the new changes to your application.
 
 ### Use the app
 
