@@ -4,12 +4,13 @@ import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } fr
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
-    marginBottom: '1em',
+    marginBottom: '1.5em',
+    fontWeight: 'bold',
   },
   inputContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    margin: '1.5em 0 3.5em',
+    margin: '3.5em 0',
     '& div:not(:last-child)': {
       marginRight: '1em',
     },
@@ -50,15 +51,17 @@ export default function JoinEventScreen({ state, dispatch, connect }: JoinEventS
   };
 
   return (
-    <>
+    <div>
       <Typography variant="h5" className={classes.gutterBottom}>
-        Join Event
+        Join event
       </Typography>
-      <Typography variant="body1">Enter the event name to join</Typography>
+      <Typography variant="body2" className={classes.gutterBottom} style={{ color: '#606B85' }}>
+        Enter the event name to join.
+      </Typography>
       <form onSubmit={handleSubmit}>
         <div className={classes.inputContainer}>
           <div className={classes.textFieldContainer}>
-            <InputLabel shrink htmlFor="input-user-name">
+            <InputLabel shrink htmlFor="input-user-name" style={{ fontWeight: 'bold' }}>
               Event name
             </InputLabel>
             <TextField
@@ -83,6 +86,6 @@ export default function JoinEventScreen({ state, dispatch, connect }: JoinEventS
           </Button>
         </Grid>
       </form>
-    </>
+    </div>
   );
 }

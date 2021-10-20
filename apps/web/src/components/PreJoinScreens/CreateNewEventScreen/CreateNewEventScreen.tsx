@@ -4,7 +4,8 @@ import { appActionTypes, ActiveScreen, appStateTypes } from '../../../state/appS
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
-    marginBottom: '1em',
+    marginBottom: '1.5em',
+    fontWeight: 'bold',
   },
   inputContainer: {
     display: 'flex',
@@ -45,17 +46,17 @@ export default function CreateNewEventScreen({ state, dispatch }: CreateNewEvent
   };
 
   return (
-    <>
+    <div>
       <Typography variant="h5" className={classes.gutterBottom}>
-        Create New Event
+        Create new event
       </Typography>
-      <Typography variant="body1">
+      <Typography variant="body2" className={classes.gutterBottom} style={{ color: '#606B85' }}>
         Tip: give your event a name that’s related to the topic you’ll be talking about.
       </Typography>
       <form onSubmit={handleSubmit}>
         <div className={classes.inputContainer}>
           <div className={classes.textFieldContainer}>
-            <InputLabel shrink htmlFor="input-user-name">
+            <InputLabel shrink htmlFor="input-user-name" style={{ fontWeight: 'bold' }}>
               Event name
             </InputLabel>
             <TextField
@@ -80,6 +81,6 @@ export default function CreateNewEventScreen({ state, dispatch }: CreateNewEvent
           </Button>
         </Grid>
       </form>
-    </>
+    </div>
   );
 }

@@ -72,6 +72,9 @@ export default createTheme({
         color: 'rgb(40, 42, 43)',
         fontSize: '0.9rem',
       },
+      h4: {
+        fontSize: '1.8rem',
+      },
     },
     MuiInputBase: {
       root: {

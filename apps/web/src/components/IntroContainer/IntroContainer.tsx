@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   innerContainer: {
     display: 'flex',
     width: '888px',
-    height: '379px',
+    height: '400px',
     borderRadius: '8px',
     boxShadow: '0px 2px 4px 0px rgba(40, 42, 43, 0.3)',
     overflow: 'hidden',
@@ -87,15 +87,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   content: {
     background: 'white',
     width: '100%',
-    padding: '4em',
+    padding: '2em 4em',
     flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    height: '100%',
     [theme.breakpoints.down('sm')]: {
       padding: '2em',
     },
   },
   title: {
     color: 'white',
-    margin: '1em 0 0',
+    fontWeight: 'bold',
     [theme.breakpoints.down('sm')]: {
       margin: 0,
       fontSize: '1.1rem',
