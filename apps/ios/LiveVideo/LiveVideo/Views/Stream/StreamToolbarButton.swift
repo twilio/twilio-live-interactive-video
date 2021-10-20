@@ -13,6 +13,10 @@ struct StreamToolbarButton: View {
             imageForegroundColor: .backgroundStrongest,
             imageBackgroundColor: .backgroundStrong
         )
+        static let highlight = Role(
+            imageForegroundColor: .white,
+            imageBackgroundColor: .backgroundHighlight
+        )
         static let destructive = Role(
             imageForegroundColor: .white,
             imageBackgroundColor: .backgroundDestructive
@@ -24,7 +28,12 @@ struct StreamToolbarButton: View {
     let shouldShowBadge: Bool
     let action: () -> Void
     
-    init(image: Image, role: Role = .default, shouldShowBadge: Bool = false, action: @escaping () -> Void = { }) {
+    init(
+        image: Image,
+        role: Role = .default,
+        shouldShowBadge: Bool = false,
+        action: @escaping () -> Void = { }
+    ) {
         self.image = image
         self.role = role
         self.shouldShowBadge = shouldShowBadge
@@ -78,6 +87,8 @@ struct StreamToolbarButton_Previews: PreviewProvider {
         Group {
             StreamToolbarButton(image: Image(systemName: "mic.slash"))
                 .previewDisplayName("Default")
+            StreamToolbarButton(image: Image(systemName: "hand.raised"), role: .highlight)
+                .previewDisplayName("Highlight")
             StreamToolbarButton(image: Image(systemName: "person.2"), shouldShowBadge: true)
                 .previewDisplayName("Badge")
             StreamToolbarButton(image: Image(systemName: "arrow.left"), role: .destructive)
