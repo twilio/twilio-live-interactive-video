@@ -53,7 +53,11 @@ When you have created and joined a Video Room, you can retrieve the audience URL
 
 ![View of the More -> About menu bar](https://twilio-cms-prod.s3.amazonaws.com/images/Screen_Shot_2021-09-07_at_5.19.22_PM.width-1000.png)
 
-### Run the iOS app
+### Run the iOS App
+
+#### Open the Project in Xcode
+
+1. [Open the iOS project](https://github.com/twilio/twilio-live-interactive-video/tree/main/apps/ios/LiveVideo/LiveVideo.xcodeproj) in Xcode.
 
 #### Configure Backend URL
 
