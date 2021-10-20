@@ -20,11 +20,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   paper: {
     width: '465px',
-    height: '80px',
+    height: '85px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     cursor: 'pointer',
+    transition: 'all 0.2s linear',
+    '&:hover': {
+      backgroundColor: '#EFEFEF',
+    },
   },
   innerPaperContainer: {
     display: 'flex',
@@ -59,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
   },
   backButton: {
-    marginTop: '2em',
+    marginTop: '1.5em',
     fontWeight: 'bold',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
@@ -89,7 +93,7 @@ export default function SpeakerOrViewerScreen({ state, dispatch }: SpeakerOrView
           <Paper
             onClick={() => dispatch({ type: 'set-participant-type', participantType: 'speaker' })}
             className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
-            elevation={1}
+            elevation={3}
             style={{ margin: '0.3em 0' }}
           >
             <div className={classes.innerPaperContainer}>
@@ -114,7 +118,7 @@ export default function SpeakerOrViewerScreen({ state, dispatch }: SpeakerOrView
         <div>
           <Paper
             onClick={() => dispatch({ type: 'set-participant-type', participantType: 'viewer' })}
-            elevation={1}
+            elevation={3}
             color="primary"
             className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
           >

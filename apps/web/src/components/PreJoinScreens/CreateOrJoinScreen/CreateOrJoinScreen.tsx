@@ -15,16 +15,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   paperContainer: {
     display: 'flex',
     flexDirection: 'column',
-    height: '55%',
-    justifyContent: 'space-around',
+    height: '70%',
+    justifyContent: 'space-evenly',
   },
   paper: {
-    width: '465px',
-    height: '70px',
+    width: '475px',
+    height: '75px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     cursor: 'pointer',
+    transition: 'all 0.2s linear',
+    '&:hover': {
+      backgroundColor: '#EFEFEF',
+    },
   },
   innerPaperContainer: {
     display: 'flex',
@@ -59,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
   },
   backButton: {
-    marginTop: '2em',
+    marginTop: '0.8em',
     fontWeight: 'bold',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
@@ -80,7 +84,7 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
       <Typography variant="h5" className={classes.gutterBottom}>
         Create or join?
       </Typography>
-      <Typography variant="body2" className={classes.gutterBottom} style={{ color: '#606B85' }}>
+      <Typography variant="body2" style={{ color: '#606B85', fontWeight: 'bold' }}>
         Create your own event or join one that's already happening.
       </Typography>
 
@@ -89,7 +93,7 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
           <Paper
             onClick={() => dispatch({ type: 'set-participant-type', participantType: 'host' })}
             className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
-            elevation={1}
+            elevation={3}
           >
             <div className={classes.innerPaperContainer}>
               <div className={classes.leftIcon}>
@@ -108,7 +112,7 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
         <div>
           <Paper
             onClick={() => dispatch({ type: 'set-participant-type', participantType: null })}
-            elevation={1}
+            elevation={3}
             color="primary"
             className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
           >
