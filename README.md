@@ -25,14 +25,6 @@ Copy the `.env.example` file to `.env` and perform the following one-time steps 
 
 Update the ACCOUNT_SID and AUTH_TOKEN `.env` entries with the Account SID and Auth Token found on the [Twilio Console home page](https://twilio.com/console).
 
-#### Set your API Key and API Key Secret 
-
-Create an API Key and Secret and update the TWILIO_API_KEY_SID and TWILIO_API_KEY_SECRET `.env` entries. You can create a new API Key and Secret in the Twilio Console by navigating to `Account -> API Keys`.
-
-#### Provide a Twilio Sync Service SID 
-
-Update the SYNC_SERVICE_SID `.env` entry with your Default Service SID found in `Sync -> Services` or use a new Twilio Sync Service SID that can be created in the Twilio console.
-
 #### Install Dependencies
 
 Once you have setup all your environment variables, run `npm install` to install all dependencies from NPM.
