@@ -17,25 +17,40 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             FormStack {
-                Text("Create or join?")
-                    .font(.system(size: 28, weight: .bold))
                 Text("Create your own event or join one that’s already happening.")
                     .foregroundColor(.textWeak)
                     .font(.system(size: 15))
-                Button("Create Event") {
-                    showCreateStream = true
-                }
-                Button("Join Event") {
-                    showJoinStream = true
-                }
+                Button(
+                    action: {
+                        showCreateStream = true
+                    },
+                    label: {
+                        CardButtonLabel(
+                            title: "Create event",
+                            image: Image(systemName: "plus.square"),
+                            imageColor: .backgroundSuccess
+                        )
+                    }
+                )
+                Button(
+                    action: {
+                        showJoinStream = true
+                    },
+                    label: {
+                        CardButtonLabel(
+                            title: "Join event",
+                            image: Image(systemName: "person.3"),
+                            imageColor: .cardButtonIconPurple
+                        )
+                    }
+                )
             }
-            .buttonStyle(PrimaryButtonStyle())
+            .navigationTitle("Create or join?")
             .toolbar {
                 Button(action: { showSettings.toggle() }) {
                     Image(systemName: "gear")
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
             .sheet(
                 isPresented: $showSettings,
                 onDismiss: {

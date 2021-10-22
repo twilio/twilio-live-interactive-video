@@ -16,7 +16,11 @@ extension Color {
     static var backgroundStrong: Color { Color("BackgroundStrong") }
     static var backgroundStronger: Color { Color("BackgroundStronger") }
     static var backgroundStrongest: Color { Color("BackgroundStrongest") }
+    static var backgroundSuccess: Color { Color("BackgroundSuccess") }
     static var border: Color { Color("Border") }
     static var borderSuccessWeak: Color { Color("BorderSuccessWeak") }
+    static var borderWeaker: Color { Color("BorderWeaker") }
+    static var cardButtonIconPurple: Color { Color("CardButtonIconPurple") }
+    static var shadowLow: Color { Color("ShadowLow") }
     static var textWeak: Color { Color("TextWeak") }
 }

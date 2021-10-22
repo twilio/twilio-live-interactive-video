@@ -35,6 +35,7 @@
 		DC4AA66526D1456100E677D5 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA66426D1456100E677D5 /* AuthManager.swift */; };
 		DC4AA66826D175A600E677D5 /* SwiftyUserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = DC4AA66726D175A600E677D5 /* SwiftyUserDefaults */; };
 		DC4F45E7271F5A3700BE730B /* TwilioLivePlayer in Frameworks */ = {isa = PBXBuildFile; productRef = DC4F45E6271F5A3700BE730B /* TwilioLivePlayer */; };
+		DC4F45E92723135500BE730B /* CardButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4F45E82723135500BE730B /* CardButtonLabel.swift */; };
 		DC504A7526F0F18700C37EC9 /* SpeakerGridViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC504A7426F0F18600C37EC9 /* SpeakerGridViewModel.swift */; };
 		DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC504A7626F1468E00C37EC9 /* SpeakerVideoView.swift */; };
 		DC5F453926CC061A009C5C79 /* LiveVideoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */; };
@@ -115,6 +116,7 @@
 		DC4AA65F26D047DD00E677D5 /* FormTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormTextFieldStyle.swift; sourceTree = "<group>"; };
 		DC4AA66126D0493E00E677D5 /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
 		DC4AA66426D1456100E677D5 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		DC4F45E82723135500BE730B /* CardButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardButtonLabel.swift; sourceTree = "<group>"; };
 		DC504A7426F0F18600C37EC9 /* SpeakerGridViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerGridViewModel.swift; sourceTree = "<group>"; };
 		DC504A7626F1468E00C37EC9 /* SpeakerVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoView.swift; sourceTree = "<group>"; };
 		DC5F453526CC061A009C5C79 /* LiveVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -283,6 +285,7 @@
 			children = (
 				DC4AA65826D0133600E677D5 /* Color.swift */,
 				DCC1D62B26D97BB200892038 /* ErrorAlert.swift */,
+				DC4F45E82723135500BE730B /* CardButtonLabel.swift */,
 				DCC1D62926D9643400892038 /* FormStack.swift */,
 				DC4AA65F26D047DD00E677D5 /* FormTextFieldStyle.swift */,
 				DC4AA66126D0493E00E677D5 /* PrimaryButtonStyle.swift */,
@@ -623,6 +626,7 @@
 				DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */,
 				DC175F34270E3FD200D9D1FE /* RaisedHandsStore.swift in Sources */,
 				DCC48FA326D8322900EE49EF /* SwiftUIPlayerView.swift in Sources */,
+				DC4F45E92723135500BE730B /* CardButtonLabel.swift in Sources */,
 				DC1ED0F726E12C7400FFA769 /* ProgressHUD.swift in Sources */,
 				DC175F32270E23F900D9D1FE /* ViewerStore.swift in Sources */,
 				DCC1D62626D9396400892038 /* StreamManager.swift in Sources */,
