@@ -35,8 +35,10 @@ export default function Player() {
 
   useEffect(() => {
     if (player) {
-      player.attach(videoElRef.current);
-      player.play();
+      if (player?.state === 'idle') {
+        player.attach(videoElRef.current);
+        player.play();
+      }
 
       if (!welcomeMessageDisplayed) {
         setWelcomeMessageDisplayed(true);
@@ -53,7 +55,7 @@ export default function Player() {
   return (
     <div style={{ height: '100vh' }}>
       <div className={classes.container}>
-        <video className={classes.video} ref={videoElRef}></video>
+        <video className={classes.video} ref={videoElRef} playsInline></video>
       </div>
       <PlayerMenuBar roomName={appState.eventName} disconnect={disconnect} />
     </div>
