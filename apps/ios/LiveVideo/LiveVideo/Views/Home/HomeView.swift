@@ -8,12 +8,10 @@ struct HomeView: View {
     @EnvironmentObject var authManager: AuthManager
     @EnvironmentObject var streamManager: StreamManager
     @State private var showSettings = false
-    @State private var showCreateStream = false
-    @State private var showJoinStream = false
     @State private var showStream = false
     @State private var signOut = false
-    @State private var streamConfig: StreamConfig?
-
+    @StateObject private var streamConfigFlowModel = StreamConfigFlowModel()
+    
     var body: some View {
         NavigationView {
             FormStack {
@@ -22,7 +20,9 @@ struct HomeView: View {
                     .font(.system(size: 15))
                 Button(
                     action: {
-                        showCreateStream = true
+                        streamConfigFlowModel.parameters = StreamConfigFlowModel.Parameters()
+                        streamConfigFlowModel.parameters.role = .host
+                        streamConfigFlowModel.isShowing = true
                     },
                     label: {
                         CardButtonLabel(
@@ -34,7 +34,8 @@ struct HomeView: View {
                 )
                 Button(
                     action: {
-                        showJoinStream = true
+                        streamConfigFlowModel.parameters = StreamConfigFlowModel.Parameters()
+                        streamConfigFlowModel.isShowing = true
                     },
                     label: {
                         CardButtonLabel(
@@ -63,23 +64,25 @@ struct HomeView: View {
                 }
             )
             .sheet(
-                isPresented: $showCreateStream,
+                isPresented: $streamConfigFlowModel.isShowing,
                 onDismiss: {
-                    showStream = streamConfig != nil
-                    streamManager.config = streamConfig
+                    guard
+                        let streamName = streamConfigFlowModel.parameters.streamName,
+                        let role = streamConfigFlowModel.parameters.role
+                    else {
+                        return
+                    }
+                    
+                    streamManager.config = StreamConfig(
+                        streamName: streamName,
+                        userIdentity: authManager.userIdentity,
+                        role: role
+                    )
+                    showStream = true
                 },
                 content: {
-                    JoinStreamView(streamConfig: $streamConfig, mode: .create)
-                }
-            )
-            .sheet(
-                isPresented: $showJoinStream,
-                onDismiss: {
-                    showStream = streamConfig != nil
-                    streamManager.config = streamConfig
-                },
-                content: {
-                    JoinStreamView(streamConfig: $streamConfig, mode: .join)
+                    EnterStreamNameView()
+                        .environmentObject(streamConfigFlowModel)
                 }
             )
             .fullScreenCover(isPresented: $authManager.isSignedOut) {
