@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useLayoutEffect } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { Player as TwilioPlayer } from '@twilio/player-sdk';
+import { Player as TwilioPlayer } from '@twilio/live-player-sdk';
 import PlayerMenuBar from './PlayerMenuBar/PlayerMenuBar';
 import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import { useAppState } from '../../state';
@@ -35,16 +35,11 @@ function Player() {
   const enqueueSnackbar = useEnqueueSnackbar();
   const [welcomeMessageDisplayed, setWelcomeMessageDisplayed] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (player) {
-      // if (player?.state === 'idle') {
-      //   player.attach(videoElRef.current);
-      //   player.play();
-      // }
-      console.log('state1', state);
       if (state === 'ready') {
-        console.log('state2', state);
         appDispatch({ type: 'set-is-loading', isLoading: false });
+
         player.attach(videoElRef.current);
         player.play();
       }
@@ -52,7 +47,6 @@ function Player() {
   }, [player, appDispatch, state]);
 
   useEffect(() => {
-    console.log('meage', welcomeMessageDisplayed);
     if (!welcomeMessageDisplayed) {
       setWelcomeMessageDisplayed(true);
       enqueueSnackbar({

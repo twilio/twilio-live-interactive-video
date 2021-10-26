@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Player as TwilioPlayer } from '@twilio/player-sdk';
+import { Player as TwilioPlayer } from '@twilio/live-player-sdk';
 import usePlayerContext from '../usePlayerContext/usePlayerContext';
 
 export function usePlayerState() {
