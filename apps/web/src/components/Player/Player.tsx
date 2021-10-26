@@ -61,7 +61,7 @@ function Player() {
   return (
     <div style={{ height: '100vh' }}>
       <div className={classes.container}>
-        <video className={classes.video} ref={videoElRef} playsInline autoPlay></video>
+        <video className={classes.video} ref={videoElRef} playsInline></video>
       </div>
       <PlayerMenuBar roomName={appState.eventName} disconnect={disconnect} />
     </div>
