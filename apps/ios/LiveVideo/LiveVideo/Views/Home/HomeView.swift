@@ -41,7 +41,7 @@ struct HomeView: View {
                         CardButtonLabel(
                             title: "Join event",
                             image: Image(systemName: "person.3"),
-                            imageColor: .cardButtonIconPurple
+                            imageColor: .iconPurple
                         )
                     }
                 )

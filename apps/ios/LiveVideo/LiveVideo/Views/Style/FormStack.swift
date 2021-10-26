@@ -20,10 +20,8 @@ struct FormStack<Content>: View where Content: View {
                 content()
                 Spacer()
             }
-            .padding(.horizontal, 40)
             .padding(.top, 20)
-//
-//            .padding(40)
+            .padding([.horizontal, .bottom], 40)
         }
     }
 }

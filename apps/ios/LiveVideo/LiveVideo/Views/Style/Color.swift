@@ -20,7 +20,7 @@ extension Color {
     static var border: Color { Color("Border") }
     static var borderSuccessWeak: Color { Color("BorderSuccessWeak") }
     static var borderWeaker: Color { Color("BorderWeaker") }
-    static var cardButtonIconPurple: Color { Color("CardButtonIconPurple") }
+    static var iconPurple: Color { Color("IconPurple") }
     static var shadowLow: Color { Color("ShadowLow") }
     static var textWeak: Color { Color("TextWeak") }
 }
