@@ -15,9 +15,10 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             FormStack {
+                Text("Create or join?")
+                    .font(.system(size: 28, weight: .bold))
                 Text("Create your own event or join one that’s already happening.")
-                    .foregroundColor(.textWeak)
-                    .font(.system(size: 15))
+                    .modifier(TipStyle())
                 Button(
                     action: {
                         streamConfigFlowModel.parameters = StreamConfigFlowModel.Parameters()
@@ -46,12 +47,12 @@ struct HomeView: View {
                     }
                 )
             }
-            .navigationTitle("Create or join?")
             .toolbar {
                 Button(action: { showSettings.toggle() }) {
                     Image(systemName: "gear")
                 }
             }
+            .navigationBarTitleDisplayMode(.inline)
             .sheet(
                 isPresented: $showSettings,
                 onDismiss: {
@@ -70,7 +71,7 @@ struct HomeView: View {
                         let streamName = streamConfigFlowModel.parameters.streamName,
                         let role = streamConfigFlowModel.parameters.role
                     else {
-                        return
+                        return // The user cancelled
                     }
                     
                     streamManager.config = StreamConfig(
