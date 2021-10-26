@@ -67,18 +67,11 @@ struct HomeView: View {
             .sheet(
                 isPresented: $streamConfigFlowModel.isShowing,
                 onDismiss: {
-                    guard
-                        let streamName = streamConfigFlowModel.parameters.streamName,
-                        let role = streamConfigFlowModel.parameters.role
-                    else {
-                        return // The user cancelled
+                    guard let config = streamConfigFlowModel.config else {
+                        return // The user concelled
                     }
                     
-                    streamManager.config = StreamConfig(
-                        streamName: streamName,
-                        userIdentity: authManager.userIdentity,
-                        role: role
-                    )
+                    streamManager.config = config
                     showStream = true
                 },
                 content: {

@@ -12,6 +12,7 @@ struct EnterStreamNameView: View {
     }
     
     @EnvironmentObject var flowModel: StreamConfigFlowModel
+    @EnvironmentObject var authManager: AuthManager
     @State private var streamName = ""
     @State private var isShowingSelectRole = false
 
@@ -50,6 +51,7 @@ struct EnterStreamNameView: View {
 
                     Button("Continue") {
                         flowModel.parameters.streamName = streamName
+                        flowModel.parameters.userIdentity = authManager.userIdentity
                         
                         if viewModel.shouldSelectRole {
                             isShowingSelectRole = true
