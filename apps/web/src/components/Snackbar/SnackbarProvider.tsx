@@ -17,7 +17,6 @@ export interface SnackbarMessage {
 
 export const Snackbar = React.forwardRef<HTMLDivElement, SnackbarProps>(({ id, headline, message, variant }, ref) => {
   const { closeSnackbar } = useSnackbar();
-  console.log('snackbar');
   const handleClose = () => {
     closeSnackbar(id);
   };
