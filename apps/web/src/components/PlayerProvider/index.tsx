@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useState } from 'react';
-import { Player as TwilioPlayer } from '@twilio/player-sdk';
+import { Player as TwilioPlayer } from '@twilio/live-player-sdk';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
 TwilioPlayer.setLogLevel(TwilioPlayer.LogLevel.Error);
