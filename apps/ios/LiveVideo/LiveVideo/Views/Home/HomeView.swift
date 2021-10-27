@@ -16,7 +16,7 @@ struct HomeView: View {
         NavigationView {
             FormStack {
                 Text("Create or join?")
-                    .font(.system(size: 28, weight: .bold))
+                    .modifier(TitleStyle())
                 Text("Create your own event or join one that’s already happening.")
                     .modifier(TipStyle())
                 Button(
