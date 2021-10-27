@@ -22,7 +22,7 @@ struct MoreSpeakersView: View {
 struct MoreSpeakersView_Previews: PreviewProvider {
     static var previews: some View {
         MoreSpeakersView()
-            .environmentObject(SpeakerGridViewModel(speakerCount: 10))
+            .environmentObject(SpeakerGridViewModel.stub(offscreenSpeakerCount: 10))
             .previewLayout(.sizeThatFits)
             .fixedSize(horizontal: false, vertical: true)
     }

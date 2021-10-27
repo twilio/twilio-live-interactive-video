@@ -60,13 +60,13 @@ struct SpeakerGridView_Previews: PreviewProvider {
         Group {
             ForEach((1...6), id: \.self) {
                 SpeakerGridView(spacing: 6)
-                    .environmentObject(SpeakerGridViewModel(speakerCount: $0))
+                    .environmentObject(SpeakerGridViewModel.stub(onscreenSpeakerCount: $0))
             }
             .frame(width: 400, height: 700)
 
             ForEach((1...6), id: \.self) {
                 SpeakerGridView(spacing: 6)
-                    .environmentObject(SpeakerGridViewModel(speakerCount: $0))
+                    .environmentObject(SpeakerGridViewModel.stub(onscreenSpeakerCount: $0))
             }
             .frame(width: 700, height: 300)
         }
@@ -75,16 +75,17 @@ struct SpeakerGridView_Previews: PreviewProvider {
 }
 
 extension SpeakerGridViewModel {
-    convenience init(speakerCount: Int) {
-        self.init()
-        let maxOnscreenSpeakerCount = 6
-        
-        onscreenSpeakers = Array(1...min(maxOnscreenSpeakerCount, speakerCount))
+    static func stub(onscreenSpeakerCount: Int = 6, offscreenSpeakerCount: Int = 0) -> SpeakerGridViewModel {
+        let viewModel = SpeakerGridViewModel()
+
+        viewModel.onscreenSpeakers = Array(1...onscreenSpeakerCount)
             .map { SpeakerVideoViewModel(identity: "Speaker \($0)") }
         
-        if speakerCount > maxOnscreenSpeakerCount {
-            offscreenSpeakers = Array(maxOnscreenSpeakerCount + 1...speakerCount)
-                .map { SpeakerVideoViewModel(identity: "Speaker \($0)") }
+        if offscreenSpeakerCount > 1 {
+            viewModel.offscreenSpeakers = Array(1...offscreenSpeakerCount)
+                .map { SpeakerVideoViewModel(identity: "Offscreen \($0)") }
         }
+        
+        return viewModel
     }
 }

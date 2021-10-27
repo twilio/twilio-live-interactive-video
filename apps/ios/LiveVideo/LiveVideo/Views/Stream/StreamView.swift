@@ -167,12 +167,12 @@ struct StreamView_Previews: PreviewProvider {
                     .previewDisplayName("Speaker")
                     .environmentObject(StreamManager(config: .stub(role: .speaker)))
             }
-            .environmentObject(SpeakerGridViewModel(speakerCount: 6))
+            .environmentObject(SpeakerGridViewModel.stub())
 
             StreamView()
                 .previewDisplayName("Offscreen Speakers")
                 .environmentObject(StreamManager(config: .stub(role: .speaker)))
-                .environmentObject(SpeakerGridViewModel(speakerCount: 10))
+                .environmentObject(SpeakerGridViewModel.stub(offscreenSpeakerCount: 10))
             
             Group {
                 StreamView()
