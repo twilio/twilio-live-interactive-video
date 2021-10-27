@@ -36,13 +36,11 @@ function Player() {
   const [welcomeMessageDisplayed, setWelcomeMessageDisplayed] = useState(false);
 
   useLayoutEffect(() => {
-    if (player) {
-      if (state === 'ready') {
-        appDispatch({ type: 'set-is-loading', isLoading: false });
+    if (player && state === 'ready') {
+      appDispatch({ type: 'set-is-loading', isLoading: false });
 
-        player.attach(videoElRef.current);
-        player.play();
-      }
+      player.attach(videoElRef.current);
+      player.play();
     }
   }, [player, appDispatch, state]);
 
