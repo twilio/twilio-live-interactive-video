@@ -59,6 +59,7 @@
 		DC6404D4271B3BF8004730C6 /* StreamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6404D3271B3BF8004730C6 /* StreamViewModel.swift */; };
 		DC6404D8271B68D4004730C6 /* ParticipantsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6404D7271B68D4004730C6 /* ParticipantsViewModel.swift */; };
 		DC6404DA271E217C004730C6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC6404D9271E217B004730C6 /* LaunchScreen.storyboard */; };
+		DC9E18372729B68B0070F53F /* TitleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9E18362729B68B0070F53F /* TitleStyle.swift */; };
 		DCB4497426F5496400B52774 /* SpeakerSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */; };
 		DCB4497626F65A7000B52774 /* SpeakerVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */; };
 		DCC1D62626D9396400892038 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC1D62526D9396400892038 /* StreamManager.swift */; };
@@ -147,6 +148,7 @@
 		DC6404D3271B3BF8004730C6 /* StreamViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamViewModel.swift; sourceTree = "<group>"; };
 		DC6404D7271B68D4004730C6 /* ParticipantsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsViewModel.swift; sourceTree = "<group>"; };
 		DC6404D9271E217B004730C6 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		DC9E18362729B68B0070F53F /* TitleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleStyle.swift; sourceTree = "<group>"; };
 		DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerSettingsManager.swift; sourceTree = "<group>"; };
 		DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoViewModel.swift; sourceTree = "<group>"; };
 		DCC1D62526D9396400892038 /* StreamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamManager.swift; sourceTree = "<group>"; };
@@ -297,6 +299,7 @@
 				DC4AA66126D0493E00E677D5 /* PrimaryButtonStyle.swift */,
 				DC1ED0F626E12C7400FFA769 /* ProgressHUD.swift */,
 				DC4F45EE27286AF300BE730B /* TipStyle.swift */,
+				DC9E18362729B68B0070F53F /* TitleStyle.swift */,
 			);
 			path = Style;
 			sourceTree = "<group>";
@@ -652,6 +655,7 @@
 				DC504A7526F0F18700C37EC9 /* SpeakerGridViewModel.swift in Sources */,
 				DCC48F8926D8288B00EE49EF /* APIErrorResponse.swift in Sources */,
 				DC5F459426CEC1FF009C5C79 /* UserDefaultsManager.swift in Sources */,
+				DC9E18372729B68B0070F53F /* TitleStyle.swift in Sources */,
 				DC5F458F26CEBEC8009C5C79 /* AppInfoStore.swift in Sources */,
 				DCC1D62C26D97BB200892038 /* ErrorAlert.swift in Sources */,
 				DC175F2D270E232F00D9D1FE /* SyncManager.swift in Sources */,

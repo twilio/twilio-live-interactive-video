@@ -7,7 +7,6 @@ import SwiftUI
 struct CardButtonLabel: View {
     let title: String
     let image: Image
-    var imageColor = Color.backgroundPrimary
     var detail: String?
 
     var body: some View {
@@ -20,14 +19,13 @@ struct CardButtonLabel: View {
             
             HStack(alignment: .titleAndImages) {
                 ZStack {
-                    imageColor
-                        .opacity(0.08)
+                    Color.backgroundPrimaryWeakest
                         .clipShape(Circle())
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .padding(10)
-                        .foregroundColor(imageColor)
+                        .foregroundColor(Color.backgroundPrimary)
                         .alignmentGuide(.titleAndImages) { $0[VerticalAlignment.center] }
                 }
                 .frame(width: 40, height: 40)
@@ -78,13 +76,6 @@ struct CardButton_Previews: PreviewProvider {
                 image: Image(systemName: "mic")
             )
                 .previewDisplayName("Default Image Color")
-            
-            CardButtonLabel(
-                title: "Title",
-                image: Image(systemName: "plus.square"),
-                imageColor: .backgroundSuccess
-            )
-                .previewDisplayName("Custom Image Color")
             
             CardButtonLabel(
                 title: String(repeating: "Title ", count: 10),
