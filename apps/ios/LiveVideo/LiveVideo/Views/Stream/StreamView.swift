@@ -55,14 +55,14 @@ struct StreamView: View {
                             }
                             
                             if !isPortraitOrientation && !speakerGridViewModel.offscreenSpeakers.isEmpty {
-                                MoreSpeakersView()
+                                OffscreenSpeakersView()
                                     .frame(width: 100)
                                     .padding([.leading, .bottom], gridSpacing)
                             }
                         }
                         
                         if isPortraitOrientation && !speakerGridViewModel.offscreenSpeakers.isEmpty {
-                            MoreSpeakersView()
+                            OffscreenSpeakersView()
                                 .padding(.bottom, gridSpacing)
                                 .fixedSize(horizontal: false, vertical: true)
                         }

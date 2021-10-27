@@ -4,7 +4,7 @@
 
 import SwiftUI
 
-struct MoreSpeakersView: View {
+struct OffscreenSpeakersView: View {
     @EnvironmentObject var viewModel: SpeakerGridViewModel
     
     var body: some View {
@@ -19,9 +19,9 @@ struct MoreSpeakersView: View {
     }
 }
 
-struct MoreSpeakersView_Previews: PreviewProvider {
+struct OffscreenSpeakersView_Previews: PreviewProvider {
     static var previews: some View {
-        MoreSpeakersView()
+        OffscreenSpeakersView()
             .environmentObject(SpeakerGridViewModel.stub(offscreenSpeakerCount: 10))
             .previewLayout(.sizeThatFits)
             .fixedSize(horizontal: false, vertical: true)
