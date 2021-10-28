@@ -6,6 +6,16 @@ import Combine
 import TwilioLivePlayer
 
 class StreamViewModel: ObservableObject {
+    enum AlertIdentifier: String, Identifiable {
+        case error
+        case receivedSpeakerInvite
+        case streamEndedByHost
+        case streamWillEndIfHostLeaves
+        case viewerConnected
+        
+        var id: String { rawValue }
+    }
+    
     @Published var isHandRaised = false {
         didSet {
             guard streamManager.state == .connected else {
@@ -28,13 +38,8 @@ class StreamViewModel: ObservableObject {
             }
         }
     }
-    @Published var haveSpeakerInvite = false
-    @Published var showError = false
-    private(set) var error: Error? {
-        didSet {
-            showError = error != nil
-        }
-    }
+    @Published var alertIdentifier: AlertIdentifier?
+    private(set) var error: Error?
     private var streamManager: StreamManager!
     private var api: API!
     private var viewerStore: ViewerStore!
@@ -73,24 +78,35 @@ class StreamViewModel: ObservableObject {
                     self.speakerSettingsManager.isMicOn = false
                     self.speakerSettingsManager.isCameraOn = false
                 case .connected:
-                    break
+                    switch streamManager.config.role {
+                    case .viewer:
+                        self.alertIdentifier = .viewerConnected
+                    case .host, .speaker:
+                        break
+                    }
                 }
             }
             .store(in: &subscriptions)
 
         streamManager.errorPublisher
-            .sink { [weak self] error in self?.error = error }
+            .sink { [weak self] error in self?.handleError(error) }
             .store(in: &subscriptions)
 
         viewerStore.speakerInvitePublisher
             .sink { [weak self] in
-                self?.haveSpeakerInvite = true
+                self?.alertIdentifier = .receivedSpeakerInvite
             }
             .store(in: &subscriptions)
     }
 
     private func handleError(_ error: Error) {
         streamManager.disconnect()
-        self.error = error
+        
+        if let error = error as? LiveVideoError, error.isStreamEndedByHostError {
+            alertIdentifier = .streamEndedByHost
+        } else {
+            self.error = error
+            alertIdentifier = .error
+        }
     }
 }
