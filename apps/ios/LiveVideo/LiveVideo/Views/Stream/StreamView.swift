@@ -9,9 +9,17 @@ struct StreamView: View {
     @EnvironmentObject var streamManager: StreamManager
     @EnvironmentObject var speakerSettingsManager: SpeakerSettingsManager
     @EnvironmentObject var raisedHandsStore: RaisedHandsStore
+    @EnvironmentObject var speakerGridViewModel: SpeakerGridViewModel
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.verticalSizeClass) var verticalSizeClass
     @State private var isShowingParticipants = false
     private let app = UIApplication.shared
+    private let gridSpacing: CGFloat = 6
+    
+    private var isPortraitOrientation: Bool {
+        verticalSizeClass == .regular && horizontalSizeClass == .compact
+    }
     
     var body: some View {
         GeometryReader { geometry in
@@ -21,7 +29,7 @@ struct StreamView: View {
                 VStack(spacing: 0) {
                     VStack(spacing: 0) {
                         StreamStatusView(streamName: streamManager.config.streamName, streamState: $streamManager.state)
-                            .padding([.horizontal, .bottom], 6)
+                            .padding(.bottom, gridSpacing)
                             .alert(isPresented: $viewModel.showError) {
                                 if let error = viewModel.error as? LiveVideoError, error.isStreamEndedByHostError {
                                     return Alert(
@@ -38,15 +46,30 @@ struct StreamView: View {
                                 }
                             }
 
-                        switch streamManager.config.role {
-                        case .host, .speaker:
-                            SpeakerGridView()
-                        case .viewer:
-                            SwiftUIPlayerView(player: $streamManager.player)
+                        HStack(spacing: 0) {
+                            switch streamManager.config.role {
+                            case .host, .speaker:
+                                SpeakerGridView(spacing: gridSpacing)
+                            case .viewer:
+                                SwiftUIPlayerView(player: $streamManager.player)
+                            }
+                            
+                            if !isPortraitOrientation && !speakerGridViewModel.offscreenSpeakers.isEmpty {
+                                OffscreenSpeakersView()
+                                    .frame(width: 100)
+                                    .padding([.leading, .bottom], gridSpacing)
+                            }
+                        }
+                        
+                        if isPortraitOrientation && !speakerGridViewModel.offscreenSpeakers.isEmpty {
+                            OffscreenSpeakersView()
+                                .padding(.bottom, gridSpacing)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                     }
-                    .padding(.leading, geometry.safeAreaInsets.leading)
-                    .padding(.trailing, geometry.safeAreaInsets.trailing)
+                    .padding(.leading, geometry.safeAreaInsets.leading.isZero ? gridSpacing : geometry.safeAreaInsets.leading)
+                    .padding(.trailing, geometry.safeAreaInsets.trailing.isZero ? gridSpacing : geometry.safeAreaInsets.trailing)
+                    .padding(.top, geometry.safeAreaInsets.top.isZero ? 3 : 0)
                     
                     StreamToolbar {
                         StreamToolbarButton(
@@ -144,8 +167,13 @@ struct StreamView_Previews: PreviewProvider {
                     .previewDisplayName("Speaker")
                     .environmentObject(StreamManager(config: .stub(role: .speaker)))
             }
-            .environmentObject(SpeakerGridViewModel(speakerCount: 6))
+            .environmentObject(SpeakerGridViewModel.stub())
 
+            StreamView()
+                .previewDisplayName("Offscreen Speakers")
+                .environmentObject(StreamManager(config: .stub(role: .speaker)))
+                .environmentObject(SpeakerGridViewModel.stub(offscreenSpeakerCount: 10))
+            
             Group {
                 StreamView()
                     .previewDisplayName("Viewer")
