@@ -30,6 +30,7 @@
     "firebase": "^7.24.0",
     "firebase-admin": "^9.5.0",
     "fscreen": "^1.0.2",
+    "http-proxy-middleware": "^2.0.1",
     "husky": "^3.1.0",
     "immer": "^9.0.6",
     "linkify-it": "^3.0.2",
@@ -120,7 +121,6 @@
       "pre-commit": "lint-staged"
     }
   },
-  "proxy": "https://test-twilio-live-interactive-video-1330-6355-dev.twil.io",
   "jest": {
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
