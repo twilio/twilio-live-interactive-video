@@ -45,13 +45,15 @@ If you make any changes to this application, you can run `npm run serverless:rem
 
 ### Use the web app
 
-When you visit the URL for your deployed live streaming application, you'll be able to create and join a Twilio Video Room.
+When you visit the URL for your deployed live streaming application, you'll first see a screen where you can enter your name. Then, you'll be prompted to either create a new streaming event and join the stream's Video Room as the event host, or join an existing event as either a speaker in the stream's Video Room or a stream audience member.
 
-![View of the application's landing page](https://twilio-cms-prod.s3.amazonaws.com/images/Screen_Shot_2021-09-07_at_5.05.14_PM.width-1000.png)
+The application uses [Twilio Sync](https://www.twilio.com/docs/sync) and [Twilio Conversations](https://www.twilio.com/docs/conversations) to allow stream audience members to raise their hand and receive an invitation to join the stream as a speaker.
 
-When you have created and joined a Video Room, you can retrieve the audience URL for streaming the room by going to **More -> About** in the menu bar at the bottom of the application. You will then see the **Stream Player URL**, which you can visit to view the audience stream for the Video Room.
+The first person to enter the Video Room as a speaker will be the event's host. This person can invite audience members into the stream and can end the stream when it is finished.
 
-![View of the More -> About menu bar](https://twilio-cms-prod.s3.amazonaws.com/images/Screen_Shot_2021-09-07_at_5.19.22_PM.width-1000.png)
+If you join a stream as an audience member, you can raise your hand to request to join the stream as a speaker. The host can then send you an invitation to join the stream, and send you back to the audience when you are done.
+
+The application uses the [`video-composer-v1` Media Extension](https://www.twilio.com/docs/live/video-composer), which formats the Video Room contents in a responsive grid for streaming to audience members. People viewing the live stream will see all of the Video Room participants, and the grid will change as participants enter or exit.
 
 ### Run the iOS App
 
