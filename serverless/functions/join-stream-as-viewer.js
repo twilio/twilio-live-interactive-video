@@ -97,6 +97,38 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
+  // Give user read access to viewer document
+  try {
+    await syncClient.documents(viewerDocumentName)
+      .documentPermissions(user_identity)
+      .update({ read: true, write: false, manage: false })
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error adding read access to viewer document',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  // Give user read access to raised hands map
+  try {
+    await syncClient.syncMaps(`raised_hands-${room.sid}`)
+      .syncMapPermissions(user_identity)
+      .update({ read: true, write: false, manage: false })
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error adding read access to raised hands map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
   try {
     // Get playerStreamerSid from stream document
     streamDocument = await syncClient.documents(`stream-${room.sid}`).fetch();
