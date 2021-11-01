@@ -70,7 +70,7 @@ async function deployFunctions() {
     });
 
     cli.action.start('Creating Sync Service');
-    syncService = await client.sync.services.create({ friendlyName: constants.TWILIO_SYNC_SERVICE_NAME });
+    syncService = await client.sync.services.create({ friendlyName: constants.TWILIO_SYNC_SERVICE_NAME, aclEnabled: true });
   }
 
   const { assets, functions } = await getListOfFunctionsAndAssets(__dirname, {

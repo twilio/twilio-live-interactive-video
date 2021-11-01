@@ -75,9 +75,25 @@ module.exports.handler = async (context, event, callback) => {
     }
   }
 
+  const raisedHandsMapName = `raised_hands-${room.sid}`;
+  // Give user read access to raised hands map
+  try {
+    await syncClient.syncMaps(raisedHandsMapName)
+      .syncMapPermissions(user_identity)
+      .update({ read: true, write: false, manage: false })
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error adding read access to raised hands map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
   // Lower the participant's hand
   try {
-    const raisedHandsMapName = `raised_hands-${room.sid}`;
     await syncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
   } catch (e) {
     // Ignore 404 errors. It is possible that the user may not have a key in the raised hands map

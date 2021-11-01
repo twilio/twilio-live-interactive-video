@@ -132,10 +132,11 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
+  const raisedHandsMapName = `raised_hands-${room.sid}`
   // Create raised hands map
   try {
     raisedHandsMap = await syncClient.syncMaps.create({
-      uniqueName: `raised_hands-${room.sid}`,
+      uniqueName: raisedHandsMapName,
     });
   } catch (e) {
     console.error(e);
@@ -143,6 +144,22 @@ module.exports.handler = async (context, event, callback) => {
     response.setBody({
       error: {
         message: 'error creating raised hands map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  // Give user read access to raised hands map
+  try {
+    await syncClient.syncMaps(raisedHandsMapName)
+      .syncMapPermissions(user_identity)
+      .update({ read: true, write: false, manage: false })
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error adding read access to raised hands map',
         explanation: e.message,
       },
     });
