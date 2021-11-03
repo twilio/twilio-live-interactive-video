@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 import { EventEmitter } from 'events';
-import useScreenShareParticipant from './useScreenShareParticipant';
+import usePresentationParticipant from './usePresentationParticipant';
 import useVideoContext from '../useVideoContext/useVideoContext';
 
 jest.mock('../useVideoContext/useVideoContext');
@@ -23,28 +23,28 @@ mockUseVideoContext.mockImplementation(() => ({
   onError: () => {},
 }));
 
-describe('the useScreenShareParticipant hook', () => {
-  it('return undefined when there are no participants sharing their screen', () => {
-    const { result } = renderHook(useScreenShareParticipant);
+describe('the usePresentationParticipant hook', () => {
+  it('return undefined when there are no participants presenting content', () => {
+    const { result } = renderHook(usePresentationParticipant);
     expect(result.current).toEqual(undefined);
   });
 
-  it('should return the localParticipant when they are sharing their screen', () => {
+  it('should return the localParticipant when they are presenting content', () => {
     const mockRoom = MockRoom();
-    mockRoom.localParticipant.tracks = new Map([[0, { trackName: 'screen' }]]);
+    mockRoom.localParticipant.tracks = new Map([[0, { trackName: 'video-composer-presentation' }]]);
     mockUseVideoContext.mockImplementation(() => ({
       room: mockRoom,
       onError: () => {},
     }));
 
-    const { result } = renderHook(useScreenShareParticipant);
+    const { result } = renderHook(usePresentationParticipant);
     expect(result.current).toEqual(mockRoom.localParticipant);
   });
 
-  it('should return a remoteParticipant when they are sharing their screen', () => {
+  it('should return a remoteParticipant when they are presenting content', () => {
     const mockRoom = MockRoom();
     const mockParticipant = {
-      tracks: new Map([[0, { trackName: 'screen' }]]),
+      tracks: new Map([[0, { trackName: 'video-composer-presentation' }]]),
     };
     mockRoom.participants = new Map([[0, mockParticipant]]);
     mockUseVideoContext.mockImplementation(() => ({
@@ -52,7 +52,7 @@ describe('the useScreenShareParticipant hook', () => {
       onError: () => {},
     }));
 
-    const { result } = renderHook(useScreenShareParticipant);
+    const { result } = renderHook(usePresentationParticipant);
     expect(result.current).toEqual(mockParticipant);
   });
 
@@ -63,11 +63,11 @@ describe('the useScreenShareParticipant hook', () => {
       onError: () => {},
     }));
 
-    const { result } = renderHook(useScreenShareParticipant);
+    const { result } = renderHook(usePresentationParticipant);
     expect(result.current).toEqual(undefined);
 
     act(() => {
-      mockRoom.localParticipant.tracks = new Map([[0, { trackName: 'screen' }]]);
+      mockRoom.localParticipant.tracks = new Map([[0, { trackName: 'video-composer-presentation' }]]);
       mockRoom.localParticipant.emit('trackPublished');
     });
 
@@ -84,14 +84,14 @@ describe('the useScreenShareParticipant hook', () => {
   it('should respond to "trackPublished" and "trackUnpublished" events emitted from the room', () => {
     const mockRoom = MockRoom();
     const mockParticipant = {
-      tracks: new Map([[0, { trackName: 'screen' }]]),
+      tracks: new Map([[0, { trackName: 'video-composer-presentation' }]]),
     };
     mockUseVideoContext.mockImplementation(() => ({
       room: mockRoom,
       onError: () => {},
     }));
 
-    const { result } = renderHook(useScreenShareParticipant);
+    const { result } = renderHook(usePresentationParticipant);
     expect(result.current).toEqual(undefined);
 
     act(() => {
@@ -112,7 +112,7 @@ describe('the useScreenShareParticipant hook', () => {
   it('should respond to "participantDisconnected" events emitted from the room', () => {
     const mockRoom = MockRoom();
     const mockParticipant = {
-      tracks: new Map([[0, { trackName: 'screen' }]]),
+      tracks: new Map([[0, { trackName: 'video-composer-presentation' }]]),
     };
     mockRoom.participants = new Map([[0, mockParticipant]]);
 
@@ -120,7 +120,7 @@ describe('the useScreenShareParticipant hook', () => {
       room: mockRoom,
     }));
 
-    const { result } = renderHook(useScreenShareParticipant);
+    const { result } = renderHook(usePresentationParticipant);
     expect(result.current).toEqual(mockParticipant);
 
     act(() => {
@@ -139,7 +139,7 @@ describe('the useScreenShareParticipant hook', () => {
       onError: () => {},
     }));
 
-    const { unmount } = renderHook(useScreenShareParticipant);
+    const { unmount } = renderHook(usePresentationParticipant);
 
     expect(mockRoom.listenerCount('trackPublished')).toBe(1);
     expect(mockRoom.listenerCount('trackUnpublished')).toBe(1);

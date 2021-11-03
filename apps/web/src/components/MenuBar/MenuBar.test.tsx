@@ -4,7 +4,7 @@ import MenuBar from './MenuBar';
 import { shallow } from 'enzyme';
 import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
-import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
+import TogglePresentationModeButton from '../Buttons/TogglePresentationModeButton/TogglePresentationModeButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import useRoomState from '../../hooks/useRoomState/useRoomState';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
@@ -17,8 +17,8 @@ const mockUseRoomState = useRoomState as jest.Mock<any>;
 const mockUseVideoContext = useVideoContext as jest.Mock<any>;
 
 mockUseVideoContext.mockImplementation(() => ({
-  isSharingScreen: false,
-  toggleScreenShare: () => {},
+  isPresenting: false,
+  togglePresentationMode: () => {},
   room: { name: 'Test Room' },
 }));
 
@@ -36,24 +36,24 @@ describe('the MenuBar component', () => {
     const wrapper = shallow(<MenuBar />);
     expect(wrapper.find(ToggleAudioButton).prop('disabled')).toBe(true);
     expect(wrapper.find(ToggleVideoButton).prop('disabled')).toBe(true);
-    expect(wrapper.find(ToggleScreenShareButton).prop('disabled')).toBe(true);
+    expect(wrapper.find(TogglePresentationModeButton).prop('disabled')).toBe(true);
   });
 
   it('should enable toggle buttons while connected to the room', () => {
     const wrapper = shallow(<MenuBar />);
     expect(wrapper.find(ToggleAudioButton).prop('disabled')).toBe(false);
     expect(wrapper.find(ToggleVideoButton).prop('disabled')).toBe(false);
-    expect(wrapper.find(ToggleScreenShareButton).prop('disabled')).toBe(false);
+    expect(wrapper.find(TogglePresentationModeButton).prop('disabled')).toBe(false);
   });
 
-  it('should hide the ToggleScreenShareButton and show the "You are sharing your screen" banner when isSharingScreen is true', () => {
+  it('should hide the TogglePresentationModeButton and show the "You are sharing your screen" banner when isPresenting is true', () => {
     mockUseVideoContext.mockImplementationOnce(() => ({
-      isSharingScreen: true,
-      toggleScreenShare: () => {},
+      isPresenting: true,
+      togglePresentationMode: () => {},
       room: { name: 'Test Room' },
     }));
     const wrapper = shallow(<MenuBar />);
-    expect(wrapper.find(ToggleScreenShareButton).exists()).toBe(false);
+    expect(wrapper.find(TogglePresentationModeButton).exists()).toBe(false);
     expect(
       wrapper
         .find(Grid)
@@ -63,26 +63,26 @@ describe('the MenuBar component', () => {
     ).toBe('You are sharing your screen');
   });
 
-  it('should display the ToggleScreenShareButton when isSharingScreen is false and isMobile is false', () => {
+  it('should display the TogglePresentationModeButton when isPresenting is false and isMobile is false', () => {
     mockUseVideoContext.mockImplementationOnce(() => ({
-      isSharingScreen: false,
-      toggleScreenShare: () => {},
+      isPresenting: false,
+      togglePresentationMode: () => {},
       room: { name: 'Test Room' },
     }));
     const wrapper = shallow(<MenuBar />);
-    expect(wrapper.find(ToggleScreenShareButton).exists()).toBe(true);
+    expect(wrapper.find(TogglePresentationModeButton).exists()).toBe(true);
   });
 
-  it('should hide the ToggleScreenShareButton when isSharingScreen is false and isMobile is true', () => {
+  it('should hide the TogglePresentationModeButton when isPresenting is false and isMobile is true', () => {
     mockUseVideoContext.mockImplementationOnce(() => ({
-      isSharingScreen: false,
-      toggleScreenShare: () => {},
+      isPresenting: false,
+      togglePresentationMode: () => {},
       room: { name: 'Test Room' },
     }));
     // @ts-ignore
     utils.isMobile = true;
     const wrapper = shallow(<MenuBar />);
-    expect(wrapper.find(ToggleScreenShareButton).exists()).toBe(false);
+    expect(wrapper.find(TogglePresentationModeButton).exists()).toBe(false);
   });
 
   it('should render the ToggleChatButton when REACT_APP_DISABLE_TWILIO_CONVERSATIONS is not true', () => {
@@ -96,11 +96,11 @@ describe('the MenuBar component', () => {
     expect(wrapper.find(ToggleChatButton).exists()).toBe(false);
   });
 
-  it('should call toggleScreenShare when the "Stop Sharing" button is clicked', () => {
-    const mockToggleScreenShare = jest.fn();
+  it('should call togglePresentationMode when the "Stop Sharing" button is clicked', () => {
+    const mockTogglePresentationMode = jest.fn();
     mockUseVideoContext.mockImplementationOnce(() => ({
-      isSharingScreen: true,
-      toggleScreenShare: mockToggleScreenShare,
+      isPresenting: true,
+      togglePresentationMode: mockTogglePresentationMode,
       room: { name: 'Test Room' },
     }));
     const wrapper = shallow(<MenuBar />);
@@ -111,6 +111,6 @@ describe('the MenuBar component', () => {
       .find(Button)
       .simulate('click');
 
-    expect(mockToggleScreenShare).toHaveBeenCalledTimes(1);
+    expect(mockTogglePresentationMode).toHaveBeenCalledTimes(1);
   });
 });

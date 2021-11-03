@@ -8,11 +8,11 @@ interface MediaStreamTrackPublishOptions {
   logLevel: LogLevels;
 }
 
-export default function useScreenShareToggle(room: Room | null, onError: ErrorCallback) {
-  const [isSharing, setIsSharing] = useState(false);
-  const stopScreenShareRef = useRef<() => void>(null!);
+export default function usePresentationModeToggle(room: Room | null, onError: ErrorCallback) {
+  const [isPresenting, setIsPresenting] = useState(false);
+  const stopPresentingRef = useRef<() => void>(null!);
 
-  const shareScreen = useCallback(() => {
+  const startPresenting = useCallback(() => {
     navigator.mediaDevices
       .getDisplayMedia({
         audio: false,
@@ -30,20 +30,20 @@ export default function useScreenShareToggle(room: Room | null, onError: ErrorCa
         // set to 'high' via track.setPriority()
         room!.localParticipant
           .publishTrack(track, {
-            name: 'screen', // Tracks can be named to easily find them later
+            name: 'video-composer-presentation', // Tracks can be named to easily find them later
             priority: 'low', // Priority is set to high by the subscriber when the video track is rendered
           } as MediaStreamTrackPublishOptions)
           .then(trackPublication => {
-            stopScreenShareRef.current = () => {
+            stopPresentingRef.current = () => {
               room!.localParticipant.unpublishTrack(track);
               // TODO: remove this if the SDK is updated to emit this event
               room!.localParticipant.emit('trackUnpublished', trackPublication);
               track.stop();
-              setIsSharing(false);
+              setIsPresenting(false);
             };
 
-            track.onended = stopScreenShareRef.current;
-            setIsSharing(true);
+            track.onended = stopPresentingRef.current;
+            setIsPresenting(true);
           })
           .catch(onError);
       })
@@ -55,11 +55,11 @@ export default function useScreenShareToggle(room: Room | null, onError: ErrorCa
       });
   }, [room, onError]);
 
-  const toggleScreenShare = useCallback(() => {
+  const togglePresentationMode = useCallback(() => {
     if (room) {
-      !isSharing ? shareScreen() : stopScreenShareRef.current();
+      !isPresenting ? startPresenting() : stopPresentingRef.current();
     }
-  }, [isSharing, shareScreen, room]);
+  }, [isPresenting, startPresenting, room]);
 
-  return [isSharing, toggleScreenShare] as const;
+  return [isPresenting, togglePresentationMode] as const;
 }

@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import ScreenShareIcon from '../../../icons/ScreenShareIcon';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import useScreenShareParticipant from '../../../hooks/useScreenShareParticipant/useScreenShareParticipant';
+import usePresentationParticipant from '../../../hooks/usePresentationParticipant/usePresentationParticipant';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 
 export const SCREEN_SHARE_TEXT = 'Share Screen';
@@ -26,21 +26,21 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function ToggleScreenShareButton(props: { disabled?: boolean }) {
+export default function TogglePresentationModeButton(props: { disabled?: boolean }) {
   const classes = useStyles();
-  const screenShareParticipant = useScreenShareParticipant();
-  const { toggleScreenShare } = useVideoContext();
-  const disableScreenShareButton = Boolean(screenShareParticipant);
-  const isScreenShareSupported = navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia;
-  const isDisabled = props.disabled || disableScreenShareButton || !isScreenShareSupported;
+  const presentationParticipant = usePresentationParticipant();
+  const { togglePresentationMode } = useVideoContext();
+  const disablePresentationModeButton = Boolean(presentationParticipant);
+  const isPresentationModeSupported = navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia;
+  const isDisabled = props.disabled || disablePresentationModeButton || !isPresentationModeSupported;
 
   let tooltipMessage = '';
 
-  if (disableScreenShareButton) {
+  if (disablePresentationModeButton) {
     tooltipMessage = SHARE_IN_PROGRESS_TEXT;
   }
 
-  if (!isScreenShareSupported) {
+  if (!isPresentationModeSupported) {
     tooltipMessage = SHARE_NOT_SUPPORTED_TEXT;
   }
 
@@ -56,7 +56,7 @@ export default function ToggleScreenShareButton(props: { disabled?: boolean }) {
           a tooltip when screen sharing is disabled */}
         <Button
           className={classes.button}
-          onClick={toggleScreenShare}
+          onClick={togglePresentationMode}
           disabled={isDisabled}
           startIcon={<ScreenShareIcon />}
           data-cy-share-screen

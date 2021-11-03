@@ -12,7 +12,7 @@ import { Typography, Grid, Hidden } from '@material-ui/core';
 import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
-import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
+import TogglePresentationModeButton from '../Buttons/TogglePresentationModeButton/TogglePresentationModeButton';
 import ToggleParticipantWindowButton from '../Buttons/ToggleParticipantWindow/ToggleParticipantWindowButton';
 import { useAppState } from '../../state';
 
@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function MenuBar() {
   const classes = useStyles();
-  const { isSharingScreen, toggleScreenShare } = useVideoContext();
+  const { isPresenting, togglePresentationMode } = useVideoContext();
   const roomState = useRoomState();
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
@@ -75,10 +75,10 @@ export default function MenuBar() {
 
   return (
     <>
-      {isSharingScreen && (
+      {isPresenting && (
         <Grid container justifyContent="center" alignItems="center" className={classes.screenShareBanner}>
           <Typography variant="h6">You are sharing your screen</Typography>
-          <Button onClick={() => toggleScreenShare()}>Stop Sharing</Button>
+          <Button onClick={() => togglePresentationMode()}>Stop Sharing</Button>
         </Grid>
       )}
       <footer className={classes.container}>
@@ -93,7 +93,7 @@ export default function MenuBar() {
               <ToggleAudioButton disabled={isReconnecting} />
               <ToggleVideoButton disabled={isReconnecting} />
               <ToggleParticipantWindowButton />
-              {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
+              {!isPresenting && !isMobile && <TogglePresentationModeButton disabled={isReconnecting} />}
               {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
               <Menu />
             </Grid>

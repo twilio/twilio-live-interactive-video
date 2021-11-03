@@ -6,7 +6,7 @@ import usePublications from '../../hooks/usePublications/usePublications';
 interface ParticipantTracksProps {
   participant: Participant;
   videoOnly?: boolean;
-  enableScreenShare?: boolean;
+  enablePresentationMode?: boolean;
   videoPriority?: Track.Priority | null;
   isLocalParticipant?: boolean;
 }
@@ -22,7 +22,7 @@ interface ParticipantTracksProps {
 export default function ParticipantTracks({
   participant,
   videoOnly,
-  enableScreenShare,
+  enablePresentationMode,
   videoPriority,
   isLocalParticipant,
 }: ParticipantTracksProps) {
@@ -30,10 +30,10 @@ export default function ParticipantTracks({
 
   let filteredPublications;
 
-  if (enableScreenShare && publications.some(p => p.trackName.includes('screen'))) {
+  if (enablePresentationMode && publications.some(p => p.trackName.includes('video-composer-presentation'))) {
     filteredPublications = publications.filter(p => !p.trackName.includes('camera'));
   } else {
-    filteredPublications = publications.filter(p => !p.trackName.includes('screen'));
+    filteredPublications = publications.filter(p => !p.trackName.includes('video-composer-presentation'));
   }
 
   return (

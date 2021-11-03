@@ -13,7 +13,7 @@ import useIsRecording from '../../hooks/useIsRecording/useIsRecording';
 import useIsTrackSwitchedOff from '../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff';
 import useParticipantIsReconnecting from '../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting';
 import usePublications from '../../hooks/usePublications/usePublications';
-import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
+import usePresentationParticipant from '../../hooks/usePresentationParticipant/usePresentationParticipant';
 import useTrack from '../../hooks/useTrack/useTrack';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
@@ -121,14 +121,14 @@ export default function MainParticipantInfo({ participant, children }: MainParti
   const localParticipant = room!.localParticipant;
   const isLocal = localParticipant === participant;
 
-  const screenShareParticipant = useScreenShareParticipant();
-  const isRemoteParticipantScreenSharing = screenShareParticipant && screenShareParticipant !== localParticipant;
+  const presentationParticipant = usePresentationParticipant();
+  const isRemoteParticipantPresenting = presentationParticipant && presentationParticipant !== localParticipant;
 
   const publications = usePublications(participant);
   const videoPublication = publications.find(p => p.trackName.includes('camera'));
-  const screenSharePublication = publications.find(p => p.trackName.includes('screen'));
+  const presentationPublication = publications.find(p => p.trackName.includes('video-composer-presentation'));
 
-  const videoTrack = useTrack(screenSharePublication || videoPublication);
+  const videoTrack = useTrack(presentationPublication || videoPublication);
   const isVideoEnabled = Boolean(videoTrack);
 
   const audioPublication = publications.find(p => p.kind === 'audio');
@@ -144,7 +144,7 @@ export default function MainParticipantInfo({ participant, children }: MainParti
       data-cy-main-participant
       data-cy-participant={participant.identity}
       className={clsx(classes.container, {
-        [classes.fullWidth]: !isRemoteParticipantScreenSharing,
+        [classes.fullWidth]: !isRemoteParticipantPresenting,
       })}
     >
       <div className={classes.infoContainer}>
@@ -154,7 +154,7 @@ export default function MainParticipantInfo({ participant, children }: MainParti
             <Typography variant="body1" color="inherit">
               {participant.identity}
               {isLocal && ' (You)'}
-              {screenSharePublication && ' - Screen'}
+              {presentationPublication && ' - Presenting'}
             </Typography>
           </div>
           <NetworkQualityLevel participant={localParticipant} />

@@ -6,7 +6,7 @@ import useHandleRoomDisconnection from './useHandleRoomDisconnection';
 const mockOnError = jest.fn();
 const mockRemoveLocalAudioTrack = jest.fn();
 const mockRemoveLocalVideoTrack = jest.fn();
-const mockToggleScreenSharing = jest.fn();
+const mockTogglePresentationMode = jest.fn();
 
 describe('the useHandleRoomDisconnection hook', () => {
   let mockRoom: any = new EventEmitter();
@@ -21,7 +21,7 @@ describe('the useHandleRoomDisconnection hook', () => {
         mockRemoveLocalAudioTrack,
         mockRemoveLocalVideoTrack,
         false,
-        mockToggleScreenSharing
+        mockTogglePresentationMode
       )
     );
     act(() => {
@@ -38,7 +38,7 @@ describe('the useHandleRoomDisconnection hook', () => {
         mockRemoveLocalAudioTrack,
         mockRemoveLocalVideoTrack,
         false,
-        mockToggleScreenSharing
+        mockTogglePresentationMode
       )
     );
     act(() => {
@@ -55,7 +55,7 @@ describe('the useHandleRoomDisconnection hook', () => {
         mockRemoveLocalAudioTrack,
         mockRemoveLocalVideoTrack,
         false,
-        mockToggleScreenSharing
+        mockTogglePresentationMode
       )
     );
     act(() => {
@@ -65,7 +65,7 @@ describe('the useHandleRoomDisconnection hook', () => {
     expect(mockRemoveLocalVideoTrack).toHaveBeenCalled();
   });
 
-  it('should not toggle screensharing when the "disconnected" event is emitted and isSharing is false', () => {
+  it('should not toggle Presentation Mode when the "disconnected" event is emitted and isPresenting is false', () => {
     renderHook(() =>
       useHandleRoomDisconnection(
         mockRoom,
@@ -73,16 +73,16 @@ describe('the useHandleRoomDisconnection hook', () => {
         mockRemoveLocalAudioTrack,
         mockRemoveLocalVideoTrack,
         false,
-        mockToggleScreenSharing
+        mockTogglePresentationMode
       )
     );
     act(() => {
       mockRoom.emit('disconnected', mockRoom, 'mockError');
     });
-    expect(mockToggleScreenSharing).not.toHaveBeenCalled();
+    expect(mockTogglePresentationMode).not.toHaveBeenCalled();
   });
 
-  it('should toggle screensharing when the "disconnected" event is emitted and isSharing is true', () => {
+  it('should toggle Presentation Mode  when the "disconnected" event is emitted and isPresenting is true', () => {
     renderHook(() =>
       useHandleRoomDisconnection(
         mockRoom,
@@ -90,13 +90,13 @@ describe('the useHandleRoomDisconnection hook', () => {
         mockRemoveLocalAudioTrack,
         mockRemoveLocalVideoTrack,
         true,
-        mockToggleScreenSharing
+        mockTogglePresentationMode
       )
     );
     act(() => {
       mockRoom.emit('disconnected', mockRoom, 'mockError');
     });
-    expect(mockToggleScreenSharing).toHaveBeenCalled();
+    expect(mockTogglePresentationMode).toHaveBeenCalled();
   });
 
   it('should tear down old listeners when receiving a new room', () => {
@@ -108,7 +108,7 @@ describe('the useHandleRoomDisconnection hook', () => {
         mockRemoveLocalAudioTrack,
         mockRemoveLocalVideoTrack,
         false,
-        mockToggleScreenSharing
+        mockTogglePresentationMode
       )
     );
     expect(originalMockRoom.listenerCount('disconnected')).toBe(1);
@@ -131,7 +131,7 @@ describe('the useHandleRoomDisconnection hook', () => {
         mockRemoveLocalAudioTrack,
         mockRemoveLocalVideoTrack,
         false,
-        mockToggleScreenSharing
+        mockTogglePresentationMode
       )
     );
     unmount();

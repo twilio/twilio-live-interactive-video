@@ -57,7 +57,7 @@ describe('the VideoProvider component', () => {
       getLocalAudioTrack: expect.any(Function),
       removeLocalVideoTrack: expect.any(Function),
       isAcquiringLocalTracks: true,
-      toggleScreenShare: expect.any(Function),
+      togglePresentationMode: expect.any(Function),
       isBackgroundSelectionOpen: false,
       setIsBackgroundSelectionOpen: expect.any(Function),
       backgroundSettings: expectedSettings,
