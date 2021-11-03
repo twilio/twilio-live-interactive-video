@@ -27,61 +27,35 @@ Run `npm install` to install all dependencies from NPM.
 
 If you want to use `yarn` to install dependencies, first run the [yarn import](https://classic.yarnpkg.com/en/docs/cli/import/) command. This will ensure that yarn installs the package versions that are specified in `package-lock.json`.
 
-## Install Twilio CLI
-
-The app is deployed to Twilio using the Twilio CLI. Install twilio-cli with:
-
-    $ npm install -g twilio-cli
-
-Login to the Twilio CLI. You will be prompted for your Account SID and Auth Token, both of which you can find on the dashboard of your [Twilio console](https://twilio.com/console).
-
-    $ twilio login
-
-This app requires an additional plugin. Install the CLI plugin with:
-
-    $ twilio plugins:install @twilio-labs/plugin-rtc
-
-**Note:** If you have previously installed the `@twilio-labs/plugin-rtc` plugin, please make sure that you are using the most recent version. You can upgrade the plugin by running `twilio plugins:update`. The chat feature requires version 0.8.1 or greater of `@twilio-labs/plugin-rtc`.
-
 ## Deploy the app to Twilio
 
-Before deploying the app, make sure you are using the correct account on the Twilio CLI (using the command `twilio profiles:list` to check).
-The app is deployed to Twilio with a single command:
+Before deploying the app, add your Twilio Account SID and Auth Token to a `.env` file in this directory (see [.env.example](.env.example) for an example). The app is deployed to Twilio with a single command:
 
-    $ npm run deploy:twilio-cli
+    $ npm run serverless:deploy
 
 This performs the following steps:
 
 - Builds the React app in the `src` directory
 - Generates a random code used to access the Video app
-- Deploys the React app and token server function as a Twilio Serverless service.
 - Prints the URL for the app and the passcode.
 
 **NOTE:** The Twilio Function that provides access tokens via a passcode should _NOT_ be used in a production environment. This token server supports seamlessly getting started with the collaboration app, and while convenient, the passcode is not secure enough for production environments. You should use an authentication provider to securely provide access tokens to your client applications. You can find more information about Programmable Video access tokens [in this tutorial](https://www.twilio.com/docs/video/tutorials/user-identity-access-tokens). **As a precaution, the passcode will expire after one week**. To generate a new passcode, redeploy the app:
 
-    $ npm run deploy:twilio-cli -- --override
+    $ npm run serverless:deploy -- --override
 
 ## View app details
 
 View the URL and passcode for the Video app with
 
-     $ twilio rtc:apps:video:view
+     $ npm run serverless:list
 
 ## Delete the app
 
 Delete the app with
 
-    $ twilio rtc:apps:video:delete
+    $ npm run serverless:remove
 
 This removes the Serverless app from Twilio. This will ensure that no further cost are incurred by the app.
-
-## Troubleshooting The Twilio CLI
-
-If any errors occur after running a [Twilio CLI RTC Plugin](https://github.com/twilio-labs/plugin-rtc) command, then try the following steps.
-
-1. Run `twilio plugins:update` to update the rtc plugin to the latest version.
-1. Run `twilio rtc:apps:video:delete` to delete any existing video apps.
-1. Run `npm run deploy:twilio-cli` to deploy a new video app.
 
 ## App Behavior with Different Room Types
 
@@ -140,27 +114,11 @@ Now the local token server (see [server/index.ts](server/index.ts)) can dispense
 
 ### Running the App locally
 
-Run the app locally with
+In order to develop this app on your local machine, you will first need to deploy all needed endpoints to Twilio Serverless. To do this, complete the steps in the "Deploy the App" section above.
 
-    $ npm start
+Once the endpoints are deployed, add the app's URL as the `PROXY_URL` in the `.env` file for this directory. Then you can start a local development server by running the following command:
 
-This will start the local token server and run the app in the development mode. Open [http://localhost:3000](http://localhost:3000) to see the application in the browser.
-
-The page will reload if you make changes to the source code in `src/`.
-You will also see any linting errors in the console. Start the token server locally with
-
-    $ npm run server
-
-The token server runs on port 8081 and expects a `POST` request at the `/token` route with the following JSON parameters:
-
-```
-{
-  "user_identity": string, // the user's identity
-  "room_name": string, // the room name
-}
-```
-
-The response will be a token that can be used to connect to a room. The server provided with this application uses the same endpoints as the [plugin-rtc](https://github.com/twilio-labs/plugin-rtc) Twilio CLI plugin that is used to deploy the app. For more detailed information on the server endpoints, please see the [plugin-rtc README](https://github.com/twilio-labs/plugin-rtc#twilio-labsplugin-rtc).
+    $ npm run start
 
 ### Multiple Participants in a Room
 
