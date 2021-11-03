@@ -27,12 +27,13 @@ async function remove() {
     client.conversations.services(conversationsService.sid).remove();
   }
 
-  cli.action.start('Removing Sync Service');
+  cli.action.start('Removing Sync Services');
   const syncServices = await client.sync.services.list();
-  const syncService = syncServices.find((key) => key.friendlyName === constants.TWILIO_SYNC_SERVICE_NAME);
-  if (syncService) {
-    client.sync.services(syncService.sid).remove();
-  }
+  syncServices.forEach(function(service) {
+    if (service.friendlyName.includes(constants.SYNC_SERVICE_NAME_PREFIX)) {
+      client.sync.services(service.sid).remove();
+    }
+  })
 
   cli.action.stop();
 }

@@ -5,7 +5,7 @@ exports.handler = async function (context, event, callback) {
   const { axiosClient, response } = common(context, event, callback);
 
   const client = context.getTwilioClient();
-  const syncClient = client.sync.services(context.SYNC_SERVICE_SID);
+  const backendStrageSyncClient = client.sync.services(context.BACKEND_STORAGE_SYNC_SERVICE_SID);
 
   const { stream_name } = event;
 
@@ -13,9 +13,11 @@ exports.handler = async function (context, event, callback) {
     // End room
     const room = await client.video.rooms(stream_name).update({ status: 'completed' });
 
-    // Get playerStreamerSid and mediaProcessorSid from stream document
-    const streamDocument = await syncClient.documents(`stream-${room.sid}`).fetch();
-    const { player_streamer_sid, media_processor_sid } = streamDocument.data;
+    // Fetch stream map item
+    const streamMapItem = await backendStrageSyncClient.syncMaps('streams').syncMapItems(room.sid).fetch();
+
+    // Get playerStreamerSid and mediaProcessorSid from stream map item
+    const { player_streamer_sid, media_processor_sid } = streamMapItem.data;
 
     // Stop mediaProcessor
     await axiosClient(`MediaProcessors/${media_processor_sid}`, {
@@ -29,8 +31,11 @@ exports.handler = async function (context, event, callback) {
       data: 'Status=ENDED',
     });
 
-    // delete stream document
-    await syncClient.documents(`stream-${room.sid}`).remove();
+    // Delete stream service
+    await client.sync.services(streamMapItem.data.sync_service_sid).remove();
+
+    // Delete stream map item
+    await backendStrageSyncClient.syncMaps('streams').syncMapItems(room.sid).remove();
 
     console.log('deleted: ', stream_name);
   } catch (e) {

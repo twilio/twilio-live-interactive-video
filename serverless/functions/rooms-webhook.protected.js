@@ -5,15 +5,16 @@ exports.handler = async function (context, event, callback) {
   const { axiosClient, response } = common(context, event, callback);
 
   const client = context.getTwilioClient();
-  const syncClient = client.sync.services(context.SYNC_SERVICE_SID);
 
   const { StatusCallbackEvent, RoomSid } = event;
 
   if (StatusCallbackEvent === 'room-ended') {
     try {
-      // Get playerStreamerSid and mediaProcessorSid from stream document
-      const streamDocument = await syncClient.documents(`stream-${RoomSid}`).fetch();
-      const { player_streamer_sid, media_processor_sid } = streamDocument.data;
+      const backendStorageSyncClient = await client.sync.services(context.BACKEND_STORAGE_SYNC_SERVICE_SID);
+      const streamMapItem = await backendStorageSyncClient.syncMaps('streams').syncMapItems(RoomSid).fetch();
+  
+      // Get playerStreamerSid and mediaProcessorSid from stream map item
+      const { player_streamer_sid, media_processor_sid } = streamMapItem.data;
 
       // Stop mediaProcessor
       await axiosClient(`MediaProcessors/${media_processor_sid}`, {
@@ -27,8 +28,12 @@ exports.handler = async function (context, event, callback) {
         data: 'Status=ENDED',
       });
 
-      // delete stream document
-      await syncClient.documents(`stream-${RoomSid}`).remove();
+      // Delete stream service
+      await client.sync.services(streamMapItem.data.sync_service_sid).remove();
+
+      // Delete stream map item
+
+      await backendStorageSyncClient.syncMaps('streams').syncMapItems(RoomSid).remove();
 
       console.log('Deleted stream: ', RoomSid);
       console.log('Ended MediaProcessor: ', media_processor_sid);
