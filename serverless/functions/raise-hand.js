@@ -63,7 +63,7 @@ module.exports.handler = async (context, event, callback) => {
   try {
     let backendStorageSyncClient = await client.sync.services(context.BACKEND_STORAGE_SYNC_SERVICE_SID);
     let streamMapItem = await backendStorageSyncClient.syncMaps('streams').syncMapItems(room.sid).fetch();
-    streamSyncClient = client.sync.services(streamMapItem.data.sync_service_sid);
+    streamSyncClient = await client.sync.services(streamMapItem.data.sync_service_sid);
   } catch (e) {
     response.setStatusCode(500);
     response.setBody({

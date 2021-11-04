@@ -115,7 +115,10 @@ module.exports.handler = async (context, event, callback) => {
   try {
     streamSyncService = await client.sync.services.create({ 
       friendlyName: SYNC_SERVICE_NAME_PREFIX + 'Stream ' + room.sid, 
-      aclEnabled: true 
+      aclEnabled: true,
+      webhookUrl: 'https://' + DOMAIN_NAME + '/sync-webhook',
+      reachabilityWebhooksEnabled: true,
+      reachabilityDebouncingEnabled: true
     });
     streamSyncClient = await client.sync.services(streamSyncService.sid);
   } catch (e) {
