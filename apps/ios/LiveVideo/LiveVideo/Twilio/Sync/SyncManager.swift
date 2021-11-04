@@ -8,6 +8,7 @@ import TwilioSyncClient
 /// Consolidates configuration and error handling for stores that are backed by [Twilio Sync](https://www.twilio.com/sync).
 class SyncManager: NSObject {
     let errorPublisher = PassthroughSubject<Error, Never>()
+    var isConnected: Bool { client != nil }
     private var client: TwilioSyncClient?
     private var raisedHandsStore: RaisedHandsStore
     private var viewerStore: ViewerStore
