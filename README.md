@@ -71,3 +71,7 @@ The application uses the [`video-composer-v1` Media Extension](https://www.twili
 1. Enter any unique name in the `Full name` field.
 1. Tap `Continue`.
 1. Tap `Create Event` to host a new stream or `Join Event` to join a stream as a viewer or a speaker.
+
+## Services Used
+
+This application uses Twilio Functions, Twilio Conversations, and Twilio Sync in addition to Twilio Video Rooms and Twilio Live resources. Note that by deploying and using this application, your will be incurring usage for these services and will be billed for usage.
