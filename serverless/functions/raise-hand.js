@@ -4,6 +4,9 @@
 module.exports.handler = async (context, event, callback) => {
   const { user_identity, stream_name, hand_raised } = event;
 
+  const common = require(Runtime.getAssets()['/common.js'].path);
+  const { getStreamMapItem } = common(context, event, callback);
+
   if (!user_identity) {
     response.setStatusCode(400);
     response.setBody({
@@ -41,9 +44,8 @@ module.exports.handler = async (context, event, callback) => {
   response.appendHeader('Content-Type', 'application/json');
 
   const client = context.getTwilioClient();
-  const syncClient = client.sync.services(context.SYNC_SERVICE_SID);
 
-  let room;
+  let room, streamSyncClient;
 
   try {
     // See if a room already exists
@@ -60,12 +62,28 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  const raisedHandsMapName = `raised_hands-${room.sid}`;
+  // Get stream sync client
+  try {
+    let streamMapItem = await getStreamMapItem(room.sid);
+    streamSyncClient = client.sync.services(streamMapItem.data.sync_service_sid);
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error getting stream sync client',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  const raisedHandsMapName = `raised_hands`;
+
   try {
     if (hand_raised) {
-      await syncClient.syncMaps(raisedHandsMapName).syncMapItems.create({ key: user_identity, data: {} });
+      await streamSyncClient.syncMaps(raisedHandsMapName).syncMapItems.create({ key: user_identity, data: { } });
     } else {
-      await syncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
+      await streamSyncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
     }
   } catch (e) {
     // Ignore errors relating to removing a syncMapItem that doesn't exist (20404), or creating one that already does exist (54208)

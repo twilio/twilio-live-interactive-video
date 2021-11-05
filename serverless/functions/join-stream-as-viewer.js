@@ -8,7 +8,7 @@ const MAX_ALLOWED_SESSION_DURATION = 14400;
 
 module.exports.handler = async (context, event, callback) => {
   const common = require(Runtime.getAssets()['/common.js'].path);
-  const { getPlaybackGrant } = common(context, event, callback);
+  const { getPlaybackGrant, getStreamMapItem } = common(context, event, callback);
 
   const { user_identity, stream_name } = event;
 
@@ -37,10 +37,9 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  let room, streamDocument, viewerDocument;
+  let room, streamMapItem, viewerDocument;
 
   const client = context.getTwilioClient();
-  const syncClient = client.sync.services(context.SYNC_SERVICE_SID);
 
   try {
     // See if a room already exists
@@ -57,10 +56,26 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  const viewerDocumentName = `viewer-${room.sid}-${user_identity}`;
+  // Fetch stream map item
+  try {
+    streamMapItem = await getStreamMapItem(room.sid);
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error fetching stream map item',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  const streamSyncClient = client.sync.services(streamMapItem.data.sync_service_sid);
+
+  const viewerDocumentName = `viewer-${user_identity}`;
   // Create viewer document
   try {
-    viewerDocument = await syncClient.documents.create({
+    viewerDocument = await streamSyncClient.documents.create({
       uniqueName: viewerDocumentName,
     });
   } catch (e) {
@@ -82,7 +97,7 @@ module.exports.handler = async (context, event, callback) => {
   // This is done outside of the viewer document creation to account
   // for viewers that may already have a viewer document
   try {
-    await syncClient.documents(viewerDocumentName).update({
+    await streamSyncClient.documents(viewerDocumentName).update({
       data: { speaker_invite: false },
     });
   } catch (e) {
@@ -99,7 +114,7 @@ module.exports.handler = async (context, event, callback) => {
 
   // Give user read access to viewer document
   try {
-    await syncClient.documents(viewerDocumentName)
+    await streamSyncClient.documents(viewerDocumentName)
       .documentPermissions(user_identity)
       .update({ read: true, write: false, manage: false })
   } catch (e) {
@@ -115,7 +130,7 @@ module.exports.handler = async (context, event, callback) => {
 
   // Give user read access to raised hands map
   try {
-    await syncClient.syncMaps(`raised_hands-${room.sid}`)
+    await streamSyncClient.syncMaps(`raised_hands`)
       .syncMapPermissions(user_identity)
       .update({ read: true, write: false, manage: false })
   } catch (e) {
@@ -129,23 +144,9 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  try {
-    // Get playerStreamerSid from stream document
-    streamDocument = await syncClient.documents(`stream-${room.sid}`).fetch();
-  } catch (e) {
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error finding stream document',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
-
   let playbackGrant;
   try {
-    playbackGrant = await getPlaybackGrant(streamDocument.data.player_streamer_sid);
+    playbackGrant = await getPlaybackGrant(streamMapItem.data.player_streamer_sid);
   } catch (e) {
     console.error(e);
     response.setStatusCode(500);
@@ -178,7 +179,7 @@ module.exports.handler = async (context, event, callback) => {
   });
 
   // Add sync grant to token
-  const syncGrant = new SyncGrant({ serviceSid: context.SYNC_SERVICE_SID });
+  const syncGrant = new SyncGrant({ serviceSid: streamMapItem.data.sync_service_sid });
   token.addGrant(syncGrant);
 
   // Return token
@@ -186,8 +187,8 @@ module.exports.handler = async (context, event, callback) => {
   response.setBody({
     token: token.toJwt(),
     sync_object_names: {
-      raised_hands_map: `raised_hands-${room.sid}`,
-      viewer_document: `viewer-${room.sid}-${user_identity}`,
+      raised_hands_map: `raised_hands`,
+      viewer_document: `viewer-${user_identity}`,
     },
     room_sid: room.sid,
   });

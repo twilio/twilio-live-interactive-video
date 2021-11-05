@@ -14,7 +14,8 @@ module.exports.handler = async (context, event, callback) => {
     TWILIO_API_KEY_SID,
     TWILIO_API_KEY_SECRET,
     CONVERSATIONS_SERVICE_SID,
-    SYNC_SERVICE_SID,
+    BACKEND_STORAGE_SYNC_SERVICE_SID,
+    SYNC_SERVICE_NAME_PREFIX,
     DOMAIN_NAME,
   } = context;
 
@@ -48,10 +49,9 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  let room, playerStreamer, mediaProcessor, streamDocument, conversation, raisedHandsMap;
+  let room, playerStreamer, mediaProcessor, streamSyncService, streamSyncClient, conversation, raisedHandsMap;
 
   const client = context.getTwilioClient();
-  const syncClient = client.sync.services(context.SYNC_SERVICE_SID);
 
   try {
     room = await client.video.rooms.create({
@@ -111,32 +111,54 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  // Create stream document
+  // Create stream sync service
   try {
-    streamDocument = await syncClient.documents.create({
-      uniqueName: `stream-${room.sid}`,
-      data: {
-        player_streamer_sid: playerStreamer.data.sid,
-        media_processor_sid: mediaProcessor.data.sid,
-      },
+    streamSyncService = await client.sync.services.create({ 
+      friendlyName: SYNC_SERVICE_NAME_PREFIX + 'Stream ' + room.sid, 
+      aclEnabled: true 
     });
+    streamSyncClient = await client.sync.services(streamSyncService.sid);
   } catch (e) {
     console.error(e);
     response.setStatusCode(500);
     response.setBody({
       error: {
-        message: 'error creating stream document',
+        message: 'error creating stream sync service',
         explanation: e.message,
       },
     });
     return callback(null, response);
   }
 
-  const raisedHandsMapName = `raised_hands-${room.sid}`
+  // Add stream to streams map
+  try {
+    const backendStorageSyncService = client.sync.services(BACKEND_STORAGE_SYNC_SERVICE_SID);
+
+    await backendStorageSyncService.syncMaps('streams').syncMapItems.create({ 
+      key: room.sid, 
+      data: {
+        sync_service_sid: streamSyncService.sid,
+        player_streamer_sid: playerStreamer.data.sid,
+        media_processor_sid: mediaProcessor.data.sid
+      } 
+    });
+  } catch (e) {
+    console.error(e);
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error adding stream to streams map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  const raisedHandsMapName = `raised_hands`
   // Create raised hands map
   try {
-    raisedHandsMap = await syncClient.syncMaps.create({
-      uniqueName: raisedHandsMapName,
+    raisedHandsMap = await streamSyncClient.syncMaps.create({
+      uniqueName: raisedHandsMapName
     });
   } catch (e) {
     console.error(e);
@@ -152,7 +174,7 @@ module.exports.handler = async (context, event, callback) => {
 
   // Give user read access to raised hands map
   try {
-    await syncClient.syncMaps(raisedHandsMapName)
+    await streamSyncClient.syncMaps(raisedHandsMapName)
       .syncMapPermissions(user_identity)
       .update({ read: true, write: false, manage: false })
   } catch (e) {
@@ -223,7 +245,7 @@ module.exports.handler = async (context, event, callback) => {
   token.addGrant(chatGrant);
 
   // Add sync grant to token
-  const syncGrant = new SyncGrant({ serviceSid: SYNC_SERVICE_SID });
+  const syncGrant = new SyncGrant({ serviceSid: streamSyncService.sid });
   token.addGrant(syncGrant);
 
   // Return token
@@ -231,7 +253,7 @@ module.exports.handler = async (context, event, callback) => {
   response.setBody({
     token: token.toJwt(),
     sync_object_names: {
-      raised_hands_map: `raised_hands-${room.sid}`,
+      raised_hands_map: `raised_hands`,
     },
   });
   return callback(null, response);

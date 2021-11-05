@@ -8,10 +8,13 @@ const SyncGrant = AccessToken.SyncGrant;
 const MAX_ALLOWED_SESSION_DURATION = 14400;
 
 module.exports.handler = async (context, event, callback) => {
-  const { ACCOUNT_SID, TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, CONVERSATIONS_SERVICE_SID, SYNC_SERVICE_SID } =
+  const { ACCOUNT_SID, TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, CONVERSATIONS_SERVICE_SID } =
     context;
 
   const { user_identity, stream_name } = event;
+
+  const common = require(Runtime.getAssets()['/common.js'].path);
+  const { getStreamMapItem } = common(context, event, callback);
 
   let response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
@@ -38,10 +41,9 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  let room, conversation;
+  let room, conversation, streamMapItem;
 
   const client = context.getTwilioClient();
-  const syncClient = client.sync.services(context.SYNC_SERVICE_SID);
 
   try {
     // See if a room already exists
@@ -57,9 +59,25 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
+  // Fetch stream map item
+  try {
+    streamMapItem = await getStreamMapItem(room.sid);
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error finding stream map item',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  const streamSyncClient = client.sync.services(streamMapItem.data.sync_service_sid);
+  
   try {
     // Reset the viewers hand_raised and speaker_invite status
-    await syncClient.documents(`viewer-${room.sid}-${user_identity}`).update({ data: { speaker_invite: false } });
+    await streamSyncClient.documents(`viewer-${user_identity}`).update({ data: { speaker_invite: false } });
   } catch (e) {
     // Ignore 404 errors. It is possible that the user may not have a viewer document
     if (e.code !== 20404) {
@@ -75,10 +93,10 @@ module.exports.handler = async (context, event, callback) => {
     }
   }
 
-  const raisedHandsMapName = `raised_hands-${room.sid}`;
+  const raisedHandsMapName = `raised_hands`;
   // Give user read access to raised hands map
   try {
-    await syncClient.syncMaps(raisedHandsMapName)
+    await streamSyncClient.syncMaps(raisedHandsMapName)
       .syncMapPermissions(user_identity)
       .update({ read: true, write: false, manage: false })
   } catch (e) {
@@ -94,7 +112,7 @@ module.exports.handler = async (context, event, callback) => {
 
   // Lower the participant's hand
   try {
-    await syncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
+    await streamSyncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
   } catch (e) {
     // Ignore 404 errors. It is possible that the user may not have a key in the raised hands map
     if (e.code !== 20404) {
@@ -162,7 +180,7 @@ module.exports.handler = async (context, event, callback) => {
   token.addGrant(chatGrant);
 
   // Add sync grant to token
-  const syncGrant = new SyncGrant({ serviceSid: SYNC_SERVICE_SID });
+  const syncGrant = new SyncGrant({ serviceSid: streamMapItem.data.sync_service_sid });
   token.addGrant(syncGrant);
 
   // Return token
@@ -170,7 +188,7 @@ module.exports.handler = async (context, event, callback) => {
   response.setBody({
     token: token.toJwt(),
     sync_object_names: {
-      raised_hands_map: `raised_hands-${room.sid}`,
+      raised_hands_map: `raised_hands`,
     },
   });
   return callback(null, response);
