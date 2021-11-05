@@ -8,7 +8,7 @@ const MAX_ALLOWED_SESSION_DURATION = 14400;
 
 module.exports.handler = async (context, event, callback) => {
   const common = require(Runtime.getAssets()['/common.js'].path);
-  const { getPlaybackGrant } = common(context, event, callback);
+  const { getPlaybackGrant, getStreamMapItem } = common(context, event, callback);
 
   const { user_identity, stream_name } = event;
 
@@ -58,8 +58,7 @@ module.exports.handler = async (context, event, callback) => {
 
   // Fetch stream map item
   try {
-    const backendStorageSyncClient = await client.sync.services(context.BACKEND_STORAGE_SYNC_SERVICE_SID);
-    streamMapItem = await backendStorageSyncClient.syncMaps('streams').syncMapItems(room.sid).fetch();
+    streamMapItem = await getStreamMapItem(room.sid);
   } catch (e) {
     response.setStatusCode(500);
     response.setBody({

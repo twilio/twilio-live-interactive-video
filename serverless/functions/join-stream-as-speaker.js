@@ -13,6 +13,9 @@ module.exports.handler = async (context, event, callback) => {
 
   const { user_identity, stream_name } = event;
 
+  const common = require(Runtime.getAssets()['/common.js'].path);
+  const { getStreamMapItem } = common(context, event, callback);
+
   let response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
@@ -58,8 +61,7 @@ module.exports.handler = async (context, event, callback) => {
 
   // Fetch stream map item
   try {
-    const backendStorageSyncClient = await client.sync.services(context.BACKEND_STORAGE_SYNC_SERVICE_SID);
-    streamMapItem = await backendStorageSyncClient.syncMaps('streams').syncMapItems(room.sid).fetch();
+    streamMapItem = await getStreamMapItem(room.sid);
   } catch (e) {
     response.setStatusCode(500);
     response.setBody({

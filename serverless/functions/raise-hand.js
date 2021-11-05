@@ -4,6 +4,9 @@
 module.exports.handler = async (context, event, callback) => {
   const { user_identity, stream_name, hand_raised } = event;
 
+  const common = require(Runtime.getAssets()['/common.js'].path);
+  const { getStreamMapItem } = common(context, event, callback);
+
   if (!user_identity) {
     response.setStatusCode(400);
     response.setBody({
@@ -61,8 +64,7 @@ module.exports.handler = async (context, event, callback) => {
 
   // Get stream sync client
   try {
-    let backendStorageSyncClient = await client.sync.services(context.BACKEND_STORAGE_SYNC_SERVICE_SID);
-    let streamMapItem = await backendStorageSyncClient.syncMaps('streams').syncMapItems(room.sid).fetch();
+    let streamMapItem = await getStreamMapItem(room.sid);
     streamSyncClient = client.sync.services(streamMapItem.data.sync_service_sid);
   } catch (e) {
     response.setStatusCode(500);

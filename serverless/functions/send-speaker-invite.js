@@ -4,6 +4,9 @@
 module.exports.handler = async (context, event, callback) => {
   const { user_identity, room_sid } = event;
 
+  const common = require(Runtime.getAssets()['/common.js'].path);
+  const { getStreamMapItem } = common(context, event, callback);
+
   let response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
@@ -11,8 +14,7 @@ module.exports.handler = async (context, event, callback) => {
 
   try {
     // Set speaker_invite to true
-    const backendStorageSyncClient = await client.sync.services(context.BACKEND_STORAGE_SYNC_SERVICE_SID);
-    const streamMapItem = await backendStorageSyncClient.syncMaps('streams').syncMapItems(room_sid).fetch();
+    const streamMapItem = await getStreamMapItem(room_sid);
     const streamSyncClient = await client.sync.services(streamMapItem.data.sync_service_sid);
     const doc = await streamSyncClient.documents(`viewer-${user_identity}`).fetch();
     await streamSyncClient.documents(doc.sid).update({ data: { ...doc.data, speaker_invite: true } });
