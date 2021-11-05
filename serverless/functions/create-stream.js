@@ -118,7 +118,7 @@ module.exports.handler = async (context, event, callback) => {
       aclEnabled: true,
       webhookUrl: 'https://' + DOMAIN_NAME + '/sync-webhook',
       reachabilityWebhooksEnabled: true,
-      reachabilityDebouncingEnabled: true
+      reachabilityDebouncingEnabled: true // To prevent disconnect event when connections are rebalanced
     });
     streamSyncClient = await client.sync.services(streamSyncService.sid);
   } catch (e) {
