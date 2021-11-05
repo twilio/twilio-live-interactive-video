@@ -2,6 +2,9 @@
 'use strict';
 
 module.exports.handler = async (context, event, callback) => {
+  const authHandler = require(Runtime.getAssets()['/auth-handler.js'].path);
+  authHandler(context, event, callback);
+
   const { user_identity, room_sid } = event;
 
   let response = new Twilio.Response();
@@ -12,8 +15,12 @@ module.exports.handler = async (context, event, callback) => {
 
   try {
     // Set speaker_invite to true
-    const doc = await syncClient.documents(`viewer-${room_sid}-${user_identity}`).fetch();
-    await syncClient.documents(doc.sid).update({ data: { ...doc.data, speaker_invite: true } });
+    const doc = await syncClient
+      .documents(`viewer-${room_sid}-${user_identity}`)
+      .fetch();
+    await syncClient
+      .documents(doc.sid)
+      .update({ data: { ...doc.data, speaker_invite: true } });
   } catch (e) {
     console.error(e);
     response.setStatusCode(500);

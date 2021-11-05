@@ -2,6 +2,9 @@
 'use strict';
 
 module.exports.handler = async (context, event, callback) => {
+  const authHandler = require(Runtime.getAssets()['/auth-handler.js'].path);
+  authHandler(context, event, callback);
+
   const { user_identity, stream_name, hand_raised } = event;
 
   if (!user_identity) {
@@ -63,9 +66,14 @@ module.exports.handler = async (context, event, callback) => {
   const raisedHandsMapName = `raised_hands-${room.sid}`;
   try {
     if (hand_raised) {
-      await syncClient.syncMaps(raisedHandsMapName).syncMapItems.create({ key: user_identity, data: {} });
+      await syncClient
+        .syncMaps(raisedHandsMapName)
+        .syncMapItems.create({ key: user_identity, data: {} });
     } else {
-      await syncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
+      await syncClient
+        .syncMaps(raisedHandsMapName)
+        .syncMapItems(user_identity)
+        .remove();
     }
   } catch (e) {
     // Ignore errors relating to removing a syncMapItem that doesn't exist (20404), or creating one that already does exist (54208)

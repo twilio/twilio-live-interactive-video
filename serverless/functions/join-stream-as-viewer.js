@@ -7,6 +7,9 @@ const ChatGrant = AccessToken.ChatGrant;
 const MAX_ALLOWED_SESSION_DURATION = 14400;
 
 module.exports.handler = async (context, event, callback) => {
+  const authHandler = require(Runtime.getAssets()['/auth-handler.js'].path);
+  authHandler(context, event, callback);
+
   const common = require(Runtime.getAssets()['/common.js'].path);
   const { getPlaybackGrant } = common(context, event, callback);
 
@@ -99,9 +102,10 @@ module.exports.handler = async (context, event, callback) => {
 
   // Give user read access to viewer document
   try {
-    await syncClient.documents(viewerDocumentName)
+    await syncClient
+      .documents(viewerDocumentName)
       .documentPermissions(user_identity)
-      .update({ read: true, write: false, manage: false })
+      .update({ read: true, write: false, manage: false });
   } catch (e) {
     response.setStatusCode(500);
     response.setBody({
@@ -115,9 +119,10 @@ module.exports.handler = async (context, event, callback) => {
 
   // Give user read access to raised hands map
   try {
-    await syncClient.syncMaps(`raised_hands-${room.sid}`)
+    await syncClient
+      .syncMaps(`raised_hands-${room.sid}`)
       .syncMapPermissions(user_identity)
-      .update({ read: true, write: false, manage: false })
+      .update({ read: true, write: false, manage: false });
   } catch (e) {
     response.setStatusCode(500);
     response.setBody({
@@ -145,7 +150,9 @@ module.exports.handler = async (context, event, callback) => {
 
   let playbackGrant;
   try {
-    playbackGrant = await getPlaybackGrant(streamDocument.data.player_streamer_sid);
+    playbackGrant = await getPlaybackGrant(
+      streamDocument.data.player_streamer_sid
+    );
   } catch (e) {
     console.error(e);
     response.setStatusCode(500);
@@ -159,12 +166,19 @@ module.exports.handler = async (context, event, callback) => {
   }
 
   // Create token
-  const token = new AccessToken(context.ACCOUNT_SID, context.TWILIO_API_KEY_SID, context.TWILIO_API_KEY_SECRET, {
-    ttl: MAX_ALLOWED_SESSION_DURATION,
-  });
+  const token = new AccessToken(
+    context.ACCOUNT_SID,
+    context.TWILIO_API_KEY_SID,
+    context.TWILIO_API_KEY_SECRET,
+    {
+      ttl: MAX_ALLOWED_SESSION_DURATION,
+    }
+  );
 
   // Add chat grant to token
-  const chatGrant = new ChatGrant({ serviceSid: context.CONVERSATIONS_SERVICE_SID });
+  const chatGrant = new ChatGrant({
+    serviceSid: context.CONVERSATIONS_SERVICE_SID,
+  });
   token.addGrant(chatGrant);
 
   // Add participant's identity to token

@@ -1,6 +1,9 @@
 'use strict';
 
 exports.handler = async function (context, event, callback) {
+  const authHandler = require(Runtime.getAssets()['/auth-handler.js'].path);
+  authHandler(context, event, callback);
+
   const common = require(Runtime.getAssets()['/common.js'].path);
   const { axiosClient, response } = common(context, event, callback);
 
@@ -12,7 +15,9 @@ exports.handler = async function (context, event, callback) {
   if (StatusCallbackEvent === 'room-ended') {
     try {
       // Get playerStreamerSid and mediaProcessorSid from stream document
-      const streamDocument = await syncClient.documents(`stream-${RoomSid}`).fetch();
+      const streamDocument = await syncClient
+        .documents(`stream-${RoomSid}`)
+        .fetch();
       const { player_streamer_sid, media_processor_sid } = streamDocument.data;
 
       // Stop mediaProcessor

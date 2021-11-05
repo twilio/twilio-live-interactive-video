@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Location } from 'history';
+import { apiClient } from '../api/api';
 
-const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/token';
+const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/verify-passcode';
 
 export function getPasscode(location: Location) {
   const match = location.search.match(/[?&]passcode=(\d+).*$/);
@@ -10,41 +11,29 @@ export function getPasscode(location: Location) {
   return passcode;
 }
 
-export function fetchToken(
-  name: string,
-  room: string,
-  passcode: string,
-  create_room = true,
-  create_conversation = process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true'
-) {
+export function fetchToken(passcode: string) {
   return fetch(endpoint, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
     },
     body: JSON.stringify({
-      user_identity: name,
-      room_name: room,
       passcode,
-      create_room,
-      create_conversation,
     }),
   });
 }
 
 export function verifyPasscode(passcode: string) {
-  return fetchToken('temp-name', 'temp-room', passcode, false /* create_room */, false /* create_conversation */).then(
-    async res => {
-      const jsonResponse = await res.json();
-      if (res.status === 401) {
-        return { isValid: false, error: jsonResponse.error?.message };
-      }
-
-      if (res.ok && jsonResponse.token) {
-        return { isValid: true };
-      }
+  return fetchToken(passcode).then(async res => {
+    const jsonResponse = await res.json();
+    if (res.status === 401) {
+      return { isValid: false, error: jsonResponse.error?.message };
     }
-  );
+
+    if (res.ok) {
+      return { isValid: true };
+    }
+  });
 }
 
 export function getErrorMessage(message: string) {
@@ -65,45 +54,15 @@ export default function usePasscodeAuth() {
   const [user, setUser] = useState<{ displayName: undefined; photoURL: undefined; passcode: string } | null>(null);
   const [isAuthReady, setIsAuthReady] = useState(false);
 
-  const getToken = useCallback(
-    (name: string, room: string) => {
-      return fetchToken(name, room, user!.passcode)
-        .then(async res => {
-          if (res.ok) {
-            return res;
-          }
-          const json = await res.json();
-          const errorMessage = getErrorMessage(json.error?.message || res.statusText);
-          throw Error(errorMessage);
-        })
-        .then(res => res.json());
-    },
-    [user]
-  );
-
-  const updateRecordingRules = useCallback(
-    async (room_sid, rules) => {
-      return fetch('/recordingrules', {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ room_sid, rules, passcode: user?.passcode }),
-        method: 'POST',
-      }).then(async res => {
-        const jsonResponse = await res.json();
-
-        if (!res.ok) {
-          const error = new Error(jsonResponse.error?.message || 'There was an error updating recording rules');
-          error.code = jsonResponse.error?.code;
-
-          return Promise.reject(error);
-        }
-
-        return jsonResponse;
-      });
-    },
-    [user]
-  );
+  useEffect(() => {
+    const inderceptorId = apiClient.interceptors.request.use(config => {
+      config.data.passcode = user?.passcode;
+      return config;
+    });
+    return () => {
+      apiClient.interceptors.request.eject(inderceptorId);
+    };
+  }, [user]);
 
   useEffect(() => {
     const passcode = getPasscode(location);
@@ -112,6 +71,7 @@ export default function usePasscodeAuth() {
       verifyPasscode(passcode)
         .then(verification => {
           if (verification?.isValid) {
+            console.log('here');
             setUser({ passcode } as any);
             window.sessionStorage.setItem('passcode', passcode);
             history.replace(location.pathname);
@@ -140,5 +100,5 @@ export default function usePasscodeAuth() {
     return Promise.resolve();
   }, []);
 
-  return { user, isAuthReady, getToken, signIn, signOut, updateRecordingRules };
+  return { user, isAuthReady, signIn, signOut };
 }
