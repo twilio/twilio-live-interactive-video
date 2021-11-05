@@ -126,7 +126,7 @@ export default function MainParticipantInfo({ participant, children }: MainParti
 
   const publications = usePublications(participant);
   const videoPublication = publications.find(p => p.trackName.includes('camera'));
-  const screenSharePublication = publications.find(p => p.trackName.includes('screen'));
+  const screenSharePublication = publications.find(p => p.trackName.includes('video-composer-presentation'));
 
   const videoTrack = useTrack(screenSharePublication || videoPublication);
   const isVideoEnabled = Boolean(videoTrack);

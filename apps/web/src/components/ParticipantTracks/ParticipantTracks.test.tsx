@@ -21,7 +21,7 @@ describe('the ParticipantTracks component', () => {
 
   it('should filter out any screen share publications', () => {
     mockUsePublications.mockImplementation(() => [
-      { trackName: 'screen', trackSid: 0, kind: 'video' },
+      { trackName: 'video-composer-presentation', trackSid: 0, kind: 'video' },
       { trackName: 'camera-123456', trackSid: 1, kind: 'video' },
     ]);
     const wrapper = shallow(<ParticipantTracks participant={'mockParticipant' as any} />);
@@ -37,7 +37,7 @@ describe('the ParticipantTracks component', () => {
   describe('with enableScreenShare prop', () => {
     it('should filter out camera publications when a screen share publication is present', () => {
       mockUsePublications.mockImplementation(() => [
-        { trackName: 'screen', trackSid: 0, kind: 'video' },
+        { trackName: 'video-composer-presentation', trackSid: 0, kind: 'video' },
         { trackName: 'camera-123456', trackSid: 1, kind: 'video' },
       ]);
       const wrapper = shallow(<ParticipantTracks participant={'mockParticipant' as any} enableScreenShare />);
@@ -47,7 +47,7 @@ describe('the ParticipantTracks component', () => {
           .find('Publication')
           .at(0)
           .prop('publication')
-      ).toEqual({ trackName: 'screen', trackSid: 0, kind: 'video' });
+      ).toEqual({ trackName: 'video-composer-presentation', trackSid: 0, kind: 'video' });
     });
 
     it('should render camera publications when a screen share publication is absent', () => {
