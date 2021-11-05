@@ -6,7 +6,7 @@ import useMainParticipant from '../../hooks/useMainParticipant/useMainParticipan
 import useParticipants from '../../hooks/useParticipants/useParticipants';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useSelectedParticipant from '../VideoProvider/useSelectedParticipant/useSelectedParticipant';
-import usePresentationParticipant from '../../hooks/usePresentationParticipant/usePresentationParticipant';
+import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,16 +47,16 @@ export default function ParticipantList() {
   const localParticipant = room!.localParticipant;
   const participants = useParticipants();
   const [selectedParticipant, setSelectedParticipant] = useSelectedParticipant();
-  const presentationParticipant = usePresentationParticipant();
+  const screenShareParticipant = useScreenShareParticipant();
   const mainParticipant = useMainParticipant();
-  const isRemoteParticipantPresenting = presentationParticipant && presentationParticipant !== localParticipant;
+  const isRemoteParticipantScreenSharing = screenShareParticipant && screenShareParticipant !== localParticipant;
 
   if (participants.length === 0) return null; // Don't render this component if there are no remote participants.
 
   return (
     <aside
       className={clsx(classes.container, {
-        [classes.transparentBackground]: !isRemoteParticipantPresenting,
+        [classes.transparentBackground]: !isRemoteParticipantScreenSharing,
       })}
     >
       <div className={classes.scrollContainer}>
@@ -65,7 +65,7 @@ export default function ParticipantList() {
           {participants.map(participant => {
             const isSelected = participant === selectedParticipant;
             const hideParticipant =
-              participant === mainParticipant && participant !== presentationParticipant && !isSelected;
+              participant === mainParticipant && participant !== screenShareParticipant && !isSelected;
             return (
               <Participant
                 key={participant.sid}

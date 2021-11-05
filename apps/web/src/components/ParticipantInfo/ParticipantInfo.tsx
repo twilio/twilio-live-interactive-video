@@ -150,7 +150,7 @@ export default function ParticipantInfo({
   const videoPublication = publications.find(p => p.trackName.includes('camera'));
 
   const isVideoEnabled = Boolean(videoPublication);
-  const isPresentationModeEnabled = publications.find(p => p.trackName.includes('video-composer-presentation'));
+  const isScreenShareEnabled = publications.find(p => p.trackName.includes('video-composer-presentation'));
 
   const videoTrack = useTrack(videoPublication);
   const isVideoSwitchedOff = useIsTrackSwitchedOff(videoTrack as LocalVideoTrack | RemoteVideoTrack);
@@ -172,7 +172,7 @@ export default function ParticipantInfo({
       <div className={classes.infoContainer}>
         <NetworkQualityLevel participant={participant} />
         <div className={classes.infoRowBottom}>
-          {isPresentationModeEnabled && (
+          {isScreenShareEnabled && (
             <span className={classes.screenShareIconContainer}>
               <ScreenShareIcon />
             </span>

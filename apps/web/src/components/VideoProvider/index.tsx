@@ -10,7 +10,7 @@ import useHandleTrackPublicationFailed from './useHandleTrackPublicationFailed/u
 import useLocalTracks from './useLocalTracks/useLocalTracks';
 import useRestartAudioTrackOnDeviceChange from './useRestartAudioTrackOnDeviceChange/useRestartAudioTrackOnDeviceChange';
 import useRoom from './useRoom/useRoom';
-import usePresentationModeToggle from './usePresentationModeToggle/usePresentationModeToggle';
+import useScreenShareToggle from './useScreenShareToggle/useScreenShareToggle';
 
 /*
  *  The hooks used by the VideoProvider component are different than the hooks found in the 'hooks/' directory. The hooks
@@ -29,8 +29,8 @@ export interface IVideoContext {
   getLocalAudioTrack: (deviceId?: string) => Promise<LocalAudioTrack>;
   isAcquiringLocalTracks: boolean;
   removeLocalVideoTrack: () => void;
-  isPresenting: boolean;
-  togglePresentationMode: () => void;
+  isSharingScreen: boolean;
+  toggleScreenShare: () => void;
   getAudioAndVideoTracks: () => Promise<void>;
   isBackgroundSelectionOpen: boolean;
   setIsBackgroundSelectionOpen: (value: boolean) => void;
@@ -66,7 +66,7 @@ export function VideoProvider({ options, children, onError = () => {} }: VideoPr
   } = useLocalTracks();
   const { room, isConnecting, connect } = useRoom(localTracks, onErrorCallback, options);
 
-  const [isPresenting, togglePresentationMode] = usePresentationModeToggle(room, onError);
+  const [isSharingScreen, toggleScreenShare] = useScreenShareToggle(room, onError);
 
   // Register callback functions to be called on room disconnect.
   useHandleRoomDisconnection(
@@ -74,8 +74,8 @@ export function VideoProvider({ options, children, onError = () => {} }: VideoPr
     onError,
     removeLocalAudioTrack,
     removeLocalVideoTrack,
-    isPresenting,
-    togglePresentationMode
+    isSharingScreen,
+    toggleScreenShare
   );
   useHandleTrackPublicationFailed(room, onError);
   useRestartAudioTrackOnDeviceChange(localTracks);
@@ -96,8 +96,8 @@ export function VideoProvider({ options, children, onError = () => {} }: VideoPr
         connect,
         isAcquiringLocalTracks,
         removeLocalVideoTrack,
-        isPresenting,
-        togglePresentationMode,
+        isSharingScreen,
+        toggleScreenShare,
         getAudioAndVideoTracks,
         isBackgroundSelectionOpen,
         setIsBackgroundSelectionOpen,

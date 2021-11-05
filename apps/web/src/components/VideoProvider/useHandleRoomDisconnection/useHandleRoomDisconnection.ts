@@ -9,8 +9,8 @@ export default function useHandleRoomDisconnection(
   onError: Callback,
   removeLocalAudioTrack: () => void,
   removeLocalVideoTrack: () => void,
-  isPresenting: boolean,
-  togglePresentationMode: () => void
+  isSharingScreen: boolean,
+  toggleScreenShare: () => void
 ) {
   const enqueueSnackbar = useEnqueueSnackbar();
   useEffect(() => {
@@ -29,8 +29,8 @@ export default function useHandleRoomDisconnection(
 
         removeLocalAudioTrack();
         removeLocalVideoTrack();
-        if (isPresenting) {
-          togglePresentationMode();
+        if (isSharingScreen) {
+          toggleScreenShare();
         }
       };
 
@@ -44,8 +44,8 @@ export default function useHandleRoomDisconnection(
     onError,
     removeLocalAudioTrack,
     removeLocalVideoTrack,
-    isPresenting,
-    togglePresentationMode,
+    isSharingScreen,
+    toggleScreenShare,
     enqueueSnackbar,
   ]);
 }

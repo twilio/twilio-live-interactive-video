@@ -8,11 +8,11 @@ interface MediaStreamTrackPublishOptions {
   logLevel: LogLevels;
 }
 
-export default function usePresentationModeToggle(room: Room | null, onError: ErrorCallback) {
-  const [isPresenting, setIsPresenting] = useState(false);
-  const stopPresentingRef = useRef<() => void>(null!);
+export default function useScreenShareToggle(room: Room | null, onError: ErrorCallback) {
+  const [isSharing, setIsSharing] = useState(false);
+  const stopScreenShareRef = useRef<() => void>(null!);
 
-  const startPresenting = useCallback(() => {
+  const shareScreen = useCallback(() => {
     navigator.mediaDevices
       .getDisplayMedia({
         audio: false,
@@ -34,16 +34,16 @@ export default function usePresentationModeToggle(room: Room | null, onError: Er
             priority: 'low', // Priority is set to high by the subscriber when the video track is rendered
           } as MediaStreamTrackPublishOptions)
           .then(trackPublication => {
-            stopPresentingRef.current = () => {
+            stopScreenShareRef.current = () => {
               room!.localParticipant.unpublishTrack(track);
               // TODO: remove this if the SDK is updated to emit this event
               room!.localParticipant.emit('trackUnpublished', trackPublication);
               track.stop();
-              setIsPresenting(false);
+              setIsSharing(false);
             };
 
-            track.onended = stopPresentingRef.current;
-            setIsPresenting(true);
+            track.onended = stopScreenShareRef.current;
+            setIsSharing(true);
           })
           .catch(onError);
       })
@@ -55,11 +55,11 @@ export default function usePresentationModeToggle(room: Room | null, onError: Er
       });
   }, [room, onError]);
 
-  const togglePresentationMode = useCallback(() => {
+  const toggleScreenShare = useCallback(() => {
     if (room) {
-      !isPresenting ? startPresenting() : stopPresentingRef.current();
+      !isSharing ? shareScreen() : stopScreenShareRef.current();
     }
-  }, [isPresenting, startPresenting, room]);
+  }, [isSharing, shareScreen, room]);
 
-  return [isPresenting, togglePresentationMode] as const;
+  return [isSharing, toggleScreenShare] as const;
 }

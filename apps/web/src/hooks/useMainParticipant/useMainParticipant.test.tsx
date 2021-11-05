@@ -3,19 +3,19 @@ import { renderHook } from '@testing-library/react-hooks';
 import useMainParticipant from './useMainParticipant';
 import useSelectedParticipant from '../../components/VideoProvider/useSelectedParticipant/useSelectedParticipant';
 import useVideoContext from '../useVideoContext/useVideoContext';
-import usePresentationParticipant from '../usePresentationParticipant/usePresentationParticipant';
+import useScreenShareParticipant from '../useScreenShareParticipant/useScreenShareParticipant';
 
 jest.mock('../useVideoContext/useVideoContext');
 jest.mock('../../components/VideoProvider/useSelectedParticipant/useSelectedParticipant');
-jest.mock('../usePresentationParticipant/usePresentationParticipant');
+jest.mock('../useScreenShareParticipant/useScreenShareParticipant');
 const mockUseVideoContext = useVideoContext as jest.Mock<any>;
 const mockSelectedParticipant = useSelectedParticipant as jest.Mock<any>;
-const mockUsePresentationParticipant = usePresentationParticipant as jest.Mock<any>;
+const mockUseScreenShareParticipant = useScreenShareParticipant as jest.Mock<any>;
 
 describe('the useMainParticipant hook', () => {
   beforeEach(() => {
     mockSelectedParticipant.mockImplementation(() => [null]);
-    mockUsePresentationParticipant.mockImplementation(() => undefined);
+    mockUseScreenShareParticipant.mockImplementation(() => undefined);
   });
 
   it('should return the dominant speaker if it exists', () => {
@@ -62,14 +62,14 @@ describe('the useMainParticipant hook', () => {
     expect(result.current).toBe('mockSelectedParticipant');
   });
 
-  it('should return the presentation participant if it exists', () => {
-    mockUsePresentationParticipant.mockImplementation(() => 'mockPresentationParticipant');
+  it('should return the screen share participant if it exists', () => {
+    mockUseScreenShareParticipant.mockImplementation(() => 'mockScreenShareParticipant');
     const mockRoom: any = new EventEmitter();
     mockRoom.dominantSpeaker = 'dominantSpeaker';
     mockRoom.participants = new Map([[0, 'participant']]) as any;
     mockRoom.localParticipant = 'localParticipant';
     mockUseVideoContext.mockImplementation(() => ({ room: mockRoom }));
     const { result } = renderHook(useMainParticipant);
-    expect(result.current).toBe('mockPresentationParticipant');
+    expect(result.current).toBe('mockScreenShareParticipant');
   });
 });

@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react-hooks';
-import usePresentationModeToggle from './usePresentationModeToggle';
+import useScreenShareToggle from './useScreenShareToggle';
 import { EventEmitter } from 'events';
 import { ErrorCallback } from '../../../types';
 
@@ -27,20 +27,20 @@ const mockMediaDevices = {
 
 Object.defineProperty(navigator, 'mediaDevices', mockMediaDevices);
 
-describe('the usePresentationModeToggle hook', () => {
+describe('the useScreenShareToggle hook', () => {
   beforeEach(() => {
     delete mockTrack.onended;
     jest.clearAllMocks();
   });
 
   it('should return a default value of false', () => {
-    const { result } = renderHook(() => usePresentationModeToggle(mockRoom, mockOnError));
+    const { result } = renderHook(() => useScreenShareToggle(mockRoom, mockOnError));
     expect(result.current).toEqual([false, expect.any(Function)]);
   });
 
   describe('toggle function', () => {
-    it('should call localParticipant.publishTrack with the correct arguments when isPresenting is false', async () => {
-      const { result, waitForNextUpdate } = renderHook(() => usePresentationModeToggle(mockRoom, mockOnError));
+    it('should call localParticipant.publishTrack with the correct arguments when isSharing is false', async () => {
+      const { result, waitForNextUpdate } = renderHook(() => useScreenShareToggle(mockRoom, mockOnError));
       result.current[1]();
       await waitForNextUpdate();
       expect(navigator.mediaDevices.getDisplayMedia).toHaveBeenCalled();
@@ -51,16 +51,16 @@ describe('the usePresentationModeToggle hook', () => {
       expect(result.current[0]).toEqual(true);
     });
 
-    it('should not toggle presentation mode when there is no room', async () => {
-      const { result } = renderHook(() => usePresentationModeToggle(null, mockOnError));
+    it('should not toggle screen sharing when there is no room', async () => {
+      const { result } = renderHook(() => useScreenShareToggle(null, mockOnError));
       result.current[1]();
       expect(navigator.mediaDevices.getDisplayMedia).not.toHaveBeenCalled();
       expect(mockLocalParticipant.publishTrack).not.toHaveBeenCalled();
     });
 
-    it('should correctly stop presentation mode when isPresenting is true', async () => {
+    it('should correctly stop screen sharing when isSharing is true', async () => {
       const localParticipantSpy = jest.spyOn(mockLocalParticipant, 'emit');
-      const { result, waitForNextUpdate } = renderHook(() => usePresentationModeToggle(mockRoom, mockOnError));
+      const { result, waitForNextUpdate } = renderHook(() => useScreenShareToggle(mockRoom, mockOnError));
       expect(mockTrack.onended).toBeUndefined();
       result.current[1]();
       await waitForNextUpdate();
@@ -75,9 +75,9 @@ describe('the usePresentationModeToggle hook', () => {
     });
 
     describe('onended function', () => {
-      it('should correctly stop presentation mode when called', async () => {
+      it('should correctly stop screen sharing when called', async () => {
         const localParticipantSpy = jest.spyOn(mockLocalParticipant, 'emit');
-        const { result, waitForNextUpdate } = renderHook(() => usePresentationModeToggle(mockRoom, mockOnError));
+        const { result, waitForNextUpdate } = renderHook(() => useScreenShareToggle(mockRoom, mockOnError));
         expect(mockTrack.onended).toBeUndefined();
         result.current[1]();
         await waitForNextUpdate();

@@ -19,7 +19,7 @@ describe('the ParticipantTracks component', () => {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('should filter out any presentation publications', () => {
+  it('should filter out any screen share publications', () => {
     mockUsePublications.mockImplementation(() => [
       { trackName: 'video-composer-presentation', trackSid: 0, kind: 'video' },
       { trackName: 'camera-123456', trackSid: 1, kind: 'video' },
@@ -34,13 +34,13 @@ describe('the ParticipantTracks component', () => {
     ).toEqual({ trackName: 'camera-123456', trackSid: 1, kind: 'video' });
   });
 
-  describe('with enablePresentationMode prop', () => {
-    it('should filter out camera publications when a presentation publication is present', () => {
+  describe('with enableScreenShare prop', () => {
+    it('should filter out camera publications when a screen share publication is present', () => {
       mockUsePublications.mockImplementation(() => [
         { trackName: 'video-composer-presentation', trackSid: 0, kind: 'video' },
         { trackName: 'camera-123456', trackSid: 1, kind: 'video' },
       ]);
-      const wrapper = shallow(<ParticipantTracks participant={'mockParticipant' as any} enablePresentationMode />);
+      const wrapper = shallow(<ParticipantTracks participant={'mockParticipant' as any} enableScreenShare />);
       expect(wrapper.find('Publication').length).toBe(1);
       expect(
         wrapper
@@ -50,9 +50,9 @@ describe('the ParticipantTracks component', () => {
       ).toEqual({ trackName: 'video-composer-presentation', trackSid: 0, kind: 'video' });
     });
 
-    it('should render camera publications when a presentation publication is absent', () => {
+    it('should render camera publications when a screen share publication is absent', () => {
       mockUsePublications.mockImplementation(() => [{ trackName: 'camera-123456', trackSid: 1, kind: 'video' }]);
-      const wrapper = shallow(<ParticipantTracks participant={'mockParticipant' as any} enablePresentationMode />);
+      const wrapper = shallow(<ParticipantTracks participant={'mockParticipant' as any} enableScreenShare />);
       expect(wrapper.find('Publication').length).toBe(1);
       expect(
         wrapper

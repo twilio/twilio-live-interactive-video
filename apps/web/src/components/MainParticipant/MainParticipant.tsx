@@ -3,7 +3,7 @@ import ParticipantTracks from '../ParticipantTracks/ParticipantTracks';
 import React from 'react';
 import useMainParticipant from '../../hooks/useMainParticipant/useMainParticipant';
 import useSelectedParticipant from '../VideoProvider/useSelectedParticipant/useSelectedParticipant';
-import usePresentationParticipant from '../../hooks/usePresentationParticipant/usePresentationParticipant';
+import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
 export default function MainParticipant() {
@@ -11,10 +11,10 @@ export default function MainParticipant() {
   const { room } = useVideoContext();
   const localParticipant = room!.localParticipant;
   const [selectedParticipant] = useSelectedParticipant();
-  const presentationParticipant = usePresentationParticipant();
+  const screenShareParticipant = useScreenShareParticipant();
 
   const videoPriority =
-    (mainParticipant === selectedParticipant || mainParticipant === presentationParticipant) &&
+    (mainParticipant === selectedParticipant || mainParticipant === screenShareParticipant) &&
     mainParticipant !== localParticipant
       ? 'high'
       : null;
@@ -26,7 +26,7 @@ export default function MainParticipant() {
       <ParticipantTracks
         participant={mainParticipant}
         videoOnly
-        enablePresentationMode={mainParticipant !== localParticipant}
+        enableScreenShare={mainParticipant !== localParticipant}
         videoPriority={videoPriority}
         isLocalParticipant={mainParticipant === localParticipant}
       />

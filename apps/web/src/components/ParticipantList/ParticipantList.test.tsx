@@ -3,18 +3,18 @@ import React from 'react';
 import ParticipantList from './ParticipantList';
 import { shallow } from 'enzyme';
 import useMainParticipant from '../../hooks/useMainParticipant/useMainParticipant';
-import usePresentationParticipant from '../../hooks/usePresentationParticipant/usePresentationParticipant';
+import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useSelectedParticipant from '../VideoProvider/useSelectedParticipant/useSelectedParticipant';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
 jest.mock('../../hooks/useVideoContext/useVideoContext');
 jest.mock('../VideoProvider/useSelectedParticipant/useSelectedParticipant');
 jest.mock('../../hooks/useMainParticipant/useMainParticipant');
-jest.mock('../../hooks/usePresentationParticipant/usePresentationParticipant');
+jest.mock('../../hooks/useScreenShareParticipant/useScreenShareParticipant');
 const mockedVideoContext = useVideoContext as jest.Mock<any>;
 const mockUseSelectedParticipant = useSelectedParticipant as jest.Mock<any>;
 const mockUseMainParticipant = useMainParticipant as jest.Mock<any>;
-const mockUsePresentationParticipant = usePresentationParticipant as jest.Mock<any>;
+const mockUseScreenShareParticipant = useScreenShareParticipant as jest.Mock<any>;
 
 describe('the ParticipantList component', () => {
   let mockRoom: any;
@@ -105,14 +105,14 @@ describe('the ParticipantList component', () => {
     ).toBe(false);
   });
 
-  it('should not add the hideParticipant prop when the participant is the mainParticipant and they are presenting content', () => {
+  it('should not add the hideParticipant prop when the participant is the mainParticipant and they are sharing their screen', () => {
     const mockParticipant = { sid: 0 };
     mockRoom.participants = new Map([
       [0, mockParticipant],
       [1, { sid: 1 }],
     ]);
     mockUseMainParticipant.mockImplementation(() => mockParticipant);
-    mockUsePresentationParticipant.mockImplementation(() => mockParticipant);
+    mockUseScreenShareParticipant.mockImplementation(() => mockParticipant);
     mockedVideoContext.mockImplementation(() => ({ room: mockRoom }));
     const wrapper = shallow(<ParticipantList />);
     expect(
