@@ -74,18 +74,21 @@ module.exports.handler = async (context, event, callback) => {
   }
 
   const streamSyncClient = client.sync.services(streamMapItem.data.sync_service_sid);
-  
+
+  const viewerDocumentName = `viewer-${user_identity}`;
+  // Create viewer document
   try {
-    // Reset the viewers hand_raised and speaker_invite status
-    await streamSyncClient.documents(`viewer-${user_identity}`).update({ data: { speaker_invite: false } });
+    await streamSyncClient.documents.create({
+      uniqueName: viewerDocumentName,
+    });
   } catch (e) {
-    // Ignore 404 errors. It is possible that the user may not have a viewer document
-    if (e.code !== 20404) {
+    // Ignore "Unique name already exists" error
+    if (e.code !== 54301) {
       console.error(e);
       response.setStatusCode(500);
       response.setBody({
         error: {
-          message: 'error updating viewer document',
+          message: 'error creating viewer document',
           explanation: e.message,
         },
       });
@@ -93,6 +96,22 @@ module.exports.handler = async (context, event, callback) => {
     }
   }
 
+  // Give user read access to viewer document
+  try {
+    await streamSyncClient.documents(viewerDocumentName)
+      .documentPermissions(user_identity)
+      .update({ read: true, write: false, manage: false })
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error adding read access to viewer document',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+  
   const raisedHandsMapName = `raised_hands`;
   // Give user read access to raised hands map
   try {

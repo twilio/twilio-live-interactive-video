@@ -65,7 +65,7 @@ module.exports.handler = async (context, event, callback) => {
   // Get stream sync client
   try {
     let streamMapItem = await getStreamMapItem(room.sid);
-    streamSyncClient = client.sync.services(streamMapItem.data.sync_service_sid);
+    streamSyncClient = await client.sync.services(streamMapItem.data.sync_service_sid);
   } catch (e) {
     response.setStatusCode(500);
     response.setBody({
