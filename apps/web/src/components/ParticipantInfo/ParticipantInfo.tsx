@@ -150,7 +150,7 @@ export default function ParticipantInfo({
   const videoPublication = publications.find(p => p.trackName.includes('camera'));
 
   const isVideoEnabled = Boolean(videoPublication);
-  const isScreenShareEnabled = publications.find(p => p.trackName.includes('screen'));
+  const isScreenShareEnabled = publications.find(p => p.trackName.includes('video-composer-presentation'));
 
   const videoTrack = useTrack(videoPublication);
   const isVideoSwitchedOff = useIsTrackSwitchedOff(videoTrack as LocalVideoTrack | RemoteVideoTrack);

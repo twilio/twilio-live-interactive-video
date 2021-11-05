@@ -34,7 +34,7 @@ describe('the VideoTrack component', () => {
   it('should have "object-fit: contain" applied when the track is a screen track', () => {
     const mockTrack2 = {
       ...mockTrack,
-      name: 'screen',
+      name: 'video-composer-presentation',
     } as any;
     const { container } = render(<VideoTrack track={mockTrack2} />);
     expect(container.querySelector('video')!.style).toMatchObject({ objectFit: 'contain' });

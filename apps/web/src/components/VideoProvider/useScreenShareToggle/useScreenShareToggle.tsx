@@ -30,7 +30,7 @@ export default function useScreenShareToggle(room: Room | null, onError: ErrorCa
         // set to 'high' via track.setPriority()
         room!.localParticipant
           .publishTrack(track, {
-            name: 'screen', // Tracks can be named to easily find them later
+            name: 'video-composer-presentation', // Tracks can be named to easily find them later
             priority: 'low', // Priority is set to high by the subscriber when the video track is rendered
           } as MediaStreamTrackPublishOptions)
           .then(trackPublication => {

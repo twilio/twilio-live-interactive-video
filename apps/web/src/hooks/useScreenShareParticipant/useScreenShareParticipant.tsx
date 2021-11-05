@@ -20,7 +20,7 @@ export default function useScreenShareParticipant() {
             .concat(room.localParticipant)
             .find((participant: Participant) =>
               Array.from<TrackPublication>(participant.tracks.values()).find(track =>
-                track.trackName.includes('screen')
+                track.trackName.includes('video-composer-presentation')
               )
             )
         );
