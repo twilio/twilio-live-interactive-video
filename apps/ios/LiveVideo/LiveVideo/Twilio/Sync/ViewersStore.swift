@@ -5,20 +5,20 @@
 import TwilioSyncClient
 import Combine
 
-class RaisedHandsStore: NSObject, SyncStoring {
-    struct RaisedHand {
+class ViewersStore: NSObject, SyncStoring, ObservableObject {
+    struct Viewer {
         let userIdentity: String
         
         init(mapItem: TWSMapItem) {
             userIdentity = mapItem.key
         }
     }
-    
-    let raisedHandAddedPublisher = PassthroughSubject<RaisedHand, Never>()
-    let raisedHandRemovedPublisher = PassthroughSubject<RaisedHand, Never>()
+
+    let viewerAddedPublisher = PassthroughSubject<Viewer, Never>()
+    let viewerRemovedPublisher = PassthroughSubject<Viewer, Never>()
+    private(set) var viewers: [Viewer] = []
     var uniqueName: String!
     var errorHandler: ((Error) -> Void)?
-    private(set) var raisedHands: [RaisedHand] = []
     private var map: TWSMap?
 
     func connect(client: TwilioSyncClient, completion: @escaping (Error?) -> Void) {
@@ -36,7 +36,7 @@ class RaisedHandsStore: NSObject, SyncStoring {
             
             self.map = map
 
-            /// Only fetch the first page because showing more than 100 raised hands is not useful.
+            /// Only fetch the first page because showing details for more than 100 viewers is not useful.
             let queryOptions = TWSMapQueryOptions().withPageSize(100)
 
             map.queryItems(with: queryOptions) { result, paginator in
@@ -45,7 +45,7 @@ class RaisedHandsStore: NSObject, SyncStoring {
                     return
                 }
 
-                self.raisedHands = paginator.getItems().map { RaisedHand(mapItem: $0) }
+                self.viewers = paginator.getItems().map { Viewer(mapItem: $0) }
                 completion(nil)
             }
         }
@@ -53,15 +53,15 @@ class RaisedHandsStore: NSObject, SyncStoring {
     
     func disconnect() {
         map = nil
-        raisedHands = []
+        viewers = []
     }
 }
 
-extension RaisedHandsStore: TWSMapDelegate {
+extension ViewersStore: TWSMapDelegate {
     func onMap(_ map: TWSMap, itemAdded item: TWSMapItem, eventContext: TWSEventContext) {
-        let raisedHand = RaisedHand(mapItem: item)
-        raisedHands.append(raisedHand)
-        raisedHandAddedPublisher.send(raisedHand)
+        let viewer = Viewer(mapItem: item)
+        viewers.append(viewer)
+        viewerAddedPublisher.send(viewer)
     }
     
     func onMap(
@@ -70,13 +70,13 @@ extension RaisedHandsStore: TWSMapDelegate {
         previousItemData: [String : Any],
         eventContext: TWSEventContext
     ) {
-        guard let index = raisedHands.firstIndex(where: { $0.userIdentity == itemKey }) else {
+        guard let index = viewers.firstIndex(where: { $0.userIdentity == itemKey }) else {
             return
         }
-
-        let raisedHand = raisedHands[index]
-        raisedHands.remove(at: index)
-        raisedHandRemovedPublisher.send(raisedHand)
+        
+        let viewer = viewers[index]
+        viewers.remove(at: index)
+        viewerRemovedPublisher.send(viewer)
     }
     
     func onMap(_ map: TWSMap, errorOccurred error: TWSError) {

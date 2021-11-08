@@ -8,7 +8,7 @@ struct StreamView: View {
     @EnvironmentObject var viewModel: StreamViewModel
     @EnvironmentObject var streamManager: StreamManager
     @EnvironmentObject var speakerSettingsManager: SpeakerSettingsManager
-    @EnvironmentObject var raisedHandsStore: RaisedHandsStore
+    @EnvironmentObject var viewersViewModel: ViewersViewModel
     @EnvironmentObject var speakerGridViewModel: SpeakerGridViewModel
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
@@ -83,7 +83,7 @@ struct StreamView: View {
                             }
                             StreamToolbarButton(
                                 image: Image(systemName: "person.2"),
-                                shouldShowBadge: raisedHandsStore.haveNew
+                                shouldShowBadge: viewersViewModel.haveNewRaisedHand
                             ) {
                                 isShowingParticipants = true
                             }
@@ -213,7 +213,7 @@ struct StreamView_Previews: PreviewProvider {
             .environmentObject(SpeakerGridViewModel())
         }
         .environmentObject(SpeakerSettingsManager())
-        .environmentObject(RaisedHandsStore())
+        .environmentObject(ViewersViewModel())
         .environmentObject(StreamViewModel())
     }
 }

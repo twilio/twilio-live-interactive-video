@@ -2,13 +2,50 @@
 
 exports.handler = async function (context, event, callback) {
   const common = require(Runtime.getAssets()['/common.js'].path);
-  const { axiosClient, response } = common(context, event, callback);
+  const { axiosClient, response, getStreamMapItem } = common(context, event, callback);
 
   const client = context.getTwilioClient();
 
   const { StatusCallbackEvent, RoomSid } = event;
 
-  if (StatusCallbackEvent === 'room-ended') {
+  if (StatusCallbackEvent === 'participant-connected') {
+    let streamSyncClient;
+
+    // Get stream sync client
+    try {
+      const streamMapItem = await getStreamMapItem(RoomSid);
+      streamSyncClient = await client.sync.services(streamMapItem.data.sync_service_sid);
+    } catch (e) {
+      console.error(e);
+      response.setStatusCode(500);
+      response.setBody({
+        error: {
+          message: 'error getting stream sync client',
+          explanation: e.message,
+        },
+      });
+      return callback(null, response);
+    }
+
+    // Remove user from viewers map
+    try {
+      await streamSyncClient.syncMaps('viewers').syncMapItems(event.ParticipantIdentity).remove();
+    } catch (e) {
+      const notFoundError = 20404;
+
+      if (e.code !== notFoundError) {
+        console.error(e);
+        response.setStatusCode(500);
+        response.setBody({
+          error: {
+            message: 'error removing user from viewers map',
+            explanation: e.message,
+          },
+        });
+        return callback(null, response);
+      }
+    }
+  } else if (StatusCallbackEvent === 'room-ended') {
     try {
       const backendStorageSyncClient = await client.sync.services(context.BACKEND_STORAGE_SYNC_SERVICE_SID);
       const streamMapItem = await backendStorageSyncClient.syncMaps('streams').syncMapItems(RoomSid).fetch();

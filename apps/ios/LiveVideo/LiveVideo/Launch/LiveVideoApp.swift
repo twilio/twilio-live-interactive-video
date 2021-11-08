@@ -13,7 +13,7 @@ struct LiveVideoApp: App {
     @StateObject private var streamManager = StreamManager()
     @StateObject private var speakerSettingsManager = SpeakerSettingsManager()
     @StateObject private var speakerGridViewModel = SpeakerGridViewModel()
-    @StateObject private var raisedHandsStore = RaisedHandsStore()
+    @StateObject private var viewersViewModel = ViewersViewModel()
     @StateObject private var api = API()
 
     var body: some Scene {
@@ -25,14 +25,20 @@ struct LiveVideoApp: App {
                 .environmentObject(streamManager)
                 .environmentObject(speakerGridViewModel)
                 .environmentObject(speakerSettingsManager)
-                .environmentObject(raisedHandsStore)
+                .environmentObject(viewersViewModel)
                 .environmentObject(api)
                 .onAppear {
                     let localParticipant = LocalParticipantManager(authManager: authManager)
                     let roomManager = RoomManager()
                     roomManager.configure(localParticipant: localParticipant)
                     let viewerStore = ViewerStore()
-                    let syncManager = SyncManager(raisedHandsStore: raisedHandsStore, viewerStore: viewerStore)
+                    let raisedHandsStore = RaisedHandsStore()
+                    let viewersStore = ViewersStore()
+                    let syncManager = SyncManager(
+                        viewersStore: viewersStore,
+                        raisedHandsStore: raisedHandsStore,
+                        viewerStore: viewerStore
+                    )
                     streamManager.configure(
                         roomManager: roomManager,
                         playerManager: PlayerManager(),
@@ -48,6 +54,11 @@ struct LiveVideoApp: App {
                     participantsViewModel.configure(api: api, roomManager: roomManager)
                     speakerSettingsManager.configure(localParticipant: localParticipant)
                     speakerGridViewModel.configure(roomManager: roomManager)
+                    viewersViewModel.configure(
+                        streamManager: streamManager,
+                        viewersStore: viewersStore,
+                        raisedHandsStore: raisedHandsStore
+                    )
                 }
         }
     }

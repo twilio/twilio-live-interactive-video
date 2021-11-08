@@ -110,6 +110,7 @@ class StreamManager: ObservableObject {
             case let .success(response):
                 self?.connectSync(
                     accessToken: response.token,
+                    viewersMapName: response.syncObjectNames.viewersMap,
                     raisedHandsMapName: response.syncObjectNames.raisedHandsMap,
                     viewerDocumentName: response.syncObjectNames.viewerDocument
                 )
@@ -119,7 +120,12 @@ class StreamManager: ObservableObject {
         }
     }
     
-    private func connectSync(accessToken: String, raisedHandsMapName: String, viewerDocumentName: String?) {
+    private func connectSync(
+        accessToken: String,
+        viewersMapName: String,
+        raisedHandsMapName: String,
+        viewerDocumentName: String?
+    ) {
         guard !syncManager.isConnected else {
             connectRoomOrPlayer(accessToken: accessToken)
             return
@@ -127,6 +133,7 @@ class StreamManager: ObservableObject {
 
         syncManager.connect(
             token: accessToken,
+            viewersMapName: viewersMapName,
             raisedHandsMapName: raisedHandsMapName,
             viewerDocumentName: viewerDocumentName
         ) { [weak self] error in
@@ -158,6 +165,17 @@ extension StreamManager: PlayerManagerDelegate {
     func playerManagerDidConnect(_ playerManager: PlayerManager) {
         player = playerManager.player
         state = .connected
+        
+        let request = ViewerConnectedToPlayerRequest(userIdentity: config.userIdentity, streamName: config.streamName)
+        
+        api.request(request) { [weak self] result in
+            switch result {
+            case .success:
+                break
+            case let .failure(error):
+                self?.handleError(error)
+            }
+        }
     }
     
     func playerManager(_ playerManager: PlayerManager, didDisconnectWithError error: Error) {

@@ -191,6 +191,41 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
+  const viewersMapName = `viewers`
+  
+  // Create viewers map
+  try {
+    raisedHandsMap = await streamSyncClient.syncMaps.create({
+      uniqueName: viewersMapName
+    });
+  } catch (e) {
+    console.error(e);
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error creating viewers map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  // Give user read access to viewers map
+  try {
+    await streamSyncClient.syncMaps(viewersMapName)
+      .syncMapPermissions(user_identity)
+      .update({ read: true, write: false, manage: false })
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error adding read access to viewers map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
   const conversationsClient = client.conversations.services(CONVERSATIONS_SERVICE_SID);
 
   try {
@@ -256,6 +291,7 @@ module.exports.handler = async (context, event, callback) => {
   response.setBody({
     token: token.toJwt(),
     sync_object_names: {
+      viewers_map: 'viewers',
       raised_hands_map: `raised_hands`,
     },
   });

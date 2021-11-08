@@ -11,10 +11,12 @@ class SyncManager: NSObject {
     var isConnected: Bool { client != nil }
     private var client: TwilioSyncClient?
     private var raisedHandsStore: RaisedHandsStore
+    private var viewersStore: ViewersStore
     private var viewerStore: ViewerStore
     private var stores: [SyncStoring] = []
 
-    init(raisedHandsStore: RaisedHandsStore, viewerStore: ViewerStore) {
+    init(viewersStore: ViewersStore, raisedHandsStore: RaisedHandsStore, viewerStore: ViewerStore) {
+        self.viewersStore = viewersStore
         self.raisedHandsStore = raisedHandsStore
         self.viewerStore = viewerStore
     }
@@ -27,12 +29,14 @@ class SyncManager: NSObject {
     /// - Parameter completion: Called when all configured stores are synchronnized or an error is encountered.
     func connect(
         token: String,
+        viewersMapName: String,
         raisedHandsMapName: String,
         viewerDocumentName: String?,
         completion: @escaping (Error?) -> Void
     ) {
+        viewersStore.uniqueName = viewersMapName
         raisedHandsStore.uniqueName = raisedHandsMapName
-        stores.append(raisedHandsStore)
+        stores = [viewersStore, raisedHandsStore]
         
         if let viewerDocumentName = viewerDocumentName {
             viewerStore.uniqueName = viewerDocumentName

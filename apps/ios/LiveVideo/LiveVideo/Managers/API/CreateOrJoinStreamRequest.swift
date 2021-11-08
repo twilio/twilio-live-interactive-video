@@ -12,6 +12,7 @@ struct CreateOrJoinStreamRequest: APIRequest {
 
     struct Response: Decodable {
         struct SyncObjectNames: Decodable {
+            let viewersMap: String
             let raisedHandsMap: String
             let viewerDocument: String?
         }
