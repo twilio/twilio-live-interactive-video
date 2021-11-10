@@ -1,7 +1,7 @@
 'use strict';
 
 exports.handler = async function (context, event, callback) {
-  const authHandler = require(Runtime.getAssets()['/auth-handler.js'].path);
+  const authHandler = require(Runtime.getAssets()['/auth.js'].path);
   authHandler(context, event, callback);
 
   const common = require(Runtime.getAssets()['/common.js'].path);

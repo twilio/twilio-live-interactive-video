@@ -120,7 +120,7 @@
       "pre-commit": "lint-staged"
     }
   },
-  "proxy": "https://twilio-live-interactive-video-4946-5730-dev.twil.io?passcode=93557249465730",
+  "proxy": "https://twilio-live-interactive-video-2697-4873-dev.twil.io",
   "jest": {
     "snapshotSerializers": [
       "enzyme-to-json/serializer"

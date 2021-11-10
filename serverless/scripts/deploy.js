@@ -1,5 +1,7 @@
 const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
-const { getListOfFunctionsAndAssets } = require('@twilio-labs/serverless-api/dist/utils/fs');
+const {
+  getListOfFunctionsAndAssets,
+} = require('@twilio-labs/serverless-api/dist/utils/fs');
 const cli = require('cli-ux').default;
 const { Command } = require('commander');
 const constants = require('../constants');
@@ -17,7 +19,10 @@ program.option('-o, --override', 'Override existing deployment');
 program.parse(process.argv);
 const options = program.opts();
 
-const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
+const client = require('twilio')(
+  process.env.ACCOUNT_SID,
+  process.env.AUTH_TOKEN
+);
 const serverlessClient = new TwilioServerlessApiClient({
   username: process.env.ACCOUNT_SID,
   password: process.env.AUTH_TOKEN,
@@ -26,13 +31,20 @@ const serverlessClient = new TwilioServerlessApiClient({
 // Returns an object of the previously deployed environment variables if they exist.
 async function findExistingConfiguration() {
   const services = await client.serverless.services.list();
-  const service = services.find((service) => service.friendlyName.includes(constants.SERVICE_NAME));
+  const service = services.find((service) =>
+    service.friendlyName.includes(constants.SERVICE_NAME)
+  );
 
   if (service) {
     const envVariables = await serverlessClient.getEnvironmentVariables({
       serviceSid: service.sid,
       environment: 'dev',
-      keys: ['TWILIO_API_KEY_SID', 'TWILIO_API_KEY_SECRET', 'CONVERSATIONS_SERVICE_SID', 'SYNC_SERVICE_SID'],
+      keys: [
+        'TWILIO_API_KEY_SID',
+        'TWILIO_API_KEY_SECRET',
+        'CONVERSATIONS_SERVICE_SID',
+        'SYNC_SERVICE_SID',
+      ],
       getValues: true,
     });
 
@@ -62,7 +74,9 @@ async function deployFunctions() {
   // Create new services if they don't already exist
   if (!existingConfiguration) {
     cli.action.start('Creating Api Key');
-    apiKey = await client.newKeys.create({ friendlyName: constants.API_KEY_NAME });
+    apiKey = await client.newKeys.create({
+      friendlyName: constants.API_KEY_NAME,
+    });
 
     cli.action.start('Creating Conversations Service');
     conversationsService = await client.conversations.services.create({
@@ -70,7 +84,10 @@ async function deployFunctions() {
     });
 
     cli.action.start('Creating Sync Service');
-    syncService = await client.sync.services.create({ friendlyName: constants.TWILIO_SYNC_SERVICE_NAME, aclEnabled: true });
+    syncService = await client.sync.services.create({
+      friendlyName: constants.TWILIO_SYNC_SERVICE_NAME,
+      aclEnabled: true,
+    });
   }
 
   const { assets, functions } = await getListOfFunctionsAndAssets(__dirname, {
@@ -103,10 +120,15 @@ async function deployFunctions() {
 
   const deployConfig = {
     env: {
-      TWILIO_API_KEY_SID: existingConfiguration?.TWILIO_API_KEY_SID || apiKey.sid,
-      TWILIO_API_KEY_SECRET: existingConfiguration?.TWILIO_API_KEY_SECRET || apiKey.secret,
-      CONVERSATIONS_SERVICE_SID: existingConfiguration?.CONVERSATIONS_SERVICE_SID || conversationsService.sid,
-      SYNC_SERVICE_SID: existingConfiguration?.SYNC_SERVICE_SID || syncService.sid,
+      TWILIO_API_KEY_SID:
+        existingConfiguration?.TWILIO_API_KEY_SID || apiKey.sid,
+      TWILIO_API_KEY_SECRET:
+        existingConfiguration?.TWILIO_API_KEY_SECRET || apiKey.secret,
+      CONVERSATIONS_SERVICE_SID:
+        existingConfiguration?.CONVERSATIONS_SERVICE_SID ||
+        conversationsService.sid,
+      SYNC_SERVICE_SID:
+        existingConfiguration?.SYNC_SERVICE_SID || syncService.sid,
       MEDIA_EXTENSION: constants.MEDIA_EXTENSION,
       APP_EXPIRY: Date.now() + 1000 * 60 * 60 * 24 * 7, // One week
       PASSCODE: getRandomInt(6),
@@ -115,6 +137,7 @@ async function deployFunctions() {
       dependencies: {
         axios: '^0.21.4',
         twilio: '^3.68.0', // This determines the version of the Twilio client returned by context.getTwilioClient()
+        '@twilio/runtime-handler': '1.2.1',
       },
     },
     functionsEnv: 'dev',
@@ -130,10 +153,14 @@ async function deployFunctions() {
     deployConfig.serviceName = `${constants.SERVICE_NAME}-${getRandomInt(4)}`;
   }
 
-  const { domain, serviceSid } = await serverlessClient.deployProject(deployConfig);
+  const { domain, serviceSid } = await serverlessClient.deployProject(
+    deployConfig
+  );
 
   // Make functions editable in console
-  await client.serverless.services(serviceSid).update({ includeCredentials: true, uiEditable: true });
+  await client.serverless
+    .services(serviceSid)
+    .update({ includeCredentials: true, uiEditable: true });
 }
 
 async function deploy() {

@@ -2,9 +2,9 @@
 'use strict';
 
 module.exports = async (context, event, callback) => {
-  const { API_PASSCODE, API_PASSCODE_EXPIRY, DOMAIN_NAME } = context;
+  const { PASSCODE, APP_EXPIRY, DOMAIN_NAME } = context;
 
-  const { passcode } = event;
+  const passcode = event.request.headers.authorization;
   const [, appID, serverlessID] = DOMAIN_NAME.match(
     /-?(\d*)-(\d+)(?:-\w+)?.twil.io$/
   );
@@ -12,7 +12,7 @@ module.exports = async (context, event, callback) => {
   let response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  if (Date.now() > API_PASSCODE_EXPIRY) {
+  if (Date.now() > APP_EXPIRY) {
     response.setStatusCode(401);
     response.setBody({
       error: {
@@ -24,11 +24,11 @@ module.exports = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  if (API_PASSCODE + appID + serverlessID !== passcode) {
+  if (PASSCODE + appID + serverlessID !== passcode) {
     response.setStatusCode(401);
     response.setBody({
       error: {
-        message: 'passcode incorrect',
+        message: `passcode incorrect`,
         explanation:
           'The passcode used to validate application users is incorrect.',
       },

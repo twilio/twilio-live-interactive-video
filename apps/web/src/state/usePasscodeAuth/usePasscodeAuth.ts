@@ -3,7 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import { apiClient } from '../api/api';
 
-const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/verify-passcode';
+const endpoint = '/verify-passcode';
 
 export function getPasscode(location: Location) {
   const match = location.search.match(/[?&]passcode=(\d+).*$/);
@@ -11,25 +11,22 @@ export function getPasscode(location: Location) {
   return passcode;
 }
 
-export function fetchToken(passcode: string) {
+export function fetchPasscode(passcode: string) {
   return fetch(endpoint, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
+      Authorization: `${passcode}`,
     },
-    body: JSON.stringify({
-      passcode,
-    }),
   });
 }
 
 export function verifyPasscode(passcode: string) {
-  return fetchToken(passcode).then(async res => {
+  return fetchPasscode(passcode).then(async res => {
     const jsonResponse = await res.json();
     if (res.status === 401) {
       return { isValid: false, error: jsonResponse.error?.message };
     }
-
     if (res.ok) {
       return { isValid: true };
     }
@@ -54,9 +51,10 @@ export default function usePasscodeAuth() {
   const [user, setUser] = useState<{ displayName: undefined; photoURL: undefined; passcode: string } | null>(null);
   const [isAuthReady, setIsAuthReady] = useState(false);
 
+  // add passcode to Authorization header for each api request:
   useEffect(() => {
     const inderceptorId = apiClient.interceptors.request.use(config => {
-      config.data.passcode = user?.passcode;
+      config.headers!.authorization = `${user?.passcode}`;
       return config;
     });
     return () => {
@@ -71,7 +69,6 @@ export default function usePasscodeAuth() {
       verifyPasscode(passcode)
         .then(verification => {
           if (verification?.isValid) {
-            console.log('here');
             setUser({ passcode } as any);
             window.sessionStorage.setItem('passcode', passcode);
             history.replace(location.pathname);

@@ -2,7 +2,7 @@
 'use strict';
 
 module.exports.handler = async (context, event, callback) => {
-  const authHandler = require(Runtime.getAssets()['/auth-handler.js'].path);
+  const authHandler = require(Runtime.getAssets()['/auth.js'].path);
   authHandler(context, event, callback);
 
   const { user_identity, stream_name, hand_raised } = event;
