@@ -24,6 +24,23 @@ exports.handler = async function (context, event, callback) {
       return callback(null, response);
     }
 
+    // Remove user from speakers map
+    try {
+      await streamSyncClient.syncMaps('speakers').syncMapItems(event.Identity).remove();
+    } catch (e) {
+      if (e.code !== notFoundError) {
+        console.error(e);
+        response.setStatusCode(500);
+        response.setBody({
+          error: {
+            message: 'error removing user from speakers map',
+            explanation: e.message,
+          },
+        });
+        return callback(null, response);
+      }
+    }
+
     // Remove user from raised hands map
     try {
       await streamSyncClient.syncMaps('raised_hands').syncMapItems(event.Identity).remove();
