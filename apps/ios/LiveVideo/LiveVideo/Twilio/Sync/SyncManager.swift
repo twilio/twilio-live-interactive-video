@@ -10,12 +10,12 @@ class SyncManager: NSObject {
     let errorPublisher = PassthroughSubject<Error, Never>()
     var isConnected: Bool { client != nil }
     private var client: TwilioSyncClient?
-    private var raisedHandsStore: RaisedHandsStore
-    private var viewersStore: ViewersStore
+    private var raisedHandsStore: SyncUsersStore
+    private var viewersStore: SyncUsersStore
     private var viewerStore: ViewerStore
     private var stores: [SyncStoring] = []
 
-    init(viewersStore: ViewersStore, raisedHandsStore: RaisedHandsStore, viewerStore: ViewerStore) {
+    init(viewersStore: SyncUsersStore, raisedHandsStore: SyncUsersStore, viewerStore: ViewerStore) {
         self.viewersStore = viewersStore
         self.raisedHandsStore = raisedHandsStore
         self.viewerStore = viewerStore

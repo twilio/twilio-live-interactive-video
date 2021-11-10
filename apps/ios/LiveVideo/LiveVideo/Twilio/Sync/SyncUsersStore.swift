@@ -5,20 +5,24 @@
 import TwilioSyncClient
 import Combine
 
-class ViewersStore: NSObject, SyncStoring, ObservableObject {
-    struct Viewer {
-        let userIdentity: String
-        
+/// Reusable store that fetches users from a sync map.
+///
+/// Set `uniqueName` to specify the name of the sync map to fetch users from.
+class SyncUsersStore: NSObject, SyncStoring {
+    struct User: Identifiable {
+        let identity: String
+        var id: String { identity }
+     
         init(mapItem: TWSMapItem) {
-            userIdentity = mapItem.key
+            identity = mapItem.key
         }
     }
 
-    let viewerAddedPublisher = PassthroughSubject<Viewer, Never>()
-    let viewerRemovedPublisher = PassthroughSubject<Viewer, Never>()
-    private(set) var viewers: [Viewer] = []
+    let userAddedPublisher = PassthroughSubject<User, Never>()
+    let userRemovedPublisher = PassthroughSubject<User, Never>()
     var uniqueName: String!
     var errorHandler: ((Error) -> Void)?
+    private(set) var users: [User] = []
     private var map: TWSMap?
 
     func connect(client: TwilioSyncClient, completion: @escaping (Error?) -> Void) {
@@ -36,7 +40,7 @@ class ViewersStore: NSObject, SyncStoring, ObservableObject {
             
             self.map = map
 
-            /// Only fetch the first page because showing details for more than 100 viewers is not useful.
+            /// Only fetch the first page because showing more than 100 is not useful for this app
             let queryOptions = TWSMapQueryOptions().withPageSize(100)
 
             map.queryItems(with: queryOptions) { result, paginator in
@@ -45,7 +49,7 @@ class ViewersStore: NSObject, SyncStoring, ObservableObject {
                     return
                 }
 
-                self.viewers = paginator.getItems().map { Viewer(mapItem: $0) }
+                self.users = paginator.getItems().map { User(mapItem: $0) }
                 completion(nil)
             }
         }
@@ -53,15 +57,15 @@ class ViewersStore: NSObject, SyncStoring, ObservableObject {
     
     func disconnect() {
         map = nil
-        viewers = []
+        users = []
     }
 }
 
-extension ViewersStore: TWSMapDelegate {
+extension SyncUsersStore: TWSMapDelegate {
     func onMap(_ map: TWSMap, itemAdded item: TWSMapItem, eventContext: TWSEventContext) {
-        let viewer = Viewer(mapItem: item)
-        viewers.append(viewer)
-        viewerAddedPublisher.send(viewer)
+        let user = User(mapItem: item)
+        users.append(user)
+        userAddedPublisher.send(user)
     }
     
     func onMap(
@@ -70,13 +74,13 @@ extension ViewersStore: TWSMapDelegate {
         previousItemData: [String : Any],
         eventContext: TWSEventContext
     ) {
-        guard let index = viewers.firstIndex(where: { $0.userIdentity == itemKey }) else {
+        guard let index = users.firstIndex(where: { $0.identity == itemKey }) else {
             return
         }
-        
-        let viewer = viewers[index]
-        viewers.remove(at: index)
-        viewerRemovedPublisher.send(viewer)
+
+        let user = users[index]
+        users.remove(at: index)
+        userRemovedPublisher.send(user)
     }
     
     func onMap(_ map: TWSMap, errorOccurred error: TWSError) {

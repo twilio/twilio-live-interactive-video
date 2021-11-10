@@ -32,8 +32,8 @@ struct LiveVideoApp: App {
                     let roomManager = RoomManager()
                     roomManager.configure(localParticipant: localParticipant)
                     let viewerStore = ViewerStore()
-                    let raisedHandsStore = RaisedHandsStore()
-                    let viewersStore = ViewersStore()
+                    let raisedHandsStore = SyncUsersStore()
+                    let viewersStore = SyncUsersStore()
                     let syncManager = SyncManager(
                         viewersStore: viewersStore,
                         raisedHandsStore: raisedHandsStore,

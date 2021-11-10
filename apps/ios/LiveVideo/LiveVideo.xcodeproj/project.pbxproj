@@ -10,7 +10,7 @@
 		DC175F2D270E232F00D9D1FE /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F2C270E232F00D9D1FE /* SyncManager.swift */; };
 		DC175F30270E238F00D9D1FE /* TwilioSyncClient in Frameworks */ = {isa = PBXBuildFile; productRef = DC175F2F270E238F00D9D1FE /* TwilioSyncClient */; };
 		DC175F32270E23F900D9D1FE /* ViewerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F31270E23F900D9D1FE /* ViewerStore.swift */; };
-		DC175F34270E3FD200D9D1FE /* RaisedHandsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F33270E3FD200D9D1FE /* RaisedHandsStore.swift */; };
+		DC175F34270E3FD200D9D1FE /* SyncUsersStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F33270E3FD200D9D1FE /* SyncUsersStore.swift */; };
 		DC175F37270E5B6F00D9D1FE /* ParticipantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F36270E5B6F00D9D1FE /* ParticipantsView.swift */; };
 		DC175F39270F673600D9D1FE /* SendSpeakerInviteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F38270F673600D9D1FE /* SendSpeakerInviteRequest.swift */; };
 		DC175F3E2717530D00D9D1FE /* SyncStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F3D2717530D00D9D1FE /* SyncStoring.swift */; };
@@ -41,7 +41,6 @@
 		DC4F45EF27286AF300BE730B /* TipStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4F45EE27286AF300BE730B /* TipStyle.swift */; };
 		DC504A7526F0F18700C37EC9 /* SpeakerGridViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC504A7426F0F18600C37EC9 /* SpeakerGridViewModel.swift */; };
 		DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC504A7626F1468E00C37EC9 /* SpeakerVideoView.swift */; };
-		DC50A5732739B8CA00E29580 /* ViewersStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50A5722739B8CA00E29580 /* ViewersStore.swift */; };
 		DC50A5752739E26300E29580 /* ViewerConnectedToPlayerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50A5742739E26300E29580 /* ViewerConnectedToPlayerRequest.swift */; };
 		DC50A577273ACE1700E29580 /* ViewersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50A576273ACE1600E29580 /* ViewersViewModel.swift */; };
 		DC5F453926CC061A009C5C79 /* LiveVideoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */; };
@@ -101,7 +100,7 @@
 /* Begin PBXFileReference section */
 		DC175F2C270E232F00D9D1FE /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		DC175F31270E23F900D9D1FE /* ViewerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewerStore.swift; sourceTree = "<group>"; };
-		DC175F33270E3FD200D9D1FE /* RaisedHandsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaisedHandsStore.swift; sourceTree = "<group>"; };
+		DC175F33270E3FD200D9D1FE /* SyncUsersStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncUsersStore.swift; sourceTree = "<group>"; };
 		DC175F36270E5B6F00D9D1FE /* ParticipantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsView.swift; sourceTree = "<group>"; };
 		DC175F38270F673600D9D1FE /* SendSpeakerInviteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendSpeakerInviteRequest.swift; sourceTree = "<group>"; };
 		DC175F3D2717530D00D9D1FE /* SyncStoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStoring.swift; sourceTree = "<group>"; };
@@ -130,7 +129,6 @@
 		DC4F45EE27286AF300BE730B /* TipStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipStyle.swift; sourceTree = "<group>"; };
 		DC504A7426F0F18600C37EC9 /* SpeakerGridViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerGridViewModel.swift; sourceTree = "<group>"; };
 		DC504A7626F1468E00C37EC9 /* SpeakerVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoView.swift; sourceTree = "<group>"; };
-		DC50A5722739B8CA00E29580 /* ViewersStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewersStore.swift; sourceTree = "<group>"; };
 		DC50A5742739E26300E29580 /* ViewerConnectedToPlayerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewerConnectedToPlayerRequest.swift; sourceTree = "<group>"; };
 		DC50A576273ACE1600E29580 /* ViewersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewersViewModel.swift; sourceTree = "<group>"; };
 		DC5F453526CC061A009C5C79 /* LiveVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -225,10 +223,9 @@
 		DC175F3A2715DC4500D9D1FE /* Sync */ = {
 			isa = PBXGroup;
 			children = (
-				DC175F33270E3FD200D9D1FE /* RaisedHandsStore.swift */,
 				DC175F2C270E232F00D9D1FE /* SyncManager.swift */,
 				DC175F3D2717530D00D9D1FE /* SyncStoring.swift */,
-				DC50A5722739B8CA00E29580 /* ViewersStore.swift */,
+				DC175F33270E3FD200D9D1FE /* SyncUsersStore.swift */,
 				DC175F31270E23F900D9D1FE /* ViewerStore.swift */,
 			);
 			path = Sync;
@@ -650,7 +647,7 @@
 				DC1ED0FD26E14D0B00FFA769 /* StreamToolbar.swift in Sources */,
 				DC1ED0F926E1440200FFA769 /* StreamStatusView.swift in Sources */,
 				DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */,
-				DC175F34270E3FD200D9D1FE /* RaisedHandsStore.swift in Sources */,
+				DC175F34270E3FD200D9D1FE /* SyncUsersStore.swift in Sources */,
 				DCC48FA326D8322900EE49EF /* SwiftUIPlayerView.swift in Sources */,
 				DC4F45E92723135500BE730B /* CardButtonLabel.swift in Sources */,
 				DC1ED0F726E12C7400FFA769 /* ProgressHUD.swift in Sources */,
@@ -680,7 +677,6 @@
 				DC1ED11C26E92DEA00FFA769 /* RemoteParticipantManager.swift in Sources */,
 				DC5F453B26CC061A009C5C79 /* HomeView.swift in Sources */,
 				DCC1D62A26D9643400892038 /* FormStack.swift in Sources */,
-				DC50A5732739B8CA00E29580 /* ViewersStore.swift in Sources */,
 				DC6404D4271B3BF8004730C6 /* StreamViewModel.swift in Sources */,
 				DCB4497426F5496400B52774 /* SpeakerSettingsManager.swift in Sources */,
 				DC1ED0FB26E144AE00FFA769 /* StreamToolbarButton.swift in Sources */,

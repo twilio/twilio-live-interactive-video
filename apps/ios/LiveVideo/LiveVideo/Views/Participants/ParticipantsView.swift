@@ -16,11 +16,11 @@ struct ParticipantsView: View {
                 Section(header: Text("Viewers (\(viewersViewModel.viewerCount))")) {
                     ForEach(viewersViewModel.viewersWithRaisedHand) { viewer in
                         HStack {
-                            Text("\(viewer.userIdentity) 🖐")
+                            Text("\(viewer.identity) 🖐")
                                 .alert(isPresented: $viewModel.showSpeakerInviteSent) {
                                     Alert(
                                         title: Text("Invitation sent"),
-                                        message: Text("You invited \(viewer.userIdentity) to be a speaker. They’ll be able to share audio and video."),
+                                        message: Text("You invited \(viewer.identity) to be a speaker. They’ll be able to share audio and video."),
                                         dismissButton: .default(Text("Got it!"))
                                     )
                                 }
@@ -28,7 +28,7 @@ struct ParticipantsView: View {
                             
                             if streamManager.config.role == .host {
                                 Button("Invite to speak") {
-                                    viewModel.sendSpeakerInvite(userIdentity: viewer.userIdentity)
+                                    viewModel.sendSpeakerInvite(userIdentity: viewer.identity)
                                 }
                                 .foregroundColor(.backgroundPrimary)
                                 .alert(isPresented: $viewModel.showError) {
@@ -43,7 +43,7 @@ struct ParticipantsView: View {
                     
                     ForEach(viewersViewModel.viewersWithoutRaisedHand) { viewer in
                         HStack {
-                            Text(viewer.userIdentity)
+                            Text(viewer.identity)
                             Spacer()
                         }
                     }
@@ -90,15 +90,15 @@ struct ParticipantsView_Previews: PreviewProvider {
 private extension ViewersViewModel {
     static func stub(withRaisedHand: [String] = [], withoutRaisedHand: [String] = []) -> ViewersViewModel {
         let viewModel = ViewersViewModel()
-        viewModel.viewersWithRaisedHand = withRaisedHand.map { ViewersViewModel.Viewer(userIdentity: $0) }
-        viewModel.viewersWithoutRaisedHand = withoutRaisedHand.map { ViewersViewModel.Viewer(userIdentity: $0) }
+        viewModel.viewersWithRaisedHand = withRaisedHand.map { SyncUsersStore.User(identity: $0) }
+        viewModel.viewersWithoutRaisedHand = withoutRaisedHand.map { SyncUsersStore.User(identity: $0) }
         viewModel.viewerCount = withRaisedHand.count + withoutRaisedHand.count
         return viewModel
     }
 }
 
-private extension ViewersViewModel.Viewer {
-    init(userIdentity: String) {
-        self.userIdentity = userIdentity
+private extension SyncUsersStore.User {
+    init(identity: String) {
+        self.identity = identity
     }
 }
