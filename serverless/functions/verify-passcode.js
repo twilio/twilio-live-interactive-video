@@ -1,7 +1,8 @@
 /* global Twilio Runtime */
 'use strict';
 
-// const AccessToken = Twilio.jwt.AccessToken;
+
+// verifies that auth.js does not throw error for passcode:
 
 module.exports.handler = async (context, event, callback) => {
   const authHandler = require(Runtime.getAssets()['/auth.js'].path);

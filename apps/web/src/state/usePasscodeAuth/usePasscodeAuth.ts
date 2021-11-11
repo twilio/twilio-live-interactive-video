@@ -11,18 +11,14 @@ export function getPasscode(location: Location) {
   return passcode;
 }
 
-export function fetchPasscode(passcode: string) {
+export function verifyPasscode(passcode: string) {
   return fetch(endpoint, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
       Authorization: `${passcode}`,
     },
-  });
-}
-
-export function verifyPasscode(passcode: string) {
-  return fetchPasscode(passcode).then(async res => {
+  }).then(async res => {
     const jsonResponse = await res.json();
     if (res.status === 401) {
       return { isValid: false, error: jsonResponse.error?.message };
