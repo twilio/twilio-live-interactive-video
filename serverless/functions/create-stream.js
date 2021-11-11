@@ -51,12 +51,7 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  let room,
-    playerStreamer,
-    mediaProcessor,
-    streamDocument,
-    conversation,
-    raisedHandsMap;
+  let room, playerStreamer, mediaProcessor, streamDocument, conversation, raisedHandsMap;
 
   const client = context.getTwilioClient();
   const syncClient = client.sync.services(context.SYNC_SERVICE_SID);
@@ -175,9 +170,7 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  const conversationsClient = client.conversations.services(
-    CONVERSATIONS_SERVICE_SID
-  );
+  const conversationsClient = client.conversations.services(CONVERSATIONS_SERVICE_SID);
 
   try {
     // Here we add a timer to close the conversation after the maximum length of a room (24 hours).
@@ -201,9 +194,7 @@ module.exports.handler = async (context, event, callback) => {
 
   try {
     // Add participant to conversation
-    await conversationsClient
-      .conversations(room.sid)
-      .participants.create({ identity: user_identity });
+    await conversationsClient.conversations(room.sid).participants.create({ identity: user_identity });
   } catch (e) {
     // Ignore "Participant already exists" error (50433)
     if (e.code !== 50433) {
@@ -212,8 +203,7 @@ module.exports.handler = async (context, event, callback) => {
       response.setBody({
         error: {
           message: 'error creating conversation participant',
-          explanation:
-            'Something went wrong when creating a conversation participant.',
+          explanation: 'Something went wrong when creating a conversation participant.',
         },
       });
       return callback(null, response);
@@ -221,14 +211,9 @@ module.exports.handler = async (context, event, callback) => {
   }
 
   // Create token
-  const token = new AccessToken(
-    ACCOUNT_SID,
-    TWILIO_API_KEY_SID,
-    TWILIO_API_KEY_SECRET,
-    {
-      ttl: MAX_ALLOWED_SESSION_DURATION,
-    }
-  );
+  const token = new AccessToken(ACCOUNT_SID, TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, {
+    ttl: MAX_ALLOWED_SESSION_DURATION,
+  });
 
   // Add participant's identity to token
   token.identity = user_identity;

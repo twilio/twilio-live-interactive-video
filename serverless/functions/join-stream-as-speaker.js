@@ -67,9 +67,7 @@ module.exports.handler = async (context, event, callback) => {
 
   try {
     // Reset the viewers hand_raised and speaker_invite status
-    await syncClient
-      .documents(`viewer-${room.sid}-${user_identity}`)
-      .update({ data: { speaker_invite: false } });
+    await syncClient.documents(`viewer-${room.sid}-${user_identity}`).update({ data: { speaker_invite: false } });
   } catch (e) {
     // Ignore 404 errors. It is possible that the user may not have a viewer document
     if (e.code !== 20404) {
@@ -105,10 +103,7 @@ module.exports.handler = async (context, event, callback) => {
 
   // Lower the participant's hand
   try {
-    await syncClient
-      .syncMaps(raisedHandsMapName)
-      .syncMapItems(user_identity)
-      .remove();
+    await syncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
   } catch (e) {
     // Ignore 404 errors. It is possible that the user may not have a key in the raised hands map
     if (e.code !== 20404) {
@@ -124,9 +119,7 @@ module.exports.handler = async (context, event, callback) => {
     }
   }
 
-  const conversationsClient = client.conversations.services(
-    CONVERSATIONS_SERVICE_SID
-  );
+  const conversationsClient = client.conversations.services(CONVERSATIONS_SERVICE_SID);
 
   try {
     // Find conversation
@@ -145,9 +138,7 @@ module.exports.handler = async (context, event, callback) => {
 
   try {
     // Add participant to conversation
-    await conversationsClient
-      .conversations(room.sid)
-      .participants.create({ identity: user_identity });
+    await conversationsClient.conversations(room.sid).participants.create({ identity: user_identity });
   } catch (e) {
     // Ignore "Participant already exists" error (50433)
     if (e.code !== 50433) {
@@ -156,8 +147,7 @@ module.exports.handler = async (context, event, callback) => {
       response.setBody({
         error: {
           message: 'error creating conversation participant',
-          explanation:
-            'Something went wrong when creating a conversation participant.',
+          explanation: 'Something went wrong when creating a conversation participant.',
         },
       });
       return callback(null, response);
@@ -165,14 +155,9 @@ module.exports.handler = async (context, event, callback) => {
   }
 
   // Create token
-  const token = new AccessToken(
-    ACCOUNT_SID,
-    TWILIO_API_KEY_SID,
-    TWILIO_API_KEY_SECRET,
-    {
-      ttl: MAX_ALLOWED_SESSION_DURATION,
-    }
-  );
+  const token = new AccessToken(ACCOUNT_SID, TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, {
+    ttl: MAX_ALLOWED_SESSION_DURATION,
+  });
 
   // Add participant's identity to token
   token.identity = user_identity;

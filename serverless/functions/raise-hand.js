@@ -66,14 +66,9 @@ module.exports.handler = async (context, event, callback) => {
   const raisedHandsMapName = `raised_hands-${room.sid}`;
   try {
     if (hand_raised) {
-      await syncClient
-        .syncMaps(raisedHandsMapName)
-        .syncMapItems.create({ key: user_identity, data: {} });
+      await syncClient.syncMaps(raisedHandsMapName).syncMapItems.create({ key: user_identity, data: {} });
     } else {
-      await syncClient
-        .syncMaps(raisedHandsMapName)
-        .syncMapItems(user_identity)
-        .remove();
+      await syncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
     }
   } catch (e) {
     // Ignore errors relating to removing a syncMapItem that doesn't exist (20404), or creating one that already does exist (54208)

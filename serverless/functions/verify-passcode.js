@@ -1,7 +1,6 @@
 /* global Twilio Runtime */
 'use strict';
 
-
 // verifies that auth.js does not throw error for passcode:
 
 module.exports.handler = async (context, event, callback) => {

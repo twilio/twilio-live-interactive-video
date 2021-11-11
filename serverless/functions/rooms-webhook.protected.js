@@ -15,9 +15,7 @@ exports.handler = async function (context, event, callback) {
   if (StatusCallbackEvent === 'room-ended') {
     try {
       // Get playerStreamerSid and mediaProcessorSid from stream document
-      const streamDocument = await syncClient
-        .documents(`stream-${RoomSid}`)
-        .fetch();
+      const streamDocument = await syncClient.documents(`stream-${RoomSid}`).fetch();
       const { player_streamer_sid, media_processor_sid } = streamDocument.data;
 
       // Stop mediaProcessor

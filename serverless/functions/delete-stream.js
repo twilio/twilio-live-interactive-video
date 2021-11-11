@@ -14,14 +14,10 @@ exports.handler = async function (context, event, callback) {
 
   try {
     // End room
-    const room = await client.video
-      .rooms(stream_name)
-      .update({ status: 'completed' });
+    const room = await client.video.rooms(stream_name).update({ status: 'completed' });
 
     // Get playerStreamerSid and mediaProcessorSid from stream document
-    const streamDocument = await syncClient
-      .documents(`stream-${room.sid}`)
-      .fetch();
+    const streamDocument = await syncClient.documents(`stream-${room.sid}`).fetch();
     const { player_streamer_sid, media_processor_sid } = streamDocument.data;
 
     // Stop mediaProcessor
