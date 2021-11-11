@@ -6,6 +6,7 @@ import TwilioVideo
 
 protocol RemoteParticipantManagerDelegate: AnyObject {
     func participantDidChange(_ participant: RemoteParticipantManager)
+    func participant(_ participant: RemoteParticipantManager, didSendMessage message: RoomMessage)
 }
 
 /// Determines remote participant state and sends updates to delegate.
@@ -107,5 +108,23 @@ extension RemoteParticipantManager: RemoteParticipantDelegate {
         publication: RemoteAudioTrackPublication
     ) {
         delegate?.participantDidChange(self)
+    }
+
+    func didSubscribeToDataTrack(
+        dataTrack: RemoteDataTrack,
+        publication: RemoteDataTrackPublication,
+        participant: RemoteParticipant
+    ) {
+        dataTrack.delegate = self
+    }
+}
+
+extension RemoteParticipantManager: RemoteDataTrackDelegate {
+    func remoteDataTrackDidReceiveData(remoteDataTrack: RemoteDataTrack, message: Data) {
+        guard let message = try? JSONDecoder(keyDecodingStrategy: .convertFromSnakeCase).decode(RoomMessage.self, from: message) else {
+            return
+        }
+        
+        delegate?.participant(self, didSendMessage: message)
     }
 }

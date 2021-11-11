@@ -42,6 +42,9 @@
 		DC504A7526F0F18700C37EC9 /* SpeakerGridViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC504A7426F0F18600C37EC9 /* SpeakerGridViewModel.swift */; };
 		DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC504A7626F1468E00C37EC9 /* SpeakerVideoView.swift */; };
 		DC50A5752739E26300E29580 /* ViewerConnectedToPlayerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50A5742739E26300E29580 /* ViewerConnectedToPlayerRequest.swift */; };
+		DC50A579273D78E900E29580 /* RoomMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50A578273D78E800E29580 /* RoomMessage.swift */; };
+		DC50A57B273DBB2700E29580 /* JSONEncoderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50A57A273DBB2700E29580 /* JSONEncoderExtension.swift */; };
+		DC50A57D273DBD6D00E29580 /* JSONDecoderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50A57C273DBD6D00E29580 /* JSONDecoderExtension.swift */; };
 		DC5F453926CC061A009C5C79 /* LiveVideoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */; };
 		DC5F453B26CC061A009C5C79 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453A26CC061A009C5C79 /* HomeView.swift */; };
 		DC5F453D26CC061F009C5C79 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC5F453C26CC061F009C5C79 /* Assets.xcassets */; };
@@ -129,6 +132,9 @@
 		DC504A7426F0F18600C37EC9 /* SpeakerGridViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerGridViewModel.swift; sourceTree = "<group>"; };
 		DC504A7626F1468E00C37EC9 /* SpeakerVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoView.swift; sourceTree = "<group>"; };
 		DC50A5742739E26300E29580 /* ViewerConnectedToPlayerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewerConnectedToPlayerRequest.swift; sourceTree = "<group>"; };
+		DC50A578273D78E800E29580 /* RoomMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomMessage.swift; sourceTree = "<group>"; };
+		DC50A57A273DBB2700E29580 /* JSONEncoderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONEncoderExtension.swift; sourceTree = "<group>"; };
+		DC50A57C273DBD6D00E29580 /* JSONDecoderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDecoderExtension.swift; sourceTree = "<group>"; };
 		DC5F453526CC061A009C5C79 /* LiveVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoApp.swift; sourceTree = "<group>"; };
 		DC5F453A26CC061A009C5C79 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -234,6 +240,7 @@
 				DC1ED10726E92DE900FFA769 /* LocalParticipantManager.swift */,
 				DC1ED10526E92DE900FFA769 /* RemoteParticipantManager.swift */,
 				DC1ED10226E92DE800FFA769 /* RoomManager.swift */,
+				DC50A578273D78E800E29580 /* RoomMessage.swift */,
 				DC1ED10E26E92DE900FFA769 /* TrackName.swift */,
 			);
 			path = Room;
@@ -460,6 +467,8 @@
 		DCC48F9926D8294900EE49EF /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				DC50A57C273DBD6D00E29580 /* JSONDecoderExtension.swift */,
+				DC50A57A273DBB2700E29580 /* JSONEncoderExtension.swift */,
 				DCC48F9A26D8296300EE49EF /* LiveVideoError.swift */,
 			);
 			path = Helpers;
@@ -636,6 +645,7 @@
 				DC5F458326CDBA0B009C5C79 /* SignInView.swift in Sources */,
 				DC44BB412703C8DD00DB656D /* SceneDelegate.swift in Sources */,
 				DC9E18392729DC740070F53F /* OffscreenSpeakersView.swift in Sources */,
+				DC50A57B273DBB2700E29580 /* JSONEncoderExtension.swift in Sources */,
 				DC1ED11A26E92DEA00FFA769 /* RoomManager.swift in Sources */,
 				DC4AA66526D1456100E677D5 /* AuthManager.swift in Sources */,
 				DC6404D22719E549004730C6 /* RaiseHandRequest.swift in Sources */,
@@ -653,6 +663,7 @@
 				DC4F45EF27286AF300BE730B /* TipStyle.swift in Sources */,
 				DC4AA66226D0493E00E677D5 /* PrimaryButtonStyle.swift in Sources */,
 				DCC48F7426D80BC300EE49EF /* EnterStreamNameView.swift in Sources */,
+				DC50A579273D78E900E29580 /* RoomMessage.swift in Sources */,
 				DCC48F8A26D8288B00EE49EF /* API.swift in Sources */,
 				DC5F459626CEC247009C5C79 /* UserDefaultsKeys.swift in Sources */,
 				DC1ED13026E960C600FFA769 /* SpeakerGridView.swift in Sources */,
@@ -686,6 +697,7 @@
 				DC175F39270F673600D9D1FE /* SendSpeakerInviteRequest.swift in Sources */,
 				DC175F402718852B00D9D1FE /* DeleteStreamRequest.swift in Sources */,
 				DC1ED0F026DFCD3C00FFA769 /* LiveBadge.swift in Sources */,
+				DC50A57D273DBD6D00E29580 /* JSONDecoderExtension.swift in Sources */,
 				DC4F45ED2728591900BE730B /* StreamConfigFlowModel.swift in Sources */,
 				DCC48FA126D8311700EE49EF /* PlayerManager.swift in Sources */,
 				DC4AA66026D047DD00E677D5 /* FormTextFieldStyle.swift in Sources */,
