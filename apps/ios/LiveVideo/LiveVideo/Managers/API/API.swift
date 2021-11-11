@@ -6,16 +6,11 @@ import Alamofire
 import Foundation
 
 class API: ObservableObject {
-    private let session = Session()
-    private let jsonEncoder = JSONEncoder()
-    private let jsonDecoder = JSONDecoder()
     private let backendURL = <#BACKEND_URL#>
+    private let session = Session()
+    private let jsonEncoder = JSONEncoder(keyEncodingStrategy: .convertToSnakeCase)
+    private let jsonDecoder = JSONDecoder(keyDecodingStrategy: .convertFromSnakeCase)
 
-    init() {
-        jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-        jsonEncoder.keyEncodingStrategy = .convertToSnakeCase
-    }
-    
     func request<Request: APIRequest>(
         _ request: Request,
         completion: ((Result<Request.Response, Error>) -> Void)? = nil
