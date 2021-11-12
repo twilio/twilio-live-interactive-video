@@ -142,7 +142,8 @@ module.exports.handler = async (context, event, callback) => {
       data: {
         sync_service_sid: streamSyncService.sid,
         player_streamer_sid: playerStreamer.data.sid,
-        media_processor_sid: mediaProcessor.data.sid
+        media_processor_sid: mediaProcessor.data.sid,
+        host_identity: user_identity
       } 
     });
   } catch (e) {

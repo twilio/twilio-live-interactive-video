@@ -149,3 +149,7 @@ class ParticipantsViewModel: ObservableObject {
         viewerCount = viewersWithoutRaisedHand.count + viewersWithRaisedHand.count
     }
 }
+
+extension SyncUsersStore.User {
+    var displayName: String
+}

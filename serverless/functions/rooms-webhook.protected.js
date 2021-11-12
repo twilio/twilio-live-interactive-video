@@ -17,9 +17,11 @@ exports.handler = async function (context, event, callback) {
         break; // Ignore the video composer participant
       }
 
+      let streamMapItem;
+
       // Get stream sync client
       try {
-        const streamMapItem = await getStreamMapItem(RoomSid);
+        streamMapItem = await getStreamMapItem(RoomSid);
         streamSyncClient = await client.sync.services(streamMapItem.data.sync_service_sid);
       } catch (e) {
         console.error(e);
@@ -69,7 +71,10 @@ exports.handler = async function (context, event, callback) {
 
       // Add user to speaker map
       try {
-        await streamSyncClient.syncMaps('speakers').syncMapItems.create({ key: event.ParticipantIdentity, data: { } });
+        await streamSyncClient.syncMaps('speakers').syncMapItems.create({ 
+          key: event.ParticipantIdentity, 
+          data: { host: streamMapItem.data.host_identity == event.ParticipantIdentity ? true : false } 
+        });
       } catch (e) {
         const alreadyExistsError = 54208;
     
