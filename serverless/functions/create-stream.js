@@ -161,7 +161,7 @@ module.exports.handler = async (context, event, callback) => {
   
   // Create speakers map
   try {
-    raisedHandsMap = await streamSyncClient.syncMaps.create({
+    await streamSyncClient.syncMaps.create({
       uniqueName: speakersMapName
     });
   } catch (e) {
