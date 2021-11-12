@@ -49,7 +49,7 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  let room, playerStreamer, mediaProcessor, streamSyncService, streamSyncClient, conversation, raisedHandsMap;
+  let room, playerStreamer, mediaProcessor, streamSyncService, streamSyncClient, conversation;
 
   const client = context.getTwilioClient();
 
@@ -160,7 +160,7 @@ module.exports.handler = async (context, event, callback) => {
   const raisedHandsMapName = `raised_hands`
   // Create raised hands map
   try {
-    raisedHandsMap = await streamSyncClient.syncMaps.create({
+    await streamSyncClient.syncMaps.create({
       uniqueName: raisedHandsMapName
     });
   } catch (e) {
@@ -195,7 +195,7 @@ module.exports.handler = async (context, event, callback) => {
   
   // Create viewers map
   try {
-    raisedHandsMap = await streamSyncClient.syncMaps.create({
+    await streamSyncClient.syncMaps.create({
       uniqueName: viewersMapName
     });
   } catch (e) {
