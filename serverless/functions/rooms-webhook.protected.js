@@ -73,7 +73,7 @@ exports.handler = async function (context, event, callback) {
       try {
         await streamSyncClient.syncMaps('speakers').syncMapItems.create({ 
           key: event.ParticipantIdentity, 
-          data: { host: streamMapItem.data.host_identity == event.ParticipantIdentity ? true : false } 
+          data: { host: false } 
         });
       } catch (e) {
         const alreadyExistsError = 54208;

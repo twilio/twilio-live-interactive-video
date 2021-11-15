@@ -46,7 +46,7 @@ class ParticipantsViewModel: ObservableObject {
         self.raisedHandsStore = raisedHandsStore
 
         streamManager.$state
-            .sink { [weak self] _ in self?.handleStreamStateChange() }
+            .sink { [weak self] state in self?.handleStreamStateChange(state) }
             .store(in: &subscriptions)
 
         speakersStore.userAddedPublisher
@@ -87,8 +87,8 @@ class ParticipantsViewModel: ObservableObject {
         }
     }
     
-    private func handleStreamStateChange() {
-        switch streamManager.state {
+    private func handleStreamStateChange(_ state: StreamManager.State) {
+        switch state {
         case .disconnected:
             speakers = []
             viewersWithRaisedHand = []

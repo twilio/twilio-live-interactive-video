@@ -108,6 +108,12 @@ struct StreamView: View {
                             ) {
                                 viewModel.isHandRaised.toggle()
                             }
+                            StreamToolbarButton(
+                                image: Image(systemName: "person.2"),
+                                shouldShowBadge: participantsViewModel.haveNewRaisedHand
+                            ) {
+                                isShowingParticipants = true
+                            }
                         }
                     }
                     
