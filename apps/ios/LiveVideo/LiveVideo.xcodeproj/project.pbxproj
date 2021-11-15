@@ -42,7 +42,6 @@
 		DC504A7526F0F18700C37EC9 /* SpeakerGridViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC504A7426F0F18600C37EC9 /* SpeakerGridViewModel.swift */; };
 		DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC504A7626F1468E00C37EC9 /* SpeakerVideoView.swift */; };
 		DC50A5752739E26300E29580 /* ViewerConnectedToPlayerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50A5742739E26300E29580 /* ViewerConnectedToPlayerRequest.swift */; };
-		DC50A577273ACE1700E29580 /* ViewersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50A576273ACE1600E29580 /* ViewersViewModel.swift */; };
 		DC5F453926CC061A009C5C79 /* LiveVideoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */; };
 		DC5F453B26CC061A009C5C79 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453A26CC061A009C5C79 /* HomeView.swift */; };
 		DC5F453D26CC061F009C5C79 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC5F453C26CC061F009C5C79 /* Assets.xcassets */; };
@@ -130,7 +129,6 @@
 		DC504A7426F0F18600C37EC9 /* SpeakerGridViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerGridViewModel.swift; sourceTree = "<group>"; };
 		DC504A7626F1468E00C37EC9 /* SpeakerVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoView.swift; sourceTree = "<group>"; };
 		DC50A5742739E26300E29580 /* ViewerConnectedToPlayerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewerConnectedToPlayerRequest.swift; sourceTree = "<group>"; };
-		DC50A576273ACE1600E29580 /* ViewersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewersViewModel.swift; sourceTree = "<group>"; };
 		DC5F453526CC061A009C5C79 /* LiveVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoApp.swift; sourceTree = "<group>"; };
 		DC5F453A26CC061A009C5C79 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -215,7 +213,6 @@
 			children = (
 				DC175F36270E5B6F00D9D1FE /* ParticipantsView.swift */,
 				DC6404D7271B68D4004730C6 /* ParticipantsViewModel.swift */,
-				DC50A576273ACE1600E29580 /* ViewersViewModel.swift */,
 			);
 			path = Participants;
 			sourceTree = "<group>";
@@ -636,7 +633,6 @@
 			files = (
 				DC1ED13226E9666E00FFA769 /* SwiftUIVideoView.swift in Sources */,
 				DCB4497626F65A7000B52774 /* SpeakerVideoViewModel.swift in Sources */,
-				DC50A577273ACE1700E29580 /* ViewersViewModel.swift in Sources */,
 				DC5F458326CDBA0B009C5C79 /* SignInView.swift in Sources */,
 				DC44BB412703C8DD00DB656D /* SceneDelegate.swift in Sources */,
 				DC9E18392729DC740070F53F /* OffscreenSpeakersView.swift in Sources */,

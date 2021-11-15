@@ -128,6 +128,22 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
+  // Give user read access to speakers map
+  try {
+    await streamSyncClient.syncMaps('speakers')
+      .syncMapPermissions(user_identity)
+      .update({ read: true, write: false, manage: false })
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error adding read access to speakers map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+  
   // Give user read access to raised hands map
   try {
     await streamSyncClient.syncMaps(`raised_hands`)
@@ -203,6 +219,7 @@ module.exports.handler = async (context, event, callback) => {
   response.setBody({
     token: token.toJwt(),
     sync_object_names: {
+      speakers_map: 'speakers',
       viewers_map: 'viewers',
       raised_hands_map: `raised_hands`,
       viewer_document: `viewer-${user_identity}`,

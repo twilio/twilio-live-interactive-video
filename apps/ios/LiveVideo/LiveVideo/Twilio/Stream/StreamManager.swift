@@ -108,35 +108,27 @@ class StreamManager: ObservableObject {
         api.request(request) { [weak self] result in
             switch result {
             case let .success(response):
-                self?.connectSync(
-                    accessToken: response.token,
-                    viewersMapName: response.syncObjectNames.viewersMap,
-                    raisedHandsMapName: response.syncObjectNames.raisedHandsMap,
-                    viewerDocumentName: response.syncObjectNames.viewerDocument
+                let objectNames = SyncManager.ObjectNames(
+                    speakersMap: response.syncObjectNames.speakersMap,
+                    viewersMap: response.syncObjectNames.viewersMap,
+                    raisedHandsMap: response.syncObjectNames.raisedHandsMap,
+                    viewerDocument: response.syncObjectNames.viewerDocument
                 )
+                
+                self?.connectSync(accessToken: response.token, objectNames: objectNames)
             case let .failure(error):
                 self?.handleError(error)
             }
         }
     }
     
-    private func connectSync(
-        accessToken: String,
-        viewersMapName: String,
-        raisedHandsMapName: String,
-        viewerDocumentName: String?
-    ) {
+    private func connectSync(accessToken: String, objectNames: SyncManager.ObjectNames) {
         guard !syncManager.isConnected else {
             connectRoomOrPlayer(accessToken: accessToken)
             return
         }
 
-        syncManager.connect(
-            token: accessToken,
-            viewersMapName: viewersMapName,
-            raisedHandsMapName: raisedHandsMapName,
-            viewerDocumentName: viewerDocumentName
-        ) { [weak self] error in
+        syncManager.connect(token: accessToken, objectNames: objectNames) { [weak self] error in
             if let error = error {
                 self?.handleError(error)
                 return

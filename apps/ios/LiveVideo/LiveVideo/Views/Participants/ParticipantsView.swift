@@ -6,15 +6,22 @@ import SwiftUI
 
 struct ParticipantsView: View {
     @EnvironmentObject var viewModel: ParticipantsViewModel
-    @EnvironmentObject var viewersViewModel: ViewersViewModel
     @EnvironmentObject var streamManager: StreamManager
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         NavigationView {
             List {
-                Section(header: Text("Viewers (\(viewersViewModel.viewerCount))")) {
-                    ForEach(viewersViewModel.viewersWithRaisedHand) { viewer in
+                Section(header: Text("Speakers (\(viewModel.speakers.count))")) {
+                    ForEach(viewModel.speakers) { speaker in
+                        HStack {
+                            Text(speaker.identity)
+                            Spacer()
+                        }
+                    }
+                }
+                Section(header: Text("Viewers (\(viewModel.viewerCount))")) {
+                    ForEach(viewModel.viewersWithRaisedHand) { viewer in
                         HStack {
                             Text("\(viewer.identity) 🖐")
                                 .alert(isPresented: $viewModel.showSpeakerInviteSent) {
@@ -41,7 +48,7 @@ struct ParticipantsView: View {
                         .buttonStyle(PlainButtonStyle())
                     }
                     
-                    ForEach(viewersViewModel.viewersWithoutRaisedHand) { viewer in
+                    ForEach(viewModel.viewersWithoutRaisedHand) { viewer in
                         HStack {
                             Text(viewer.identity)
                             Spacer()
@@ -62,7 +69,7 @@ struct ParticipantsView: View {
             }
         }
         .onAppear {
-            viewersViewModel.haveNewRaisedHand = false
+            viewModel.haveNewRaisedHand = false
         }
     }
 }
@@ -72,27 +79,43 @@ struct ParticipantsView_Previews: PreviewProvider {
         return Group {
             ParticipantsView()
                 .previewDisplayName("Host")
-                .environmentObject(ViewersViewModel.stub(withRaisedHand: ["Alice"], withoutRaisedHand: ["Bob"]))
+                .environmentObject(
+                    ParticipantsViewModel.stub(
+                        speakers: ["Sam"],
+                        viewersWithRaisedHand: ["Alice"],
+                        viewersWithoutRaisedHand: ["Bob"]
+                    )
+                )
                 .environmentObject(StreamManager(config: .stub(role: .host)))
             ParticipantsView()
                 .previewDisplayName("Speaker")
-                .environmentObject(ViewersViewModel.stub(withRaisedHand: ["Alice"], withoutRaisedHand: ["Bob"]))
+                .environmentObject(
+                    ParticipantsViewModel.stub(
+                        speakers: ["Sam"],
+                        viewersWithRaisedHand: ["Alice"],
+                        viewersWithoutRaisedHand: ["Bob"]
+                    )
+                )
                 .environmentObject(StreamManager(config: .stub(role: .speaker)))
             ParticipantsView()
                 .previewDisplayName("No Viewers")
-                .environmentObject(ViewersViewModel())
+                .environmentObject(ParticipantsViewModel.stub(speakers: ["Sam"]))
                 .environmentObject(StreamManager())
         }
-        .environmentObject(ParticipantsViewModel())
     }
 }
 
-private extension ViewersViewModel {
-    static func stub(withRaisedHand: [String] = [], withoutRaisedHand: [String] = []) -> ViewersViewModel {
-        let viewModel = ViewersViewModel()
-        viewModel.viewersWithRaisedHand = withRaisedHand.map { SyncUsersStore.User(identity: $0) }
-        viewModel.viewersWithoutRaisedHand = withoutRaisedHand.map { SyncUsersStore.User(identity: $0) }
-        viewModel.viewerCount = withRaisedHand.count + withoutRaisedHand.count
+private extension ParticipantsViewModel {
+    static func stub(
+        speakers: [String] = [],
+        viewersWithRaisedHand: [String] = [],
+        viewersWithoutRaisedHand: [String] = []
+    ) -> ParticipantsViewModel {
+        let viewModel = ParticipantsViewModel()
+        viewModel.speakers = speakers.map { SyncUsersStore.User(identity: $0) }
+        viewModel.viewersWithRaisedHand = viewersWithRaisedHand.map { SyncUsersStore.User(identity: $0) }
+        viewModel.viewersWithoutRaisedHand = viewersWithoutRaisedHand.map { SyncUsersStore.User(identity: $0) }
+        viewModel.viewerCount = viewersWithRaisedHand.count + viewersWithoutRaisedHand.count
         return viewModel
     }
 }

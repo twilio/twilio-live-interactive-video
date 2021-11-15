@@ -40,6 +40,7 @@ class StreamViewModel: ObservableObject {
     }
     @Published var alertIdentifier: AlertIdentifier?
     private(set) var error: Error?
+    private var haveShownViewerConnectedAlert = false
     private var streamManager: StreamManager!
     private var api: API!
     private var viewerStore: ViewerStore!
@@ -80,7 +81,10 @@ class StreamViewModel: ObservableObject {
                 case .connected:
                     switch streamManager.config.role {
                     case .viewer:
-                        self.alertIdentifier = .viewerConnected
+                        if !self.haveShownViewerConnectedAlert {
+                            self.haveShownViewerConnectedAlert = true
+                            self.alertIdentifier = .viewerConnected
+                        }
                     case .host, .speaker:
                         break
                     }

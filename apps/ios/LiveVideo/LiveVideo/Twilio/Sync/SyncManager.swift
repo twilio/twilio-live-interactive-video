@@ -7,38 +7,47 @@ import TwilioSyncClient
 
 /// Consolidates configuration and error handling for stores that are backed by [Twilio Sync](https://www.twilio.com/sync).
 class SyncManager: NSObject {
+    struct ObjectNames {
+        let speakersMap: String
+        let viewersMap: String
+        let raisedHandsMap: String
+        let viewerDocument: String?
+    }
+
     let errorPublisher = PassthroughSubject<Error, Never>()
     var isConnected: Bool { client != nil }
     private var client: TwilioSyncClient?
+    private var speakersStore: SyncUsersStore
     private var raisedHandsStore: SyncUsersStore
     private var viewersStore: SyncUsersStore
     private var viewerStore: ViewerStore
     private var stores: [SyncStoring] = []
 
-    init(viewersStore: SyncUsersStore, raisedHandsStore: SyncUsersStore, viewerStore: ViewerStore) {
+    init(
+        speakersStore: SyncUsersStore,
+        viewersStore: SyncUsersStore,
+        raisedHandsStore: SyncUsersStore,
+        viewerStore: ViewerStore
+    ) {
+        self.speakersStore = speakersStore
         self.viewersStore = viewersStore
         self.raisedHandsStore = raisedHandsStore
         self.viewerStore = viewerStore
     }
 
-    /// Connects all sync stores that have a configuration.
+    /// Connects all sync stores.
     ///
     /// - Parameter token: An access token with sync grant.
-    /// - Parameter raisedHandsMapName: The unique name for the raised hands map.
-    /// - Parameter viewerDocumentName: The unique name for the viewer document.
+    /// - Parameter objectNames: Unique names for the sync objects.
     /// - Parameter completion: Called when all configured stores are synchronnized or an error is encountered.
-    func connect(
-        token: String,
-        viewersMapName: String,
-        raisedHandsMapName: String,
-        viewerDocumentName: String?,
-        completion: @escaping (Error?) -> Void
+    func connect(token: String, objectNames: ObjectNames, completion: @escaping (Error?) -> Void
     ) {
-        viewersStore.uniqueName = viewersMapName
-        raisedHandsStore.uniqueName = raisedHandsMapName
-        stores = [viewersStore, raisedHandsStore]
+        speakersStore.uniqueName = objectNames.speakersMap
+        viewersStore.uniqueName = objectNames.viewersMap
+        raisedHandsStore.uniqueName = objectNames.raisedHandsMap
+        stores = [speakersStore, viewersStore, raisedHandsStore]
         
-        if let viewerDocumentName = viewerDocumentName {
+        if let viewerDocumentName = objectNames.viewerDocument {
             viewerStore.uniqueName = viewerDocumentName
             stores.append(viewerStore)
         }
