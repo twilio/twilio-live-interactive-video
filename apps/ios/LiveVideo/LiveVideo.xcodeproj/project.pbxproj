@@ -10,7 +10,7 @@
 		DC175F2D270E232F00D9D1FE /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F2C270E232F00D9D1FE /* SyncManager.swift */; };
 		DC175F30270E238F00D9D1FE /* TwilioSyncClient in Frameworks */ = {isa = PBXBuildFile; productRef = DC175F2F270E238F00D9D1FE /* TwilioSyncClient */; };
 		DC175F32270E23F900D9D1FE /* ViewerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F31270E23F900D9D1FE /* ViewerStore.swift */; };
-		DC175F34270E3FD200D9D1FE /* RaisedHandsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F33270E3FD200D9D1FE /* RaisedHandsStore.swift */; };
+		DC175F34270E3FD200D9D1FE /* SyncUsersStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F33270E3FD200D9D1FE /* SyncUsersStore.swift */; };
 		DC175F37270E5B6F00D9D1FE /* ParticipantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F36270E5B6F00D9D1FE /* ParticipantsView.swift */; };
 		DC175F39270F673600D9D1FE /* SendSpeakerInviteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F38270F673600D9D1FE /* SendSpeakerInviteRequest.swift */; };
 		DC175F3E2717530D00D9D1FE /* SyncStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F3D2717530D00D9D1FE /* SyncStoring.swift */; };
@@ -41,6 +41,8 @@
 		DC4F45EF27286AF300BE730B /* TipStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4F45EE27286AF300BE730B /* TipStyle.swift */; };
 		DC504A7526F0F18700C37EC9 /* SpeakerGridViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC504A7426F0F18600C37EC9 /* SpeakerGridViewModel.swift */; };
 		DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC504A7626F1468E00C37EC9 /* SpeakerVideoView.swift */; };
+		DC50A5752739E26300E29580 /* ViewerConnectedToPlayerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50A5742739E26300E29580 /* ViewerConnectedToPlayerRequest.swift */; };
+		DC50A577273ACE1700E29580 /* ViewersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50A576273ACE1600E29580 /* ViewersViewModel.swift */; };
 		DC5F453926CC061A009C5C79 /* LiveVideoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */; };
 		DC5F453B26CC061A009C5C79 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453A26CC061A009C5C79 /* HomeView.swift */; };
 		DC5F453D26CC061F009C5C79 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC5F453C26CC061F009C5C79 /* Assets.xcassets */; };
@@ -98,7 +100,7 @@
 /* Begin PBXFileReference section */
 		DC175F2C270E232F00D9D1FE /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		DC175F31270E23F900D9D1FE /* ViewerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewerStore.swift; sourceTree = "<group>"; };
-		DC175F33270E3FD200D9D1FE /* RaisedHandsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaisedHandsStore.swift; sourceTree = "<group>"; };
+		DC175F33270E3FD200D9D1FE /* SyncUsersStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncUsersStore.swift; sourceTree = "<group>"; };
 		DC175F36270E5B6F00D9D1FE /* ParticipantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsView.swift; sourceTree = "<group>"; };
 		DC175F38270F673600D9D1FE /* SendSpeakerInviteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendSpeakerInviteRequest.swift; sourceTree = "<group>"; };
 		DC175F3D2717530D00D9D1FE /* SyncStoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStoring.swift; sourceTree = "<group>"; };
@@ -127,6 +129,8 @@
 		DC4F45EE27286AF300BE730B /* TipStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipStyle.swift; sourceTree = "<group>"; };
 		DC504A7426F0F18600C37EC9 /* SpeakerGridViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerGridViewModel.swift; sourceTree = "<group>"; };
 		DC504A7626F1468E00C37EC9 /* SpeakerVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoView.swift; sourceTree = "<group>"; };
+		DC50A5742739E26300E29580 /* ViewerConnectedToPlayerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewerConnectedToPlayerRequest.swift; sourceTree = "<group>"; };
+		DC50A576273ACE1600E29580 /* ViewersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewersViewModel.swift; sourceTree = "<group>"; };
 		DC5F453526CC061A009C5C79 /* LiveVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoApp.swift; sourceTree = "<group>"; };
 		DC5F453A26CC061A009C5C79 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -211,6 +215,7 @@
 			children = (
 				DC175F36270E5B6F00D9D1FE /* ParticipantsView.swift */,
 				DC6404D7271B68D4004730C6 /* ParticipantsViewModel.swift */,
+				DC50A576273ACE1600E29580 /* ViewersViewModel.swift */,
 			);
 			path = Participants;
 			sourceTree = "<group>";
@@ -218,9 +223,9 @@
 		DC175F3A2715DC4500D9D1FE /* Sync */ = {
 			isa = PBXGroup;
 			children = (
-				DC175F33270E3FD200D9D1FE /* RaisedHandsStore.swift */,
 				DC175F2C270E232F00D9D1FE /* SyncManager.swift */,
 				DC175F3D2717530D00D9D1FE /* SyncStoring.swift */,
+				DC175F33270E3FD200D9D1FE /* SyncUsersStore.swift */,
 				DC175F31270E23F900D9D1FE /* ViewerStore.swift */,
 			);
 			path = Sync;
@@ -446,10 +451,11 @@
 				DCC48F7B26D8288B00EE49EF /* API.swift */,
 				DCC48F7A26D8288B00EE49EF /* APIErrorResponse.swift */,
 				DCC48F7C26D8288B00EE49EF /* APIRequest.swift */,
+				DC1ED12D26E94B5900FFA769 /* CreateOrJoinStreamRequest.swift */,
 				DC175F3F2718852A00D9D1FE /* DeleteStreamRequest.swift */,
 				DC6404D12719E549004730C6 /* RaiseHandRequest.swift */,
 				DC175F38270F673600D9D1FE /* SendSpeakerInviteRequest.swift */,
-				DC1ED12D26E94B5900FFA769 /* CreateOrJoinStreamRequest.swift */,
+				DC50A5742739E26300E29580 /* ViewerConnectedToPlayerRequest.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -630,6 +636,7 @@
 			files = (
 				DC1ED13226E9666E00FFA769 /* SwiftUIVideoView.swift in Sources */,
 				DCB4497626F65A7000B52774 /* SpeakerVideoViewModel.swift in Sources */,
+				DC50A577273ACE1700E29580 /* ViewersViewModel.swift in Sources */,
 				DC5F458326CDBA0B009C5C79 /* SignInView.swift in Sources */,
 				DC44BB412703C8DD00DB656D /* SceneDelegate.swift in Sources */,
 				DC9E18392729DC740070F53F /* OffscreenSpeakersView.swift in Sources */,
@@ -640,7 +647,7 @@
 				DC1ED0FD26E14D0B00FFA769 /* StreamToolbar.swift in Sources */,
 				DC1ED0F926E1440200FFA769 /* StreamStatusView.swift in Sources */,
 				DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */,
-				DC175F34270E3FD200D9D1FE /* RaisedHandsStore.swift in Sources */,
+				DC175F34270E3FD200D9D1FE /* SyncUsersStore.swift in Sources */,
 				DCC48FA326D8322900EE49EF /* SwiftUIPlayerView.swift in Sources */,
 				DC4F45E92723135500BE730B /* CardButtonLabel.swift in Sources */,
 				DC1ED0F726E12C7400FFA769 /* ProgressHUD.swift in Sources */,
@@ -657,6 +664,7 @@
 				DC44BB3F2703C8AD00DB656D /* AppDelegate.swift in Sources */,
 				DC175F3E2717530D00D9D1FE /* SyncStoring.swift in Sources */,
 				DC504A7526F0F18700C37EC9 /* SpeakerGridViewModel.swift in Sources */,
+				DC50A5752739E26300E29580 /* ViewerConnectedToPlayerRequest.swift in Sources */,
 				DCC48F8926D8288B00EE49EF /* APIErrorResponse.swift in Sources */,
 				DC5F459426CEC1FF009C5C79 /* UserDefaultsManager.swift in Sources */,
 				DC9E18372729B68B0070F53F /* TitleStyle.swift in Sources */,
