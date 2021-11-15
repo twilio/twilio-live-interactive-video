@@ -15,7 +15,7 @@ struct ParticipantsView: View {
                 Section(header: Text("Speakers (\(viewModel.speakers.count))")) {
                     ForEach(viewModel.speakers) { speaker in
                         HStack {
-                            Text(speaker.identity)
+                            Text(speaker.displayName)
                             Spacer()
                         }
                     }
@@ -121,7 +121,8 @@ private extension ParticipantsViewModel {
 }
 
 private extension SyncUsersStore.User {
-    init(identity: String) {
+    init(identity: String, isHost: Bool = false) {
         self.identity = identity
+        self.isHost = isHost
     }
 }

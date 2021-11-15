@@ -177,6 +177,28 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
+  // Add user to speaker map--special case for the host
+  try {
+    await streamSyncClient.syncMaps('speakers').syncMapItems.create({ 
+      key: user_identity, 
+      data: { host: true } 
+    });
+  } catch (e) {
+    const alreadyExistsError = 54208;
+
+    if (e.code !== alreadyExistsError) {
+      console.error(e);
+      response.setStatusCode(500);
+      response.setBody({
+        error: {
+          message: 'error adding user to speakers map',
+          explanation: e.message,
+        },
+      });
+      return callback(null, response);
+    }
+  }
+
   // Give user read access to speakers map
   try {
     await streamSyncClient.syncMaps(speakersMapName)

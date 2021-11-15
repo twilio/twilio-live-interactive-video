@@ -151,5 +151,7 @@ class ParticipantsViewModel: ObservableObject {
 }
 
 extension SyncUsersStore.User {
-    var displayName: String
+    var displayName: String {
+        isHost ? "\(identity) (Host)" : identity
+    }
 }
