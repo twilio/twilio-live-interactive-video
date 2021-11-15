@@ -17,11 +17,9 @@ exports.handler = async function (context, event, callback) {
         break; // Ignore the video composer participant
       }
 
-      let streamMapItem;
-
       // Get stream sync client
       try {
-        streamMapItem = await getStreamMapItem(RoomSid);
+        const streamMapItem = await getStreamMapItem(RoomSid);
         streamSyncClient = await client.sync.services(streamMapItem.data.sync_service_sid);
       } catch (e) {
         console.error(e);
