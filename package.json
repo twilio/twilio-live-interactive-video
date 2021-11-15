@@ -24,7 +24,7 @@
     "commander": "^8.2.0",
     "dotenv": "^10.0.0",
     "nanoid": "^3.1.28",
-    "twilio": "^3.68.0"
+    "twilio": "^3.71.1"
   },
   "bugs": {
     "url": "https://github.com/twilio/twilio-live-interactive-video/issues"
