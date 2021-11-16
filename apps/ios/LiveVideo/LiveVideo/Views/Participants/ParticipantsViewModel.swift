@@ -109,21 +109,6 @@ class ParticipantsViewModel: ObservableObject {
         }
     }
     
-    private func handleConnect() {
-        speakersStore.users.forEach { addSpeaker(user: $0) }
-        viewersStore.users.forEach { addViewer(user: $0) }
-        raisedHandsStore.users.forEach { addRaisedHand(user: $0) }
-    }
-    
-    private func handleDisconnect() {
-        speakers = []
-        viewersWithRaisedHand = []
-        viewersWithoutRaisedHand = []
-        newRaisedHands = []
-        viewerCount = 0
-        error = nil
-    }
-    
     private func addSpeaker(user: SyncUsersStore.User) {
         speakers.append(user)
     }

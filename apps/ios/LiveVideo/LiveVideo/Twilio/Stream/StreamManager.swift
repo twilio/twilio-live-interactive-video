@@ -59,7 +59,29 @@ class StreamManager: ObservableObject {
 
         playerManager.delegate = self
     }
+    
+    func connect() {
+        guard api != nil else {
+            return /// When not configured do nothing so `PreviewProvider` doesn't crash.
+        }
+
+        state = .connecting
+        fetchAccessToken()
+    }
+    
+    func disconnect() {
+        roomManager.disconnect()
+        playerManager.disconnect()
+        syncManager.disconnect()
+        player = nil
+        state = .disconnected
         
+        if config.role == .host {
+            let request = DeleteStreamRequest(streamName: config.streamName)
+            api.request(request)
+        }
+    }
+    
     /// Change role from viewer to speaker or speaker to viewer.
     ///
     /// - Note: The user that created the stream is the host. There is only one host and the host cannot change. When the host leaves the stream ends for all users.
