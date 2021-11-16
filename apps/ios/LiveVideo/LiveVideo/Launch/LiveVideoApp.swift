@@ -59,7 +59,7 @@ struct LiveVideoApp: App {
                         viewersStore: viewersStore,
                         raisedHandsStore: raisedHandsStore
                     )
-                    speakerSettingsManager.configure(localParticipant: localParticipant)
+                    speakerSettingsManager.configure(roomManager: roomManager)
                     speakerGridViewModel.configure(roomManager: roomManager)
                 }
         }

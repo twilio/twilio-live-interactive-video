@@ -10,32 +10,32 @@ class SpeakerSettingsManager: ObservableObject {
         didSet {
             guard oldValue != isMicOn else { return }
             
-            localParticipant?.isMicOn = isMicOn
+            roomManager.localParticipant.isMicOn = isMicOn
         }
     }
     @Published var isCameraOn = false {
         didSet {
             guard oldValue != isCameraOn else { return }
 
-            localParticipant?.isCameraOn = isCameraOn
+            roomManager.localParticipant.isCameraOn = isCameraOn
         }
     }
-    private var localParticipant: LocalParticipantManager?
+    private var roomManager: RoomManager!
     private var subscriptions = Set<AnyCancellable>()
     
-    func configure(localParticipant: LocalParticipantManager) {
-        self.localParticipant = localParticipant
+    func configure(roomManager: RoomManager) {
+        self.roomManager = roomManager
         
-        isMicOn = localParticipant.isMicOn
-        isCameraOn = localParticipant.isCameraOn
-        
-        localParticipant.changePublisher
+        roomManager.localParticipant.changePublisher
             .sink { [weak self] participant in
-                guard let self = self else { return }
-                
-                self.isMicOn = participant.isMicOn
-                self.isCameraOn = participant.isCameraOn
+                self?.isMicOn = participant.isMicOn
+                self?.isCameraOn = participant.isCameraOn
             }
+            .store(in: &subscriptions)
+
+        roomManager.messagePublisher
+            .filter { $0.messageType == .mute && $0.toParticipantIdentity == roomManager.localParticipant.identity  }
+            .sink { [weak self] _ in self?.isMicOn = false }
             .store(in: &subscriptions)
     }
 }

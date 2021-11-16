@@ -17,6 +17,7 @@ class RoomManager: NSObject {
     /// one publisher can provide updates for all remote participants. Otherwise subscribers would need to make
     /// subscription changes whenever a remote participant connects or disconnects.
     let remoteParticipantChangePublisher = PassthroughSubject<RemoteParticipantManager, Never>()
+    let messagePublisher = PassthroughSubject<RoomMessage, Never>()
     // MARK: -
 
     var roomSID: String? { room?.sid }
@@ -33,6 +34,7 @@ class RoomManager: NSObject {
             builder.roomName = roomName
             builder.audioTracks = [self.localParticipant.micTrack].compactMap { $0 }
             builder.videoTracks = [self.localParticipant.cameraTrack].compactMap { $0 }
+            builder.dataTracks = [self.localParticipant.dataTrack].compactMap { $0 }
             builder.isDominantSpeakerEnabled = true
             builder.bandwidthProfileOptions = BandwidthProfileOptions(
                 videoOptions: VideoBandwidthProfileOptions { builder in
@@ -118,6 +120,10 @@ extension RoomManager: RoomDelegate {
 extension RoomManager: RemoteParticipantManagerDelegate {
     func participantDidChange(_ participant: RemoteParticipantManager) {
         remoteParticipantChangePublisher.send(participant)
+    }
+    
+    func participant(_ participant: RemoteParticipantManager, didSendMessage message: RoomMessage) {
+        messagePublisher.send(message)
     }
 }
 

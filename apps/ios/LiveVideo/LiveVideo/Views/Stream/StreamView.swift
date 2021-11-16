@@ -34,7 +34,7 @@ struct StreamView: View {
                         HStack(spacing: 0) {
                             switch streamManager.config.role {
                             case .host, .speaker:
-                                SpeakerGridView(spacing: gridSpacing)
+                                SpeakerGridView(spacing: gridSpacing, role: streamManager.config.role)
                             case .viewer:
                                 SwiftUIPlayerView(player: $streamManager.player)
                             }

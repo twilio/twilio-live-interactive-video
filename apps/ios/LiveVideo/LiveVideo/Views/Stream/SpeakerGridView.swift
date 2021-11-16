@@ -9,6 +9,7 @@ struct SpeakerGridView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     let spacing: CGFloat
+    let role: StreamConfig.Role
 
     private var isPortraitOrientation: Bool {
         verticalSizeClass == .regular && horizontalSizeClass == .compact
@@ -45,8 +46,24 @@ struct SpeakerGridView: View {
                 GeometryReader { geometry in
                     LazyVGrid(columns: columns, spacing: spacing) {
                         ForEach($viewModel.onscreenSpeakers, id: \.self) { $speaker in
-                            SpeakerVideoView(speaker: $speaker)
-                                .frame(height: geometry.size.height / CGFloat(rowCount) - spacing)
+                            Group {
+                                if role == .host && !speaker.isMuted && !speaker.isYou  {
+                                    Menu(
+                                        content: {
+                                            Button(
+                                                action: { viewModel.muteSpeaker(speaker) },
+                                                label: { Label("Mute", systemImage: "mic.slash") }
+                                            )
+                                        },
+                                        label: {
+                                            SpeakerVideoView(speaker: $speaker)
+                                        }
+                                    )
+                                } else {
+                                    SpeakerVideoView(speaker: $speaker)
+                                }
+                            }
+                            .frame(height: geometry.size.height / CGFloat(rowCount) - spacing)
                         }
                     }
                 }
@@ -59,13 +76,13 @@ struct SpeakerGridView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             ForEach((1...6), id: \.self) {
-                SpeakerGridView(spacing: 6)
+                SpeakerGridView(spacing: 6, role: .host)
                     .environmentObject(SpeakerGridViewModel.stub(onscreenSpeakerCount: $0))
             }
             .frame(width: 400, height: 700)
 
             ForEach((1...6), id: \.self) {
-                SpeakerGridView(spacing: 6)
+                SpeakerGridView(spacing: 6, role: .host)
                     .environmentObject(SpeakerGridViewModel.stub(onscreenSpeakerCount: $0))
             }
             .frame(width: 700, height: 300)

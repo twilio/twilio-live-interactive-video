@@ -52,7 +52,12 @@ class SpeakerGridViewModel: ObservableObject {
             .sink { [weak self] participant in self?.updateSpeaker(SpeakerVideoViewModel(participant: participant)) }
             .store(in: &subscriptions)
     }
-    
+
+    func muteSpeaker(_ speaker: SpeakerVideoViewModel) {
+        let message = RoomMessage(messageType: .mute, toParticipantIdentity: speaker.identity)
+        roomManager.localParticipant.sendMessage(message)
+    }
+
     private func addSpeaker(_ speaker: SpeakerVideoViewModel) {
         if onscreenSpeakers.count < maxOnscreenSpeakerCount {
             onscreenSpeakers.append(speaker)

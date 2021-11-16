@@ -8,6 +8,7 @@ import TwilioVideo
 struct SpeakerVideoViewModel {
     let identity: String
     let displayName: String
+    let isYou: Bool
     let isMuted: Bool
     let isDominantSpeaker: Bool
     let dominantSpeakerStartTime: Date
@@ -17,6 +18,7 @@ struct SpeakerVideoViewModel {
     init(participant: LocalParticipantManager) {
         identity = participant.identity
         displayName = "You"
+        isYou = true
         isMuted = !participant.isMicOn
         isDominantSpeaker = false
         dominantSpeakerStartTime = .distantPast
@@ -33,6 +35,7 @@ struct SpeakerVideoViewModel {
     init(participant: RemoteParticipantManager) {
         identity = participant.identity
         displayName = participant.identity
+        isYou = false
         isMuted = !participant.isMicOn
         isDominantSpeaker = participant.isDominantSpeaker
         dominantSpeakerStartTime = participant.dominantSpeakerStartTime
