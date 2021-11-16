@@ -124,6 +124,6 @@ class SpeakerGridViewModel: ObservableObject {
 
 private extension SyncUsersStore {
     var host: User? {
-        users.first { $0.isHost }
+        users.first { $0.isHost } // This app only has one host and it is the user that created the stream
     }
 }
