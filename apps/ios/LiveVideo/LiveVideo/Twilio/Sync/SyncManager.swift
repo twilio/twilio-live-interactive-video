@@ -14,7 +14,8 @@ class SyncManager: NSObject {
         let viewerDocument: String?
     }
 
-    let errorPublisher = PassthroughSubject<Error, Never>()
+    let connectPublisher = PassthroughSubject<Void, Never>()
+    let disconnectPublisher = PassthroughSubject<Error?, Never>()
     var isConnected: Bool { client != nil }
     private var client: TwilioSyncClient?
     private var speakersStore: SyncUsersStore
@@ -82,6 +83,7 @@ class SyncManager: NSObject {
                     
                     if connectedStoreCount == self?.stores.count {
                         completion(nil)
+                        self?.connectPublisher.send()
                     }
                 }
             }
@@ -89,6 +91,11 @@ class SyncManager: NSObject {
     }
     
     func disconnect() {
+        cleanUp()
+        disconnectPublisher.send(nil) // Intentional disconnect so no error
+    }
+    
+    private func cleanUp() {
         client?.shutdown()
         client = nil
         stores.forEach { $0.disconnect() }
@@ -96,8 +103,8 @@ class SyncManager: NSObject {
     }
     
     private func handleError(_ error: Error) {
-        disconnect()
-        errorPublisher.send(error)
+        cleanUp()
+        disconnectPublisher.send(error)
     }
 }
 

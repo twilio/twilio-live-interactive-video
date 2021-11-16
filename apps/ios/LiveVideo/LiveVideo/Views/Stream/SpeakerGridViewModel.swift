@@ -112,12 +112,18 @@ class SpeakerGridViewModel: ObservableObject {
     }
     
     private func makeSpeaker(participant: LocalParticipantManager) -> SpeakerVideoViewModel {
-        let isHost = speakersStore.users.first { $0.identity == participant.identity }?.isHost ?? false
+        let isHost = speakersStore.host?.identity == participant.identity
         return SpeakerVideoViewModel(participant: participant, isHost: isHost)
     }
 
     private func makeSpeaker(participant: RemoteParticipantManager) -> SpeakerVideoViewModel {
-        let isHost = speakersStore.users.first { $0.identity == participant.identity }?.isHost ?? false
+        let isHost = speakersStore.host?.identity == participant.identity
         return SpeakerVideoViewModel(participant: participant, isHost: isHost)
+    }
+}
+
+private extension SyncUsersStore {
+    var host: User? {
+        users.first { $0.isHost }
     }
 }

@@ -49,14 +49,12 @@ class RoomManager: NSObject {
     }
 
     func disconnect() {
-        room?.disconnect()
         cleanUp()
-        
-        // Intentional disconnect so no error
-        roomDisconnectPublisher.send(nil)
+        roomDisconnectPublisher.send(nil) // Intentional disconnect so no error
     }
     
     private func cleanUp() {
+        room?.disconnect()
         room = nil
         localParticipant.participant = nil
         remoteParticipants.removeAll()

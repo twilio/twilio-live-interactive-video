@@ -67,7 +67,8 @@ exports.handler = async function (context, event, callback) {
         }
       }
 
-      // Add user to speaker map
+      // Add user to the speakers map. There is only one host and they are added to the speakers map 
+      // when the stream is created. So all new speakers that are added here will not be host.
       try {
         await streamSyncClient.syncMaps('speakers').syncMapItems.create({ 
           key: event.ParticipantIdentity, 

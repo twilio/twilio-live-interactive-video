@@ -53,8 +53,12 @@ class StreamManager: ObservableObject {
             .sink { [weak self] error in self?.handleError(error) }
             .store(in: &subscriptions)
 
-        syncManager.errorPublisher
-            .sink { [weak self] error in self?.handleError(error) }
+        syncManager.disconnectPublisher
+            .sink { [weak self] error in
+                guard let error = error else { return }
+                
+                self?.handleError(error)
+            }
             .store(in: &subscriptions)
 
         playerManager.delegate = self

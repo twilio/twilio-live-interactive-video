@@ -22,7 +22,7 @@ class ParticipantsViewModel: ObservableObject {
             haveNewRaisedHand = !newRaisedHands.isEmpty
         }
     }
-    private var streamManager: StreamManager!
+    private var syncManager: SyncManager!
     private var api: API!
     private var roomManager: RoomManager!
     private var speakersStore: SyncUsersStore!
@@ -31,22 +31,26 @@ class ParticipantsViewModel: ObservableObject {
     private var subscriptions = Set<AnyCancellable>()
     
     func configure(
-        streamManager: StreamManager,
+        syncManager: SyncManager,
         api: API,
         roomManager: RoomManager,
         speakersStore: SyncUsersStore,
         viewersStore: SyncUsersStore,
         raisedHandsStore: SyncUsersStore
     ) {
-        self.streamManager = streamManager
+        self.syncManager = syncManager
         self.api = api
         self.roomManager = roomManager
         self.speakersStore = speakersStore
         self.viewersStore = viewersStore
         self.raisedHandsStore = raisedHandsStore
 
-        streamManager.$state
-            .sink { [weak self] state in self?.handleStreamStateChange(state) }
+        syncManager.connectPublisher
+            .sink { [weak self] in self?.handleConnect() }
+            .store(in: &subscriptions)
+
+        syncManager.disconnectPublisher
+            .sink { [weak self] _ in self?.handleDisconnect() }
             .store(in: &subscriptions)
 
         speakersStore.userAddedPublisher
@@ -87,22 +91,19 @@ class ParticipantsViewModel: ObservableObject {
         }
     }
     
-    private func handleStreamStateChange(_ state: StreamManager.State) {
-        switch state {
-        case .disconnected:
-            speakers = []
-            viewersWithRaisedHand = []
-            viewersWithoutRaisedHand = []
-            newRaisedHands = []
-            viewerCount = 0
-            error = nil
-        case .connected:
-            speakersStore.users.forEach { addSpeaker(user: $0) }
-            viewersStore.users.forEach { addViewer(user: $0) }
-            raisedHandsStore.users.forEach { addRaisedHand(user: $0) }
-        case .connecting, .changingRole:
-            break
-        }
+    private func handleConnect() {
+        speakersStore.users.forEach { addSpeaker(user: $0) }
+        viewersStore.users.forEach { addViewer(user: $0) }
+        raisedHandsStore.users.forEach { addRaisedHand(user: $0) }
+    }
+    
+    private func handleDisconnect() {
+        speakers = []
+        viewersWithRaisedHand = []
+        viewersWithoutRaisedHand = []
+        newRaisedHands = []
+        viewerCount = 0
+        error = nil
     }
     
     private func addSpeaker(user: SyncUsersStore.User) {

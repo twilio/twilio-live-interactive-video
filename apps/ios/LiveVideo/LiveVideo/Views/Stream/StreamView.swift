@@ -81,26 +81,6 @@ struct StreamView: View {
                             ) {
                                 speakerSettingsManager.isCameraOn.toggle()
                             }
-                            StreamToolbarButton(
-                                image: Image(systemName: "person.2"),
-                                shouldShowBadge: participantsViewModel.haveNewRaisedHand
-                            ) {
-                                isShowingParticipants = true
-                            }
-                            
-                            if streamManager.config.role != .host {
-                                Menu {
-                                    Button("Move to Viewers") {
-                                        streamManager.changeRole(to: .viewer)
-                                    }
-                                } label: {
-                                    StreamToolbarButton(
-                                        image: Image(systemName: "ellipsis")
-                                    ) {
-
-                                    }
-                                }
-                            }
                         case .viewer:
                             StreamToolbarButton(
                                 image: Image(systemName: "hand.raised"),
@@ -108,11 +88,26 @@ struct StreamView: View {
                             ) {
                                 viewModel.isHandRaised.toggle()
                             }
-                            StreamToolbarButton(
-                                image: Image(systemName: "person.2"),
-                                shouldShowBadge: participantsViewModel.haveNewRaisedHand
-                            ) {
-                                isShowingParticipants = true
+                        }
+
+                        StreamToolbarButton(
+                            image: Image(systemName: "person.2"),
+                            shouldShowBadge: streamManager.config.role != .viewer && participantsViewModel.haveNewRaisedHand
+                        ) {
+                            isShowingParticipants = true
+                        }
+
+                        if streamManager.config.role == .speaker {
+                            Menu {
+                                Button("Move to Viewers") {
+                                    streamManager.changeRole(to: .viewer)
+                                }
+                            } label: {
+                                StreamToolbarButton(
+                                    image: Image(systemName: "ellipsis")
+                                ) {
+
+                                }
                             }
                         }
                     }

@@ -52,7 +52,7 @@ struct LiveVideoApp: App {
                         viewerStore: viewerStore
                     )
                     participantsViewModel.configure(
-                        streamManager: streamManager,
+                        syncManager: syncManager,
                         api: api,
                         roomManager: roomManager,
                         speakersStore: speakersStore,
