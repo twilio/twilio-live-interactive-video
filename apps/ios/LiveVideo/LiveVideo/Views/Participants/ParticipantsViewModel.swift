@@ -22,7 +22,7 @@ class ParticipantsViewModel: ObservableObject {
             haveNewRaisedHand = !newRaisedHands.isEmpty
         }
     }
-    private var syncManager: SyncManager!
+    private var streamManager: StreamManager!
     private var api: API!
     private var roomManager: RoomManager!
     private var speakersStore: SyncUsersStore!
@@ -31,28 +31,24 @@ class ParticipantsViewModel: ObservableObject {
     private var subscriptions = Set<AnyCancellable>()
     
     func configure(
-        syncManager: SyncManager,
+        streamManager: StreamManager,
         api: API,
         roomManager: RoomManager,
         speakersStore: SyncUsersStore,
         viewersStore: SyncUsersStore,
         raisedHandsStore: SyncUsersStore
     ) {
-        self.syncManager = syncManager
+        self.streamManager = streamManager
         self.api = api
         self.roomManager = roomManager
         self.speakersStore = speakersStore
         self.viewersStore = viewersStore
         self.raisedHandsStore = raisedHandsStore
 
-        syncManager.connectPublisher
-            .sink { [weak self] in self?.handleConnect() }
+        streamManager.$state
+            .sink { [weak self] state in self?.handleStreamStateChange(state) }
             .store(in: &subscriptions)
-
-        syncManager.disconnectPublisher
-            .sink { [weak self] _ in self?.handleDisconnect() }
-            .store(in: &subscriptions)
-
+        
         speakersStore.userAddedPublisher
             .sink { [weak self] user in self?.addSpeaker(user: user) }
             .store(in: &subscriptions)
@@ -88,6 +84,28 @@ class ParticipantsViewModel: ObservableObject {
             case let .failure(error):
                 self?.error = error
             }
+        }
+    }
+
+    private func handleStreamStateChange(_ state: StreamManager.State) {
+        switch streamManager.state {
+        case .disconnected:
+            speakers = []
+            viewersWithRaisedHand = []
+            viewersWithoutRaisedHand = []
+            newRaisedHands = []
+            viewerCount = 0
+            error = nil
+        case .connected:
+            guard speakers.count == .zero else {
+                return // The user just changed role so don't load everything again
+            }
+            
+            speakersStore.users.forEach { addSpeaker(user: $0) }
+            viewersStore.users.forEach { addViewer(user: $0) }
+            raisedHandsStore.users.forEach { addRaisedHand(user: $0) }
+        case .connecting, .changingRole:
+            break
         }
     }
     
