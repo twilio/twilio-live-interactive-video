@@ -11,6 +11,9 @@ module.exports.handler = async (context, event, callback) => {
   const { ACCOUNT_SID, TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, CONVERSATIONS_SERVICE_SID } =
     context;
 
+  const authHandler = require(Runtime.getAssets()['/auth.js'].path);
+  authHandler(context, event, callback);
+
   const { user_identity, stream_name } = event;
 
   const common = require(Runtime.getAssets()['/common.js'].path);
@@ -133,7 +136,7 @@ module.exports.handler = async (context, event, callback) => {
   try {
     await streamSyncClient.syncMaps(raisedHandsMapName)
       .syncMapPermissions(user_identity)
-      .update({ read: true, write: false, manage: false })
+      .update({ read: true, write: false, manage: false });
   } catch (e) {
     response.setStatusCode(500);
     response.setBody({

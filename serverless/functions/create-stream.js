@@ -19,6 +19,9 @@ module.exports.handler = async (context, event, callback) => {
     DOMAIN_NAME,
   } = context;
 
+  const authHandler = require(Runtime.getAssets()['/auth.js'].path);
+  authHandler(context, event, callback);
+
   const common = require(Runtime.getAssets()['/common.js'].path);
   const { axiosClient } = common(context, event, callback);
 
@@ -214,7 +217,7 @@ module.exports.handler = async (context, event, callback) => {
   try {
     await streamSyncClient.syncMaps(raisedHandsMapName)
       .syncMapPermissions(user_identity)
-      .update({ read: true, write: false, manage: false })
+      .update({ read: true, write: false, manage: false });
   } catch (e) {
     response.setStatusCode(500);
     response.setBody({

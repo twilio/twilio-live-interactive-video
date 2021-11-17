@@ -7,6 +7,9 @@ const ChatGrant = AccessToken.ChatGrant;
 const MAX_ALLOWED_SESSION_DURATION = 14400;
 
 module.exports.handler = async (context, event, callback) => {
+  const authHandler = require(Runtime.getAssets()['/auth.js'].path);
+  authHandler(context, event, callback);
+
   const common = require(Runtime.getAssets()['/common.js'].path);
   const { getPlaybackGrant, getStreamMapItem } = common(context, event, callback);
 
@@ -116,7 +119,7 @@ module.exports.handler = async (context, event, callback) => {
   try {
     await streamSyncClient.documents(viewerDocumentName)
       .documentPermissions(user_identity)
-      .update({ read: true, write: false, manage: false })
+      .update({ read: true, write: false, manage: false });
   } catch (e) {
     response.setStatusCode(500);
     response.setBody({
@@ -148,7 +151,7 @@ module.exports.handler = async (context, event, callback) => {
   try {
     await streamSyncClient.syncMaps(`raised_hands`)
       .syncMapPermissions(user_identity)
-      .update({ read: true, write: false, manage: false })
+      .update({ read: true, write: false, manage: false });
   } catch (e) {
     response.setStatusCode(500);
     response.setBody({
@@ -197,7 +200,9 @@ module.exports.handler = async (context, event, callback) => {
   });
 
   // Add chat grant to token
-  const chatGrant = new ChatGrant({ serviceSid: context.CONVERSATIONS_SERVICE_SID });
+  const chatGrant = new ChatGrant({
+    serviceSid: context.CONVERSATIONS_SERVICE_SID,
+  });
   token.addGrant(chatGrant);
 
   // Add participant's identity to token
