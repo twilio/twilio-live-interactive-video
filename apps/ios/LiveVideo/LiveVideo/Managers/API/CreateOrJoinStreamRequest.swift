@@ -15,7 +15,7 @@ struct CreateOrJoinStreamRequest: APIRequest {
             let speakersMap: String
             let viewersMap: String
             let raisedHandsMap: String
-            let viewerDocument: String?
+            let userDocument: String?
         }
         
         let token: String

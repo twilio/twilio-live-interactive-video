@@ -43,7 +43,7 @@ class StreamViewModel: ObservableObject {
     private var haveShownViewerConnectedAlert = false
     private var streamManager: StreamManager!
     private var api: API!
-    private var viewerStore: ViewerStore!
+    private var userDocument: SyncUserDocument!
     private var speakerSettingsManager: SpeakerSettingsManager!
     private var subscriptions = Set<AnyCancellable>()
 
@@ -51,12 +51,12 @@ class StreamViewModel: ObservableObject {
         streamManager: StreamManager,
         speakerSettingsManager: SpeakerSettingsManager,
         api: API,
-        viewerStore: ViewerStore
+        userDocument: SyncUserDocument
     ) {
         self.streamManager = streamManager
         self.speakerSettingsManager = speakerSettingsManager
         self.api = api
-        self.viewerStore = viewerStore
+        self.userDocument = userDocument
 
         streamManager.$state
             .sink { [weak self] state in
@@ -96,7 +96,7 @@ class StreamViewModel: ObservableObject {
             .sink { [weak self] error in self?.handleError(error) }
             .store(in: &subscriptions)
 
-        viewerStore.speakerInvitePublisher
+        userDocument.speakerInvitePublisher
             .sink { [weak self] in
                 self?.alertIdentifier = .receivedSpeakerInvite
             }

@@ -5,9 +5,9 @@
 import Combine
 
 class ParticipantsViewModel: ObservableObject {
-    @Published var speakers: [SyncUsersStore.User] = []
-    @Published var viewersWithRaisedHand: [SyncUsersStore.User] = []
-    @Published var viewersWithoutRaisedHand: [SyncUsersStore.User] = []
+    @Published var speakers: [SyncUsersMap.User] = []
+    @Published var viewersWithRaisedHand: [SyncUsersMap.User] = []
+    @Published var viewersWithoutRaisedHand: [SyncUsersMap.User] = []
     @Published var viewerCount = 0
     @Published var haveNewRaisedHand = false
     @Published var showError = false
@@ -17,7 +17,7 @@ class ParticipantsViewModel: ObservableObject {
             showError = error != nil
         }
     }
-    private var newRaisedHands: [SyncUsersStore.User] = [] {
+    private var newRaisedHands: [SyncUsersMap.User] = [] {
         didSet {
             haveNewRaisedHand = !newRaisedHands.isEmpty
         }
@@ -25,51 +25,51 @@ class ParticipantsViewModel: ObservableObject {
     private var streamManager: StreamManager!
     private var api: API!
     private var roomManager: RoomManager!
-    private var speakersStore: SyncUsersStore!
-    private var viewersStore: SyncUsersStore!
-    private var raisedHandsStore: SyncUsersStore!
+    private var speakersMap: SyncUsersMap!
+    private var viewersMap: SyncUsersMap!
+    private var raisedHandsMap: SyncUsersMap!
     private var subscriptions = Set<AnyCancellable>()
     
     func configure(
         streamManager: StreamManager,
         api: API,
         roomManager: RoomManager,
-        speakersStore: SyncUsersStore,
-        viewersStore: SyncUsersStore,
-        raisedHandsStore: SyncUsersStore
+        speakersMap: SyncUsersMap,
+        viewersMap: SyncUsersMap,
+        raisedHandsMap: SyncUsersMap
     ) {
         self.streamManager = streamManager
         self.api = api
         self.roomManager = roomManager
-        self.speakersStore = speakersStore
-        self.viewersStore = viewersStore
-        self.raisedHandsStore = raisedHandsStore
+        self.speakersMap = speakersMap
+        self.viewersMap = viewersMap
+        self.raisedHandsMap = raisedHandsMap
 
         streamManager.$state
             .sink { [weak self] state in self?.handleStreamStateChange(state) }
             .store(in: &subscriptions)
         
-        speakersStore.userAddedPublisher
+        speakersMap.userAddedPublisher
             .sink { [weak self] user in self?.addSpeaker(user: user) }
             .store(in: &subscriptions)
 
-        speakersStore.userRemovedPublisher
+        speakersMap.userRemovedPublisher
             .sink { [weak self] user in self?.removeSpeaker(user: user) }
             .store(in: &subscriptions)
 
-        viewersStore.userAddedPublisher
+        viewersMap.userAddedPublisher
             .sink { [weak self] user in self?.addViewer(user: user) }
             .store(in: &subscriptions)
 
-        viewersStore.userRemovedPublisher
+        viewersMap.userRemovedPublisher
             .sink { [weak self] user in self?.removeViewer(user: user) }
             .store(in: &subscriptions)
         
-        raisedHandsStore.userAddedPublisher
+        raisedHandsMap.userAddedPublisher
             .sink { [weak self] user in self?.addRaisedHand(user: user) }
             .store(in: &subscriptions)
 
-        raisedHandsStore.userRemovedPublisher
+        raisedHandsMap.userRemovedPublisher
             .sink { [weak self] user in self?.removeRaisedHand(user: user) }
             .store(in: &subscriptions)
     }
@@ -101,23 +101,23 @@ class ParticipantsViewModel: ObservableObject {
                 return // The user just changed role so don't load everything again
             }
             
-            speakersStore.users.forEach { addSpeaker(user: $0) }
-            viewersStore.users.forEach { addViewer(user: $0) }
-            raisedHandsStore.users.forEach { addRaisedHand(user: $0) }
+            speakersMap.users.forEach { addSpeaker(user: $0) }
+            viewersMap.users.forEach { addViewer(user: $0) }
+            raisedHandsMap.users.forEach { addRaisedHand(user: $0) }
         case .connecting, .changingRole:
             break
         }
     }
     
-    private func addSpeaker(user: SyncUsersStore.User) {
+    private func addSpeaker(user: SyncUsersMap.User) {
         speakers.append(user)
     }
     
-    private func removeSpeaker(user: SyncUsersStore.User) {
+    private func removeSpeaker(user: SyncUsersMap.User) {
         speakers.removeAll { $0.identity == user.identity }
     }
 
-    private func addViewer(user: SyncUsersStore.User) {
+    private func addViewer(user: SyncUsersMap.User) {
         guard viewersWithRaisedHand.first(where: { $0.identity == user.identity }) == nil else {
             return
         }
@@ -126,23 +126,23 @@ class ParticipantsViewModel: ObservableObject {
         updateViewerCount()
     }
     
-    private func removeViewer(user: SyncUsersStore.User) {
+    private func removeViewer(user: SyncUsersMap.User) {
         viewersWithoutRaisedHand.removeAll { $0.identity == user.identity }
         updateViewerCount()
     }
 
-    private func addRaisedHand(user: SyncUsersStore.User) {
+    private func addRaisedHand(user: SyncUsersMap.User) {
         viewersWithRaisedHand.append(user)
         newRaisedHands.append(user)
         viewersWithoutRaisedHand.removeAll { $0.identity == user.identity }
         updateViewerCount()
     }
     
-    private func removeRaisedHand(user: SyncUsersStore.User) {
+    private func removeRaisedHand(user: SyncUsersMap.User) {
         viewersWithRaisedHand.removeAll { $0.identity == user.identity }
         newRaisedHands.removeAll { $0.identity == user.identity }
 
-        if viewersStore.users.first(where: { $0.identity == user.identity }) != nil {
+        if viewersMap.users.first(where: { $0.identity == user.identity }) != nil {
             viewersWithoutRaisedHand.insert(user, at: 0)
         }
 
@@ -154,7 +154,7 @@ class ParticipantsViewModel: ObservableObject {
     }
 }
 
-extension SyncUsersStore.User {
+extension SyncUsersMap.User {
     var displayName: String {
         isHost ? "\(identity) (Host)" : identity
     }

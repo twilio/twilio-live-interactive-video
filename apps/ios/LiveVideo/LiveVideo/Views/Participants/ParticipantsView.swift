@@ -112,15 +112,15 @@ private extension ParticipantsViewModel {
         viewersWithoutRaisedHand: [String] = []
     ) -> ParticipantsViewModel {
         let viewModel = ParticipantsViewModel()
-        viewModel.speakers = speakers.map { SyncUsersStore.User(identity: $0) }
-        viewModel.viewersWithRaisedHand = viewersWithRaisedHand.map { SyncUsersStore.User(identity: $0) }
-        viewModel.viewersWithoutRaisedHand = viewersWithoutRaisedHand.map { SyncUsersStore.User(identity: $0) }
+        viewModel.speakers = speakers.map { SyncUsersMap.User(identity: $0) }
+        viewModel.viewersWithRaisedHand = viewersWithRaisedHand.map { SyncUsersMap.User(identity: $0) }
+        viewModel.viewersWithoutRaisedHand = viewersWithoutRaisedHand.map { SyncUsersMap.User(identity: $0) }
         viewModel.viewerCount = viewersWithRaisedHand.count + viewersWithoutRaisedHand.count
         return viewModel
     }
 }
 
-private extension SyncUsersStore.User {
+private extension SyncUsersMap.User {
     init(identity: String, isHost: Bool = false) {
         self.identity = identity
         self.isHost = isHost
