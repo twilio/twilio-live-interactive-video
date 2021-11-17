@@ -16,14 +16,14 @@ module.exports.handler = async (context, event, callback) => {
     // Set speaker_invite to true
     const streamMapItem = await getStreamMapItem(room_sid);
     const streamSyncClient = await client.sync.services(streamMapItem.data.sync_service_sid);
-    const doc = await streamSyncClient.documents(`viewer-${user_identity}`).fetch();
+    const doc = await streamSyncClient.documents(`user-${user_identity}`).fetch();
     await streamSyncClient.documents(doc.sid).update({ data: { ...doc.data, speaker_invite: true } });
   } catch (e) {
     console.error(e);
     response.setStatusCode(500);
     response.setBody({
       error: {
-        message: 'error updating viewer document',
+        message: 'error updating user document',
         explanation: e.message,
       },
     });
