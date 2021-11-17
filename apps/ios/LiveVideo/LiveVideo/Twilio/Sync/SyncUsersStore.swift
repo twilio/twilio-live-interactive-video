@@ -11,10 +11,12 @@ import Combine
 class SyncUsersStore: NSObject, SyncStoring {
     struct User: Identifiable {
         let identity: String
+        let isHost: Bool
         var id: String { identity }
      
         init(mapItem: TWSMapItem) {
             identity = mapItem.key
+            isHost = mapItem.data["host"] as? Bool ?? false
         }
     }
 
