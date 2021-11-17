@@ -179,6 +179,30 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
+  // Add the host to the speakers map when the stream is created so that:
+  // 
+  //   1. The speakers map is gauranteed to contain the host before any user connects to the stream. 
+  //   2. We don't need a separate way to keep track of who the host is.
+  // 
+  // There is only one host and it is the user that creates the stream. Other users are added to 
+  // the speakers map in rooms-webhook when they connect to the video room.
+  try {
+    await streamSyncClient.syncMaps('speakers').syncMapItems.create({ 
+      key: user_identity, 
+      data: { host: true } 
+    });
+  } catch (e) {
+    console.error(e);
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error adding host to speakers map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
   // Give user read access to speakers map
   try {
     await streamSyncClient.syncMaps(speakersMapName)

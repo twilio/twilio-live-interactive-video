@@ -46,9 +46,9 @@ class ParticipantsViewModel: ObservableObject {
         self.raisedHandsStore = raisedHandsStore
 
         streamManager.$state
-            .sink { [weak self] _ in self?.handleStreamStateChange() }
+            .sink { [weak self] state in self?.handleStreamStateChange(state) }
             .store(in: &subscriptions)
-
+        
         speakersStore.userAddedPublisher
             .sink { [weak self] user in self?.addSpeaker(user: user) }
             .store(in: &subscriptions)
@@ -86,9 +86,9 @@ class ParticipantsViewModel: ObservableObject {
             }
         }
     }
-    
-    private func handleStreamStateChange() {
-        switch streamManager.state {
+
+    private func handleStreamStateChange(_ state: StreamManager.State) {
+        switch state {
         case .disconnected:
             speakers = []
             viewersWithRaisedHand = []
@@ -97,6 +97,10 @@ class ParticipantsViewModel: ObservableObject {
             viewerCount = 0
             error = nil
         case .connected:
+            guard speakers.count == .zero else {
+                return // The user just changed role so don't load everything again
+            }
+            
             speakersStore.users.forEach { addSpeaker(user: $0) }
             viewersStore.users.forEach { addViewer(user: $0) }
             raisedHandsStore.users.forEach { addRaisedHand(user: $0) }
@@ -147,5 +151,11 @@ class ParticipantsViewModel: ObservableObject {
     
     private func updateViewerCount() {
         viewerCount = viewersWithoutRaisedHand.count + viewersWithRaisedHand.count
+    }
+}
+
+extension SyncUsersStore.User {
+    var displayName: String {
+        isHost ? "\(identity) (Host)" : identity
     }
 }
