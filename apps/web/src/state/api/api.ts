@@ -35,7 +35,7 @@ export const joinStreamAsViewer = (user_identity: string, stream_name: string) =
     room_sid: string;
     sync_object_names: {
       raised_hands_map: string;
-      viewer_document: string;
+      user_document: string;
     };
   }>('join-stream-as-viewer', {
     user_identity,

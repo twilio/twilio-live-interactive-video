@@ -26,7 +26,7 @@ export default function LeaveEventButton(props: { buttonClassName?: string }) {
   const { room } = useVideoContext();
   const { appState, appDispatch } = useAppState();
   const { connect: playerConnect } = usePlayerContext();
-  const { registerViewerDocument } = useSyncContext();
+  const { registerUserDocument } = useSyncContext();
 
   const anchorRef = useRef<HTMLButtonElement>(null);
 
@@ -34,7 +34,7 @@ export default function LeaveEventButton(props: { buttonClassName?: string }) {
     setMenuOpen(false);
     const { data } = await joinStreamAsViewer(appState.participantName, appState.eventName);
     await playerConnect(data.token);
-    registerViewerDocument(data.sync_object_names.viewer_document);
+    registerUserDocument(data.sync_object_names.user_document);
     room!.disconnect();
   }
 
