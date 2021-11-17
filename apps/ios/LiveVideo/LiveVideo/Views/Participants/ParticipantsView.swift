@@ -12,7 +12,7 @@ struct ParticipantsView: View {
     var body: some View {
         NavigationView {
             List {
-                Section(header: Text("Speakers (\(viewModel.speakers.count))")) {
+                Section(header: ParticipantsHeader(title: "Speakers (\(viewModel.speakers.count))")) {
                     ForEach(viewModel.speakers) { speaker in
                         HStack {
                             Text(speaker.displayName)
@@ -20,10 +20,10 @@ struct ParticipantsView: View {
                         }
                     }
                 }
-                Section(header: Text("Viewers (\(viewModel.viewerCount))")) {
+                Section(header: ParticipantsHeader(title: "Viewers (\(viewModel.viewerCount))")) {
                     ForEach(viewModel.viewersWithRaisedHand) { viewer in
                         HStack {
-                            Text("\(viewer.identity) 🖐")
+                            Text("\(viewer.identity) 👋")
                                 .alert(isPresented: $viewModel.showSpeakerInviteSent) {
                                     Alert(
                                         title: Text("Invitation sent"),
@@ -58,7 +58,7 @@ struct ParticipantsView: View {
             }
             .listStyle(.plain)
             .animation(.default)
-            .navigationTitle("Participants")
+            .navigationTitle("Participants (\(viewModel.speakers.count + viewModel.viewerCount))")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {

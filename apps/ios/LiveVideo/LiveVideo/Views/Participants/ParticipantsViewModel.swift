@@ -88,7 +88,7 @@ class ParticipantsViewModel: ObservableObject {
     }
 
     private func handleStreamStateChange(_ state: StreamManager.State) {
-        switch streamManager.state {
+        switch state {
         case .disconnected:
             speakers = []
             viewersWithRaisedHand = []
