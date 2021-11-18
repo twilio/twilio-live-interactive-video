@@ -29,15 +29,15 @@ struct LiveVideoApp: App {
                     let localParticipant = LocalParticipantManager(authManager: authManager)
                     let roomManager = RoomManager()
                     roomManager.configure(localParticipant: localParticipant)
-                    let viewerStore = ViewerStore()
-                    let speakersStore = SyncUsersStore()
-                    let raisedHandsStore = SyncUsersStore()
-                    let viewersStore = SyncUsersStore()
+                    let userDocument = SyncUserDocument()
+                    let speakersMap = SyncUsersMap()
+                    let raisedHandsMap = SyncUsersMap()
+                    let viewersMap = SyncUsersMap()
                     let syncManager = SyncManager(
-                        speakersStore: speakersStore,
-                        viewersStore: viewersStore,
-                        raisedHandsStore: raisedHandsStore,
-                        viewerStore: viewerStore
+                        speakersMap: speakersMap,
+                        viewersMap: viewersMap,
+                        raisedHandsMap: raisedHandsMap,
+                        userDocument: userDocument
                     )
                     streamManager.configure(
                         roomManager: roomManager,
@@ -49,18 +49,18 @@ struct LiveVideoApp: App {
                         streamManager: streamManager,
                         speakerSettingsManager: speakerSettingsManager,
                         api: api,
-                        viewerStore: viewerStore
+                        userDocument: userDocument
                     )
                     participantsViewModel.configure(
                         streamManager: streamManager,
                         api: api,
                         roomManager: roomManager,
-                        speakersStore: speakersStore,
-                        viewersStore: viewersStore,
-                        raisedHandsStore: raisedHandsStore
+                        speakersMap: speakersMap,
+                        viewersMap: viewersMap,
+                        raisedHandsMap: raisedHandsMap
                     )
                     speakerSettingsManager.configure(roomManager: roomManager)
-                    speakerGridViewModel.configure(roomManager: roomManager, speakersStore: speakersStore)
+                    speakerGridViewModel.configure(roomManager: roomManager, speakersMap: speakersMap)
                 }
         }
     }

@@ -4,7 +4,7 @@
 
 import TwilioSyncClient
 
-protocol SyncStoring: AnyObject {
+protocol SyncObjectConnecting: AnyObject {
     var errorHandler: ((Error) -> Void)? { get set }
     func connect(client: TwilioSyncClient, completion: @escaping (Error?) -> Void)
     func disconnect()

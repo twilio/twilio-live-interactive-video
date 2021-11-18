@@ -22,7 +22,7 @@ export default function PreJoinScreens() {
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect } = useVideoContext();
   const { connect: playerConnect, disconnect: playerDisconnect } = usePlayerContext();
-  const { connect: syncConnect, registerViewerDocument, registerRaisedHandsMap } = useSyncContext();
+  const { connect: syncConnect, registerUserDocument, registerRaisedHandsMap } = useSyncContext();
   const [mediaError, setMediaError] = useState<Error>();
   const { appState, appDispatch } = useAppState();
   const enqueueSnackbar = useEnqueueSnackbar();
@@ -65,7 +65,7 @@ export default function PreJoinScreens() {
           const { data } = await joinStreamAsViewer(appState.participantName, appState.eventName);
           syncConnect(data.token);
           await playerConnect(data.token);
-          registerViewerDocument(data.sync_object_names.viewer_document);
+          registerUserDocument(data.sync_object_names.user_document);
           // chatConnect(data.token);
           break;
         }

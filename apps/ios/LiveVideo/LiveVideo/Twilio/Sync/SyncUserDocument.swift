@@ -5,7 +5,7 @@
 import Combine
 import TwilioSyncClient
 
-class ViewerStore: NSObject, SyncStoring, ObservableObject {
+class SyncUserDocument: NSObject, SyncObjectConnecting, ObservableObject {
     let speakerInvitePublisher = PassthroughSubject<Void, Never>()
     var uniqueName: String!
     var errorHandler: ((Error) -> Void)?
@@ -30,7 +30,7 @@ class ViewerStore: NSObject, SyncStoring, ObservableObject {
     }
 }
 
-extension ViewerStore: TWSDocumentDelegate {
+extension SyncUserDocument: TWSDocumentDelegate {
     func onDocument(
         _ document: TWSDocument,
         updated data: [String : Any],
