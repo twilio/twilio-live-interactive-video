@@ -12,11 +12,13 @@ class SpeakerGridViewModel: ObservableObject {
     private let maxOnscreenSpeakerCount = 6
     private var roomManager: RoomManager!
     private var speakersMap: SyncUsersMap!
+    private var api: API!
     private var subscriptions = Set<AnyCancellable>()
 
-    func configure(roomManager: RoomManager, speakersMap: SyncUsersMap) {
+    func configure(roomManager: RoomManager, speakersMap: SyncUsersMap, api: API) {
         self.roomManager = roomManager
         self.speakersMap = speakersMap
+        self.api = api
         
         roomManager.roomConnectPublisher
             .sink { [weak self] in
@@ -66,6 +68,15 @@ class SpeakerGridViewModel: ObservableObject {
         roomManager.localParticipant.sendMessage(message)
     }
 
+    func removeSpeaker(_ speaker: SpeakerVideoViewModel) {
+        guard let roomName = roomManager.roomName else {
+            return
+        }
+        
+        let request = RemoveSpeakerRequest(roomName: roomName, userIdentity: speaker.identity)
+        api.request(request)
+    }
+    
     private func addSpeaker(_ speaker: SpeakerVideoViewModel) {
         if onscreenSpeakers.count < maxOnscreenSpeakerCount {
             onscreenSpeakers.append(speaker)
