@@ -3,8 +3,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import { apiClient } from '../api/api';
 
-const endpoint = '/verify-passcode';
-
 export function getPasscode(location: Location) {
   const match = location.search.match(/[?&]passcode=(\d+).*$/);
   const passcode = match ? match[1] : window.sessionStorage.getItem('passcode');
@@ -12,7 +10,7 @@ export function getPasscode(location: Location) {
 }
 
 export function verifyPasscode(passcode: string) {
-  return fetch(endpoint, {
+  return fetch('/verify-passcode', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',

@@ -6,9 +6,7 @@ import { useAppState } from '../../state';
 export default function PrivateRoute({ children, ...rest }: RouteProps) {
   const { isAuthReady, user } = useAppState();
 
-  const renderChildren = user;
-
-  if (!renderChildren && !isAuthReady) {
+  if (!user && !isAuthReady) {
     return null;
   }
 
@@ -25,10 +23,5 @@ export default function PrivateRoute({ children, ...rest }: RouteProps) {
     return redirectTo;
   }
 
-  return (
-    <Route
-      {...rest}
-      render={({ location }) => (renderChildren ? children : <Redirect to={getRedirectTo(location)} />)}
-    />
-  );
+  return <Route {...rest} render={({ location }) => (user ? children : <Redirect to={getRedirectTo(location)} />)} />;
 }

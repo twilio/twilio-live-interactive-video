@@ -12,7 +12,7 @@ module.exports.handler = async (context, event, callback) => {
 
   response.setStatusCode(200);
 
-  response.setBody({});
+  response.setBody({ verified: true });
 
   return callback(null, response);
 };

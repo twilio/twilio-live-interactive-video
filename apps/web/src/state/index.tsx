@@ -29,7 +29,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
   const [settings, dispatchSetting] = useReducer(settingsReducer, initialSettings);
   const [appState, appDispatch] = useReducer(appReducer, initialAppState);
 
-  let contextValue = {
+  const contextValue = {
     error,
     setError,
     activeSinkId,
@@ -38,12 +38,8 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
     dispatchSetting,
     appState,
     appDispatch,
-  } as StateContextType;
-
-  contextValue = {
-    ...contextValue,
     ...usePasscodeAuth(),
-  };
+  } as StateContextType;
 
   return <StateContext.Provider value={{ ...contextValue }}>{props.children}</StateContext.Provider>;
 }
