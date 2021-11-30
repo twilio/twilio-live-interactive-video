@@ -5,7 +5,7 @@ import { useAppState } from '../../state';
 
 type SyncContextType = {
   connect: (token: string) => void;
-  registerViewerDocument: (token: string) => Promise<void>;
+  registerUserDocument: (token: string) => Promise<void>;
   raisedHandsMap: SyncMap | undefined;
   registerRaisedHandsMap: (token: string) => Promise<void>;
 };
@@ -16,7 +16,7 @@ export const SyncProvider: React.FC = ({ children }) => {
   const { appDispatch } = useAppState();
   const { player } = usePlayerContext();
   const [raisedHandsMap, setRaisedHandsMap] = useState<SyncMap>();
-  const [viewerDocument, setViewerDocument] = useState<SyncDocument>();
+  const [userDocument, setUserDocument] = useState<SyncDocument>();
 
   const syncClientRef = useRef<SyncClient>();
 
@@ -24,8 +24,8 @@ export const SyncProvider: React.FC = ({ children }) => {
     syncClientRef.current = new SyncClient(token);
   }
 
-  function registerViewerDocument(viewerDocumentName: string) {
-    return syncClientRef.current!.document(viewerDocumentName).then(document => setViewerDocument(document));
+  function registerUserDocument(userDocumentName: string) {
+    return syncClientRef.current!.document(userDocumentName).then(document => setUserDocument(document));
   }
 
   function registerRaisedHandsMap(raisedHandsMapName: string) {
@@ -34,22 +34,22 @@ export const SyncProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     // The user can only accept a speaker invite when they are a viewer (when there is a player)
-    if (viewerDocument && player) {
+    if (userDocument && player) {
       const handleUpdate = (update: any) => {
         if (typeof update.data.speaker_invite !== 'undefined') {
           appDispatch({ type: 'set-has-speaker-invite', hasSpeakerInvite: update.data.speaker_invite });
         }
       };
 
-      viewerDocument.on('updated', handleUpdate);
+      userDocument.on('updated', handleUpdate);
       return () => {
-        viewerDocument.off('updated', handleUpdate);
+        userDocument.off('updated', handleUpdate);
       };
     }
-  }, [viewerDocument, player, appDispatch]);
+  }, [userDocument, player, appDispatch]);
 
   return (
-    <SyncContext.Provider value={{ connect, registerViewerDocument, raisedHandsMap, registerRaisedHandsMap }}>
+    <SyncContext.Provider value={{ connect, registerUserDocument, raisedHandsMap, registerRaisedHandsMap }}>
       {children}
     </SyncContext.Provider>
   );

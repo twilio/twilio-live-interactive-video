@@ -40,7 +40,7 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  let room, streamMapItem, viewerDocument;
+  let room, streamMapItem, userDocument;
 
   const client = context.getTwilioClient();
 
@@ -75,11 +75,11 @@ module.exports.handler = async (context, event, callback) => {
 
   const streamSyncClient = client.sync.services(streamMapItem.data.sync_service_sid);
 
-  const viewerDocumentName = `viewer-${user_identity}`;
-  // Create viewer document
+  const userDocumentName = `user-${user_identity}`;
+  // Create user document
   try {
-    viewerDocument = await streamSyncClient.documents.create({
-      uniqueName: viewerDocumentName,
+    userDocument = await streamSyncClient.documents.create({
+      uniqueName: userDocumentName,
     });
   } catch (e) {
     // Ignore "Unique name already exists" error
@@ -88,7 +88,7 @@ module.exports.handler = async (context, event, callback) => {
       response.setStatusCode(500);
       response.setBody({
         error: {
-          message: 'error creating viewer document',
+          message: 'error creating user document',
           explanation: e.message,
         },
       });
@@ -96,11 +96,11 @@ module.exports.handler = async (context, event, callback) => {
     }
   }
 
-  // Update viewer document to set speaker_invite to false.
-  // This is done outside of the viewer document creation to account
-  // for viewers that may already have a viewer document
+  // Update user document to set speaker_invite to false.
+  // This is done outside of the user document creation to account
+  // for users that may already have a user document
   try {
-    await streamSyncClient.documents(viewerDocumentName).update({
+    await streamSyncClient.documents(userDocumentName).update({
       data: { speaker_invite: false },
     });
   } catch (e) {
@@ -108,23 +108,23 @@ module.exports.handler = async (context, event, callback) => {
     response.setStatusCode(500);
     response.setBody({
       error: {
-        message: 'error updating viewer  document',
+        message: 'error updating user  document',
         explanation: e.message,
       },
     });
     return callback(null, response);
   }
 
-  // Give user read access to viewer document
+  // Give user read access to user document
   try {
-    await streamSyncClient.documents(viewerDocumentName)
+    await streamSyncClient.documents(userDocumentName)
       .documentPermissions(user_identity)
       .update({ read: true, write: false, manage: false });
   } catch (e) {
     response.setStatusCode(500);
     response.setBody({
       error: {
-        message: 'error adding read access to viewer document',
+        message: 'error adding read access to user document',
         explanation: e.message,
       },
     });
@@ -227,7 +227,7 @@ module.exports.handler = async (context, event, callback) => {
       speakers_map: 'speakers',
       viewers_map: 'viewers',
       raised_hands_map: `raised_hands`,
-      viewer_document: `viewer-${user_identity}`,
+      user_document: `user-${user_identity}`,
     },
     room_sid: room.sid,
   });

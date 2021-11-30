@@ -112,7 +112,7 @@ class StreamManager: ObservableObject {
                     speakersMap: response.syncObjectNames.speakersMap,
                     viewersMap: response.syncObjectNames.viewersMap,
                     raisedHandsMap: response.syncObjectNames.raisedHandsMap,
-                    viewerDocument: response.syncObjectNames.viewerDocument
+                    userDocument: response.syncObjectNames.userDocument
                 )
                 
                 self?.connectSync(accessToken: response.token, objectNames: objectNames)
