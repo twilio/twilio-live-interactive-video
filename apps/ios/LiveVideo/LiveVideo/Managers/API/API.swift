@@ -6,7 +6,7 @@ import Alamofire
 import Foundation
 
 class API: ObservableObject {
-    private let backendURL = <#BACKEND_URL#>
+    var backendURL: String!
     private let session = Session()
     private let jsonEncoder = JSONEncoder(keyEncodingStrategy: .convertToSnakeCase)
     private let jsonDecoder = JSONDecoder(keyDecodingStrategy: .convertFromSnakeCase)
@@ -16,10 +16,11 @@ class API: ObservableObject {
         completion: ((Result<Request.Response, Error>) -> Void)? = nil
     ) {
         session.request(
-            "\(backendURL)/\(request.path)",
+            backendURL + "/" + request.path,
             method: .post, // Twilio Functions does not care about method
             parameters: request.parameters,
-            encoder: JSONParameterEncoder(encoder: jsonEncoder)
+            encoder: JSONParameterEncoder(encoder: jsonEncoder),
+            headers: [.authorization("passcode")]
         )
         .validate()
         .responseDecodable(of: request.responseType, decoder: jsonDecoder) { [weak self] response in

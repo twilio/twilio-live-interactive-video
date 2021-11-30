@@ -83,10 +83,16 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        let authManager = AuthManager()
-        authManager.signIn(userIdentity: "Alice")
-        
         return HomeView()
-            .environmentObject(authManager)
+            .environmentObject(AuthManager.stub())
+    }
+}
+
+private extension AuthManager {
+    static func stub(userIdentity: String = "Alice", isSignedOut: Bool = false) -> AuthManager {
+        let authManager = AuthManager()
+        authManager.userIdentity = userIdentity
+        authManager.isSignedOut = isSignedOut
+        return authManager
     }
 }
