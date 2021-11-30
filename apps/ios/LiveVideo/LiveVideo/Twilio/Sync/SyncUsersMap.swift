@@ -8,7 +8,7 @@ import Combine
 /// Reusable store that fetches users from a sync map.
 ///
 /// Set `uniqueName` to specify the name of the sync map to fetch users from.
-class SyncUsersStore: NSObject, SyncStoring {
+class SyncUsersMap: NSObject, SyncObjectConnecting {
     struct User: Identifiable {
         let identity: String
         let isHost: Bool
@@ -63,7 +63,7 @@ class SyncUsersStore: NSObject, SyncStoring {
     }
 }
 
-extension SyncUsersStore: TWSMapDelegate {
+extension SyncUsersMap: TWSMapDelegate {
     func onMap(_ map: TWSMap, itemAdded item: TWSMapItem, eventContext: TWSEventContext) {
         let user = User(mapItem: item)
         users.append(user)

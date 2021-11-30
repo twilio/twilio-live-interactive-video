@@ -9,11 +9,11 @@
 /* Begin PBXBuildFile section */
 		DC175F2D270E232F00D9D1FE /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F2C270E232F00D9D1FE /* SyncManager.swift */; };
 		DC175F30270E238F00D9D1FE /* TwilioSyncClient in Frameworks */ = {isa = PBXBuildFile; productRef = DC175F2F270E238F00D9D1FE /* TwilioSyncClient */; };
-		DC175F32270E23F900D9D1FE /* ViewerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F31270E23F900D9D1FE /* ViewerStore.swift */; };
-		DC175F34270E3FD200D9D1FE /* SyncUsersStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F33270E3FD200D9D1FE /* SyncUsersStore.swift */; };
+		DC175F32270E23F900D9D1FE /* SyncUserDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F31270E23F900D9D1FE /* SyncUserDocument.swift */; };
+		DC175F34270E3FD200D9D1FE /* SyncUsersMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F33270E3FD200D9D1FE /* SyncUsersMap.swift */; };
 		DC175F37270E5B6F00D9D1FE /* ParticipantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F36270E5B6F00D9D1FE /* ParticipantsView.swift */; };
 		DC175F39270F673600D9D1FE /* SendSpeakerInviteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F38270F673600D9D1FE /* SendSpeakerInviteRequest.swift */; };
-		DC175F3E2717530D00D9D1FE /* SyncStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F3D2717530D00D9D1FE /* SyncStoring.swift */; };
+		DC175F3E2717530D00D9D1FE /* SyncObjectConnecting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F3D2717530D00D9D1FE /* SyncObjectConnecting.swift */; };
 		DC175F402718852B00D9D1FE /* DeleteStreamRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F3F2718852A00D9D1FE /* DeleteStreamRequest.swift */; };
 		DC1ED0F026DFCD3C00FFA769 /* LiveBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED0EF26DFCD3C00FFA769 /* LiveBadge.swift */; };
 		DC1ED0F726E12C7400FFA769 /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED0F626E12C7400FFA769 /* ProgressHUD.swift */; };
@@ -102,11 +102,11 @@
 
 /* Begin PBXFileReference section */
 		DC175F2C270E232F00D9D1FE /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
-		DC175F31270E23F900D9D1FE /* ViewerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewerStore.swift; sourceTree = "<group>"; };
-		DC175F33270E3FD200D9D1FE /* SyncUsersStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncUsersStore.swift; sourceTree = "<group>"; };
+		DC175F31270E23F900D9D1FE /* SyncUserDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncUserDocument.swift; sourceTree = "<group>"; };
+		DC175F33270E3FD200D9D1FE /* SyncUsersMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncUsersMap.swift; sourceTree = "<group>"; };
 		DC175F36270E5B6F00D9D1FE /* ParticipantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsView.swift; sourceTree = "<group>"; };
 		DC175F38270F673600D9D1FE /* SendSpeakerInviteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendSpeakerInviteRequest.swift; sourceTree = "<group>"; };
-		DC175F3D2717530D00D9D1FE /* SyncStoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStoring.swift; sourceTree = "<group>"; };
+		DC175F3D2717530D00D9D1FE /* SyncObjectConnecting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncObjectConnecting.swift; sourceTree = "<group>"; };
 		DC175F3F2718852A00D9D1FE /* DeleteStreamRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteStreamRequest.swift; sourceTree = "<group>"; };
 		DC1ED0EF26DFCD3C00FFA769 /* LiveBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBadge.swift; sourceTree = "<group>"; };
 		DC1ED0F626E12C7400FFA769 /* ProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
@@ -230,9 +230,9 @@
 			isa = PBXGroup;
 			children = (
 				DC175F2C270E232F00D9D1FE /* SyncManager.swift */,
-				DC175F3D2717530D00D9D1FE /* SyncStoring.swift */,
-				DC175F33270E3FD200D9D1FE /* SyncUsersStore.swift */,
-				DC175F31270E23F900D9D1FE /* ViewerStore.swift */,
+				DC175F3D2717530D00D9D1FE /* SyncObjectConnecting.swift */,
+				DC175F31270E23F900D9D1FE /* SyncUserDocument.swift */,
+				DC175F33270E3FD200D9D1FE /* SyncUsersMap.swift */,
 			);
 			path = Sync;
 			sourceTree = "<group>";
@@ -656,11 +656,11 @@
 				DC1ED0FD26E14D0B00FFA769 /* StreamToolbar.swift in Sources */,
 				DC1ED0F926E1440200FFA769 /* StreamStatusView.swift in Sources */,
 				DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */,
-				DC175F34270E3FD200D9D1FE /* SyncUsersStore.swift in Sources */,
+				DC175F34270E3FD200D9D1FE /* SyncUsersMap.swift in Sources */,
 				DCC48FA326D8322900EE49EF /* SwiftUIPlayerView.swift in Sources */,
 				DC4F45E92723135500BE730B /* CardButtonLabel.swift in Sources */,
 				DC1ED0F726E12C7400FFA769 /* ProgressHUD.swift in Sources */,
-				DC175F32270E23F900D9D1FE /* ViewerStore.swift in Sources */,
+				DC175F32270E23F900D9D1FE /* SyncUserDocument.swift in Sources */,
 				DCC1D62626D9396400892038 /* StreamManager.swift in Sources */,
 				DCC48F9B26D8296300EE49EF /* LiveVideoError.swift in Sources */,
 				DC4F45EF27286AF300BE730B /* TipStyle.swift in Sources */,
@@ -672,7 +672,7 @@
 				DC1ED13026E960C600FFA769 /* SpeakerGridView.swift in Sources */,
 				DC5F458826CEA7CB009C5C79 /* SettingsView.swift in Sources */,
 				DC44BB3F2703C8AD00DB656D /* AppDelegate.swift in Sources */,
-				DC175F3E2717530D00D9D1FE /* SyncStoring.swift in Sources */,
+				DC175F3E2717530D00D9D1FE /* SyncObjectConnecting.swift in Sources */,
 				DC504A7526F0F18700C37EC9 /* SpeakerGridViewModel.swift in Sources */,
 				DC50A5752739E26300E29580 /* ViewerConnectedToPlayerRequest.swift in Sources */,
 				DCC48F8926D8288B00EE49EF /* APIErrorResponse.swift in Sources */,

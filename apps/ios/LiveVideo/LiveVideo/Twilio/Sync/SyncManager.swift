@@ -11,45 +11,45 @@ class SyncManager: NSObject {
         let speakersMap: String
         let viewersMap: String
         let raisedHandsMap: String
-        let viewerDocument: String?
+        let userDocument: String?
     }
 
     let errorPublisher = PassthroughSubject<Error, Never>()
     var isConnected: Bool { client != nil }
     private var client: TwilioSyncClient?
-    private var speakersStore: SyncUsersStore
-    private var raisedHandsStore: SyncUsersStore
-    private var viewersStore: SyncUsersStore
-    private var viewerStore: ViewerStore
-    private var stores: [SyncStoring] = []
+    private var speakersMap: SyncUsersMap
+    private var raisedHandsMap: SyncUsersMap
+    private var viewersMap: SyncUsersMap
+    private var userDocument: SyncUserDocument
+    private var objects: [SyncObjectConnecting] = []
 
     init(
-        speakersStore: SyncUsersStore,
-        viewersStore: SyncUsersStore,
-        raisedHandsStore: SyncUsersStore,
-        viewerStore: ViewerStore
+        speakersMap: SyncUsersMap,
+        viewersMap: SyncUsersMap,
+        raisedHandsMap: SyncUsersMap,
+        userDocument: SyncUserDocument
     ) {
-        self.speakersStore = speakersStore
-        self.viewersStore = viewersStore
-        self.raisedHandsStore = raisedHandsStore
-        self.viewerStore = viewerStore
+        self.speakersMap = speakersMap
+        self.viewersMap = viewersMap
+        self.raisedHandsMap = raisedHandsMap
+        self.userDocument = userDocument
     }
 
-    /// Connects all sync stores.
+    /// Connects all sync objects.
     ///
     /// - Parameter token: An access token with sync grant.
     /// - Parameter objectNames: Unique names for the sync objects.
-    /// - Parameter completion: Called when all configured stores are synchronnized or an error is encountered.
+    /// - Parameter completion: Called when all configured objects are synchronnized or an error is encountered.
     func connect(token: String, objectNames: ObjectNames, completion: @escaping (Error?) -> Void
     ) {
-        speakersStore.uniqueName = objectNames.speakersMap
-        viewersStore.uniqueName = objectNames.viewersMap
-        raisedHandsStore.uniqueName = objectNames.raisedHandsMap
-        stores = [speakersStore, viewersStore, raisedHandsStore]
+        speakersMap.uniqueName = objectNames.speakersMap
+        viewersMap.uniqueName = objectNames.viewersMap
+        raisedHandsMap.uniqueName = objectNames.raisedHandsMap
+        objects = [speakersMap, viewersMap, raisedHandsMap]
         
-        if let viewerDocumentName = objectNames.viewerDocument {
-            viewerStore.uniqueName = viewerDocumentName
-            stores.append(viewerStore)
+        if let userDocumentName = objectNames.userDocument {
+            userDocument.uniqueName = userDocumentName
+            objects.append(userDocument)
         }
         
         TwilioSyncClient.syncClient(
@@ -64,23 +64,23 @@ class SyncManager: NSObject {
 
             self?.client = client
 
-            var connectedStoreCount = 0
+            var connectedObjectCount = 0
             
-            self?.stores.forEach { store in
-                store.errorHandler = { error in
+            self?.objects.forEach { object in
+                object.errorHandler = { error in
                     self?.handleError(error)
                 }
                 
-                store.connect(client: client) { error in
+                object.connect(client: client) { error in
                     if let error = error {
                         self?.disconnect()
                         completion(error)
                         return
                     }
                     
-                    connectedStoreCount += 1
+                    connectedObjectCount += 1
                     
-                    if connectedStoreCount == self?.stores.count {
+                    if connectedObjectCount == self?.objects.count {
                         completion(nil)
                     }
                 }
@@ -91,8 +91,8 @@ class SyncManager: NSObject {
     func disconnect() {
         client?.shutdown()
         client = nil
-        stores.forEach { $0.disconnect() }
-        stores = []
+        objects.forEach { $0.disconnect() }
+        objects = []
     }
     
     private func handleError(_ error: Error) {

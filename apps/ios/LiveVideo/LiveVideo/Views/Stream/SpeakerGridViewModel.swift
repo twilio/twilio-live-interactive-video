@@ -11,12 +11,12 @@ class SpeakerGridViewModel: ObservableObject {
     @Published var offscreenSpeakers: [SpeakerVideoViewModel] = []
     private let maxOnscreenSpeakerCount = 6
     private var roomManager: RoomManager!
-    private var speakersStore: SyncUsersStore!
+    private var speakersMap: SyncUsersMap!
     private var subscriptions = Set<AnyCancellable>()
 
-    func configure(roomManager: RoomManager, speakersStore: SyncUsersStore) {
+    func configure(roomManager: RoomManager, speakersMap: SyncUsersMap) {
         self.roomManager = roomManager
-        self.speakersStore = speakersStore
+        self.speakersMap = speakersMap
         
         roomManager.roomConnectPublisher
             .sink { [weak self] in
@@ -112,17 +112,17 @@ class SpeakerGridViewModel: ObservableObject {
     }
     
     private func makeSpeaker(participant: LocalParticipantManager) -> SpeakerVideoViewModel {
-        let isHost = speakersStore.host?.identity == participant.identity
+        let isHost = speakersMap.host?.identity == participant.identity
         return SpeakerVideoViewModel(participant: participant, isHost: isHost)
     }
 
     private func makeSpeaker(participant: RemoteParticipantManager) -> SpeakerVideoViewModel {
-        let isHost = speakersStore.host?.identity == participant.identity
+        let isHost = speakersMap.host?.identity == participant.identity
         return SpeakerVideoViewModel(participant: participant, isHost: isHost)
     }
 }
 
-private extension SyncUsersStore {
+private extension SyncUsersMap {
     var host: User? {
         users.first { $0.isHost } // This app only has one host and it is the user that created the stream
     }
