@@ -11,7 +11,7 @@ exports.handler = async function (context, event, callback) {
   const videoComposerIdentityPrefix = 'video-composer';
   let streamSyncClient;
 
-  switch(StatusCallbackEvent) {
+  switch (StatusCallbackEvent) {
     case 'participant-connected':
       if (event.ParticipantIdentity.startsWith(videoComposerIdentityPrefix)) {
         break; // Ignore the video composer participant
@@ -32,7 +32,7 @@ exports.handler = async function (context, event, callback) {
         });
         return callback(null, response);
       }
-  
+
       // Remove user from viewers map
       try {
         await streamSyncClient.syncMaps('viewers').syncMapItems(event.ParticipantIdentity).remove();
@@ -50,7 +50,7 @@ exports.handler = async function (context, event, callback) {
         }
       }
 
-      // Remove user from raised hands map 
+      // Remove user from raised hands map
       try {
         await streamSyncClient.syncMaps('raised_hands').syncMapItems(event.ParticipantIdentity).remove();
       } catch (e) {
@@ -67,16 +67,16 @@ exports.handler = async function (context, event, callback) {
         }
       }
 
-      // Add user to the speakers map. There is only one host and they are added to the speakers map 
+      // Add user to the speakers map. There is only one host and they are added to the speakers map
       // when the stream is created. So all new speakers that are added here will not be host.
       try {
-        await streamSyncClient.syncMaps('speakers').syncMapItems.create({ 
-          key: event.ParticipantIdentity, 
-          data: { host: false } 
+        await streamSyncClient.syncMaps('speakers').syncMapItems.create({
+          key: event.ParticipantIdentity,
+          data: { host: false },
         });
       } catch (e) {
         const alreadyExistsError = 54208;
-    
+
         if (e.code !== alreadyExistsError) {
           console.error(e);
           response.setStatusCode(500);
@@ -89,7 +89,7 @@ exports.handler = async function (context, event, callback) {
           return callback(null, response);
         }
       }
-    
+
       break;
     case 'participant-disconnected':
       if (event.ParticipantIdentity.startsWith(videoComposerIdentityPrefix)) {
@@ -134,7 +134,7 @@ exports.handler = async function (context, event, callback) {
       try {
         const backendStorageSyncClient = await client.sync.services(context.BACKEND_STORAGE_SYNC_SERVICE_SID);
         const streamMapItem = await backendStorageSyncClient.syncMaps('streams').syncMapItems(RoomSid).fetch();
-    
+
         // Get playerStreamerSid and mediaProcessorSid from stream map item
         const { player_streamer_sid, media_processor_sid } = streamMapItem.data;
 
