@@ -4,9 +4,9 @@
 
 import SwiftUI
 
-struct SignInView: View {
-    @State private var name = ""
-    @State private var isShowingDetailView = false
+struct EnterUserIdentityView: View {
+    @State private var userIdentity = ""
+    @State private var isShowingPasscodeView = false
 
     var body: some View {
         NavigationView {
@@ -27,27 +27,34 @@ struct SignInView: View {
                 Text("What's your name?")
                     .modifier(TipStyle())
 
-                TextField("Full name", text: $name)
+                TextField("Full name", text: $userIdentity)
                     .textFieldStyle(FormTextFieldStyle())
                     .autocapitalization(.words)
                     .disableAutocorrection(true)
-
-                NavigationLink(destination: PasscodeView(name: $name), isActive: $isShowingDetailView) {
-                    EmptyView()
-                }
                 
                 Button("Continue") {
-                    isShowingDetailView = true
+                    isShowingPasscodeView = true
                 }
-                .buttonStyle(PrimaryButtonStyle(isEnabled: !name.isEmpty))
-                .disabled(name.isEmpty)
+                .buttonStyle(PrimaryButtonStyle(isEnabled: !userIdentity.isEmpty))
+                .disabled(userIdentity.isEmpty)
+                .background(
+                    /// Set the `NavigationLink` as background with 0 opacity so it is completely invisible and doesn't alter spacing
+                    NavigationLink(
+                        destination: EnterPasscodeView(userIdentity: userIdentity),
+                        isActive: $isShowingPasscodeView
+                    ) {
+                        EmptyView()
+                    }
+                        .opacity(0)
+                )
             }
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
 
-struct SignInView_Previews: PreviewProvider {
+struct EnterUserIdentityView_Previews: PreviewProvider {
     static var previews: some View {
-        SignInView()
+        EnterUserIdentityView()
     }
 }

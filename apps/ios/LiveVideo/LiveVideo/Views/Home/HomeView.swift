@@ -72,7 +72,7 @@ struct HomeView: View {
                 }
             )
             .fullScreenCover(isPresented: $authManager.isSignedOut) {
-                SignInView()
+                EnterUserIdentityView()
             }
             .fullScreenCover(isPresented: $showStream) {
                 StreamView()
@@ -84,12 +84,12 @@ struct HomeView: View {
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         return HomeView()
-            .environmentObject(AuthManager.stub())
+            .environmentObject(AuthManager.stub(isSignedOut: false))
     }
 }
 
 private extension AuthManager {
-    static func stub(userIdentity: String = "Alice", isSignedOut: Bool = false) -> AuthManager {
+    static func stub(userIdentity: String = "", isSignedOut: Bool = true) -> AuthManager {
         let authManager = AuthManager()
         authManager.userIdentity = userIdentity
         authManager.isSignedOut = isSignedOut

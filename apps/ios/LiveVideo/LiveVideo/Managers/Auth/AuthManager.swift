@@ -9,22 +9,18 @@ class AuthManager: ObservableObject {
     @Published var isSignedOut = true
     @Published var userIdentity = ""
     private let keychain = Keychain()
-    private let userIdentityKey = "UserIdentity"
-    private let passcodeKey = "Passcode"
+    private let userIdentityKey = "UserIdentity" // Store user identity in keychain because it is PII
+    private let passcodeKey = "Passcode" // Store passcode in keychain because it is secret
     private var api: API!
-
-    init() {
-        guard let userIdentity = keychain[userIdentityKey], let passcode = keychain[passcodeKey] else {
-            return
-        }
-        
-        isSignedOut = false
-        self.userIdentity = userIdentity
-        try? configureAPI(passcode: passcode)
-    }
 
     func configure(api: API) {
         self.api = api
+
+        if let userIdentity = keychain[userIdentityKey], let passcode = keychain[passcodeKey] {
+            isSignedOut = false
+            self.userIdentity = userIdentity
+            try? configureAPI(passcode: passcode)
+        }
     }
     
     func signIn(userIdentity: String, passcode: String, completion: @escaping (Result<Void, Error>) -> Void) {
@@ -61,7 +57,7 @@ class AuthManager: ObservableObject {
     
     private func configureAPI(passcode: String) throws {
         let passcodeComponents = try PasscodeComponents(string: passcode)
-        let backendURL = "https://twilio-live-interactive-video-" + passcodeComponents.appID + passcodeComponents.serverlessID + "-dev.twil.io"
+        let backendURL = "https://twilio-live-interactive-video-" + passcodeComponents.appID + "-" + passcodeComponents.serverlessID + "-dev.twil.io"
         api.configure(backendURL: backendURL, passcode: passcodeComponents.passcode)
     }
 }

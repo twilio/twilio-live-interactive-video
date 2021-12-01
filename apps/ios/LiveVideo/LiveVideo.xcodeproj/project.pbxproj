@@ -52,7 +52,7 @@
 		DC5F454026CC061F009C5C79 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC5F453F26CC061F009C5C79 /* Preview Assets.xcassets */; };
 		DC5F454B26CC061F009C5C79 /* LiveVideoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F454A26CC061F009C5C79 /* LiveVideoTests.swift */; };
 		DC5F455626CC061F009C5C79 /* LiveVideoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F455526CC061F009C5C79 /* LiveVideoUITests.swift */; };
-		DC5F458326CDBA0B009C5C79 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F458226CDBA0B009C5C79 /* SignInView.swift */; };
+		DC5F458326CDBA0B009C5C79 /* EnterUserIdentityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F458226CDBA0B009C5C79 /* EnterUserIdentityView.swift */; };
 		DC5F458626CEA6CE009C5C79 /* InAppSettingsKit in Frameworks */ = {isa = PBXBuildFile; productRef = DC5F458526CEA6CE009C5C79 /* InAppSettingsKit */; };
 		DC5F458826CEA7CB009C5C79 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F458726CEA7CB009C5C79 /* SettingsView.swift */; };
 		DC5F458A26CEB413009C5C79 /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DC5F458926CEB413009C5C79 /* InAppSettings.bundle */; };
@@ -69,7 +69,7 @@
 		DCB1BDFE27568D70006CE9D1 /* VerifyPasscodeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BDFD27568D70006CE9D1 /* VerifyPasscodeRequest.swift */; };
 		DCB1BE0027568F5B006CE9D1 /* PasscodeComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BDFF27568F5B006CE9D1 /* PasscodeComponents.swift */; };
 		DCB1BE032756A288006CE9D1 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = DCB1BE022756A288006CE9D1 /* KeychainAccess */; };
-		DCB1BE052756D954006CE9D1 /* PasscodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BE042756D954006CE9D1 /* PasscodeView.swift */; };
+		DCB1BE052756D954006CE9D1 /* EnterPasscodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BE042756D954006CE9D1 /* EnterPasscodeView.swift */; };
 		DCB4497426F5496400B52774 /* SpeakerSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */; };
 		DCB4497626F65A7000B52774 /* SpeakerVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */; };
 		DCC1D62626D9396400892038 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC1D62526D9396400892038 /* StreamManager.swift */; };
@@ -153,7 +153,7 @@
 		DC5F455126CC061F009C5C79 /* LiveVideoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LiveVideoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC5F455526CC061F009C5C79 /* LiveVideoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoUITests.swift; sourceTree = "<group>"; };
 		DC5F455726CC061F009C5C79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DC5F458226CDBA0B009C5C79 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		DC5F458226CDBA0B009C5C79 /* EnterUserIdentityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterUserIdentityView.swift; sourceTree = "<group>"; };
 		DC5F458726CEA7CB009C5C79 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		DC5F458926CEB413009C5C79 /* InAppSettings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InAppSettings.bundle; sourceTree = "<group>"; };
 		DC5F458E26CEBEC8009C5C79 /* AppInfoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoStore.swift; sourceTree = "<group>"; };
@@ -167,7 +167,7 @@
 		DC9E18382729DC740070F53F /* OffscreenSpeakersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffscreenSpeakersView.swift; sourceTree = "<group>"; };
 		DCB1BDFD27568D70006CE9D1 /* VerifyPasscodeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyPasscodeRequest.swift; sourceTree = "<group>"; };
 		DCB1BDFF27568F5B006CE9D1 /* PasscodeComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeComponents.swift; sourceTree = "<group>"; };
-		DCB1BE042756D954006CE9D1 /* PasscodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeView.swift; sourceTree = "<group>"; };
+		DCB1BE042756D954006CE9D1 /* EnterPasscodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPasscodeView.swift; sourceTree = "<group>"; };
 		DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerSettingsManager.swift; sourceTree = "<group>"; };
 		DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoViewModel.swift; sourceTree = "<group>"; };
 		DCC1D62526D9396400892038 /* StreamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamManager.swift; sourceTree = "<group>"; };
@@ -337,8 +337,8 @@
 		DC4AA65D26D03DF100E677D5 /* SignIn */ = {
 			isa = PBXGroup;
 			children = (
-				DC5F458226CDBA0B009C5C79 /* SignInView.swift */,
-				DCB1BE042756D954006CE9D1 /* PasscodeView.swift */,
+				DCB1BE042756D954006CE9D1 /* EnterPasscodeView.swift */,
+				DC5F458226CDBA0B009C5C79 /* EnterUserIdentityView.swift */,
 			);
 			path = SignIn;
 			sourceTree = "<group>";
@@ -659,7 +659,7 @@
 				DCB1BDFE27568D70006CE9D1 /* VerifyPasscodeRequest.swift in Sources */,
 				DC1ED13226E9666E00FFA769 /* SwiftUIVideoView.swift in Sources */,
 				DCB4497626F65A7000B52774 /* SpeakerVideoViewModel.swift in Sources */,
-				DC5F458326CDBA0B009C5C79 /* SignInView.swift in Sources */,
+				DC5F458326CDBA0B009C5C79 /* EnterUserIdentityView.swift in Sources */,
 				DC44BB412703C8DD00DB656D /* SceneDelegate.swift in Sources */,
 				DC9E18392729DC740070F53F /* OffscreenSpeakersView.swift in Sources */,
 				DC50A57B273DBB2700E29580 /* JSONEncoderExtension.swift in Sources */,
@@ -693,7 +693,7 @@
 				DCC48F8926D8288B00EE49EF /* APIErrorResponse.swift in Sources */,
 				DC5F459426CEC1FF009C5C79 /* UserDefaultsManager.swift in Sources */,
 				DC9E18372729B68B0070F53F /* TitleStyle.swift in Sources */,
-				DCB1BE052756D954006CE9D1 /* PasscodeView.swift in Sources */,
+				DCB1BE052756D954006CE9D1 /* EnterPasscodeView.swift in Sources */,
 				DC5F458F26CEBEC8009C5C79 /* AppInfoStore.swift in Sources */,
 				DCC1D62C26D97BB200892038 /* ErrorAlert.swift in Sources */,
 				DC175F2D270E232F00D9D1FE /* SyncManager.swift in Sources */,

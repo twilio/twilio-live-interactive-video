@@ -14,10 +14,6 @@ struct VerifyPasscodeRequest: APIRequest {
     }
 
     let path = "verify-passcode"
-    let parameters: Parameters
+    let parameters = Parameters()
     let responseType = Response.self
-    
-    init() {
-        parameters = Parameters()
-    }
 }

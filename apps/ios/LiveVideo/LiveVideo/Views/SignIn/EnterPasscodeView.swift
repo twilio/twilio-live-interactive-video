@@ -4,14 +4,14 @@
 
 import SwiftUI
 
-struct PasscodeView: View {
+struct EnterPasscodeView: View {
+    let userIdentity: String
     @EnvironmentObject var authManager: AuthManager
-    @State private var passcode = ""
-    @Binding var name: String
-    @State private var showLoader = false
-    @State private var error: Error?
-    @State private var isShowingError = false
     @Environment(\.presentationMode) var presentationMode
+    @State private var passcode = ""
+    @State private var isShowingLoader = false
+    @State private var isShowingError = false
+    @State private var error: Error?
 
     var body: some View {
         ZStack {
@@ -19,15 +19,16 @@ struct PasscodeView: View {
                 Text("This is a number you or someone on your team was sent during setup.")
                     .foregroundColor(.textWeak)
                 
-                TextField("Passcode", text: $passcode)
-                    .textFieldStyle(FormTextFieldStyle()) // TODO: Use number pad
-                    .autocapitalization(.words)
-                    .disableAutocorrection(true)
-
+                SecureField("Passcode", text: $passcode)
+                    .textFieldStyle(FormTextFieldStyle())
+                    .keyboardType(.numberPad)
+                
                 Button("Continue") {
-                    showLoader = true
-                    authManager.signIn(userIdentity: name, passcode: passcode) { result in
-                        showLoader = false
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    isShowingLoader = true
+                    
+                    authManager.signIn(userIdentity: userIdentity, passcode: passcode) { result in
+                        isShowingLoader = false
                         
                         switch result {
                         case .success:
@@ -42,24 +43,22 @@ struct PasscodeView: View {
                 .disabled(passcode.isEmpty)
             }
 
-            if showLoader {
+            if isShowingLoader {
                 ProgressHUD()
             }
         }
         .navigationTitle("Enter passcode")
         .navigationBarTitleDisplayMode(.inline)
         .alert(isPresented: $isShowingError) {
-            Alert(error: error!) {
-
-            }
+            Alert(error: error!)
         }
     }
 }
 
-struct PasscodeView_Previews: PreviewProvider {
+struct EnterPasscodeView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PasscodeView(name: .constant(""))
+            EnterPasscodeView(userIdentity: "")
         }
     }
 }
