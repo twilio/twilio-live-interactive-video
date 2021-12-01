@@ -6,7 +6,7 @@ import Foundation
 
 struct VerifyPasscodeRequest: APIRequest {
     struct Parameters: Encodable {
-        
+        // The backend verifies the passcode in the request header so no parameters needed
     }
 
     struct Response: Decodable {
