@@ -338,7 +338,6 @@
 			isa = PBXGroup;
 			children = (
 				DC5F458226CDBA0B009C5C79 /* SignInView.swift */,
-				DCB1BDFF27568F5B006CE9D1 /* PasscodeComponents.swift */,
 				DCB1BE042756D954006CE9D1 /* PasscodeView.swift */,
 			);
 			path = SignIn;
@@ -356,6 +355,7 @@
 			isa = PBXGroup;
 			children = (
 				DC4AA66426D1456100E677D5 /* AuthManager.swift */,
+				DCB1BDFF27568F5B006CE9D1 /* PasscodeComponents.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";

@@ -26,14 +26,15 @@ struct PasscodeView: View {
 
                 Button("Continue") {
                     showLoader = true
-                    authManager.signIn(userIdentity: name, passcode: passcode) { error in
-                        showLoader = false // TODO: Handle error
+                    authManager.signIn(userIdentity: name, passcode: passcode) { result in
+                        showLoader = false
                         
-                        if let error = error {
+                        switch result {
+                        case .success:
+                            presentationMode.wrappedValue.dismiss()
+                        case let .failure(error):
                             self.error = error
                             isShowingError = true
-                        } else {
-                            presentationMode.wrappedValue.dismiss()
                         }
                     }
                 }

@@ -3,35 +3,35 @@
 //
 
 import Combine
-import Foundation
 import KeychainAccess
 
-/// Store user identity in passcode because it is PII. Store passcode in keychain because it is a secret.
 class AuthManager: ObservableObject {
     @Published var isSignedOut = true
     @Published var userIdentity = ""
-    private(set) var passcode = ""
     private let keychain = Keychain()
+    private let userIdentityKey = "UserIdentity"
+    private let passcodeKey = "Passcode"
     private var api: API!
 
     init() {
-        if let passcode = keychain["Passcode"], let userIdentity = keychain["UserIdentity"] {
-            isSignedOut = false
-            self.passcode = passcode
-            self.userIdentity = userIdentity
-            try? configureAPI(passcode: passcode)
+        guard let userIdentity = keychain[userIdentityKey], let passcode = keychain[passcodeKey] else {
+            return
         }
+        
+        isSignedOut = false
+        self.userIdentity = userIdentity
+        try? configureAPI(passcode: passcode)
     }
 
     func configure(api: API) {
         self.api = api
     }
     
-    func signIn(userIdentity: String, passcode: String, completion: @escaping (Error?) -> Void) {
+    func signIn(userIdentity: String, passcode: String, completion: @escaping (Result<Void, Error>) -> Void) {
         do {
             try configureAPI(passcode: passcode)
         } catch {
-            completion(error)
+            completion(.failure(error))
             return
         }
         
@@ -42,36 +42,26 @@ class AuthManager: ObservableObject {
             
             switch result {
             case .success:
-                self.keychain["UserIdentity"] = userIdentity
-                self.keychain["Passcode"] = passcode
+                self.keychain[self.userIdentityKey] = userIdentity
+                self.keychain[self.passcodeKey] = passcode
                 self.userIdentity = userIdentity
-                self.passcode = passcode
                 self.isSignedOut = false
-                completion(nil)
+                completion(.success(()))
             case let .failure(error):
-                completion(error)
+                completion(.failure(error))
             }
         }
     }
 
     func signOut() {
         isSignedOut = true
-        keychain["UserIdentity"] = nil
-        keychain["Passcode"] = nil
-        passcode = ""
         userIdentity = ""
+        try? keychain.removeAll()
     }
     
     private func configureAPI(passcode: String) throws {
         let passcodeComponents = try PasscodeComponents(string: passcode)
-        
-        var appID: String {
-            guard let appID = passcodeComponents.appID else { return "" }
-            
-            return "\(appID)-"
-        }
-        
-        api.backendURL = "https://twilio-live-interactive-video-\(appID)\(passcodeComponents.serverlessID)-dev.twil.io"
-        api.passcode = passcodeComponents.passcode
+        let backendURL = "https://twilio-live-interactive-video-" + passcodeComponents.appID + passcodeComponents.serverlessID + "-dev.twil.io"
+        api.configure(backendURL: backendURL, passcode: passcodeComponents.passcode)
     }
 }
