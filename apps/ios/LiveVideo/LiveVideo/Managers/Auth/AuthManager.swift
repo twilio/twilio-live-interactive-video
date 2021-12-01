@@ -72,5 +72,6 @@ class AuthManager: ObservableObject {
         }
         
         api.backendURL = "https://twilio-live-interactive-video-\(appID)\(passcodeComponents.serverlessID)-dev.twil.io"
+        api.passcode = passcodeComponents.passcode
     }
 }

@@ -7,6 +7,7 @@ import Foundation
 
 class API: ObservableObject {
     var backendURL: String!
+    var passcode: String!
     private let session = Session()
     private let jsonEncoder = JSONEncoder(keyEncodingStrategy: .convertToSnakeCase)
     private let jsonDecoder = JSONDecoder(keyDecodingStrategy: .convertFromSnakeCase)
@@ -20,7 +21,7 @@ class API: ObservableObject {
             method: .post, // Twilio Functions does not care about method
             parameters: request.parameters,
             encoder: JSONParameterEncoder(encoder: jsonEncoder),
-            headers: [.authorization("passcode")]
+            headers: [.authorization(passcode)]
         )
         .validate()
         .responseDecodable(of: request.responseType, decoder: jsonDecoder) { [weak self] response in
