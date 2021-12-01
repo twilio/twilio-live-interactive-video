@@ -152,6 +152,12 @@ struct StreamView: View {
                         viewModel.isHandRaised = false
                     }
                 )
+            case .speakerMovedToViewersByHost:
+                return Alert(
+                    title: Text("Moved to viewers"),
+                    message: Text("You have been moved to viewers by the host."),
+                    dismissButton: .default(Text("OK"))
+                )
             case .streamEndedByHost:
                 return Alert(
                     title: Text("Event is no longer available"),

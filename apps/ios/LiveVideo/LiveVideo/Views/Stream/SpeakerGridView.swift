@@ -47,12 +47,18 @@ struct SpeakerGridView: View {
                     LazyVGrid(columns: columns, spacing: spacing) {
                         ForEach($viewModel.onscreenSpeakers, id: \.self) { $speaker in
                             Group {
-                                if role == .host && !speaker.isMuted && !speaker.isYou  {
+                                if role == .host && !speaker.isYou {
                                     Menu(
                                         content: {
+                                            if !speaker.isMuted {
+                                                Button(
+                                                    action: { viewModel.muteSpeaker(speaker) },
+                                                    label: { Label("Mute", systemImage: "mic.slash") }
+                                                )
+                                            }
                                             Button(
-                                                action: { viewModel.muteSpeaker(speaker) },
-                                                label: { Label("Mute", systemImage: "mic.slash") }
+                                                action: { viewModel.removeSpeaker(speaker) },
+                                                label: { Label("Move to viewers", systemImage: "minus.circle") }
                                             )
                                         },
                                         label: {
