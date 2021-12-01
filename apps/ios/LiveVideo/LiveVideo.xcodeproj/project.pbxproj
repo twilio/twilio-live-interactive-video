@@ -50,7 +50,7 @@
 		DC5F453B26CC061A009C5C79 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453A26CC061A009C5C79 /* HomeView.swift */; };
 		DC5F453D26CC061F009C5C79 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC5F453C26CC061F009C5C79 /* Assets.xcassets */; };
 		DC5F454026CC061F009C5C79 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC5F453F26CC061F009C5C79 /* Preview Assets.xcassets */; };
-		DC5F454B26CC061F009C5C79 /* LiveVideoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F454A26CC061F009C5C79 /* LiveVideoTests.swift */; };
+		DC5F454B26CC061F009C5C79 /* PasscodeComponentsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F454A26CC061F009C5C79 /* PasscodeComponentsSpec.swift */; };
 		DC5F455626CC061F009C5C79 /* LiveVideoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F455526CC061F009C5C79 /* LiveVideoUITests.swift */; };
 		DC5F458326CDBA0B009C5C79 /* EnterUserIdentityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F458226CDBA0B009C5C79 /* EnterUserIdentityView.swift */; };
 		DC5F458626CEA6CE009C5C79 /* InAppSettingsKit in Frameworks */ = {isa = PBXBuildFile; productRef = DC5F458526CEA6CE009C5C79 /* InAppSettingsKit */; };
@@ -70,6 +70,8 @@
 		DCB1BE0027568F5B006CE9D1 /* PasscodeComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BDFF27568F5B006CE9D1 /* PasscodeComponents.swift */; };
 		DCB1BE032756A288006CE9D1 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = DCB1BE022756A288006CE9D1 /* KeychainAccess */; };
 		DCB1BE052756D954006CE9D1 /* EnterPasscodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BE042756D954006CE9D1 /* EnterPasscodeView.swift */; };
+		DCB1BE0827581BC6006CE9D1 /* Quick in Frameworks */ = {isa = PBXBuildFile; productRef = DCB1BE0727581BC6006CE9D1 /* Quick */; };
+		DCB1BE0B27581C11006CE9D1 /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = DCB1BE0A27581C11006CE9D1 /* Nimble */; };
 		DCB4497426F5496400B52774 /* SpeakerSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */; };
 		DCB4497626F65A7000B52774 /* SpeakerVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */; };
 		DCC1D62626D9396400892038 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC1D62526D9396400892038 /* StreamManager.swift */; };
@@ -148,7 +150,7 @@
 		DC5F453F26CC061F009C5C79 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		DC5F454126CC061F009C5C79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DC5F454626CC061F009C5C79 /* LiveVideoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LiveVideoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		DC5F454A26CC061F009C5C79 /* LiveVideoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoTests.swift; sourceTree = "<group>"; };
+		DC5F454A26CC061F009C5C79 /* PasscodeComponentsSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeComponentsSpec.swift; sourceTree = "<group>"; };
 		DC5F454C26CC061F009C5C79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DC5F455126CC061F009C5C79 /* LiveVideoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LiveVideoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC5F455526CC061F009C5C79 /* LiveVideoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoUITests.swift; sourceTree = "<group>"; };
@@ -203,6 +205,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCB1BE0827581BC6006CE9D1 /* Quick in Frameworks */,
+				DCB1BE0B27581C11006CE9D1 /* Nimble in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,7 +412,7 @@
 		DC5F454926CC061F009C5C79 /* LiveVideoTests */ = {
 			isa = PBXGroup;
 			children = (
-				DC5F454A26CC061F009C5C79 /* LiveVideoTests.swift */,
+				DC5F454A26CC061F009C5C79 /* PasscodeComponentsSpec.swift */,
 				DC5F454C26CC061F009C5C79 /* Info.plist */,
 			);
 			path = LiveVideoTests;
@@ -550,6 +554,10 @@
 				DC5F454826CC061F009C5C79 /* PBXTargetDependency */,
 			);
 			name = LiveVideoTests;
+			packageProductDependencies = (
+				DCB1BE0727581BC6006CE9D1 /* Quick */,
+				DCB1BE0A27581C11006CE9D1 /* Nimble */,
+			);
 			productName = LiveVideoTests;
 			productReference = DC5F454626CC061F009C5C79 /* LiveVideoTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -611,6 +619,8 @@
 				DC175F2E270E238F00D9D1FE /* XCRemoteSwiftPackageReference "twilio-sync-ios" */,
 				DC4F45E5271F5A3700BE730B /* XCRemoteSwiftPackageReference "twilio-live-player-ios" */,
 				DCB1BE012756A288006CE9D1 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				DCB1BE0627581BC6006CE9D1 /* XCRemoteSwiftPackageReference "Quick" */,
+				DCB1BE0927581C11006CE9D1 /* XCRemoteSwiftPackageReference "Nimble" */,
 			);
 			productRefGroup = DC5F453626CC061A009C5C79 /* Products */;
 			projectDirPath = "";
@@ -728,7 +738,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DC5F454B26CC061F009C5C79 /* LiveVideoTests.swift in Sources */,
+				DC5F454B26CC061F009C5C79 /* PasscodeComponentsSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1092,6 +1102,22 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		DCB1BE0627581BC6006CE9D1 /* XCRemoteSwiftPackageReference "Quick" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Quick/Quick";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+		DCB1BE0927581C11006CE9D1 /* XCRemoteSwiftPackageReference "Nimble" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Quick/Nimble";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
 		DCC48F9626D828E500EE49EF /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire";
@@ -1132,6 +1158,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DCB1BE012756A288006CE9D1 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
 			productName = KeychainAccess;
+		};
+		DCB1BE0727581BC6006CE9D1 /* Quick */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DCB1BE0627581BC6006CE9D1 /* XCRemoteSwiftPackageReference "Quick" */;
+			productName = Quick;
+		};
+		DCB1BE0A27581C11006CE9D1 /* Nimble */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DCB1BE0927581C11006CE9D1 /* XCRemoteSwiftPackageReference "Nimble" */;
+			productName = Nimble;
 		};
 		DCC48F9726D828E500EE49EF /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
