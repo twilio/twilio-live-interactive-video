@@ -17,6 +17,10 @@ class API: ObservableObject {
         self.passcode = passcode
     }
     
+    /// Send a request to the reference backend.
+    ///
+    /// - Parameter request: The request to send.
+    /// - Parameter completion: Called on the main queue with result when the request is completed.
     func request<Request: APIRequest>(
         _ request: Request,
         completion: ((Result<Request.Response, Error>) -> Void)? = nil
