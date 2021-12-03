@@ -26,6 +26,7 @@ struct LiveVideoApp: App {
                 .environmentObject(speakerSettingsManager)
                 .environmentObject(api)
                 .onAppear {
+                    authManager.configure(api: api)
                     let localParticipant = LocalParticipantManager(authManager: authManager)
                     let roomManager = RoomManager()
                     roomManager.configure(localParticipant: localParticipant)
