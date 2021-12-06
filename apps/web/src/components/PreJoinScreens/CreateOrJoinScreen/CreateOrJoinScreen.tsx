@@ -5,11 +5,10 @@ import { Text } from '@twilio-paste/core/text';
 import { Button } from '@twilio-paste/core/button';
 import { Box } from '@twilio-paste/core/box';
 
-import { appActionTypes, ActiveScreen, appStateTypes } from '../../../state/appState/appReducer';
-
 import { ArrowBackIcon } from '@twilio-paste/icons/esm/ArrowBackIcon';
 import { ArrowForwardIcon } from '@twilio-paste/icons/esm/ArrowForwardIcon';
 
+import { appActionTypes, ActiveScreen, appStateTypes } from '../../../state/appState/appReducer';
 import CreateEventIcon from '../../../icons/CreateEventIcon';
 import JoinEventIcon from '../../../icons/JoinEventIcon';
 
@@ -43,9 +42,6 @@ const CalloutButton: React.FC<{ children: React.ReactNode; onClick: () => void }
     }}
   >
     {children}
-    <Box>
-      <ArrowForwardIcon decorative={true} size="sizeIcon80" color="colorTextIcon" />
-    </Box>
   </Box>
 );
 
@@ -66,6 +62,9 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
               Create a new event
             </Text>
           </Box>
+          <Box>
+            <ArrowForwardIcon decorative={true} size="sizeIcon80" color="colorTextIcon" />
+          </Box>
         </CalloutButton>
 
         <CalloutButton onClick={() => dispatch({ type: 'set-participant-type', participantType: null })}>
@@ -74,6 +73,9 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
             <Text as="span" fontWeight="fontWeightBold" color="colorTextWeak" textAlign="left">
               Join an event
             </Text>
+          </Box>
+          <Box>
+            <ArrowForwardIcon decorative={true} size="sizeIcon80" color="colorTextIcon" />
           </Box>
         </CalloutButton>
       </Box>
