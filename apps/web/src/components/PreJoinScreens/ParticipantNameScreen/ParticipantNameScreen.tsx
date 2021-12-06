@@ -23,7 +23,7 @@ export default function ParticipantNameScreen({ state, dispatch }: ParticipantNa
   };
 
   return (
-    <Box>
+    <>
       <Text as="p" fontWeight="fontWeightBold" color="colorTextWeak" marginBottom="space20" fontSize="fontSize70">
         Welcome to
       </Text>
@@ -41,6 +41,6 @@ export default function ParticipantNameScreen({ state, dispatch }: ParticipantNa
           </Button>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 }
