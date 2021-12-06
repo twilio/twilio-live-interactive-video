@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import { CssBaseline } from '@material-ui/core';
 import { MuiThemeProvider } from '@material-ui/core/styles';
+import { Theme } from '@twilio-paste/core/theme';
 
 import App from './App';
 import AppStateProvider, { useAppState } from './state';
@@ -49,26 +50,28 @@ const VideoApp = () => {
 ReactDOM.render(
   <MuiThemeProvider theme={theme}>
     <CssBaseline />
-    <UnsupportedBrowserWarning>
-      <Router basename="/">
-        <AppStateProvider>
-          <Switch>
-            <PrivateRoute exact path="/">
-              <VideoApp />
-            </PrivateRoute>
-            <PrivateRoute path="/:ViewerType/:EventName">
-              <VideoApp />
-            </PrivateRoute>
-            <Route path="/login">
-              <LoginPage />
-            </Route>
-            <Route>
-              <Redirect to="/" />
-            </Route>
-          </Switch>
-        </AppStateProvider>
-      </Router>
-    </UnsupportedBrowserWarning>
+    <Theme.Provider theme="default">
+      <UnsupportedBrowserWarning>
+        <Router basename="/">
+          <AppStateProvider>
+            <Switch>
+              <PrivateRoute exact path="/">
+                <VideoApp />
+              </PrivateRoute>
+              <PrivateRoute path="/:ViewerType/:EventName">
+                <VideoApp />
+              </PrivateRoute>
+              <Route path="/login">
+                <LoginPage />
+              </Route>
+              <Route>
+                <Redirect to="/" />
+              </Route>
+            </Switch>
+          </AppStateProvider>
+        </Router>
+      </UnsupportedBrowserWarning>
+    </Theme.Provider>
   </MuiThemeProvider>,
   document.getElementById('root')
 );
