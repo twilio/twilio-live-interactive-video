@@ -36,12 +36,16 @@ Once the application environment has been configured and dependencies have been 
 ```shell
 npm run serverless:deploy
 
-App deployed to: https://twilio-live-interactive-video-1234-5678-dev.twil.io
+App deployed to: https://twilio-live-interactive-video-1234-5678-dev.twil.io?passcode=12345612345678
 Passcode: 123 456 1234 5678
 This URL is for demo purposes only. It will expire on Tue Oct 19 2021 14:58:20 GMT-0600 (Mountain Daylight Time)
 ```
 
 If you make any changes to this application, you can run `npm run serverless:remove` followed by `npm run serverless:deploy` to deploy the new changes to your application.
+
+**NOTE:** The Twilio Function that provides access tokens via a passcode should *NOT* be used in a production environment. This token server supports seamlessly getting started with the collaboration app, and while convenient, the passcode is not secure enough for production environments. You should use an authentication provider to securely provide access tokens to your client applications. You can find more information about Programmable Video access tokens [in this tutorial](https://www.twilio.com/docs/video/tutorials/user-identity-access-tokens).
+
+The passcode will expire after one week. To generate a new passcode, run `npm run serverless:remove` followed by `npm run serverless:deploy`.
 
 ### Use the web app
 
@@ -61,15 +65,11 @@ The application uses the [`video-composer-v1` Media Extension](https://www.twili
 
 1. [Open the iOS project](https://github.com/twilio/twilio-live-interactive-video/tree/main/apps/ios/LiveVideo/LiveVideo.xcodeproj) in Xcode.
 
-#### Configure Backend URL
-
-1.  Replace `BACKEND_URL` in the [iOS app source](https://github.com/twilio/twilio-live-interactive-video/blob/main/apps/ios/LiveVideo/LiveVideo/Managers/API/API.swift) with [the URL that the app was deployed to](#deploy-the-app-to-twilio).
-
 #### Run
 
 1. Run the app.
-1. Enter any unique name in the `Full name` field.
-1. Tap `Continue`.
+1. Enter any unique name in the `Full name` field and tap `Continue`.
+1. Enter passcode from the [backend deploy](#deploy-the-app-to-twilio) and tap `Continue`.
 1. Tap `Create Event` to host a new stream or `Join Event` to join a stream as a viewer or a speaker.
 
 ## Services Used
