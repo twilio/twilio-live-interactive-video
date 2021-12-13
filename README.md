@@ -45,7 +45,7 @@ If you make any changes to this application, you can run `npm run serverless:rem
 
 **NOTE:** The Twilio Function that provides access tokens via a passcode should *NOT* be used in a production environment. This token server supports seamlessly getting started with the collaboration app, and while convenient, the passcode is not secure enough for production environments. You should use an authentication provider to securely provide access tokens to your client applications. You can find more information about Programmable Video access tokens [in this tutorial](https://www.twilio.com/docs/video/tutorials/user-identity-access-tokens).
 
-The passcode will expire after one week. To generate a new passcode, run `npm run serverless:remove` followed by `npm run serverless:deploy`.
+The passcode will expire after one week. To generate a new passcode, run `npm run serverless:deploy -- --override`.
 
 ### Use the web app
 
