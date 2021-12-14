@@ -44,10 +44,6 @@ describe('the UserMenu component', () => {
   });
 
   describe('when logged in with passcode auth', () => {
-    beforeAll(() => {
-      process.env.REACT_APP_SET_AUTH = 'passcode';
-    });
-
     it('should stop all tracks and signout when the Logout link is clicked', () => {
       const wrapper = shallow(<UserMenu />);
       wrapper.find(Link).simulate('click');

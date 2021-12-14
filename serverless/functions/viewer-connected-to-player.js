@@ -2,6 +2,9 @@
 'use strict';
 
 module.exports.handler = async (context, event, callback) => {
+  const authHandler = require(Runtime.getAssets()['/auth.js'].path);
+  authHandler(context, event, callback);
+
   const { user_identity, stream_name } = event;
   const common = require(Runtime.getAssets()['/common.js'].path);
   const { getStreamMapItem } = common(context, event, callback);
@@ -67,7 +70,7 @@ module.exports.handler = async (context, event, callback) => {
 
   // Add user to viewers map
   try {
-    await streamSyncClient.syncMaps('viewers').syncMapItems.create({ key: user_identity, data: { } });
+    await streamSyncClient.syncMaps('viewers').syncMapItems.create({ key: user_identity, data: {} });
   } catch (e) {
     const alreadyExistsError = 54208;
 

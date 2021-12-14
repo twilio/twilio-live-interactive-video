@@ -19,6 +19,9 @@ module.exports.handler = async (context, event, callback) => {
     DOMAIN_NAME,
   } = context;
 
+  const authHandler = require(Runtime.getAssets()['/auth.js'].path);
+  authHandler(context, event, callback);
+
   const common = require(Runtime.getAssets()['/common.js'].path);
   const { axiosClient } = common(context, event, callback);
 

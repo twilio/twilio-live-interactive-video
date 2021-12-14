@@ -62,7 +62,9 @@ async function deployFunctions() {
   // Create new services if they don't already exist
   if (!existingConfiguration) {
     cli.action.start('Creating Api Key');
-    apiKey = await client.newKeys.create({ friendlyName: constants.API_KEY_NAME });
+    apiKey = await client.newKeys.create({
+      friendlyName: constants.API_KEY_NAME,
+    });
 
     cli.action.start('Creating Conversations Service');
     conversationsService = await client.conversations.services.create({
@@ -118,6 +120,7 @@ async function deployFunctions() {
       dependencies: {
         axios: '^0.21.4',
         twilio: '^3.68.0', // This determines the version of the Twilio client returned by context.getTwilioClient()
+        '@twilio/runtime-handler': '1.2.1',
       },
     },
     functionsEnv: 'dev',
