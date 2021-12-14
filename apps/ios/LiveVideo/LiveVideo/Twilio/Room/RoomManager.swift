@@ -21,6 +21,7 @@ class RoomManager: NSObject {
     // MARK: -
 
     var roomSID: String? { room?.sid }
+    var roomName: String? { room?.name }
     private(set) var localParticipant: LocalParticipantManager!
     private(set) var remoteParticipants: [RemoteParticipantManager] = []
     private var room: Room?
@@ -80,14 +81,18 @@ extension RoomManager: RoomDelegate {
     }
     
     func roomDidDisconnect(room: Room, error: Error?) {
-        guard let error = error else {
-            return
-        }
-        
-        if (error as NSError).isRoomCompletedError {
-            handleError(LiveVideoError.streamEndedByHost)
+        if let error = error {
+            if (error as NSError).isRoomCompletedError {
+                handleError(LiveVideoError.streamEndedByHost)
+            } else if (error as NSError).isParticipantNotFoundError {
+                // Can receive this error when a speaker is removed by host if there is other activity in progress
+                handleError(LiveVideoError.speakerMovedToViewersByHost)
+            } else {
+                handleError(error)
+            }
         } else {
-            handleError(error)
+            // Most of the time there is no error when speaker is removed by host
+            handleError(LiveVideoError.speakerMovedToViewersByHost)
         }
     }
     
@@ -128,6 +133,9 @@ extension RoomManager: RemoteParticipantManagerDelegate {
 private extension NSError {
     var isRoomCompletedError: Bool {
         domain == TwilioVideoSDK.ErrorDomain && code == TwilioVideoSDK.Error.roomRoomCompletedError.rawValue
+    }
+    var isParticipantNotFoundError: Bool {
+        domain == TwilioVideoSDK.ErrorDomain && code == TwilioVideoSDK.Error.participantNotFoundError.rawValue
     }
 }
 

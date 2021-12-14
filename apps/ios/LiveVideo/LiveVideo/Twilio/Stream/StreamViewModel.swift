@@ -9,6 +9,7 @@ class StreamViewModel: ObservableObject {
     enum AlertIdentifier: String, Identifiable {
         case error
         case receivedSpeakerInvite
+        case speakerMovedToViewersByHost
         case streamEndedByHost
         case streamWillEndIfHostLeaves
         case viewerConnected
@@ -106,11 +107,32 @@ class StreamViewModel: ObservableObject {
     private func handleError(_ error: Error) {
         streamManager.disconnect()
         
-        if let error = error as? LiveVideoError, error.isStreamEndedByHostError {
+        if error.isStreamEndedByHostError {
             alertIdentifier = .streamEndedByHost
+        } else if error.isSpeakerMovedToViewersByHostError {
+            alertIdentifier = .speakerMovedToViewersByHost
+            streamManager.changeRole(to: .viewer)
         } else {
             self.error = error
             alertIdentifier = .error
         }
+    }
+}
+
+private extension Error {
+    var isSpeakerMovedToViewersByHostError: Bool {
+        if case .speakerMovedToViewersByHost = self as? LiveVideoError {
+            return true
+        }
+
+        return false
+    }
+
+    var isStreamEndedByHostError: Bool {
+        if case .streamEndedByHost = self as? LiveVideoError {
+            return true
+        }
+
+        return false
     }
 }

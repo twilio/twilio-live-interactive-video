@@ -28,6 +28,7 @@
 		DC1ED13026E960C600FFA769 /* SpeakerGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED12F26E960C600FFA769 /* SpeakerGridView.swift */; };
 		DC1ED13226E9666E00FFA769 /* SwiftUIVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED13126E9666E00FFA769 /* SwiftUIVideoView.swift */; };
 		DC3BB82527445F9A005D0327 /* ParticipantsHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BB82427445F99005D0327 /* ParticipantsHeader.swift */; };
+		DC3BB82727480A9E005D0327 /* RemoveSpeakerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BB82627480A9E005D0327 /* RemoveSpeakerRequest.swift */; };
 		DC44BB3F2703C8AD00DB656D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC44BB3E2703C8AD00DB656D /* AppDelegate.swift */; };
 		DC44BB412703C8DD00DB656D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC44BB402703C8DD00DB656D /* SceneDelegate.swift */; };
 		DC4AA65926D0133600E677D5 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA65826D0133600E677D5 /* Color.swift */; };
@@ -127,6 +128,7 @@
 		DC1ED12F26E960C600FFA769 /* SpeakerGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerGridView.swift; sourceTree = "<group>"; };
 		DC1ED13126E9666E00FFA769 /* SwiftUIVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIVideoView.swift; sourceTree = "<group>"; };
 		DC3BB82427445F99005D0327 /* ParticipantsHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsHeader.swift; sourceTree = "<group>"; };
+		DC3BB82627480A9E005D0327 /* RemoveSpeakerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveSpeakerRequest.swift; sourceTree = "<group>"; };
 		DC44BB3E2703C8AD00DB656D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DC44BB402703C8DD00DB656D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		DC4AA65826D0133600E677D5 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
@@ -475,6 +477,7 @@
 				DC1ED12D26E94B5900FFA769 /* CreateOrJoinStreamRequest.swift */,
 				DC175F3F2718852A00D9D1FE /* DeleteStreamRequest.swift */,
 				DC6404D12719E549004730C6 /* RaiseHandRequest.swift */,
+				DC3BB82627480A9E005D0327 /* RemoveSpeakerRequest.swift */,
 				DC175F38270F673600D9D1FE /* SendSpeakerInviteRequest.swift */,
 				DCB1BDFD27568D70006CE9D1 /* VerifyPasscodeRequest.swift */,
 				DC50A5742739E26300E29580 /* ViewerConnectedToPlayerRequest.swift */,
@@ -719,6 +722,7 @@
 				DC1ED0FB26E144AE00FFA769 /* StreamToolbarButton.swift in Sources */,
 				DC5F453926CC061A009C5C79 /* LiveVideoApp.swift in Sources */,
 				DC175F37270E5B6F00D9D1FE /* ParticipantsView.swift in Sources */,
+				DC3BB82727480A9E005D0327 /* RemoveSpeakerRequest.swift in Sources */,
 				DCC48F7726D8116C00EE49EF /* StreamView.swift in Sources */,
 				DC1ED11E26E92DEA00FFA769 /* LocalParticipantManager.swift in Sources */,
 				DC4F45EB2723695D00BE730B /* SelectRoleView.swift in Sources */,

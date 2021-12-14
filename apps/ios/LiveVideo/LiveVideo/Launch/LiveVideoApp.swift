@@ -61,7 +61,7 @@ struct LiveVideoApp: App {
                         raisedHandsMap: raisedHandsMap
                     )
                     speakerSettingsManager.configure(roomManager: roomManager)
-                    speakerGridViewModel.configure(roomManager: roomManager, speakersMap: speakersMap)
+                    speakerGridViewModel.configure(roomManager: roomManager, speakersMap: speakersMap, api: api)
                 }
         }
     }
