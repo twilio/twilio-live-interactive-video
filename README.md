@@ -47,6 +47,12 @@ If you make any changes to this application, you can run `npm run serverless:rem
 
 The passcode will expire after one week. To generate a new passcode, run `npm run serverless:deploy -- --override`.
 
+#### Max Stream Duration
+
+The app is configured to automatically end a stream after it has been running for 30 minutes. This limitation is in place to limit [charges applied to your Twilio account](https://www.twilio.com/live/pricing) during early testing.
+
+Max duration is specified when the reference backend creates a `MediaProcessor`. To change the max duration edit [this source code]((https://github.com/twilio/twilio-live-interactive-video/blob/6e4966a01dcc1fddb36e45d10b4281263d34d9db/serverless/functions/create-stream.js#L88)).
+
 ### Use the web app
 
 When you visit the URL for your deployed live streaming application, you'll first see a screen where you can enter your name. Then, you'll be prompted to either create a new streaming event and join the stream's Video Room as the event host, or join an existing event as either a speaker in the stream's Video Room or a stream audience member.
