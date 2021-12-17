@@ -11,6 +11,8 @@ export const createStream = (user_identity: string, stream_name: string) =>
   apiClient.post<{
     token: string;
     sync_object_names: {
+      speakers_map: string;
+      viewers_map: string;
       raised_hands_map: string;
     };
   }>('create-stream', {
@@ -22,7 +24,10 @@ export const joinStreamAsSpeaker = (user_identity: string, stream_name: string) 
   apiClient.post<{
     token: string;
     sync_object_names: {
+      speakers_map: string;
+      viewers_map: string;
       raised_hands_map: string;
+      user_document: string;
     };
   }>('join-stream-as-speaker', {
     user_identity,
@@ -34,6 +39,8 @@ export const joinStreamAsViewer = (user_identity: string, stream_name: string) =
     token: string;
     room_sid: string;
     sync_object_names: {
+      speakers_map: string;
+      viewers_map: string;
       raised_hands_map: string;
       user_document: string;
     };

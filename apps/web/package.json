@@ -46,7 +46,7 @@
     "strip-color": "^0.1.0",
     "ts-node": "^9.1.1",
     "twilio": "^3.63.1",
-    "twilio-sync": "^3.0.4-rc.7",
+    "twilio-sync": "^3.0.6",
     "twilio-video": "^2.18.0",
     "typescript": "^3.8.3"
   },
@@ -120,7 +120,7 @@
       "pre-commit": "lint-staged"
     }
   },
-  "proxy": "https://test-twilio-live-interactive-video-1330-6355-dev.twil.io",
+  "proxy": "https://twilio-live-interactive-video-6925-9663-dev.twil.io",
   "jest": {
     "snapshotSerializers": [
       "enzyme-to-json/serializer"

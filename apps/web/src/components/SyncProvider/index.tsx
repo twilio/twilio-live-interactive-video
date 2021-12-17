@@ -1,13 +1,15 @@
 import React, { createContext, useEffect, useRef, useState } from 'react';
-import SyncClient, { SyncDocument, SyncMap } from 'twilio-sync';
+import { SyncClient, SyncDocument, SyncMap } from 'twilio-sync';
 import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import { useAppState } from '../../state';
 
 type SyncContextType = {
   connect: (token: string) => void;
-  registerUserDocument: (token: string) => Promise<void>;
+  registerUserDocument: (userDocumentName: string) => Promise<void>;
   raisedHandsMap: SyncMap | undefined;
-  registerRaisedHandsMap: (token: string) => Promise<void>;
+  registerRaisedHandsMap: (raisedHandsMapName: string) => Promise<void>;
+  registerSpeakersMap: (speakersMapName: string) => Promise<void>;
+  speakersMap: SyncMap | undefined;
 };
 
 export const SyncContext = createContext<SyncContextType>(null!);
@@ -16,12 +18,17 @@ export const SyncProvider: React.FC = ({ children }) => {
   const { appDispatch } = useAppState();
   const { player } = usePlayerContext();
   const [raisedHandsMap, setRaisedHandsMap] = useState<SyncMap>();
+  const [speakersMap, setSpeakersMap] = useState<SyncMap>();
   const [userDocument, setUserDocument] = useState<SyncDocument>();
 
   const syncClientRef = useRef<SyncClient>();
 
   function connect(token: string) {
     syncClientRef.current = new SyncClient(token);
+  }
+
+  function registerSpeakersMap(speakersMapName: string) {
+    return syncClientRef.current!.map(speakersMapName).then(map => setSpeakersMap(map));
   }
 
   function registerUserDocument(userDocumentName: string) {
@@ -49,7 +56,16 @@ export const SyncProvider: React.FC = ({ children }) => {
   }, [userDocument, player, appDispatch]);
 
   return (
-    <SyncContext.Provider value={{ connect, registerUserDocument, raisedHandsMap, registerRaisedHandsMap }}>
+    <SyncContext.Provider
+      value={{
+        connect,
+        registerUserDocument,
+        raisedHandsMap,
+        registerRaisedHandsMap,
+        registerSpeakersMap,
+        speakersMap,
+      }}
+    >
       {children}
     </SyncContext.Provider>
   );
