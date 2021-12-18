@@ -1,25 +1,25 @@
-# Twilio Live Interactive Video 
+# Twilio Live Interactive Video
 
-This project demonstrates an interactive live video streaming app that uses [Twilio Live](https://www.twilio.com/docs/live) and [Twilio Video](https://www.twilio.com/docs/video). The project is setup as a monorepo that contains the frontend reference applications for the Web and iOS (Android coming soon). 
+This project demonstrates an interactive live video streaming app that uses [Twilio Live](https://www.twilio.com/docs/live) and [Twilio Video](https://www.twilio.com/docs/video). The project is setup as a monorepo that contains the frontend reference applications for the Web and iOS (Android coming soon).
 
 ## Features
 
-* Deploy the application to Twilio Serverless in just a few minutes.
-* Create or join a stream as a speaker and collaborate with other users.
-* Join a stream as a viewer to see the Twilio Video Room participants composed as a high quality media stream.
+- Deploy the application to Twilio Serverless in just a few minutes.
+- Create or join a stream as a speaker and collaborate with other users.
+- Join a stream as a viewer to see the Twilio Video Room participants composed as a high quality media stream.
 
-## Getting Started 
+## Getting Started
 
 This section describes the steps required for all developers to get started with their respective platform.
 
 ### Requirements
 
-* [Node.js v14+](https://nodejs.org/en/download/)
-* NPM v7+ (upgrade from NPM 6 with `npm install --global npm`)
+- [Node.js v14+](https://nodejs.org/en/download/)
+- NPM v7+ (upgrade from NPM 6 with `npm install --global npm`)
 
 ### Setup Enviromenment
 
-Copy the `.env.example` file to `.env` and perform the following one-time steps before deploying your application. 
+Copy the `.env.example` file to `.env` and perform the following one-time steps before deploying your application.
 
 #### Set your Account Sid and Auth Token
 
@@ -43,15 +43,15 @@ This URL is for demo purposes only. It will expire on Tue Oct 19 2021 14:58:20 G
 
 If you make any changes to this application, you can run `npm run serverless:remove` followed by `npm run serverless:deploy` to deploy the new changes to your application.
 
-**NOTE:** The Twilio Function that provides access tokens via a passcode should *NOT* be used in a production environment. This token server supports seamlessly getting started with the collaboration app, and while convenient, the passcode is not secure enough for production environments. You should use an authentication provider to securely provide access tokens to your client applications. You can find more information about Programmable Video access tokens [in this tutorial](https://www.twilio.com/docs/video/tutorials/user-identity-access-tokens).
+**NOTE:** The Twilio Function that provides access tokens via a passcode should _NOT_ be used in a production environment. This token server supports seamlessly getting started with the collaboration app, and while convenient, the passcode is not secure enough for production environments. You should use an authentication provider to securely provide access tokens to your client applications. You can find more information about Programmable Video access tokens [in this tutorial](https://www.twilio.com/docs/video/tutorials/user-identity-access-tokens).
 
 The passcode will expire after one week. To generate a new passcode, run `npm run serverless:deploy -- --override`.
 
 #### Max Stream Duration
 
-The app is configured to automatically end a stream after it has been running for 30 minutes. This limitation is in place to limit [charges applied to your Twilio account](https://www.twilio.com/live/pricing) during early testing.
+The app is configured to automatically end a stream after it has been running for 30 minutes. This limitation is in place to limit the [charges applied to your Twilio account](https://www.twilio.com/live/pricing) during early testing.
 
-Max duration is specified when the reference backend creates a `MediaProcessor`. To change the max duration edit [this source code]((https://github.com/twilio/twilio-live-interactive-video/blob/6e4966a01dcc1fddb36e45d10b4281263d34d9db/serverless/functions/create-stream.js#L88)).
+Max duration is specified when the reference backend creates a `MediaProcessor`. To change the max duration, edit [this source code](serverless/functions/create-stream.js#L88) before deploying the app.
 
 ### Use the web app
 
