@@ -20,7 +20,7 @@ async function getAppInfo() {
   const [, appID, serverlessID] = environment.domainName.match(/-?(\d*)-(\d+)(?:-\w+)?.twil.io$/);
   const fullPasscode = `${passcode}${appID}${serverlessID}`;
 
-  console.log('App deployed to: https://' + environment.domainName);
+  console.log(`App deployed to: https://${environment.domainName}?passcode=${fullPasscode}`);
   console.log(`Passcode: ${fullPasscode.replace(/(\d{3})(\d{3})(\d{4})(\d{4})/, '$1 $2 $3 $4')}`);
   console.log(`This URL is for demo purposes only. It will expire on ${expiryDate}`);
 }
