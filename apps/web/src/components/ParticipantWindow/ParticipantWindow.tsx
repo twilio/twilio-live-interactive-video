@@ -4,6 +4,8 @@ import clsx from 'clsx';
 import { useAppState } from '../../state';
 import ParticipantWindowHeader from './ParticipantWindowHeader/ParticipantWindowHeader';
 import { useRaisedHandsMap } from '../../hooks/useRaisedHandsMap/useRaisedHandsMap';
+import { useViewersMap } from '../../hooks/useViewersMap/useViewersMap';
+import { useSpeakersMap } from '../../hooks/useSpeakersMap/useSpeakersMap';
 import { RaisedHand } from './RaisedHand/RaisedHand';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { sendSpeakerInvite } from '../../state/api/api';
@@ -36,8 +38,11 @@ export default function ParticipantWindow() {
   const classes = useStyles();
   const { appState } = useAppState();
   const raisedHands = useRaisedHandsMap();
+  const viewers = useViewersMap();
   const { room } = useVideoContext();
   const enqueueSnackbar = useEnqueueSnackbar();
+
+  console.log(viewers);
 
   const handleInvite = useCallback(
     (raisedHand: string) => {
@@ -62,6 +67,10 @@ export default function ParticipantWindow() {
           isHost={appState.participantType === 'host'}
         />
       ))}
+      <div>
+        <div>Viewers</div>
+        {viewers.map(v => console.log('sdfasfdads', v))}
+      </div>
     </aside>
   );
 }

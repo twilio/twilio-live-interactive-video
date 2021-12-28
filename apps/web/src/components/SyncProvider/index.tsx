@@ -10,6 +10,8 @@ type SyncContextType = {
   registerRaisedHandsMap: (raisedHandsMapName: string) => Promise<void>;
   registerSpeakersMap: (speakersMapName: string) => Promise<void>;
   speakersMap: SyncMap | undefined;
+  registerViewersMap: (viewersMapName: string) => Promise<void>;
+  viewersMap: SyncMap | undefined;
 };
 
 export const SyncContext = createContext<SyncContextType>(null!);
@@ -19,6 +21,7 @@ export const SyncProvider: React.FC = ({ children }) => {
   const { player } = usePlayerContext();
   const [raisedHandsMap, setRaisedHandsMap] = useState<SyncMap>();
   const [speakersMap, setSpeakersMap] = useState<SyncMap>();
+  const [viewersMap, setViewersMap] = useState<SyncMap>();
   const [userDocument, setUserDocument] = useState<SyncDocument>();
 
   const syncClientRef = useRef<SyncClient>();
@@ -37,6 +40,10 @@ export const SyncProvider: React.FC = ({ children }) => {
 
   function registerRaisedHandsMap(raisedHandsMapName: string) {
     return syncClientRef.current!.map(raisedHandsMapName).then(map => setRaisedHandsMap(map));
+  }
+
+  function registerViewersMap(viewersMapName: string) {
+    return syncClientRef.current!.map(viewersMapName).then(map => setViewersMap(map));
   }
 
   useEffect(() => {
@@ -64,6 +71,8 @@ export const SyncProvider: React.FC = ({ children }) => {
         registerRaisedHandsMap,
         registerSpeakersMap,
         speakersMap,
+        registerViewersMap,
+        viewersMap,
       }}
     >
       {children}
