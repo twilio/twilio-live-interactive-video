@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 
@@ -22,20 +21,15 @@ const useStyles = makeStyles({
 interface RaisedHandProps {
   name: string;
   handleInvite: (handleInviteIdentity: string) => void;
-  isHost: boolean;
 }
 
-export function RaisedHand({ name, handleInvite, isHost }: RaisedHandProps) {
+export function RaisedHand({ name, handleInvite }: RaisedHandProps) {
   const classes = useStyles();
 
   return (
     <div className={classes.container}>
       <Typography variant="body1">{name} 👋</Typography>
-      <Typography
-        variant="body1"
-        className={clsx(classes.invite, { [classes.hide]: !isHost })}
-        onClick={() => handleInvite(name)}
-      >
+      <Typography variant="body1" className={classes.invite} onClick={() => handleInvite(name)}>
         Invite to speak
       </Typography>
     </div>
