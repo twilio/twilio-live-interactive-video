@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import clsx from 'clsx';
+import { Typography } from '@material-ui/core';
 import { useAppState } from '../../state';
 import ParticipantWindowHeader from './ParticipantWindowHeader/ParticipantWindowHeader';
 import { useRaisedHandsMap } from '../../hooks/useRaisedHandsMap/useRaisedHandsMap';
@@ -30,6 +31,10 @@ const useStyles = makeStyles((theme: Theme) =>
     hide: {
       display: 'none',
     },
+    header: {
+      fontWeight: 'bold',
+      padding: '0 1em',
+    },
   })
 );
 
@@ -53,20 +58,23 @@ export default function ParticipantWindow() {
     [room, enqueueSnackbar]
   );
 
+  const viewersWithoutRaisedHands = viewers.filter(viewer => !raisedHands.includes(viewer));
+
   return (
     <aside className={clsx(classes.participantWindowContainer, { [classes.hide]: !appState.isParticipantWindowOpen })}>
       <ParticipantWindowHeader />
+      <div className={classes.header}>{`Viewers (${viewersWithoutRaisedHands.length + raisedHands.length})`}</div>
+
       {raisedHands.map(raisedHand => (
-        <RaisedHand
-          key={raisedHand}
-          name={raisedHand}
-          handleInvite={handleInvite}
-          isHost={appState.participantType === 'host'}
-        />
+        <RaisedHand key={raisedHand} name={raisedHand} handleInvite={handleInvite} />
       ))}
-      <div>
-        <div>Viewers</div>
-        {viewers.map(v => console.log('sdfasfdads', v))}
+
+      <div style={{ padding: '0.4em 1em' }}>
+        {viewersWithoutRaisedHands.map(viewer => (
+          <>
+            <Typography variant="body1">{viewer}</Typography>
+          </>
+        ))}
       </div>
     </aside>
   );
