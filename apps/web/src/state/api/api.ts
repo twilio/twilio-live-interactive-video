@@ -49,6 +49,14 @@ export const joinStreamAsViewer = (user_identity: string, stream_name: string) =
     stream_name,
   });
 
+export const connectViewerToPlayer = (user_identity: string, stream_name: string) =>
+  apiClient.post<{
+    success: boolean;
+  }>('viewer-connected-to-player', {
+    user_identity,
+    stream_name,
+  });
+
 export const raiseHand = (user_identity: string, stream_name: string, hand_raised: boolean) =>
   apiClient.post('raise-hand', {
     user_identity,

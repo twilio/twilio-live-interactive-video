@@ -9,6 +9,7 @@ export function useViewersMap() {
     if (viewersMap) {
       // Sets the list on load. Limiting to first 100 speakers
       viewersMap.getItems({ pageSize: 100 }).then(paginator => {
+        console.log('sdfasd', paginator);
         setViewers(paginator.items.map(item => item.key));
       });
 
@@ -21,12 +22,10 @@ export function useViewersMap() {
       };
 
       viewersMap.on('itemAdded', handleItemAdded);
-      viewersMap.on('itemUpdated', handleItemAdded);
       viewersMap.on('itemRemoved', handleItemRemoved);
 
       return () => {
         viewersMap.off('itemAdded', handleItemAdded);
-        viewersMap.off('itemUpdated', handleItemAdded);
         viewersMap.on('itemRemoved', handleItemRemoved);
       };
     }

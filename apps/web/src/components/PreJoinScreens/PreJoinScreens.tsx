@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ActiveScreen } from '../../state/appState/appReducer';
-import { createStream, joinStreamAsSpeaker, joinStreamAsViewer } from '../../state/api/api';
+import { createStream, joinStreamAsSpeaker, joinStreamAsViewer, connectViewerToPlayer } from '../../state/api/api';
 import CreateNewEventScreen from './CreateNewEventScreen/CreateNewEventScreen';
 import CreateOrJoinScreen from './CreateOrJoinScreen/CreateOrJoinScreen';
 import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
@@ -80,6 +80,7 @@ export default function PreJoinScreens() {
           registerUserDocument(data.sync_object_names.user_document);
           registerSpeakersMap(data.sync_object_names.speakers_map);
           registerViewersMap(data.sync_object_names.viewers_map);
+          await connectViewerToPlayer(appState.participantName, appState.eventName);
           // chatConnect(data.token);
           break;
         }
