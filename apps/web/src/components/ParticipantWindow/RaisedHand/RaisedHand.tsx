@@ -5,7 +5,6 @@ import { Typography } from '@material-ui/core';
 const useStyles = makeStyles({
   container: {
     display: 'flex',
-    padding: '0.4em 1em',
     justifyContent: 'space-between',
   },
   invite: {
