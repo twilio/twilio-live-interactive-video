@@ -8,6 +8,7 @@ import { RaisedHand } from './RaisedHand/RaisedHand';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { sendSpeakerInvite } from '../../state/api/api';
 import { useEnqueueSnackbar } from '../../hooks/useSnackbar/useSnackbar';
+import SpeakersList from '../SpeakersList/SpeakersList';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,6 +55,7 @@ export default function ParticipantWindow() {
   return (
     <aside className={clsx(classes.participantWindowContainer, { [classes.hide]: !appState.isParticipantWindowOpen })}>
       <ParticipantWindowHeader />
+      <SpeakersList />
       {raisedHands.map(raisedHand => (
         <RaisedHand
           key={raisedHand}

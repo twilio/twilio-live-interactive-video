@@ -6,10 +6,11 @@ import { useSpeakersMap } from '../../hooks/useSpeakersMap/useSpeakersMap';
 const useStyles = makeStyles({
   header: {
     fontWeight: 'bold',
-    padding: '0 1em',
+    padding: '1em 1em 0',
   },
   speakersContainer: {
     padding: '0.4em 1em',
+    borderBottom: '0.1em solid #CACDD8',
     '& p': {
       padding: '0.5em 0',
     },
@@ -17,7 +18,7 @@ const useStyles = makeStyles({
 });
 
 export default function SpeakersList() {
-  const { speakers } = useSpeakersMap();
+  const { host, speakers } = useSpeakersMap();
 
   const classes = useStyles();
 
@@ -26,13 +27,16 @@ export default function SpeakersList() {
       <div className={classes.header}>{`Speakers (${speakers.length})`}</div>
 
       <div className={classes.speakersContainer}>
-        {speakers.map(speaker => (
-          <>
-            <Typography key={speaker} variant="body1">
-              {speaker}
-            </Typography>
-          </>
-        ))}
+        <Typography variant="body1">{`${host} (Host, you)`}</Typography>
+        {speakers
+          .filter(speaker => speaker !== host)
+          .map(speaker => (
+            <>
+              <Typography key={speaker} variant="body1">
+                {speaker}
+              </Typography>
+            </>
+          ))}
       </div>
     </>
   );
