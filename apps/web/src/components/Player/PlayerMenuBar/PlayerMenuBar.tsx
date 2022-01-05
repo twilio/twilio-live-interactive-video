@@ -79,11 +79,6 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
             <Button onClick={handleRaiseHand} startIcon={isHandRaised ? <LowerHandIcon /> : <RaiseHandIcon />}>
               {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
             </Button>
-          </Grid>
-        </Grid>
-
-        <Grid item>
-          <Grid container justifyContent="center">
             <Button onClick={() => toggleParticipantWindow()} startIcon={<ParticipantIcon />}>
               Participants
             </Button>
