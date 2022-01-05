@@ -35,7 +35,7 @@ export function useSpeakersMap() {
 
       return () => {
         speakersMap.off('itemAdded', handleItemAdded);
-        speakersMap.on('itemRemoved', handleItemRemoved);
+        speakersMap.off('itemRemoved', handleItemRemoved);
       };
     }
   }, [speakersMap]);
