@@ -4,7 +4,6 @@ import { Typography, Grid, Button } from '@material-ui/core';
 import { useAppState } from '../../../state';
 import { raiseHand } from '../../../state/api/api';
 import { useEnqueueSnackbar } from '../../../hooks/useSnackbar/useSnackbar';
-import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import LowerHandIcon from '../../../icons/LowerHandIcon';
 import RaiseHandIcon from '../../../icons/RaiseHandIcon';
 import ParticipantIcon from '../../../icons/ParticipantIcon';
@@ -39,7 +38,6 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: string; disconnect: () => void }) {
   const classes = useStyles();
   const { appState, appDispatch } = useAppState();
-  const { setIsChatWindowOpen } = useChatContext();
   const [isHandRaised, setIsHandRaised] = useState(false);
   const lastClickTimeRef = useRef(0);
   const enqueueSnackbar = useEnqueueSnackbar();
@@ -61,7 +59,6 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
   }, [isHandRaised, appState.participantName, appState.eventName, enqueueSnackbar]);
 
   const toggleParticipantWindow = () => {
-    setIsChatWindowOpen(false);
     appDispatch({
       type: 'set-is-participant-window-open',
       isParticipantWindowOpen: !appState.isParticipantWindowOpen,
