@@ -28,7 +28,7 @@ const useStyles = makeStyles({
 export default function SpeakersList() {
   const { host, speakers } = useSpeakersMap();
   const { room } = useVideoContext();
-  const localParticipant = room!.localParticipant;
+  const localParticipant = room?.localParticipant;
 
   const classes = useStyles();
 
@@ -46,7 +46,7 @@ export default function SpeakersList() {
               <Typography key={speaker} variant="body1">
                 {speaker}
               </Typography>
-              {localParticipant.identity === host && <SpeakerMenu />}
+              {localParticipant?.identity === host && <SpeakerMenu />}
             </div>
           ))}
       </div>
