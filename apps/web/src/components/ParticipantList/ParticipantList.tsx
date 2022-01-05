@@ -7,6 +7,7 @@ import useParticipants from '../../hooks/useParticipants/useParticipants';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useSelectedParticipant from '../VideoProvider/useSelectedParticipant/useSelectedParticipant';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
+import { useSpeakersMap } from '../../hooks/useSpeakersMap/useSpeakersMap';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,6 +50,7 @@ export default function ParticipantList() {
   const [selectedParticipant, setSelectedParticipant] = useSelectedParticipant();
   const screenShareParticipant = useScreenShareParticipant();
   const mainParticipant = useMainParticipant();
+  const { host } = useSpeakersMap();
   const isRemoteParticipantScreenSharing = screenShareParticipant && screenShareParticipant !== localParticipant;
 
   if (participants.length === 0) return null; // Don't render this component if there are no remote participants.
@@ -61,7 +63,11 @@ export default function ParticipantList() {
     >
       <div className={classes.scrollContainer}>
         <div className={classes.innerScrollContainer}>
-          <Participant participant={localParticipant} isLocalParticipant={true} />
+          <Participant
+            participant={localParticipant}
+            isLocalParticipant={true}
+            isHost={localParticipant.identity === host}
+          />
           {participants.map(participant => {
             const isSelected = participant === selectedParticipant;
             const hideParticipant =
@@ -73,6 +79,7 @@ export default function ParticipantList() {
                 isSelected={participant === selectedParticipant}
                 onClick={() => setSelectedParticipant(participant)}
                 hideParticipant={hideParticipant}
+                isHost={participant.identity === host}
               />
             );
           })}

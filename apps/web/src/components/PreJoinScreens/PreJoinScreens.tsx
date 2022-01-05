@@ -22,7 +22,7 @@ export default function PreJoinScreens() {
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect } = useVideoContext();
   const { connect: playerConnect, disconnect: playerDisconnect } = usePlayerContext();
-  const { connect: syncConnect, registerUserDocument, registerRaisedHandsMap } = useSyncContext();
+  const { connect: syncConnect, registerUserDocument, registerRaisedHandsMap, registerSpeakersMap } = useSyncContext();
   const [mediaError, setMediaError] = useState<Error>();
   const { appState, appDispatch } = useAppState();
   const enqueueSnackbar = useEnqueueSnackbar();
@@ -36,6 +36,7 @@ export default function PreJoinScreens() {
         await videoConnect(data.token);
         chatConnect(data.token);
         registerRaisedHandsMap(data.sync_object_names.raised_hands_map);
+        registerSpeakersMap(data.sync_object_names.speakers_map);
         playerDisconnect();
         appDispatch({ type: 'set-is-loading', isLoading: false });
         appDispatch({ type: 'set-has-speaker-invite', hasSpeakerInvite: false });
@@ -48,6 +49,7 @@ export default function PreJoinScreens() {
           syncConnect(data.token);
           await videoConnect(data.token);
           registerRaisedHandsMap(data.sync_object_names.raised_hands_map);
+          registerSpeakersMap(data.sync_object_names.speakers_map);
           chatConnect(data.token);
           break;
         }
@@ -57,6 +59,7 @@ export default function PreJoinScreens() {
           syncConnect(data.token);
           await videoConnect(data.token);
           registerRaisedHandsMap(data.sync_object_names.raised_hands_map);
+          registerSpeakersMap(data.sync_object_names.speakers_map);
           chatConnect(data.token);
           break;
         }
@@ -66,6 +69,7 @@ export default function PreJoinScreens() {
           syncConnect(data.token);
           await playerConnect(data.token);
           registerUserDocument(data.sync_object_names.user_document);
+          registerSpeakersMap(data.sync_object_names.speakers_map);
           // chatConnect(data.token);
           break;
         }
