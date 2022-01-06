@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Button, Menu as MenuContainer, MenuItem, Typography } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { joinStreamAsViewer } from '../../../state/api/api';
+import { joinStreamAsViewer, connectViewerToPlayer } from '../../../state/api/api';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useAppState } from '../../../state';
 import usePlayerContext from '../../../hooks/usePlayerContext/usePlayerContext';
@@ -34,6 +34,7 @@ export default function LeaveEventButton(props: { buttonClassName?: string }) {
     setMenuOpen(false);
     const { data } = await joinStreamAsViewer(appState.participantName, appState.eventName);
     await playerConnect(data.token);
+    await connectViewerToPlayer(appState.participantName, appState.eventName);
     registerUserDocument(data.sync_object_names.user_document);
     room!.disconnect();
   }
