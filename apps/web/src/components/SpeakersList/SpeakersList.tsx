@@ -12,8 +12,8 @@ const useStyles = makeStyles({
   },
   speakersListContainer: {
     padding: '0.4em 1em',
-    maxHeight: '50%',
-    overflow: 'scroll',
+    overflow: 'auto',
+    maxHeight: 'calc(50% - 56px)', //participantWindowHeader is 56px
     borderBottom: '0.1em solid #CACDD8',
     '& p': {
       padding: '0.5em 0',

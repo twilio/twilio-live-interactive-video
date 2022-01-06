@@ -15,7 +15,6 @@ const useStyles = makeStyles({
     '& p': {
       padding: '0.5em 0',
     },
-    maxHeight: '50%',
     overflow: 'auto',
   },
 });
