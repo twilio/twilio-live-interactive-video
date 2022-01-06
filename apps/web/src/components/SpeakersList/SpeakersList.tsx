@@ -13,7 +13,8 @@ const useStyles = makeStyles({
   speakersListContainer: {
     padding: '0.4em 1em',
     overflow: 'auto',
-    maxHeight: 'calc(50% - 56px)', //participantWindowHeader is 56px
+    flexShrink: 0,
+    maxHeight: 'calc(50% - 28px)', //participantWindowHeader is 56px
     borderBottom: '0.1em solid #CACDD8',
     '& p': {
       padding: '0.5em 0',
@@ -46,7 +47,7 @@ export default function SpeakersList() {
             <Typography variant="body1">
               {localParticipant?.identity === speaker ? `${speaker} (You)` : speaker}
             </Typography>
-            {localParticipant?.identity === host && <SpeakerMenu />}
+            {host && localParticipant?.identity === host && <SpeakerMenu />}
           </div>
         ))}
     </div>
