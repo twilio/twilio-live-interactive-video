@@ -7,7 +7,7 @@ import { useRaisedHandsMap } from '../../hooks/useRaisedHandsMap/useRaisedHandsM
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { useViewersMap } from '../../hooks/useViewersMap/useViewersMap';
 import { sendSpeakerInvite } from '../../state/api/api';
-import { RaisedHand } from '../ParticipantWindow/RaisedHand/RaisedHand';
+import { RaisedHand } from './RaisedHand/RaisedHand';
 
 const useStyles = makeStyles({
   header: {
