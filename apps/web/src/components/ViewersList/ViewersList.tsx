@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
+import { useAppState } from '../../state';
 import { useRaisedHandsMap } from '../../hooks/useRaisedHandsMap/useRaisedHandsMap';
 import { useViewersMap } from '../../hooks/useViewersMap/useViewersMap';
 import { RaisedHand } from '../ParticipantWindow/RaisedHand/RaisedHand';
@@ -24,6 +25,7 @@ interface ViewersListProps {
 }
 
 export default function ViewersList({ handleInvite }: ViewersListProps) {
+  const { appState } = useAppState();
   const raisedHands = useRaisedHandsMap();
   const viewers = useViewersMap();
   const viewersWithoutRaisedHands = viewers.filter(viewer => !raisedHands.includes(viewer));
@@ -35,7 +37,12 @@ export default function ViewersList({ handleInvite }: ViewersListProps) {
     <div className={classes.viewersContainer}>
       <div className={classes.header}>{`Viewers (${viewerCount})`}</div>
       {raisedHands.map(raisedHand => (
-        <RaisedHand key={raisedHand} name={raisedHand} handleInvite={handleInvite} />
+        <RaisedHand
+          key={raisedHand}
+          name={raisedHand}
+          handleInvite={handleInvite}
+          isHost={appState.participantType === 'host'}
+        />
       ))}
 
       {viewersWithoutRaisedHands.map(viewer => (
