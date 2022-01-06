@@ -10,6 +10,7 @@ const useStyles = makeStyles(() =>
       background: '#F4F4F6',
       borderBottom: '1px solid #E4E7E9',
       display: 'flex',
+      flexShrink: 0,
       justifyContent: 'space-between',
       alignItems: 'center',
       padding: '0 1em',
