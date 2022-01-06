@@ -16,6 +16,7 @@ import usePublications from '../../hooks/usePublications/usePublications';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useTrack from '../../hooks/useTrack/useTrack';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import { useSpeakersMap } from '../../hooks/useSpeakersMap/useSpeakersMap';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -121,6 +122,9 @@ export default function MainParticipantInfo({ participant, children }: MainParti
   const localParticipant = room!.localParticipant;
   const isLocal = localParticipant === participant;
 
+  const { host } = useSpeakersMap();
+  const isHost = host === participant.identity;
+
   const screenShareParticipant = useScreenShareParticipant();
   const isRemoteParticipantScreenSharing = screenShareParticipant && screenShareParticipant !== localParticipant;
 
@@ -153,6 +157,7 @@ export default function MainParticipantInfo({ participant, children }: MainParti
             <AudioLevelIndicator audioTrack={audioTrack} />
             <Typography variant="body1" color="inherit">
               {isLocal ? 'You' : participant.identity}
+              {isHost && ' (Host)'}
               {screenSharePublication && ' - Screen'}
             </Typography>
           </div>
