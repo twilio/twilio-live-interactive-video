@@ -12,6 +12,13 @@ type SyncContextType = {
   speakersMap: SyncMap | undefined;
   registerViewersMap: (viewersMapName: string) => Promise<void>;
   viewersMap: SyncMap | undefined;
+  registerSyncMaps: (syncObjectNames: SyncObjectNames) => void;
+};
+
+type SyncObjectNames = {
+  speakers_map: string;
+  viewers_map: string;
+  raised_hands_map: string;
 };
 
 export const SyncContext = createContext<SyncContextType>(null!);
@@ -46,6 +53,12 @@ export const SyncProvider: React.FC = ({ children }) => {
     return syncClientRef.current!.map(viewersMapName).then(map => setViewersMap(map));
   }
 
+  function registerSyncMaps(syncObjectNames: SyncObjectNames) {
+    registerRaisedHandsMap(syncObjectNames.raised_hands_map);
+    registerSpeakersMap(syncObjectNames.speakers_map);
+    registerViewersMap(syncObjectNames.viewers_map);
+  }
+
   useEffect(() => {
     // The user can only accept a speaker invite when they are a viewer (when there is a player)
     if (userDocument && player) {
@@ -73,6 +86,7 @@ export const SyncProvider: React.FC = ({ children }) => {
         speakersMap,
         registerViewersMap,
         viewersMap,
+        registerSyncMaps,
       }}
     >
       {children}
