@@ -134,6 +134,7 @@ interface ParticipantInfoProps {
   isSelected?: boolean;
   isLocalParticipant?: boolean;
   hideParticipant?: boolean;
+  isHost?: boolean;
 }
 
 export default function ParticipantInfo({
@@ -143,6 +144,7 @@ export default function ParticipantInfo({
   children,
   isLocalParticipant,
   hideParticipant,
+  isHost,
 }: ParticipantInfoProps) {
   const publications = usePublications(participant);
 
@@ -181,6 +183,7 @@ export default function ParticipantInfo({
             <AudioLevelIndicator audioTrack={audioTrack} />
             <Typography variant="body1" className={classes.typeography} component="span">
               {isLocalParticipant ? 'You' : participant.identity}
+              {isHost && ' (Host)'}
             </Typography>
           </span>
         </div>
