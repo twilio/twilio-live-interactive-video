@@ -7,10 +7,7 @@ type SyncContextType = {
   connect: (token: string) => void;
   registerUserDocument: (userDocumentName: string) => Promise<void>;
   raisedHandsMap: SyncMap | undefined;
-  registerRaisedHandsMap: (raisedHandsMapName: string) => Promise<void>;
-  registerSpeakersMap: (speakersMapName: string) => Promise<void>;
   speakersMap: SyncMap | undefined;
-  registerViewersMap: (viewersMapName: string) => Promise<void>;
   viewersMap: SyncMap | undefined;
   registerSyncMaps: (syncObjectNames: SyncObjectNames) => void;
 };
@@ -37,26 +34,15 @@ export const SyncProvider: React.FC = ({ children }) => {
     syncClientRef.current = new SyncClient(token);
   }
 
-  function registerSpeakersMap(speakersMapName: string) {
-    return syncClientRef.current!.map(speakersMapName).then(map => setSpeakersMap(map));
-  }
-
   function registerUserDocument(userDocumentName: string) {
     return syncClientRef.current!.document(userDocumentName).then(document => setUserDocument(document));
   }
 
-  function registerRaisedHandsMap(raisedHandsMapName: string) {
-    return syncClientRef.current!.map(raisedHandsMapName).then(map => setRaisedHandsMap(map));
-  }
-
-  function registerViewersMap(viewersMapName: string) {
-    return syncClientRef.current!.map(viewersMapName).then(map => setViewersMap(map));
-  }
-
-  function registerSyncMaps(syncObjectNames: SyncObjectNames) {
-    registerRaisedHandsMap(syncObjectNames.raised_hands_map);
-    registerSpeakersMap(syncObjectNames.speakers_map);
-    registerViewersMap(syncObjectNames.viewers_map);
+  function registerSyncMaps({ speakers_map, viewers_map, raised_hands_map }: SyncObjectNames) {
+    const syncClient = syncClientRef.current!;
+    syncClient.map(raised_hands_map).then(map => setRaisedHandsMap(map));
+    syncClient.map(speakers_map).then(map => setSpeakersMap(map));
+    syncClient.map(viewers_map).then(map => setViewersMap(map));
   }
 
   useEffect(() => {
@@ -81,10 +67,7 @@ export const SyncProvider: React.FC = ({ children }) => {
         connect,
         registerUserDocument,
         raisedHandsMap,
-        registerRaisedHandsMap,
-        registerSpeakersMap,
         speakersMap,
-        registerViewersMap,
         viewersMap,
         registerSyncMaps,
       }}
