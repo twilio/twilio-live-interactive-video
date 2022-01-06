@@ -13,7 +13,7 @@ export function useViewersMap() {
       });
 
       const handleItemAdded = (args: any) => {
-        setViewers(prevViewers => [args.item.key, ...prevViewers]);
+        setViewers(prevViewers => [...prevViewers, args.item.key]);
       };
 
       const handleItemRemoved = (args: any) => {

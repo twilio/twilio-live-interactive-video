@@ -13,7 +13,7 @@ export function useRaisedHandsMap() {
       });
 
       const handleItemAdded = (args: any) => {
-        setRaisedHands(prevRaisedHands => [args.item.key, ...prevRaisedHands]);
+        setRaisedHands(prevRaisedHands => [...prevRaisedHands, args.item.key]);
       };
 
       const handleItemRemoved = (args: any) => {

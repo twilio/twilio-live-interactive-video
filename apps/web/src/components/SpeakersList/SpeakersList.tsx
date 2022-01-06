@@ -43,7 +43,9 @@ export default function SpeakersList() {
         .filter(speaker => speaker !== host)
         .map(speaker => (
           <div key={speaker} className={classes.speakerContainer}>
-            <Typography variant="body1">{speaker}</Typography>
+            <Typography variant="body1">
+              {localParticipant?.identity === speaker ? `${speaker} (You)` : speaker}
+            </Typography>
             {localParticipant?.identity === host && <SpeakerMenu />}
           </div>
         ))}
