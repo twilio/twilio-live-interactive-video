@@ -47,7 +47,7 @@ export default function SpeakersList() {
             <Typography variant="body1">
               {localParticipant?.identity === speaker ? `${speaker} (You)` : speaker}
             </Typography>
-            {host && localParticipant?.identity === host && <SpeakerMenu />}
+            {host && localParticipant?.identity === host && <SpeakerMenu speaker={speaker} />}
           </div>
         ))}
     </div>

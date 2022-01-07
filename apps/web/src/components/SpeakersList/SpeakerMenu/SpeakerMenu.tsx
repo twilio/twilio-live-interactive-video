@@ -1,10 +1,18 @@
 import React, { useState, useRef } from 'react';
 import { Button, Menu, MenuItem, MenuList } from '@material-ui/core';
 import SpeakerMenuIcon from '../../../icons/SpeakerMenuIcon';
+import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 
-export function SpeakerMenu() {
+export function SpeakerMenu({ speaker }: { speaker: String }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
+  const { room } = useVideoContext();
+
+  const handleMuteSpeaker = () => {
+    const [localDataTrackPublication] = [...room!.localParticipant.dataTracks.values()];
+    const message = JSON.stringify({ message_type: 'mute', to_participant_identity: speaker });
+    localDataTrackPublication.track.send(message);
+  };
 
   return (
     <>
@@ -25,10 +33,8 @@ export function SpeakerMenu() {
         }}
       >
         <MenuList dense>
-          <MenuItem>Return to Viewer</MenuItem>
-          <MenuItem>Turn off Speaker's Video</MenuItem>
-          <MenuItem>Mute Speaker</MenuItem>
-          <MenuItem style={{ color: 'red' }}>Remove User</MenuItem>
+          <MenuItem onClick={handleMuteSpeaker}>Mute Speaker</MenuItem>
+          <MenuItem style={{ color: 'red' }}>Move To Viewers</MenuItem>
         </MenuList>
       </Menu>
     </>
