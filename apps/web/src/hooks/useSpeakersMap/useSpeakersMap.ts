@@ -23,7 +23,7 @@ export function useSpeakersMap() {
       });
 
       const handleItemAdded = (args: any) => {
-        setSpeakers(prevSpeakers => [args.item.key, ...prevSpeakers]);
+        setSpeakers(prevSpeakers => [...prevSpeakers, args.item.key]);
       };
 
       const handleItemRemoved = (args: any) => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ActiveScreen } from '../../state/appState/appReducer';
-import { createStream, joinStreamAsSpeaker, joinStreamAsViewer } from '../../state/api/api';
+import { createStream, joinStreamAsSpeaker, joinStreamAsViewer, connectViewerToPlayer } from '../../state/api/api';
 import CreateNewEventScreen from './CreateNewEventScreen/CreateNewEventScreen';
 import CreateOrJoinScreen from './CreateOrJoinScreen/CreateOrJoinScreen';
 import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
@@ -22,7 +22,7 @@ export default function PreJoinScreens() {
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect } = useVideoContext();
   const { connect: playerConnect, disconnect: playerDisconnect } = usePlayerContext();
-  const { connect: syncConnect, registerUserDocument, registerRaisedHandsMap, registerSpeakersMap } = useSyncContext();
+  const { connect: syncConnect, registerUserDocument, registerSyncMaps } = useSyncContext();
   const [mediaError, setMediaError] = useState<Error>();
   const { appState, appDispatch } = useAppState();
   const enqueueSnackbar = useEnqueueSnackbar();
@@ -35,8 +35,7 @@ export default function PreJoinScreens() {
         const { data } = await joinStreamAsSpeaker(appState.participantName, appState.eventName);
         await videoConnect(data.token);
         chatConnect(data.token);
-        registerRaisedHandsMap(data.sync_object_names.raised_hands_map);
-        registerSpeakersMap(data.sync_object_names.speakers_map);
+        registerSyncMaps(data.sync_object_names);
         playerDisconnect();
         appDispatch({ type: 'set-is-loading', isLoading: false });
         appDispatch({ type: 'set-has-speaker-invite', hasSpeakerInvite: false });
@@ -48,8 +47,7 @@ export default function PreJoinScreens() {
           const { data } = await createStream(appState.participantName, appState.eventName);
           syncConnect(data.token);
           await videoConnect(data.token);
-          registerRaisedHandsMap(data.sync_object_names.raised_hands_map);
-          registerSpeakersMap(data.sync_object_names.speakers_map);
+          registerSyncMaps(data.sync_object_names);
           chatConnect(data.token);
           break;
         }
@@ -58,8 +56,7 @@ export default function PreJoinScreens() {
           const { data } = await joinStreamAsSpeaker(appState.participantName, appState.eventName);
           syncConnect(data.token);
           await videoConnect(data.token);
-          registerRaisedHandsMap(data.sync_object_names.raised_hands_map);
-          registerSpeakersMap(data.sync_object_names.speakers_map);
+          registerSyncMaps(data.sync_object_names);
           chatConnect(data.token);
           break;
         }
@@ -69,7 +66,8 @@ export default function PreJoinScreens() {
           syncConnect(data.token);
           await playerConnect(data.token);
           registerUserDocument(data.sync_object_names.user_document);
-          registerSpeakersMap(data.sync_object_names.speakers_map);
+          registerSyncMaps(data.sync_object_names);
+          await connectViewerToPlayer(appState.participantName, appState.eventName);
           // chatConnect(data.token);
           break;
         }

@@ -6,7 +6,6 @@ import { Typography } from '@material-ui/core';
 const useStyles = makeStyles({
   container: {
     display: 'flex',
-    padding: '0.4em 1em',
     justifyContent: 'space-between',
   },
   invite: {
@@ -23,14 +22,15 @@ interface RaisedHandProps {
   name: string;
   handleInvite: (handleInviteIdentity: string) => void;
   isHost: boolean;
+  isLocalViewer: boolean;
 }
 
-export function RaisedHand({ name, handleInvite, isHost }: RaisedHandProps) {
+export function RaisedHand({ name, handleInvite, isHost, isLocalViewer }: RaisedHandProps) {
   const classes = useStyles();
 
   return (
     <div className={classes.container}>
-      <Typography variant="body1">{name} 👋</Typography>
+      <Typography variant="body1">{isLocalViewer ? `${name} (You)` : name} 👋</Typography>
       <Typography
         variant="body1"
         className={clsx(classes.invite, { [classes.hide]: !isHost })}
