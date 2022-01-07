@@ -1,10 +1,22 @@
 import React, { useState, useRef } from 'react';
 import { Button, Menu, MenuItem, MenuList } from '@material-ui/core';
 import SpeakerMenuIcon from '../../../icons/SpeakerMenuIcon';
+import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import { removeSpeaker } from '../../../state/api/api';
 
-export function SpeakerMenu() {
+interface SpeakerMenuProps {
+  speaker: string;
+}
+
+export function SpeakerMenu({ speaker }: SpeakerMenuProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
+  const { room } = useVideoContext();
+
+  async function switchToViewer() {
+    room?.emit('bye');
+    await removeSpeaker(speaker, room!.name);
+  }
 
   return (
     <>
@@ -25,7 +37,7 @@ export function SpeakerMenu() {
         }}
       >
         <MenuList dense>
-          <MenuItem>Return to Viewer</MenuItem>
+          <MenuItem onClick={switchToViewer}>Return to Viewer</MenuItem>
           <MenuItem>Turn off Speaker's Video</MenuItem>
           <MenuItem>Mute Speaker</MenuItem>
           <MenuItem style={{ color: 'red' }}>Remove User</MenuItem>

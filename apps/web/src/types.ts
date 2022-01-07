@@ -1,10 +1,15 @@
-import { LocalVideoTrack, RemoteVideoTrack, TwilioError } from 'twilio-video';
+import { LocalVideoTrack, RemoteVideoTrack, TwilioError, Room } from 'twilio-video';
 
 declare module 'twilio-video' {
   // These help to create union types between Local and Remote VideoTracks
   interface LocalVideoTrack {
     isSwitchedOff: undefined;
     setPriority: undefined;
+  }
+
+  interface Room {
+    on(event: 'bye', listener: () => void): this;
+    on(event: string, listener: Function): this;
   }
 }
 

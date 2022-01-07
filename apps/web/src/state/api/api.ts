@@ -74,3 +74,9 @@ export const deleteStream = (stream_name: string) =>
   apiClient.post('delete-stream', {
     stream_name,
   });
+
+export const removeSpeaker = (user_identity: string, room_name: string) =>
+  apiClient.post('remove-speaker', {
+    user_identity,
+    room_name,
+  });
