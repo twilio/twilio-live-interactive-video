@@ -9,7 +9,6 @@ export default function DataTrack({ track }: { track: IDataTrack }) {
 
   useEffect(() => {
     const handleMessage = (message: string) => {
-      console.log(message);
       try {
         const JSONMessage = JSON.parse(message);
         if (
@@ -18,7 +17,6 @@ export default function DataTrack({ track }: { track: IDataTrack }) {
         ) {
           if (isAudioEnabled) {
             toggleAudio();
-            console.log('ok!');
           }
         }
       } catch (e) {
