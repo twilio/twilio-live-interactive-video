@@ -8,11 +8,11 @@ import BackgroundSelectionDialog from '../BackgroundSelectionDialog/BackgroundSe
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import ParticipantWindow from '../ParticipantWindow/ParticipantWindow';
-import { joinStreamAsViewer, connectViewerToPlayer } from '../../state/api/api';
+import { joinStreamAsViewer } from '../../state/api/api';
 import { useAppState } from '../../state';
 import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import useSyncContext from '../../hooks/useSyncContext/useSyncContext';
-import { Room as IRoom, TwilioError } from 'twilio-video';
+import { useViewersMap } from '../../hooks/useViewersMap/useViewersMap';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
@@ -41,22 +41,22 @@ export default function Room() {
   const { connect } = usePlayerContext();
   const { registerUserDocument } = useSyncContext();
   const { appState } = useAppState();
+  const viewers = useViewersMap();
 
   useEffect(() => {
-    if (room) {
-      const handleConnectToPlayer = async (_: IRoom, error: TwilioError) => {
+    if (room && viewers.includes(room.localParticipant.identity)) {
+      const handleConnectToPlayer = async () => {
         const { data } = await joinStreamAsViewer(room.localParticipant.identity, room.name);
         await connect(data.token);
-        await connectViewerToPlayer(room.localParticipant.identity, room.name);
         registerUserDocument(data.sync_object_names.user_document);
       };
-      room.on('bye', handleConnectToPlayer);
+      room.on('disconnected', handleConnectToPlayer);
 
       return () => {
-        room.off('bye', handleConnectToPlayer);
+        room.off('disconnected', handleConnectToPlayer);
       };
     }
-  }, [room, connect, registerUserDocument]);
+  }, [room, connect, registerUserDocument, viewers]);
 
   return (
     <div
