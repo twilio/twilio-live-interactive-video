@@ -36,11 +36,13 @@ export default function LeaveEventButton(props: { buttonClassName?: string }) {
     await playerConnect(data.token);
     await connectViewerToPlayer(appState.participantName, appState.eventName);
     registerUserDocument(data.sync_object_names.user_document);
+    room!.emit('bye');
     room!.disconnect();
   }
 
   function disconnect() {
     setMenuOpen(false);
+    room!.emit('bye');
     room!.disconnect();
     appDispatch({ type: 'reset-state' });
   }

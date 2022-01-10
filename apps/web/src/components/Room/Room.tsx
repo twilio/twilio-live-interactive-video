@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { makeStyles, Theme } from '@material-ui/core';
 import ChatWindow from '../ChatWindow/ChatWindow';
@@ -12,7 +12,6 @@ import { joinStreamAsViewer } from '../../state/api/api';
 import { useAppState } from '../../state';
 import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import useSyncContext from '../../hooks/useSyncContext/useSyncContext';
-import { useViewersMap } from '../../hooks/useViewersMap/useViewersMap';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
@@ -41,14 +40,28 @@ export default function Room() {
   const { connect } = usePlayerContext();
   const { registerUserDocument } = useSyncContext();
   const { appState } = useAppState();
-  const viewers = useViewersMap();
+  const byeRef = useRef(false);
 
   useEffect(() => {
-    if (room && viewers.includes(room.localParticipant.identity)) {
+    if (room) {
+      const handleBye = () => (byeRef.current = true);
+      room.on('bye', handleBye);
+
+      return () => {
+        room.off('bye', handleBye);
+      };
+    }
+  }, [room]);
+
+  useEffect(() => {
+    if (room) {
+      byeRef.current = false;
       const handleConnectToPlayer = async () => {
-        const { data } = await joinStreamAsViewer(room.localParticipant.identity, room.name);
-        await connect(data.token);
-        registerUserDocument(data.sync_object_names.user_document);
+        if (!byeRef.current) {
+          const { data } = await joinStreamAsViewer(room.localParticipant.identity, room.name);
+          await connect(data.token);
+          registerUserDocument(data.sync_object_names.user_document);
+        }
       };
       room.on('disconnected', handleConnectToPlayer);
 
@@ -56,7 +69,7 @@ export default function Room() {
         room.off('disconnected', handleConnectToPlayer);
       };
     }
-  }, [room, connect, registerUserDocument, viewers]);
+  }, [room, connect, registerUserDocument]);
 
   return (
     <div
