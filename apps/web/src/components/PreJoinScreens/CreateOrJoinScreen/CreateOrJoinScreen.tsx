@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-evenly',
   },
   paper: {
-    width: '475px',
+    width: '100%',
     height: '75px',
     display: 'flex',
     alignItems: 'center',
@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: 'all 0.2s linear',
     '&:hover': {
       backgroundColor: '#EFEFEF',
+    },
+    [theme.breakpoints.down('sm')]: {
+      margin: '0.8em 0',
     },
   },
   innerPaperContainer: {

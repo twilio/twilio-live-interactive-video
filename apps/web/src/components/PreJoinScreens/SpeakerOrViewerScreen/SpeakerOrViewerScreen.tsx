@@ -16,10 +16,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     height: '65%',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
   },
   paper: {
-    width: '465px',
+    width: '100%',
     height: '85px',
     display: 'flex',
     alignItems: 'center',
@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   innerPaperContainer: {
     display: 'flex',
+    height: '100%',
     alignItems: 'center',
   },
   disabledPaper: {
@@ -131,8 +132,8 @@ export default function SpeakerOrViewerScreen({ state, dispatch }: SpeakerOrView
                   Join as viewer
                 </Typography>
                 <Typography variant="caption" style={{ color: '#606B85' }}>
-                  You’ll have to raise your hand to speak or share video.
-                  <div>Your audio/video will not be shared by default.</div>
+                  You’ll have to raise your hand to speak or share video. Your audio/video will not be shared by
+                  default.
                 </Typography>
               </div>
             </div>
