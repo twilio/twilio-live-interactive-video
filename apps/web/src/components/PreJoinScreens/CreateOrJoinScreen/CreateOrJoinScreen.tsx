@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { Typography, makeStyles, Button, Theme, Paper } from '@material-ui/core';
+import { Typography, makeStyles, Button, Theme } from '@material-ui/core';
 import { appActionTypes, ActiveScreen, appStateTypes } from '../../../state/appState/appReducer';
 import BackArrowIcon from '../../../icons/BackArrowIcon';
 import CreateEventIcon from '../../../icons/CreateEventIcon';
@@ -24,6 +24,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor: '#fff',
+    borderColor: 'transparent',
+    borderRadius: '4px',
+    boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
     cursor: 'pointer',
     transition: 'all 0.2s linear',
     '&:hover': {
@@ -46,24 +50,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
   },
   leftIcon: {
-    margin: '0 1em 0',
+    margin: '0 0.7em 0 0.5em',
   },
   rightArrowIcon: {
-    margin: '0.5em 1em 0 0',
-  },
-  inputContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    margin: '1.5em 0 3.5em',
-    '& div:not(:last-child)': {
-      marginRight: '1em',
-    },
-    [theme.breakpoints.down('sm')]: {
-      margin: '1.5em 0 2em',
-    },
-  },
-  textFieldContainer: {
-    width: '100%',
+    margin: '0.5em 0.5em 0 0',
   },
   backButton: {
     marginTop: '0.8em',
@@ -92,46 +82,40 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
       </Typography>
 
       <div className={classes.paperContainer}>
-        <div>
-          <Paper
-            onClick={() => dispatch({ type: 'set-participant-type', participantType: 'host' })}
-            className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
-            elevation={3}
-          >
-            <div className={classes.innerPaperContainer}>
-              <div className={classes.leftIcon}>
-                <CreateEventIcon />
-              </div>
-              <Typography variant="body2" className={classes.bodyTypography}>
-                Create a new event
-              </Typography>
+        <button
+          autoFocus
+          onClick={() => dispatch({ type: 'set-participant-type', participantType: 'host' })}
+          className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
+        >
+          <div className={classes.innerPaperContainer}>
+            <div className={classes.leftIcon}>
+              <CreateEventIcon />
             </div>
-            <div className={classes.rightArrowIcon}>
-              <RightArrowIcon />
-            </div>
-          </Paper>
-        </div>
+            <Typography variant="body2" className={classes.bodyTypography}>
+              Create a new event
+            </Typography>
+          </div>
+          <div className={classes.rightArrowIcon}>
+            <RightArrowIcon />
+          </div>
+        </button>
 
-        <div>
-          <Paper
-            onClick={() => dispatch({ type: 'set-participant-type', participantType: null })}
-            elevation={3}
-            color="primary"
-            className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
-          >
-            <div className={classes.innerPaperContainer}>
-              <div className={classes.leftIcon}>
-                <JoinEventIcon />
-              </div>
-              <Typography variant="body2" className={classes.bodyTypography}>
-                Join an event
-              </Typography>
+        <button
+          onClick={() => dispatch({ type: 'set-participant-type', participantType: null })}
+          className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
+        >
+          <div className={classes.innerPaperContainer}>
+            <div className={classes.leftIcon}>
+              <JoinEventIcon />
             </div>
-            <div className={classes.rightArrowIcon}>
-              <RightArrowIcon />
-            </div>
-          </Paper>
-        </div>
+            <Typography variant="body2" className={classes.bodyTypography}>
+              Join an event
+            </Typography>
+          </div>
+          <div className={classes.rightArrowIcon}>
+            <RightArrowIcon />
+          </div>
+        </button>
       </div>
       <div>
         <Button
