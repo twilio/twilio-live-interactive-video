@@ -34,7 +34,7 @@ export default function DataTrack({ track }: { track: IDataTrack }) {
     return () => {
       track.off('message', handleMessage);
     };
-  }, [track, isAudioEnabled, room, toggleAudio]);
+  }, [track, isAudioEnabled, room, toggleAudio, enqueueSnackbar]);
 
   return null; // This component does not return any HTML, so we will return 'null' instead.
 }
