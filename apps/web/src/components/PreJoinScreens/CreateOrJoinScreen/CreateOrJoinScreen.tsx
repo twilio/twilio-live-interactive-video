@@ -1,6 +1,5 @@
 import React from 'react';
-import clsx from 'clsx';
-import { Typography, makeStyles, Button, Theme } from '@material-ui/core';
+import { Typography, makeStyles, Button, Theme, Paper, ButtonBase } from '@material-ui/core';
 import { appActionTypes, ActiveScreen, appStateTypes } from '../../../state/appState/appReducer';
 import BackArrowIcon from '../../../icons/BackArrowIcon';
 import CreateEventIcon from '../../../icons/CreateEventIcon';
@@ -11,6 +10,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
     marginBottom: '1em',
     fontWeight: 'bold',
+  },
+  focusVisible: {
+    borderRadius: '4px',
+    border: 'solid 2px rgb(2,122,197)',
   },
   paperContainer: {
     display: 'flex',
@@ -24,11 +27,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
-    borderColor: 'transparent',
-    borderRadius: '4px',
-    boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
-    cursor: 'pointer',
     transition: 'all 0.2s linear',
     '&:hover': {
       backgroundColor: '#EFEFEF',
@@ -82,41 +80,47 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
       </Typography>
 
       <div className={classes.paperContainer}>
-        <button
-          autoFocus
-          onClick={() => dispatch({ type: 'set-participant-type', participantType: 'host' })}
-          className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
-        >
-          <div className={classes.innerPaperContainer}>
-            <div className={classes.leftIcon}>
-              <CreateEventIcon />
+        <ButtonBase focusRipple>
+          <Paper
+            onClick={() => dispatch({ type: 'set-participant-type', participantType: 'host' })}
+            className={classes.paper}
+            elevation={3}
+          >
+            <div className={classes.innerPaperContainer}>
+              <div className={classes.leftIcon}>
+                <CreateEventIcon />
+              </div>
+              <Typography variant="body2" className={classes.bodyTypography}>
+                Create a new event
+              </Typography>
             </div>
-            <Typography variant="body2" className={classes.bodyTypography}>
-              Create a new event
-            </Typography>
-          </div>
-          <div className={classes.rightArrowIcon}>
-            <RightArrowIcon />
-          </div>
-        </button>
+            <div className={classes.rightArrowIcon}>
+              <RightArrowIcon />
+            </div>
+          </Paper>
+        </ButtonBase>
 
-        <button
-          onClick={() => dispatch({ type: 'set-participant-type', participantType: null })}
-          className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
-        >
-          <div className={classes.innerPaperContainer}>
-            <div className={classes.leftIcon}>
-              <JoinEventIcon />
+        <ButtonBase focusRipple>
+          <Paper
+            onClick={() => dispatch({ type: 'set-participant-type', participantType: null })}
+            className={classes.paper}
+            elevation={3}
+          >
+            <div className={classes.innerPaperContainer}>
+              <div className={classes.leftIcon}>
+                <JoinEventIcon />
+              </div>
+              <Typography variant="body2" className={classes.bodyTypography}>
+                Join an event
+              </Typography>
             </div>
-            <Typography variant="body2" className={classes.bodyTypography}>
-              Join an event
-            </Typography>
-          </div>
-          <div className={classes.rightArrowIcon}>
-            <RightArrowIcon />
-          </div>
-        </button>
+            <div className={classes.rightArrowIcon}>
+              <RightArrowIcon />
+            </div>
+          </Paper>
+        </ButtonBase>
       </div>
+
       <div>
         <Button
           startIcon={<BackArrowIcon />}

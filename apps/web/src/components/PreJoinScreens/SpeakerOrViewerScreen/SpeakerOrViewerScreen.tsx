@@ -1,6 +1,5 @@
 import React from 'react';
-import clsx from 'clsx';
-import { Typography, makeStyles, Button, Theme } from '@material-ui/core';
+import { Typography, makeStyles, Button, Theme, Paper, ButtonBase } from '@material-ui/core';
 import { appActionTypes, ActiveScreen, appStateTypes } from '../../../state/appState/appReducer';
 import BackArrowIcon from '../../../icons/BackArrowIcon';
 import SpeakerIcon from '../../../icons/SpeakerIcon';
@@ -22,11 +21,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   paper: {
     height: '84px',
+    width: '100%',
     backgroundColor: '#fff',
-    borderColor: 'transparent',
-    borderRadius: '4px',
-    boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
-    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     transition: 'all 0.2s linear',
     '&:hover': {
       backgroundColor: '#EFEFEF',
@@ -39,6 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    width: '100%',
   },
   disabledPaper: {
     pointerEvents: 'none',
@@ -89,50 +89,56 @@ export default function SpeakerOrViewerScreen({ state, dispatch }: SpeakerOrView
       </Typography>
 
       <div className={classes.paperContainer}>
-        <button
-          autoFocus
-          onClick={() => dispatch({ type: 'set-participant-type', participantType: 'speaker' })}
-          className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
-        >
-          <div className={classes.innerPaperContainer}>
-            <div className={classes.leftIcon}>
-              <SpeakerIcon />
+        <ButtonBase focusRipple>
+          <Paper
+            onClick={() => dispatch({ type: 'set-participant-type', participantType: 'speaker' })}
+            className={classes.paper}
+            elevation={3}
+          >
+            <div className={classes.innerPaperContainer}>
+              <div className={classes.leftIcon}>
+                <SpeakerIcon />
+              </div>
+              <div className={classes.typographyContainer}>
+                <Typography variant="body2" className={classes.bodyTypography}>
+                  Join as speaker
+                </Typography>
+                <Typography variant="caption" style={{ color: '#606B85' }}>
+                  Your audio/video will be shared by default.
+                </Typography>
+              </div>
+              <div className={classes.rightArrowIcon}>
+                <RightArrowIcon />
+              </div>
             </div>
-            <div className={classes.typographyContainer}>
-              <Typography variant="body2" className={classes.bodyTypography}>
-                Join as speaker
-              </Typography>
-              <Typography variant="caption" style={{ color: '#606B85' }}>
-                Your audio/video will be shared by default.
-              </Typography>
-            </div>
-            <div className={classes.rightArrowIcon}>
-              <RightArrowIcon />
-            </div>
-          </div>
-        </button>
+          </Paper>
+        </ButtonBase>
 
-        <button
-          onClick={() => dispatch({ type: 'set-participant-type', participantType: 'viewer' })}
-          className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
-        >
-          <div className={classes.innerPaperContainer}>
-            <div className={classes.leftIcon}>
-              <ViewerIcon />
+        <ButtonBase focusRipple>
+          <Paper
+            onClick={() => dispatch({ type: 'set-participant-type', participantType: 'viewer' })}
+            className={classes.paper}
+            elevation={3}
+          >
+            <div className={classes.innerPaperContainer}>
+              <div className={classes.leftIcon}>
+                <ViewerIcon />
+              </div>
+              <div className={classes.typographyContainer}>
+                <Typography variant="body2" className={classes.bodyTypography}>
+                  Join as viewer
+                </Typography>
+                <Typography variant="caption" style={{ color: '#606B85' }}>
+                  You’ll have to raise your hand to speak or share video. Your audio/video will not be shared by
+                  default.
+                </Typography>
+              </div>
+              <div className={classes.rightArrowIcon}>
+                <RightArrowIcon />
+              </div>
             </div>
-            <div className={classes.typographyContainer}>
-              <Typography variant="body2" className={classes.bodyTypography}>
-                Join as viewer
-              </Typography>
-              <Typography variant="caption" style={{ color: '#606B85' }}>
-                You’ll have to raise your hand to speak or share video. Your audio/video will not be shared by default.
-              </Typography>
-            </div>
-            <div className={classes.rightArrowIcon}>
-              <RightArrowIcon />
-            </div>
-          </div>
-        </button>
+          </Paper>
+        </ButtonBase>
       </div>
 
       <div>
