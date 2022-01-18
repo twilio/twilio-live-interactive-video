@@ -8,7 +8,7 @@ import BackgroundSelectionDialog from '../BackgroundSelectionDialog/BackgroundSe
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import ParticipantWindow from '../ParticipantWindow/ParticipantWindow';
-import { joinStreamAsViewer } from '../../state/api/api';
+import { joinStreamAsViewer, connectViewerToPlayer } from '../../state/api/api';
 import { useAppState } from '../../state';
 import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import useSyncContext from '../../hooks/useSyncContext/useSyncContext';
@@ -37,29 +37,32 @@ export default function Room() {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
   const { isBackgroundSelectionOpen, room } = useVideoContext();
-  const { connect } = usePlayerContext();
+  const { connect: playerConnect } = usePlayerContext();
   const { registerUserDocument } = useSyncContext();
-  const { appState } = useAppState();
-  const byeRef = useRef(false);
+  const { appState, appDispatch } = useAppState();
+  const speakerDepartedRef = useRef(false);
 
   useEffect(() => {
     if (room) {
-      const handleBye = () => (byeRef.current = true);
-      room.on('bye', handleBye);
+      const handleSpeakerDeparted = () => (speakerDepartedRef.current = true);
+      room.on('speakerDeparted', handleSpeakerDeparted);
 
       return () => {
-        room.off('bye', handleBye);
+        room.off('speakerDeparted', handleSpeakerDeparted);
       };
     }
   }, [room]);
 
   useEffect(() => {
     if (room) {
-      byeRef.current = false;
+      speakerDepartedRef.current = false;
+      appDispatch({ type: 'set-is-loading', isLoading: true });
+
       const handleConnectToPlayer = async () => {
-        if (!byeRef.current) {
+        if (!speakerDepartedRef.current) {
           const { data } = await joinStreamAsViewer(room.localParticipant.identity, room.name);
-          await connect(data.token);
+          await playerConnect(data.token);
+          await connectViewerToPlayer(appState.participantName, appState.eventName);
           registerUserDocument(data.sync_object_names.user_document);
         }
       };
@@ -69,7 +72,7 @@ export default function Room() {
         room.off('disconnected', handleConnectToPlayer);
       };
     }
-  }, [room, connect, registerUserDocument]);
+  }, [room, playerConnect, registerUserDocument, appDispatch, appState.participantName, appState.eventName]);
 
   return (
     <div
