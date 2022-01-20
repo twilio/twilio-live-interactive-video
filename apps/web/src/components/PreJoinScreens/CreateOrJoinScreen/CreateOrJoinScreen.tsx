@@ -11,10 +11,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: '1em',
     fontWeight: 'bold',
   },
-  focusVisible: {
-    borderRadius: '4px',
-    border: 'solid 2px rgb(2,122,197)',
-  },
   paperContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -38,10 +34,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   innerPaperContainer: {
     display: 'flex',
     alignItems: 'center',
-  },
-  disabledPaper: {
-    pointerEvents: 'none',
-    opacity: 0.2,
   },
   bodyTypography: {
     color: '#606B85',
@@ -80,12 +72,8 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
       </Typography>
 
       <div className={classes.paperContainer}>
-        <ButtonBase focusRipple>
-          <Paper
-            onClick={() => dispatch({ type: 'set-participant-type', participantType: 'host' })}
-            className={classes.paper}
-            elevation={3}
-          >
+        <ButtonBase focusRipple onClick={() => dispatch({ type: 'set-participant-type', participantType: 'host' })}>
+          <Paper className={classes.paper} elevation={3}>
             <div className={classes.innerPaperContainer}>
               <div className={classes.leftIcon}>
                 <CreateEventIcon />
@@ -100,12 +88,8 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
           </Paper>
         </ButtonBase>
 
-        <ButtonBase focusRipple>
-          <Paper
-            onClick={() => dispatch({ type: 'set-participant-type', participantType: null })}
-            className={classes.paper}
-            elevation={3}
-          >
+        <ButtonBase focusRipple onClick={() => dispatch({ type: 'set-participant-type', participantType: null })}>
+          <Paper className={classes.paper} elevation={3}>
             <div className={classes.innerPaperContainer}>
               <div className={classes.leftIcon}>
                 <JoinEventIcon />

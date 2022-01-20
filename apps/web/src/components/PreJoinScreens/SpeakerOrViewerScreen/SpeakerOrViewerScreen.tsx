@@ -40,10 +40,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     width: '100%',
   },
-  disabledPaper: {
-    pointerEvents: 'none',
-    opacity: 0.2,
-  },
   bodyTypography: {
     color: '#606B85',
     fontWeight: 'bold',
@@ -89,12 +85,8 @@ export default function SpeakerOrViewerScreen({ state, dispatch }: SpeakerOrView
       </Typography>
 
       <div className={classes.paperContainer}>
-        <ButtonBase focusRipple>
-          <Paper
-            onClick={() => dispatch({ type: 'set-participant-type', participantType: 'speaker' })}
-            className={classes.paper}
-            elevation={3}
-          >
+        <ButtonBase focusRipple onClick={() => dispatch({ type: 'set-participant-type', participantType: 'speaker' })}>
+          <Paper className={classes.paper} elevation={3}>
             <div className={classes.innerPaperContainer}>
               <div className={classes.leftIcon}>
                 <SpeakerIcon />
@@ -114,12 +106,8 @@ export default function SpeakerOrViewerScreen({ state, dispatch }: SpeakerOrView
           </Paper>
         </ButtonBase>
 
-        <ButtonBase focusRipple>
-          <Paper
-            onClick={() => dispatch({ type: 'set-participant-type', participantType: 'viewer' })}
-            className={classes.paper}
-            elevation={3}
-          >
+        <ButtonBase focusRipple onClick={() => dispatch({ type: 'set-participant-type', participantType: 'viewer' })}>
+          <Paper className={classes.paper} elevation={3}>
             <div className={classes.innerPaperContainer}>
               <div className={classes.leftIcon}>
                 <ViewerIcon />
