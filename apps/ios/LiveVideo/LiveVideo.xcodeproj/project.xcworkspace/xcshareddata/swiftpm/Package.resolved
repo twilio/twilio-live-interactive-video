@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/Alamofire/Alamofire",
         "state": {
           "branch": null,
-          "revision": "f96b619bcb2383b43d898402283924b80e2c4bae",
-          "version": "5.4.3"
+          "revision": "f82c23a8a7ef8dc1a49a8bfc6a96883e79121864",
+          "version": "5.5.0"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/futuretap/InAppSettingsKit",
         "state": {
           "branch": null,
-          "revision": "297bc0fc1625df7117b75b3e238bf9a401ec1e24",
-          "version": "3.3.3"
+          "revision": "e4b97046bb88f7a289d5f5a1e2b92b751c172bab",
+          "version": "3.3.5"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/twilio/twilio-live-player-ios",
         "state": {
           "branch": null,
-          "revision": "c086f1a2bd60f7b777e0ecf7c55ebceab029757a",
-          "version": "1.0.0"
+          "revision": "7c4827e0bdb3b935aecdce9fa3c1b3c42ba60dd5",
+          "version": "1.0.1"
         }
       },
       {
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/twilio/twilio-video-ios",
         "state": {
           "branch": null,
-          "revision": "6d503871c3028484649b6da429d463c9d003270e",
-          "version": "4.4.0"
+          "revision": "e028f87d5425316c39723c7bc2508f5349e36482",
+          "version": "4.6.3"
         }
       }
     ]
