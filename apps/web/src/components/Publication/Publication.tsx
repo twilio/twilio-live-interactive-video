@@ -2,15 +2,9 @@ import React from 'react';
 import useTrack from '../../hooks/useTrack/useTrack';
 import AudioTrack from '../AudioTrack/AudioTrack';
 import VideoTrack from '../VideoTrack/VideoTrack';
+import DataTrack from '../DataTrack/DataTrack';
 
-import { IVideoTrack } from '../../types';
-import {
-  AudioTrack as IAudioTrack,
-  LocalTrackPublication,
-  Participant,
-  RemoteTrackPublication,
-  Track,
-} from 'twilio-video';
+import { LocalTrackPublication, Participant, RemoteTrackPublication, Track } from 'twilio-video';
 
 interface PublicationProps {
   publication: LocalTrackPublication | RemoteTrackPublication;
@@ -29,13 +23,16 @@ export default function Publication({ publication, isLocalParticipant, videoOnly
     case 'video':
       return (
         <VideoTrack
-          track={track as IVideoTrack}
+          track={track}
           priority={videoPriority}
           isLocal={track.name.includes('camera') && isLocalParticipant}
         />
       );
     case 'audio':
-      return videoOnly ? null : <AudioTrack track={track as IAudioTrack} />;
+      return videoOnly ? null : <AudioTrack track={track} />;
+    case 'data':
+      // We use videoOnly here because, like audio tracks, we only ever want one data track rendered at a time.
+      return videoOnly ? null : <DataTrack track={track} />;
     default:
       return null;
   }
