@@ -12,6 +12,11 @@ export function SpeakerMenu({ speaker }: { speaker: string }) {
   async function switchToViewer() {
     await removeSpeaker(speaker, room!.name);
   }
+  const handleMuteSpeaker = () => {
+    const [localDataTrackPublication] = [...room!.localParticipant.dataTracks.values()];
+    const message = JSON.stringify({ message_type: 'mute', to_participant_identity: speaker });
+    localDataTrackPublication.track.send(message);
+  };
 
   return (
     <>
@@ -32,10 +37,10 @@ export function SpeakerMenu({ speaker }: { speaker: string }) {
         }}
       >
         <MenuList dense>
-          <MenuItem onClick={switchToViewer}>Return to Viewer</MenuItem>
-          <MenuItem>Turn off Speaker's Video</MenuItem>
-          <MenuItem>Mute Speaker</MenuItem>
-          <MenuItem style={{ color: 'red' }}>Remove User</MenuItem>
+          <MenuItem onClick={handleMuteSpeaker}>Mute Speaker</MenuItem>
+          <MenuItem onClick={switchToViewer} style={{ color: 'red' }}>
+            Move To Viewers
+          </MenuItem>
         </MenuList>
       </Menu>
     </>
