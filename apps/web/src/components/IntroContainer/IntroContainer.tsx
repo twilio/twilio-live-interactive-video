@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     height: '100%',
     [theme.breakpoints.down('sm')]: {
-      padding: '2em',
+      padding: '3em 2em',
     },
   },
   title: {

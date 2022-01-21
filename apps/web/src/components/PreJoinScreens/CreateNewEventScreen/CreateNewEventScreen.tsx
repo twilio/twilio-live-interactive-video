@@ -61,6 +61,7 @@ export default function CreateNewEventScreen({ state, dispatch }: CreateNewEvent
             </InputLabel>
             <TextField
               id="input-user-name"
+              autoFocus
               variant="outlined"
               fullWidth
               size="small"

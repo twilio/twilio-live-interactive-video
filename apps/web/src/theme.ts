@@ -75,6 +75,16 @@ export default createTheme({
       h4: {
         fontSize: '1.8rem',
       },
+      caption: {
+        [defaultTheme.breakpoints.down('sm')]: {
+          fontSize: '0.6rem',
+        },
+      },
+      body2: {
+        [defaultTheme.breakpoints.down('sm')]: {
+          fontSize: '0.75rem',
+        },
+      },
     },
     MuiInputBase: {
       root: {
