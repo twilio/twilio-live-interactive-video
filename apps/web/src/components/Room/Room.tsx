@@ -12,6 +12,7 @@ import { joinStreamAsViewer, connectViewerToPlayer } from '../../state/api/api';
 import { useAppState } from '../../state';
 import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import useSyncContext from '../../hooks/useSyncContext/useSyncContext';
+import { useEnqueueSnackbar } from '../../hooks/useSnackbar/useSnackbar';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
@@ -41,6 +42,16 @@ export default function Room() {
   const { registerUserDocument } = useSyncContext();
   const { appState, appDispatch } = useAppState();
   const speakerDepartedRef = useRef(false);
+  const enqueueSnackbar = useEnqueueSnackbar();
+
+  /**
+   * Here we listen for a custom event "speakerDeparted" which is emitted whenever a speaker
+   * clicks on the "Leave Event" button or the "Leave and View Event" button. This is needed
+   * because the speaker can also leave the event if they are removed by the host. All of
+   * these scenarios result in identical events ("disconnected"), so we needed a way to prevent
+   * speakers from automatically re-joining the stream as a viewer whenever they click on the
+   * "Leave Event" button.
+   */
 
   useEffect(() => {
     if (room) {
@@ -56,14 +67,25 @@ export default function Room() {
   useEffect(() => {
     if (room) {
       speakerDepartedRef.current = false;
-      appDispatch({ type: 'set-is-loading', isLoading: true });
 
       const handleConnectToPlayer = async () => {
+        appDispatch({ type: 'set-is-loading', isLoading: true });
         if (!speakerDepartedRef.current) {
-          const { data } = await joinStreamAsViewer(room.localParticipant.identity, room.name);
-          await playerConnect(data.token);
-          await connectViewerToPlayer(appState.participantName, appState.eventName);
-          registerUserDocument(data.sync_object_names.user_document);
+          try {
+            const { data } = await joinStreamAsViewer(room.localParticipant.identity, room.name);
+            await playerConnect(data.token);
+            await connectViewerToPlayer(appState.participantName, appState.eventName);
+            registerUserDocument(data.sync_object_names.user_document);
+            enqueueSnackbar({
+              headline: 'Moved to viewers',
+              message: 'You have been moved to viewers by the host.',
+              variant: 'warning',
+            });
+            appDispatch({ type: 'set-is-loading', isLoading: false });
+          } catch (error) {
+            console.log(`ERROR: ${error.message}`, error);
+            appDispatch({ type: 'set-is-loading', isLoading: false });
+          }
         }
       };
       room.on('disconnected', handleConnectToPlayer);
@@ -72,7 +94,15 @@ export default function Room() {
         room.off('disconnected', handleConnectToPlayer);
       };
     }
-  }, [room, playerConnect, registerUserDocument, appDispatch, appState.participantName, appState.eventName]);
+  }, [
+    room,
+    playerConnect,
+    registerUserDocument,
+    appDispatch,
+    appState.participantName,
+    appState.eventName,
+    enqueueSnackbar,
+  ]);
 
   return (
     <div
