@@ -1,6 +1,5 @@
 import React from 'react';
-import clsx from 'clsx';
-import { Typography, makeStyles, Button, Theme, Paper } from '@material-ui/core';
+import { Typography, makeStyles, Button, Theme, Paper, ButtonBase } from '@material-ui/core';
 import { appActionTypes, ActiveScreen, appStateTypes } from '../../../state/appState/appReducer';
 import BackArrowIcon from '../../../icons/BackArrowIcon';
 import SpeakerIcon from '../../../icons/SpeakerIcon';
@@ -14,53 +13,50 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   paperContainer: {
     display: 'flex',
+    width: '100%',
     flexDirection: 'column',
-    height: '65%',
-    justifyContent: 'space-around',
+    height: '13em',
+    justifyContent: 'space-between',
+    marginTop: '0.5em',
   },
   paper: {
-    width: '465px',
-    height: '85px',
+    height: '84px',
+    width: '100%',
+    backgroundColor: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    cursor: 'pointer',
     transition: 'all 0.2s linear',
     '&:hover': {
       backgroundColor: '#EFEFEF',
+    },
+    [theme.breakpoints.down('sm')]: {
+      padding: '0.2em 0',
     },
   },
   innerPaperContainer: {
     display: 'flex',
     alignItems: 'center',
-  },
-  disabledPaper: {
-    pointerEvents: 'none',
-    opacity: 0.2,
+    justifyContent: 'space-between',
+    width: '100%',
   },
   bodyTypography: {
     color: '#606B85',
     fontWeight: 'bold',
+    marginBottom: '0.2em',
+  },
+  typographyContainer: {
+    textAlign: 'left',
+    margin: '0 auto 0 0.5em',
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: '0.5em',
+    },
   },
   leftIcon: {
-    margin: '0 1em 0',
+    margin: '0 0.5em 0',
   },
   rightArrowIcon: {
-    margin: '0.5em 1em 0 0',
-  },
-  inputContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    margin: '1.5em 0 3.5em',
-    '& div:not(:last-child)': {
-      marginRight: '1em',
-    },
-    [theme.breakpoints.down('sm')]: {
-      margin: '1.5em 0 2em',
-    },
-  },
-  textFieldContainer: {
-    width: '100%',
+    margin: '0.5em 0.5em 0 0',
   },
   backButton: {
     marginTop: '1.5em',
@@ -89,18 +85,13 @@ export default function SpeakerOrViewerScreen({ state, dispatch }: SpeakerOrView
       </Typography>
 
       <div className={classes.paperContainer}>
-        <div>
-          <Paper
-            onClick={() => dispatch({ type: 'set-participant-type', participantType: 'speaker' })}
-            className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
-            elevation={3}
-            style={{ margin: '0.3em 0' }}
-          >
+        <ButtonBase focusRipple onClick={() => dispatch({ type: 'set-participant-type', participantType: 'speaker' })}>
+          <Paper className={classes.paper} elevation={3}>
             <div className={classes.innerPaperContainer}>
               <div className={classes.leftIcon}>
                 <SpeakerIcon />
               </div>
-              <div>
+              <div className={classes.typographyContainer}>
                 <Typography variant="body2" className={classes.bodyTypography}>
                   Join as speaker
                 </Typography>
@@ -108,39 +99,34 @@ export default function SpeakerOrViewerScreen({ state, dispatch }: SpeakerOrView
                   Your audio/video will be shared by default.
                 </Typography>
               </div>
-            </div>
-            <div className={classes.rightArrowIcon}>
-              <RightArrowIcon />
+              <div className={classes.rightArrowIcon}>
+                <RightArrowIcon />
+              </div>
             </div>
           </Paper>
-        </div>
+        </ButtonBase>
 
-        <div>
-          <Paper
-            onClick={() => dispatch({ type: 'set-participant-type', participantType: 'viewer' })}
-            elevation={3}
-            color="primary"
-            className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
-          >
+        <ButtonBase focusRipple onClick={() => dispatch({ type: 'set-participant-type', participantType: 'viewer' })}>
+          <Paper className={classes.paper} elevation={3}>
             <div className={classes.innerPaperContainer}>
               <div className={classes.leftIcon}>
                 <ViewerIcon />
               </div>
-              <div>
+              <div className={classes.typographyContainer}>
                 <Typography variant="body2" className={classes.bodyTypography}>
                   Join as viewer
                 </Typography>
                 <Typography variant="caption" style={{ color: '#606B85' }}>
-                  You’ll have to raise your hand to speak or share video.
-                  <div>Your audio/video will not be shared by default.</div>
+                  You’ll have to raise your hand to speak or share video. Your audio/video will not be shared by
+                  default.
                 </Typography>
               </div>
-            </div>
-            <div className={classes.rightArrowIcon}>
-              <RightArrowIcon />
+              <div className={classes.rightArrowIcon}>
+                <RightArrowIcon />
+              </div>
             </div>
           </Paper>
-        </div>
+        </ButtonBase>
       </div>
 
       <div>
