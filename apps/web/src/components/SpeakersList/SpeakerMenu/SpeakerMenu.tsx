@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Button, Menu, MenuItem, MenuList } from '@material-ui/core';
 import SpeakerMenuIcon from '../../../icons/SpeakerMenuIcon';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
-import { removeSpeaker, connectViewerToPlayer } from '../../../state/api/api';
+import { removeSpeaker } from '../../../state/api/api';
 
 export function SpeakerMenu({ speaker }: { speaker: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -10,7 +10,6 @@ export function SpeakerMenu({ speaker }: { speaker: string }) {
   const { room } = useVideoContext();
 
   async function switchToViewer() {
-    await connectViewerToPlayer(speaker, room!.name);
     await removeSpeaker(speaker, room!.name);
   }
 
