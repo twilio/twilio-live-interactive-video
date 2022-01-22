@@ -8,7 +8,7 @@ declare module 'twilio-video' {
   }
 
   interface Room {
-    on(event: 'speakerDeparted', listener: () => void): this;
+    on(event: 'setPreventAutomaticJoinStreamAsViewer', listener: () => void): this;
     on(event: string, listener: Function): this;
   }
 }

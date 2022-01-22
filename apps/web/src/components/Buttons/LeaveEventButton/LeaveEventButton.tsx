@@ -36,13 +36,13 @@ export default function LeaveEventButton(props: { buttonClassName?: string }) {
     await playerConnect(data.token);
     await connectViewerToPlayer(appState.participantName, appState.eventName);
     registerUserDocument(data.sync_object_names.user_document);
-    room!.emit('speakerDeparted');
+    room!.emit('setPreventAutomaticJoinStreamAsViewer');
     room!.disconnect();
   }
 
   function disconnect() {
     setMenuOpen(false);
-    room!.emit('speakerDeparted');
+    room!.emit('setPreventAutomaticJoinStreamAsViewer');
     room!.disconnect();
     appDispatch({ type: 'reset-state' });
   }

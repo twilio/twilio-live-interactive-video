@@ -41,36 +41,37 @@ export default function Room() {
   const { connect: playerConnect } = usePlayerContext();
   const { registerUserDocument } = useSyncContext();
   const { appState, appDispatch } = useAppState();
-  const speakerDepartedRef = useRef(false);
+  const setPreventAutomaticJoinStreamAsViewerRef = useRef(false);
   const enqueueSnackbar = useEnqueueSnackbar();
 
   /**
-   * Here we listen for a custom event "speakerDeparted" which is emitted whenever a speaker
-   * clicks on the "Leave Event" button or the "Leave and View Event" button. This is needed
-   * because the speaker can also leave the event if they are removed by the host. All of
-   * these scenarios result in identical events ("disconnected"), so we needed a way to prevent
-   * speakers from automatically re-joining the stream as a viewer whenever they click on the
-   * "Leave Event" button.
+   * Here we listen for a custom event "setPreventAutomaticJoinStreamAsViewer" which is emitted
+   * whenever a speaker clicks on the "Leave Event" button or the "Leave and View Event" button.
+   * This is needed because the speaker can also leave the event if they are removed by the host.
+   * All of these scenarios result in identical events ("disconnected"), so we needed a way to
+   * prevent speakers from automatically re-joining the stream as a viewer whenever they click on
+   * the "Leave Event" button.
    */
 
   useEffect(() => {
     if (room) {
-      const handleSpeakerDeparted = () => (speakerDepartedRef.current = true);
-      room.on('speakerDeparted', handleSpeakerDeparted);
+      const handlesetPreventAutomaticJoinStreamAsViewer = () =>
+        (setPreventAutomaticJoinStreamAsViewerRef.current = true);
+      room.on('setPreventAutoJoinStreamAsViewer', handlesetPreventAutomaticJoinStreamAsViewer);
 
       return () => {
-        room.off('speakerDeparted', handleSpeakerDeparted);
+        room.off('setPreventAutomaticJoinStreamAsViewer', handlesetPreventAutomaticJoinStreamAsViewer);
       };
     }
   }, [room]);
 
   useEffect(() => {
     if (room) {
-      speakerDepartedRef.current = false;
+      setPreventAutomaticJoinStreamAsViewerRef.current = false;
 
       const handleConnectToPlayer = async () => {
         appDispatch({ type: 'set-is-loading', isLoading: true });
-        if (!speakerDepartedRef.current) {
+        if (!setPreventAutomaticJoinStreamAsViewerRef.current) {
           try {
             const { data } = await joinStreamAsViewer(room.localParticipant.identity, room.name);
             await playerConnect(data.token);
