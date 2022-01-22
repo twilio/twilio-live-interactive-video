@@ -66,6 +66,7 @@ export default function JoinEventScreen({ state, dispatch, connect }: JoinEventS
             </InputLabel>
             <TextField
               id="input-user-name"
+              autoFocus
               variant="outlined"
               fullWidth
               size="small"

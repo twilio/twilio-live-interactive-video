@@ -2,12 +2,16 @@ import React, { useState, useRef } from 'react';
 import { Button, Menu, MenuItem, MenuList } from '@material-ui/core';
 import SpeakerMenuIcon from '../../../icons/SpeakerMenuIcon';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import { removeSpeaker } from '../../../state/api/api';
 
-export function SpeakerMenu({ speaker }: { speaker: String }) {
+export function SpeakerMenu({ speaker }: { speaker: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
   const { room } = useVideoContext();
 
+  async function switchToViewer() {
+    await removeSpeaker(speaker, room!.name);
+  }
   const handleMuteSpeaker = () => {
     const [localDataTrackPublication] = [...room!.localParticipant.dataTracks.values()];
     const message = JSON.stringify({ message_type: 'mute', to_participant_identity: speaker });
@@ -34,7 +38,9 @@ export function SpeakerMenu({ speaker }: { speaker: String }) {
       >
         <MenuList dense>
           <MenuItem onClick={handleMuteSpeaker}>Mute Speaker</MenuItem>
-          <MenuItem style={{ color: 'red' }}>Move To Viewers</MenuItem>
+          <MenuItem onClick={switchToViewer} style={{ color: 'red' }}>
+            Move To Viewers
+          </MenuItem>
         </MenuList>
       </Menu>
     </>

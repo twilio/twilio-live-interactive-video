@@ -97,6 +97,7 @@ export default function LoginPage() {
               </InputLabel>
               <TextField
                 id="input-passcode"
+                autoFocus
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setPasscode(e.target.value)}
                 type="password"
                 variant="outlined"
