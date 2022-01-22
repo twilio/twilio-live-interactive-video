@@ -13,6 +13,7 @@ import { useAppState } from '../../state';
 import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import useSyncContext from '../../hooks/useSyncContext/useSyncContext';
 import { useEnqueueSnackbar } from '../../hooks/useSnackbar/useSnackbar';
+import { Room as IRoom, TwilioError } from 'twilio-video';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
@@ -55,12 +56,12 @@ export default function Room() {
 
   useEffect(() => {
     if (room) {
-      const handlesetPreventAutomaticJoinStreamAsViewer = () =>
+      const handleSetPreventAutomaticJoinStreamAsViewer = () =>
         (setPreventAutomaticJoinStreamAsViewerRef.current = true);
-      room.on('setPreventAutoJoinStreamAsViewer', handlesetPreventAutomaticJoinStreamAsViewer);
+      room.on('setPreventAutomaticJoinStreamAsViewer', handleSetPreventAutomaticJoinStreamAsViewer);
 
       return () => {
-        room.off('setPreventAutomaticJoinStreamAsViewer', handlesetPreventAutomaticJoinStreamAsViewer);
+        room.off('setPreventAutomaticJoinStreamAsViewer', handleSetPreventAutomaticJoinStreamAsViewer);
       };
     }
   }, [room]);
@@ -69,9 +70,9 @@ export default function Room() {
     if (room) {
       setPreventAutomaticJoinStreamAsViewerRef.current = false;
 
-      const handleConnectToPlayer = async () => {
-        appDispatch({ type: 'set-is-loading', isLoading: true });
-        if (!setPreventAutomaticJoinStreamAsViewerRef.current) {
+      const handleConnectToPlayer = async (_: IRoom, error: TwilioError) => {
+        if (!error && !setPreventAutomaticJoinStreamAsViewerRef.current) {
+          appDispatch({ type: 'set-is-loading', isLoading: true });
           try {
             const { data } = await joinStreamAsViewer(room.localParticipant.identity, room.name);
             await playerConnect(data.token);
@@ -83,8 +84,8 @@ export default function Room() {
               variant: 'warning',
             });
             appDispatch({ type: 'set-is-loading', isLoading: false });
-          } catch (error) {
-            console.log(`ERROR: ${error.message}`, error);
+          } catch (err) {
+            console.log(`Error moving to stream: ${err.message}`, err);
             appDispatch({ type: 'set-is-loading', isLoading: false });
           }
         }
