@@ -14,8 +14,9 @@ export function SpeakerMenu({ speaker }: { speaker: string }) {
   }
   const handleMuteSpeaker = () => {
     const [localDataTrackPublication] = [...room!.localParticipant.dataTracks.values()];
-    const message = JSON.stringify({ message_type: 'mute', to_participant_identity: speaker });
-    localDataTrackPublication.track.send(message);
+    const messageString = JSON.stringify({ message_type: 'mute', to_participant_identity: speaker });
+    const messageBuffer = new TextEncoder().encode(messageString).buffer;
+    localDataTrackPublication.track.send(messageBuffer);
   };
 
   return (
