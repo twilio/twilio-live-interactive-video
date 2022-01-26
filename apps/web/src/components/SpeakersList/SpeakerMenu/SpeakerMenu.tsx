@@ -28,7 +28,7 @@ export function SpeakerMenu({ speaker }: { speaker: string }) {
       </Button>
       <Menu
         open={menuOpen}
-        onClose={() => setMenuOpen(isOpen => !isOpen)}
+        onClose={() => setMenuOpen(false)}
         anchorEl={anchorRef.current}
         anchorOrigin={{
           vertical: 'top',
