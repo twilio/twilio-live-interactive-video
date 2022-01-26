@@ -13,6 +13,8 @@ export default function DataTrack({ track }: { track: IDataTrack }) {
     const handleMessage = (message: string | ArrayBuffer) => {
       if (message instanceof ArrayBuffer) {
         try {
+          // Here we convert the message to stringified JSON from ArrayBuffer. Sending/receiving ArrayBuffers
+          // in the DataTracks helps with interoperability with the iOS Twilio Live App.
           const messageString = new TextDecoder().decode(message);
           const JSONMessage = JSON.parse(messageString);
           if (
