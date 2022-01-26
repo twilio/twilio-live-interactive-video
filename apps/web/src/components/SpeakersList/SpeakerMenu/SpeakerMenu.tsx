@@ -10,9 +10,11 @@ export function SpeakerMenu({ speaker }: { speaker: string }) {
   const { room } = useVideoContext();
 
   async function switchToViewer() {
+    setMenuOpen(false);
     await removeSpeaker(speaker, room!.name);
   }
   const handleMuteSpeaker = () => {
+    setMenuOpen(false);
     const [localDataTrackPublication] = [...room!.localParticipant.dataTracks.values()];
     const messageString = JSON.stringify({ message_type: 'mute', to_participant_identity: speaker });
     const messageBuffer = new TextEncoder().encode(messageString).buffer;
