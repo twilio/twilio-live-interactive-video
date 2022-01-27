@@ -13,32 +13,8 @@ exports.handler = async function (context, event, callback) {
   const { stream_name } = event;
 
   try {
-    // End room
-    const room = await client.video.rooms(stream_name).update({ status: 'completed' });
-
-    // Fetch stream map item
-    const streamMapItem = await backendStrageSyncClient.syncMaps('streams').syncMapItems(room.sid).fetch();
-
-    // Get playerStreamerSid and mediaProcessorSid from stream map item
-    const { player_streamer_sid, media_processor_sid } = streamMapItem.data;
-
-    // Stop mediaProcessor
-    await axiosClient(`MediaProcessors/${media_processor_sid}`, {
-      method: 'post',
-      data: 'Status=ENDED',
-    });
-
-    // Stop playerStreamer
-    await axiosClient(`PlayerStreamers/${player_streamer_sid}`, {
-      method: 'post',
-      data: 'Status=ENDED',
-    });
-
-    // Delete stream service
-    await client.sync.services(streamMapItem.data.sync_service_sid).remove();
-
-    // Delete stream map item
-    await backendStrageSyncClient.syncMaps('streams').syncMapItems(room.sid).remove();
+    // End the video room which will cause everything else to be cleaned up in the rooms webhook
+    await client.video.rooms(stream_name).update({ status: 'completed' });
 
     console.log('deleted: ', stream_name);
   } catch (e) {
