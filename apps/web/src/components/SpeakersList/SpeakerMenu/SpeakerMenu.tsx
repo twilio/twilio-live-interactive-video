@@ -10,12 +10,17 @@ export function SpeakerMenu({ speaker }: { speaker: string }) {
   const { room } = useVideoContext();
 
   async function switchToViewer() {
+    setMenuOpen(false);
     await removeSpeaker(speaker, room!.name);
   }
   const handleMuteSpeaker = () => {
+    setMenuOpen(false);
     const [localDataTrackPublication] = [...room!.localParticipant.dataTracks.values()];
-    const message = JSON.stringify({ message_type: 'mute', to_participant_identity: speaker });
-    localDataTrackPublication.track.send(message);
+    const messageString = JSON.stringify({ message_type: 'mute', to_participant_identity: speaker });
+    // Here we convert the message from stringified JSON to an ArrayBuffer. Sending/receiving ArrayBuffers
+    // in the DataTracks helps with interoperability with the iOS Twilio Live App.
+    const messageBuffer = new TextEncoder().encode(messageString).buffer;
+    localDataTrackPublication.track.send(messageBuffer);
   };
 
   return (
@@ -25,7 +30,7 @@ export function SpeakerMenu({ speaker }: { speaker: string }) {
       </Button>
       <Menu
         open={menuOpen}
-        onClose={() => setMenuOpen(isOpen => !isOpen)}
+        onClose={() => setMenuOpen(false)}
         anchorEl={anchorRef.current}
         anchorOrigin={{
           vertical: 'top',
