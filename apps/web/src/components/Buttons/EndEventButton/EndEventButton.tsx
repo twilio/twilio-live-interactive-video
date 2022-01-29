@@ -26,6 +26,7 @@ export default function EndCallButton(props: { className?: string }) {
   const { appState, appDispatch } = useAppState();
 
   async function disconnect() {
+    room!.emit('setPreventAutomaticJoinStreamAsViewer');
     room!.disconnect();
     appDispatch({ type: 'reset-state' });
     await deleteStream(appState.eventName);

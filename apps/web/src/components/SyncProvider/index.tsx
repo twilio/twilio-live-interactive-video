@@ -1,13 +1,21 @@
 import React, { createContext, useEffect, useRef, useState } from 'react';
-import SyncClient, { SyncDocument, SyncMap } from 'twilio-sync';
+import { SyncClient, SyncDocument, SyncMap } from 'twilio-sync';
 import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import { useAppState } from '../../state';
 
 type SyncContextType = {
   connect: (token: string) => void;
-  registerUserDocument: (token: string) => Promise<void>;
+  registerUserDocument: (userDocumentName: string) => Promise<void>;
   raisedHandsMap: SyncMap | undefined;
-  registerRaisedHandsMap: (token: string) => Promise<void>;
+  speakersMap: SyncMap | undefined;
+  viewersMap: SyncMap | undefined;
+  registerSyncMaps: (syncObjectNames: SyncObjectNames) => void;
+};
+
+type SyncObjectNames = {
+  speakers_map: string;
+  viewers_map: string;
+  raised_hands_map: string;
 };
 
 export const SyncContext = createContext<SyncContextType>(null!);
@@ -16,6 +24,8 @@ export const SyncProvider: React.FC = ({ children }) => {
   const { appDispatch } = useAppState();
   const { player } = usePlayerContext();
   const [raisedHandsMap, setRaisedHandsMap] = useState<SyncMap>();
+  const [speakersMap, setSpeakersMap] = useState<SyncMap>();
+  const [viewersMap, setViewersMap] = useState<SyncMap>();
   const [userDocument, setUserDocument] = useState<SyncDocument>();
 
   const syncClientRef = useRef<SyncClient>();
@@ -28,8 +38,11 @@ export const SyncProvider: React.FC = ({ children }) => {
     return syncClientRef.current!.document(userDocumentName).then(document => setUserDocument(document));
   }
 
-  function registerRaisedHandsMap(raisedHandsMapName: string) {
-    return syncClientRef.current!.map(raisedHandsMapName).then(map => setRaisedHandsMap(map));
+  function registerSyncMaps({ speakers_map, viewers_map, raised_hands_map }: SyncObjectNames) {
+    const syncClient = syncClientRef.current!;
+    syncClient.map(raised_hands_map).then(map => setRaisedHandsMap(map));
+    syncClient.map(speakers_map).then(map => setSpeakersMap(map));
+    syncClient.map(viewers_map).then(map => setViewersMap(map));
   }
 
   useEffect(() => {
@@ -49,7 +62,16 @@ export const SyncProvider: React.FC = ({ children }) => {
   }, [userDocument, player, appDispatch]);
 
   return (
-    <SyncContext.Provider value={{ connect, registerUserDocument, raisedHandsMap, registerRaisedHandsMap }}>
+    <SyncContext.Provider
+      value={{
+        connect,
+        registerUserDocument,
+        raisedHandsMap,
+        speakersMap,
+        viewersMap,
+        registerSyncMaps,
+      }}
+    >
       {children}
     </SyncContext.Provider>
   );
