@@ -21,10 +21,15 @@ struct PresentationView: View {
                     .background(Color.blue)
             }
             
-            if viewModel.dominantSpeaker != nil {
-//                SpeakerVideoView(speaker: Binding($viewModel.dominantSpeaker)!)
-                SpeakerVideoView(speaker: $viewModel.dominantSpeaker!)
+            ForEach($viewModel.dominantSpeaker, id: \.self) { $speaker in
+                SpeakerVideoView(speaker: $speaker)
             }
+            
+            
+//            if viewModel.dominantSpeaker != nil {
+////                SpeakerVideoView(speaker: Binding($viewModel.dominantSpeaker)!)
+//                SpeakerVideoView(speaker: $viewModel.dominantSpeaker!)
+//            }
             
             SwiftUIVideoView(videoTrack: $viewModel.presentationTrack, shouldMirror: .constant(false))
         }
@@ -47,7 +52,7 @@ extension PresentationViewModel {
         presenterDisplayName: String = "Tom"
     ) -> PresentationViewModel {
         let viewModel = PresentationViewModel()
-        viewModel.dominantSpeaker = dominantSpeaker
+        viewModel.dominantSpeaker = [dominantSpeaker]
         viewModel.presenterIdentity = presenterIdentity
         viewModel.presenterDisplayName = presenterDisplayName
         return viewModel

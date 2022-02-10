@@ -12,7 +12,7 @@ struct PresenterViewModel {
 }
 
 class PresentationViewModel: ObservableObject {
-    @Published var dominantSpeaker: SpeakerVideoViewModel?
+    @Published var dominantSpeaker: [SpeakerVideoViewModel] = []
 //    @Published var presenter: PresenterViewModel?
     @Published var presenterIdentity: String?
     @Published var presenterDisplayName: String?
@@ -51,7 +51,7 @@ class PresentationViewModel: ObservableObject {
             presenterIdentity = nil
             presenterDisplayName = nil
             presentationTrack = nil
-            dominantSpeaker = nil
+            dominantSpeaker = []
             return
         }
 
@@ -64,8 +64,12 @@ class PresentationViewModel: ObservableObject {
         // Dominant speaker
         let dominantSpeaker = findDominantSpeaker()
         
-        if dominantSpeaker.identity != self.dominantSpeaker?.identity {
-            self.dominantSpeaker = dominantSpeaker
+        if !self.dominantSpeaker.isEmpty { //}  let currentDominantSpeaker = self.dominantSpeaker.first {
+//            if dominantSpeaker.identity != currentDominantSpeaker.identity {
+                self.dominantSpeaker[0] = dominantSpeaker
+//            }
+        } else {
+            self.dominantSpeaker.append(dominantSpeaker)
         }
     }
     
@@ -87,7 +91,7 @@ class PresentationViewModel: ObservableObject {
         // Show last dominant speaker
         if let dominantSpeaker = roomManager.remoteParticipants.first(where: { $0.isDominantSpeaker }) {
             return makeSpeaker(participant: dominantSpeaker)
-        } else if let dominantSpeaker = dominantSpeaker, roomManager.remoteParticipants.first(where: { $0.identity == dominantSpeaker.identity }) != nil {
+        } else if let dominantSpeaker = dominantSpeaker.first, roomManager.remoteParticipants.first(where: { $0.identity == dominantSpeaker.identity }) != nil {
             return dominantSpeaker
         } else if let firstRemoteParticipant = roomManager.remoteParticipants.first {
             return makeSpeaker(participant: firstRemoteParticipant)
