@@ -13,21 +13,28 @@ class SpeakerGridViewModel: ObservableObject {
     private var roomManager: RoomManager!
     private var speakersMap: SyncUsersMap!
     private var api: API!
+    private var speakerVideoViewModelFactory: SpeakerVideoViewModelFactory!
     private var subscriptions = Set<AnyCancellable>()
 
-    func configure(roomManager: RoomManager, speakersMap: SyncUsersMap, api: API) {
+    func configure(
+        roomManager: RoomManager,
+        speakersMap: SyncUsersMap,
+        api: API,
+        speakerVideoViewModelFactory: SpeakerVideoViewModelFactory
+    ) {
         self.roomManager = roomManager
         self.speakersMap = speakersMap
         self.api = api
+        self.speakerVideoViewModelFactory = speakerVideoViewModelFactory
         
         roomManager.roomConnectPublisher
             .sink { [weak self] in
                 guard let self = self else { return }
                 
-                self.addSpeaker(self.makeSpeaker(participant: self.roomManager.localParticipant))
+                self.addSpeaker(self.speakerVideoViewModelFactory.makeSpeaker(participant: self.roomManager.localParticipant))
 
                 self.roomManager.remoteParticipants
-                    .map { self.makeSpeaker(participant: $0) }
+                    .map { self.speakerVideoViewModelFactory.makeSpeaker(participant: $0) }
                     .forEach { self.addSpeaker($0) }
             }
             .store(in: &subscriptions)
@@ -40,7 +47,7 @@ class SpeakerGridViewModel: ObservableObject {
             .sink { [weak self] participant in
                 guard let self = self, !self.onscreenSpeakers.isEmpty else { return }
                 
-                self.onscreenSpeakers[0] = self.makeSpeaker(participant: participant)
+                self.onscreenSpeakers[0] = self.speakerVideoViewModelFactory.makeSpeaker(participant: participant)
             }
             .store(in: &subscriptions)
 
@@ -48,7 +55,7 @@ class SpeakerGridViewModel: ObservableObject {
             .sink { [weak self] participant in
                 guard let self = self else { return }
 
-                self.addSpeaker(self.makeSpeaker(participant: participant)) }
+                self.addSpeaker(self.speakerVideoViewModelFactory.makeSpeaker(participant: participant)) }
             .store(in: &subscriptions)
 
         roomManager.remoteParticipantDisconnectPublisher
@@ -59,7 +66,7 @@ class SpeakerGridViewModel: ObservableObject {
             .sink { [weak self] participant in
                 guard let self = self else { return }
 
-                self.updateSpeaker(self.makeSpeaker(participant: participant)) }
+                self.updateSpeaker(self.speakerVideoViewModelFactory.makeSpeaker(participant: participant)) }
             .store(in: &subscriptions)
     }
 
@@ -120,21 +127,5 @@ class SpeakerGridViewModel: ObservableObject {
                 offscreenSpeakers.insert(oldestDominantSpeaker, at: 0)
             }
         }
-    }
-    
-    private func makeSpeaker(participant: LocalParticipantManager) -> SpeakerVideoViewModel {
-        let isHost = speakersMap.host?.identity == participant.identity
-        return SpeakerVideoViewModel(participant: participant, isHost: isHost)
-    }
-
-    private func makeSpeaker(participant: RemoteParticipantManager) -> SpeakerVideoViewModel {
-        let isHost = speakersMap.host?.identity == participant.identity
-        return SpeakerVideoViewModel(participant: participant, isHost: isHost)
-    }
-}
-
-private extension SyncUsersMap {
-    var host: User? {
-        users.first { $0.isHost } // This app only has one host and it is the user that created the stream
     }
 }

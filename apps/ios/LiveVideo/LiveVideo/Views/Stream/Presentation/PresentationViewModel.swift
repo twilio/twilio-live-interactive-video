@@ -19,11 +19,17 @@ class PresentationViewModel: ObservableObject {
     @Published var presentationTrack: VideoTrack?
     private var roomManager: RoomManager!
     private var speakersMap: SyncUsersMap!
+    private var speakerVideoViewModelFactory: SpeakerVideoViewModelFactory!
     private var subscriptions = Set<AnyCancellable>()
 
-    func configure(roomManager: RoomManager, speakersMap: SyncUsersMap) {
+    func configure(
+        roomManager: RoomManager,
+        speakersMap: SyncUsersMap,
+        speakerVideoViewModelFactory: SpeakerVideoViewModelFactory
+    ) {
         self.roomManager = roomManager
         self.speakersMap = speakersMap
+        self.speakerVideoViewModelFactory = speakerVideoViewModelFactory
         
         roomManager.roomConnectPublisher
             .sink { [weak self] in self?.update() }
@@ -82,7 +88,7 @@ class PresentationViewModel: ObservableObject {
         
         return PresenterViewModel(
             identity: presenter.identity,
-            displayName: isHost ? "\(presenter.identity) (Host)" : presenter.identity,
+            displayName: DisplayNameFactory().makeDisplayName(identity: presenter.identity, isHost: isHost),
             presentationTrack: presenter.presentationTrack!
         )
     }
@@ -90,29 +96,13 @@ class PresentationViewModel: ObservableObject {
     private func findDominantSpeaker() -> SpeakerVideoViewModel {
         // Show last dominant speaker
         if let dominantSpeaker = roomManager.remoteParticipants.first(where: { $0.isDominantSpeaker }) {
-            return makeSpeaker(participant: dominantSpeaker)
+            return speakerVideoViewModelFactory.makeSpeaker(participant: dominantSpeaker)
         } else if let dominantSpeaker = dominantSpeaker.first, roomManager.remoteParticipants.first(where: { $0.identity == dominantSpeaker.identity }) != nil {
             return dominantSpeaker
         } else if let firstRemoteParticipant = roomManager.remoteParticipants.first {
-            return makeSpeaker(participant: firstRemoteParticipant)
+            return speakerVideoViewModelFactory.makeSpeaker(participant: firstRemoteParticipant)
         } else {
-            return makeSpeaker(participant: roomManager.localParticipant)
+            return speakerVideoViewModelFactory.makeSpeaker(participant: roomManager.localParticipant)
         }
-    }
-    
-    private func makeSpeaker(participant: LocalParticipantManager) -> SpeakerVideoViewModel {
-        let isHost = speakersMap.host?.identity == participant.identity
-        return SpeakerVideoViewModel(participant: participant, isHost: isHost)
-    }
-
-    private func makeSpeaker(participant: RemoteParticipantManager) -> SpeakerVideoViewModel {
-        let isHost = speakersMap.host?.identity == participant.identity
-        return SpeakerVideoViewModel(participant: participant, isHost: isHost)
-    }
-}
-
-private extension SyncUsersMap {
-    var host: User? {
-        users.first { $0.isHost } // This app only has one host and it is the user that created the stream
     }
 }

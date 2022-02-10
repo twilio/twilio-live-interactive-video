@@ -36,6 +36,7 @@ struct LiveVideoApp: App {
                     let speakersMap = SyncUsersMap()
                     let raisedHandsMap = SyncUsersMap()
                     let viewersMap = SyncUsersMap()
+                    let speakerVideoViewModelFactory = SpeakerVideoViewModelFactory()
                     let syncManager = SyncManager(
                         speakersMap: speakersMap,
                         viewersMap: viewersMap,
@@ -63,8 +64,18 @@ struct LiveVideoApp: App {
                         raisedHandsMap: raisedHandsMap
                     )
                     speakerSettingsManager.configure(roomManager: roomManager)
-                    speakerGridViewModel.configure(roomManager: roomManager, speakersMap: speakersMap, api: api)
-                    presentationViewModel.configure(roomManager: roomManager, speakersMap: speakersMap)
+                    speakerVideoViewModelFactory.configure(speakersMap: speakersMap)
+                    speakerGridViewModel.configure(
+                        roomManager: roomManager,
+                        speakersMap: speakersMap,
+                        api: api,
+                        speakerVideoViewModelFactory: speakerVideoViewModelFactory
+                    )
+                    presentationViewModel.configure(
+                        roomManager: roomManager,
+                        speakersMap: speakersMap,
+                        speakerVideoViewModelFactory: speakerVideoViewModelFactory
+                    )
                 }
         }
     }

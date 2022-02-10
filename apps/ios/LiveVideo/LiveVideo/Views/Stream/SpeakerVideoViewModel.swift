@@ -17,7 +17,7 @@ struct SpeakerVideoViewModel {
 
     init(participant: LocalParticipantManager, isHost: Bool) {
         identity = participant.identity
-        displayName = isHost ? "You (Host)" : "You"
+        displayName = DisplayNameFactory().makeDisplayName(identity: participant.identity, isHost: isHost, isYou: true)
         isYou = true
         isMuted = !participant.isMicOn
         isDominantSpeaker = false
@@ -34,7 +34,7 @@ struct SpeakerVideoViewModel {
     
     init(participant: RemoteParticipantManager, isHost: Bool) {
         identity = participant.identity
-        displayName = isHost ? "\(participant.identity) (Host)" : participant.identity
+        displayName = DisplayNameFactory().makeDisplayName(identity: participant.identity, isHost: isHost, isYou: false)
         isYou = false
         isMuted = !participant.isMicOn
         isDominantSpeaker = participant.isDominantSpeaker

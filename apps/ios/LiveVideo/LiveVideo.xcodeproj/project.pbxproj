@@ -88,6 +88,8 @@
 		DCC48F9B26D8296300EE49EF /* LiveVideoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC48F9A26D8296300EE49EF /* LiveVideoError.swift */; };
 		DCC48FA126D8311700EE49EF /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC48FA026D8311700EE49EF /* PlayerManager.swift */; };
 		DCC48FA326D8322900EE49EF /* SwiftUIPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC48FA226D8322900EE49EF /* SwiftUIPlayerView.swift */; };
+		DCCA726D27B5890E006B0441 /* SpeakerVideoViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCA726C27B5890E006B0441 /* SpeakerVideoViewModelFactory.swift */; };
+		DCCA726F27B590F6006B0441 /* DisplayNameFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCA726E27B590F6006B0441 /* DisplayNameFactory.swift */; };
 		DCE90C3527B41C1B00D85D9F /* PresentationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE90C3427B41C1B00D85D9F /* PresentationViewModel.swift */; };
 		DCE90C3727B434ED00D85D9F /* PresentationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE90C3627B434ED00D85D9F /* PresentationView.swift */; };
 /* End PBXBuildFile section */
@@ -188,6 +190,8 @@
 		DCC48F9A26D8296300EE49EF /* LiveVideoError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoError.swift; sourceTree = "<group>"; };
 		DCC48FA026D8311700EE49EF /* PlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerManager.swift; sourceTree = "<group>"; };
 		DCC48FA226D8322900EE49EF /* SwiftUIPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIPlayerView.swift; sourceTree = "<group>"; };
+		DCCA726C27B5890E006B0441 /* SpeakerVideoViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoViewModelFactory.swift; sourceTree = "<group>"; };
+		DCCA726E27B590F6006B0441 /* DisplayNameFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayNameFactory.swift; sourceTree = "<group>"; };
 		DCE90C3427B41C1B00D85D9F /* PresentationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationViewModel.swift; sourceTree = "<group>"; };
 		DCE90C3627B434ED00D85D9F /* PresentationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -524,6 +528,8 @@
 			children = (
 				DCE90C3427B41C1B00D85D9F /* PresentationViewModel.swift */,
 				DCE90C3627B434ED00D85D9F /* PresentationView.swift */,
+				DCCA726C27B5890E006B0441 /* SpeakerVideoViewModelFactory.swift */,
+				DCCA726E27B590F6006B0441 /* DisplayNameFactory.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -721,11 +727,13 @@
 				DC5F459426CEC1FF009C5C79 /* UserDefaultsManager.swift in Sources */,
 				DC9E18372729B68B0070F53F /* TitleStyle.swift in Sources */,
 				DCB1BE052756D954006CE9D1 /* EnterPasscodeView.swift in Sources */,
+				DCCA726F27B590F6006B0441 /* DisplayNameFactory.swift in Sources */,
 				DC5F458F26CEBEC8009C5C79 /* AppInfoStore.swift in Sources */,
 				DCC1D62C26D97BB200892038 /* ErrorAlert.swift in Sources */,
 				DC175F2D270E232F00D9D1FE /* SyncManager.swift in Sources */,
 				DC1ED12326E92DEA00FFA769 /* TrackName.swift in Sources */,
 				DC4AA65926D0133600E677D5 /* Color.swift in Sources */,
+				DCCA726D27B5890E006B0441 /* SpeakerVideoViewModelFactory.swift in Sources */,
 				DC3BB82527445F9A005D0327 /* ParticipantsHeader.swift in Sources */,
 				DCC1D62826D9568700892038 /* StreamConfig.swift in Sources */,
 				DC1ED11C26E92DEA00FFA769 /* RemoteParticipantManager.swift in Sources */,
