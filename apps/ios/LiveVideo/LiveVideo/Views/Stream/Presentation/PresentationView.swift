@@ -15,46 +15,36 @@ struct PresentationView: View {
     }
     
     var body: some View {
-        VStack(spacing: spacing) {
-            if viewModel.presenterDisplayName != nil {
-                ZStack {
-                    Color.backgroundBrand
-                    Text(viewModel.presenterDisplayName! + " is presenting.")
-                        .foregroundColor(.white)
-                        .font(.system(size: 13, weight: .bold))
-                        .padding(8)
+        HStack(spacing: spacing) {
+            VStack(spacing: spacing) {
+                if let presenterDisplayName = viewModel.presenterDisplayName {
+                    PresenterStatusView(presenterDisplayName: presenterDisplayName)
                 }
-                .cornerRadius(4)
-                .fixedSize(horizontal: false, vertical: true)
+                
+                ForEach($viewModel.dominantSpeaker, id: \.self) { $speaker in
+                    SpeakerVideoView(speaker: $speaker)
+                        
+                }
+
+                if isPortraitOrientation {
+                    PresentationVideoView(videoTrack: $viewModel.presentationTrack)
+                }
             }
+            .frame(maxWidth: isPortraitOrientation ? nil : 200)
             
-            ForEach($viewModel.dominantSpeaker, id: \.self) { $speaker in
-                SpeakerVideoView(speaker: $speaker)
+            if !isPortraitOrientation {
+                PresentationVideoView(videoTrack: $viewModel.presentationTrack)
             }
-            
-            ZStack {
-                Color.black
-                SwiftUIVideoView(videoTrack: $viewModel.presentationTrack, shouldMirror: .constant(false), fill: false)
-            }
-            .cornerRadius(4)
-
-
-
         }
         .padding(.bottom, spacing)
     }
-
-    //            if viewModel.dominantSpeaker != nil {
-    ////                SpeakerVideoView(speaker: Binding($viewModel.dominantSpeaker)!)
-    //                SpeakerVideoView(speaker: $viewModel.dominantSpeaker!)
-    //            }
 }
 
 struct PresentationView_Previews: PreviewProvider {
     static var previews: some View {
         PresentationView(spacing: 6)
             .environmentObject(PresentationViewModel.stub())
-            .frame(width: 400, height: 700)
+            .frame(width: 300, height: 700)
             .previewLayout(.sizeThatFits)
     }
 }
