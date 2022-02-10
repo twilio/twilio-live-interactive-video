@@ -90,6 +90,7 @@
 		DCC48FA326D8322900EE49EF /* SwiftUIPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC48FA226D8322900EE49EF /* SwiftUIPlayerView.swift */; };
 		DCCA726D27B5890E006B0441 /* SpeakerVideoViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCA726C27B5890E006B0441 /* SpeakerVideoViewModelFactory.swift */; };
 		DCCA726F27B590F6006B0441 /* DisplayNameFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCA726E27B590F6006B0441 /* DisplayNameFactory.swift */; };
+		DCCA727127B5BFE8006B0441 /* PresenterStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCA727027B5BFE8006B0441 /* PresenterStatus.swift */; };
 		DCE90C3527B41C1B00D85D9F /* PresentationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE90C3427B41C1B00D85D9F /* PresentationViewModel.swift */; };
 		DCE90C3727B434ED00D85D9F /* PresentationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE90C3627B434ED00D85D9F /* PresentationView.swift */; };
 /* End PBXBuildFile section */
@@ -192,6 +193,7 @@
 		DCC48FA226D8322900EE49EF /* SwiftUIPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIPlayerView.swift; sourceTree = "<group>"; };
 		DCCA726C27B5890E006B0441 /* SpeakerVideoViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoViewModelFactory.swift; sourceTree = "<group>"; };
 		DCCA726E27B590F6006B0441 /* DisplayNameFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayNameFactory.swift; sourceTree = "<group>"; };
+		DCCA727027B5BFE8006B0441 /* PresenterStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenterStatus.swift; sourceTree = "<group>"; };
 		DCE90C3427B41C1B00D85D9F /* PresentationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationViewModel.swift; sourceTree = "<group>"; };
 		DCE90C3627B434ED00D85D9F /* PresentationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -528,6 +530,7 @@
 			children = (
 				DCE90C3427B41C1B00D85D9F /* PresentationViewModel.swift */,
 				DCE90C3627B434ED00D85D9F /* PresentationView.swift */,
+				DCCA727027B5BFE8006B0441 /* PresenterStatus.swift */,
 				DCCA726C27B5890E006B0441 /* SpeakerVideoViewModelFactory.swift */,
 				DCCA726E27B590F6006B0441 /* DisplayNameFactory.swift */,
 			);
@@ -710,6 +713,7 @@
 				DC1ED0F726E12C7400FFA769 /* ProgressHUD.swift in Sources */,
 				DC175F32270E23F900D9D1FE /* SyncUserDocument.swift in Sources */,
 				DCC1D62626D9396400892038 /* StreamManager.swift in Sources */,
+				DCCA727127B5BFE8006B0441 /* PresenterStatus.swift in Sources */,
 				DCC48F9B26D8296300EE49EF /* LiveVideoError.swift in Sources */,
 				DC4F45EF27286AF300BE730B /* TipStyle.swift in Sources */,
 				DC4AA66226D0493E00E677D5 /* PrimaryButtonStyle.swift in Sources */,

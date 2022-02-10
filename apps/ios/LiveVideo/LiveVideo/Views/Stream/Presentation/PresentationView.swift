@@ -8,37 +8,51 @@ struct PresentationView: View {
     @EnvironmentObject var viewModel: PresentationViewModel
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
+    let spacing: CGFloat
 
     private var isPortraitOrientation: Bool {
         verticalSizeClass == .regular && horizontalSizeClass == .compact
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: spacing) {
             if viewModel.presenterDisplayName != nil {
-                Text(viewModel.presenterDisplayName! + " is presenting.")
-                    .foregroundColor(.white)
-                    .background(Color.blue)
+                ZStack {
+                    Color.backgroundBrand
+                    Text(viewModel.presenterDisplayName! + " is presenting.")
+                        .foregroundColor(.white)
+                        .font(.system(size: 13, weight: .bold))
+                        .padding(8)
+                }
+                .cornerRadius(4)
+                .fixedSize(horizontal: false, vertical: true)
             }
             
             ForEach($viewModel.dominantSpeaker, id: \.self) { $speaker in
                 SpeakerVideoView(speaker: $speaker)
             }
             
-            
-//            if viewModel.dominantSpeaker != nil {
-////                SpeakerVideoView(speaker: Binding($viewModel.dominantSpeaker)!)
-//                SpeakerVideoView(speaker: $viewModel.dominantSpeaker!)
-//            }
-            
-            SwiftUIVideoView(videoTrack: $viewModel.presentationTrack, shouldMirror: .constant(false))
+            ZStack {
+                Color.black
+                SwiftUIVideoView(videoTrack: $viewModel.presentationTrack, shouldMirror: .constant(false), fill: false)
+            }
+            .cornerRadius(4)
+
+
+
         }
+        .padding(.bottom, spacing)
     }
+
+    //            if viewModel.dominantSpeaker != nil {
+    ////                SpeakerVideoView(speaker: Binding($viewModel.dominantSpeaker)!)
+    //                SpeakerVideoView(speaker: $viewModel.dominantSpeaker!)
+    //            }
 }
 
 struct PresentationView_Previews: PreviewProvider {
     static var previews: some View {
-        PresentationView()
+        PresentationView(spacing: 6)
             .environmentObject(PresentationViewModel.stub())
             .frame(width: 400, height: 700)
             .previewLayout(.sizeThatFits)

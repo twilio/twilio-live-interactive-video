@@ -36,7 +36,7 @@ struct StreamView: View {
                             switch streamManager.config.role {
                             case .host, .speaker:
                                 if presentationViewModel.presenterIdentity != nil {
-                                    PresentationView()
+                                    PresentationView(spacing: gridSpacing)
                                 } else {
                                     SpeakerGridView(spacing: gridSpacing, role: streamManager.config.role)
                                 }

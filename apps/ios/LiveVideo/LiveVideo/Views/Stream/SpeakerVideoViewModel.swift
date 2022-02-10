@@ -10,8 +10,8 @@ struct SpeakerVideoViewModel {
     let displayName: String
     let isYou: Bool
     let isMuted: Bool
-    let isDominantSpeaker: Bool
     let dominantSpeakerStartTime: Date
+    var isDominantSpeaker: Bool
     var cameraTrack: VideoTrack?
     var shouldMirrorCameraVideo: Bool
 

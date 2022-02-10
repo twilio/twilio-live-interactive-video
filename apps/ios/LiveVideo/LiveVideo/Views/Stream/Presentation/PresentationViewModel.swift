@@ -77,6 +77,8 @@ class PresentationViewModel: ObservableObject {
         } else {
             self.dominantSpeaker.append(dominantSpeaker)
         }
+        
+        self.dominantSpeaker[0].isDominantSpeaker = false // Don't show outline in UI
     }
     
     private func findPresenter() -> PresenterViewModel? {
