@@ -88,6 +88,8 @@
 		DCC48F9B26D8296300EE49EF /* LiveVideoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC48F9A26D8296300EE49EF /* LiveVideoError.swift */; };
 		DCC48FA126D8311700EE49EF /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC48FA026D8311700EE49EF /* PlayerManager.swift */; };
 		DCC48FA326D8322900EE49EF /* SwiftUIPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC48FA226D8322900EE49EF /* SwiftUIPlayerView.swift */; };
+		DCE90C3527B41C1B00D85D9F /* PresentationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE90C3427B41C1B00D85D9F /* PresentationViewModel.swift */; };
+		DCE90C3727B434ED00D85D9F /* PresentationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE90C3627B434ED00D85D9F /* PresentationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -186,6 +188,8 @@
 		DCC48F9A26D8296300EE49EF /* LiveVideoError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoError.swift; sourceTree = "<group>"; };
 		DCC48FA026D8311700EE49EF /* PlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerManager.swift; sourceTree = "<group>"; };
 		DCC48FA226D8322900EE49EF /* SwiftUIPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIPlayerView.swift; sourceTree = "<group>"; };
+		DCE90C3427B41C1B00D85D9F /* PresentationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationViewModel.swift; sourceTree = "<group>"; };
+		DCE90C3627B434ED00D85D9F /* PresentationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -452,6 +456,7 @@
 		DCC48F7526D8114300EE49EF /* Stream */ = {
 			isa = PBXGroup;
 			children = (
+				DCE90C3327B41BC700D85D9F /* Presentation */,
 				DC1ED0EF26DFCD3C00FFA769 /* LiveBadge.swift */,
 				DC9E18382729DC740070F53F /* OffscreenSpeakersView.swift */,
 				DC1ED12F26E960C600FFA769 /* SpeakerGridView.swift */,
@@ -512,6 +517,15 @@
 				DCC48FA026D8311700EE49EF /* PlayerManager.swift */,
 			);
 			path = Player;
+			sourceTree = "<group>";
+		};
+		DCE90C3327B41BC700D85D9F /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				DCE90C3427B41C1B00D85D9F /* PresentationViewModel.swift */,
+				DCE90C3627B434ED00D85D9F /* PresentationView.swift */,
+			);
+			path = Presentation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -725,9 +739,11 @@
 				DC3BB82727480A9E005D0327 /* RemoveSpeakerRequest.swift in Sources */,
 				DCC48F7726D8116C00EE49EF /* StreamView.swift in Sources */,
 				DC1ED11E26E92DEA00FFA769 /* LocalParticipantManager.swift in Sources */,
+				DCE90C3527B41C1B00D85D9F /* PresentationViewModel.swift in Sources */,
 				DC4F45EB2723695D00BE730B /* SelectRoleView.swift in Sources */,
 				DCC48F8B26D8288B00EE49EF /* APIRequest.swift in Sources */,
 				DC1ED12E26E94B5900FFA769 /* CreateOrJoinStreamRequest.swift in Sources */,
+				DCE90C3727B434ED00D85D9F /* PresentationView.swift in Sources */,
 				DC175F39270F673600D9D1FE /* SendSpeakerInviteRequest.swift in Sources */,
 				DC175F402718852B00D9D1FE /* DeleteStreamRequest.swift in Sources */,
 				DC1ED0F026DFCD3C00FFA769 /* LiveBadge.swift in Sources */,

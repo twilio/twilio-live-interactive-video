@@ -13,6 +13,7 @@ struct LiveVideoApp: App {
     @StateObject private var streamManager = StreamManager()
     @StateObject private var speakerSettingsManager = SpeakerSettingsManager()
     @StateObject private var speakerGridViewModel = SpeakerGridViewModel()
+    @StateObject private var presentationViewModel = PresentationViewModel()
     @StateObject private var api = API()
 
     var body: some Scene {
@@ -23,6 +24,7 @@ struct LiveVideoApp: App {
                 .environmentObject(participantsViewModel)
                 .environmentObject(streamManager)
                 .environmentObject(speakerGridViewModel)
+                .environmentObject(presentationViewModel)
                 .environmentObject(speakerSettingsManager)
                 .environmentObject(api)
                 .onAppear {
@@ -62,6 +64,7 @@ struct LiveVideoApp: App {
                     )
                     speakerSettingsManager.configure(roomManager: roomManager)
                     speakerGridViewModel.configure(roomManager: roomManager, speakersMap: speakersMap, api: api)
+                    presentationViewModel.configure(roomManager: roomManager, speakersMap: speakersMap)
                 }
         }
     }
