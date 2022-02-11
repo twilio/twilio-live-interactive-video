@@ -23,7 +23,6 @@ struct PresentationView: View {
                 
                 ForEach($viewModel.dominantSpeaker, id: \.self) { $speaker in
                     SpeakerVideoView(speaker: $speaker)
-                        
                 }
 
                 if isPortraitOrientation {
@@ -57,7 +56,6 @@ extension PresentationViewModel {
     ) -> PresentationViewModel {
         let viewModel = PresentationViewModel()
         viewModel.dominantSpeaker = [dominantSpeaker]
-        viewModel.presenterIdentity = presenterIdentity
         viewModel.presenterDisplayName = presenterDisplayName
         return viewModel
     }

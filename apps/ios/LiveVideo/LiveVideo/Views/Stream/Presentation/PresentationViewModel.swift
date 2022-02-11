@@ -14,7 +14,7 @@ struct PresenterViewModel {
 class PresentationViewModel: ObservableObject {
     @Published var dominantSpeaker: [SpeakerVideoViewModel] = []
 //    @Published var presenter: PresenterViewModel?
-    @Published var presenterIdentity: String?
+    private var presenterIdentity: String?
     @Published var presenterDisplayName: String?
     @Published var presentationTrack: VideoTrack?
     private var roomManager: RoomManager!
