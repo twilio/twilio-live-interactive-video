@@ -5,18 +5,16 @@
 import TwilioVideo
 import Combine
 
-struct PresenterViewModel {
-    let identity: String
-    let displayName: String
-    var presentationTrack: VideoTrack
-}
+class PresentationLayoutViewModel: ObservableObject {
+    struct Presenter {
+        var identity: String = ""
+        var displayName: String = ""
+        var presentationTrack: VideoTrack?
+    }
 
-class PresentationViewModel: ObservableObject {
-    @Published var dominantSpeaker: [SpeakerVideoViewModel] = []
-//    @Published var presenter: PresenterViewModel?
-    private var presenterIdentity: String?
-    @Published var presenterDisplayName: String?
-    @Published var presentationTrack: VideoTrack?
+    @Published var isPresenting = false
+    @Published var presenter = Presenter()
+    @Published var dominantSpeaker = SpeakerVideoViewModel()
     private var roomManager: RoomManager!
     private var speakersMap: SyncUsersMap!
     private var speakerVideoViewModelFactory: SpeakerVideoViewModelFactory!
@@ -54,41 +52,31 @@ class PresentationViewModel: ObservableObject {
 
     private func update() {
         guard let newPresenter = findPresenter() else {
-            presenterIdentity = nil
-            presenterDisplayName = nil
-            presentationTrack = nil
-            dominantSpeaker = []
+            isPresenting = false
+            presenter = Presenter()
+            dominantSpeaker = SpeakerVideoViewModel()
             return
         }
 
-        if newPresenter.identity != presenterIdentity {
-            presenterIdentity = newPresenter.identity
-            presenterDisplayName = newPresenter.displayName
-            presentationTrack = newPresenter.presentationTrack
+        isPresenting = true
+        
+        if newPresenter.identity != presenter.identity {
+            presenter = newPresenter
         }
         
         // Dominant speaker
-        let dominantSpeaker = findDominantSpeaker()
-        
-        if !self.dominantSpeaker.isEmpty { //}  let currentDominantSpeaker = self.dominantSpeaker.first {
-//            if dominantSpeaker.identity != currentDominantSpeaker.identity {
-                self.dominantSpeaker[0] = dominantSpeaker
-//            }
-        } else {
-            self.dominantSpeaker.append(dominantSpeaker)
-        }
-        
-        self.dominantSpeaker[0].isDominantSpeaker = false // Don't show outline in UI
+        dominantSpeaker = findDominantSpeaker()
+        dominantSpeaker.isDominantSpeaker = false // Don't show outline in UI
     }
     
-    private func findPresenter() -> PresenterViewModel? {
+    private func findPresenter() -> Presenter? {
         guard let presenter = roomManager.remoteParticipants.first(where: { $0.presentationTrack != nil }) else {
             return nil
         }
         
         let isHost = speakersMap.host?.identity == presenter.identity
         
-        return PresenterViewModel(
+        return Presenter(
             identity: presenter.identity,
             displayName: DisplayNameFactory().makeDisplayName(identity: presenter.identity, isHost: isHost),
             presentationTrack: presenter.presentationTrack!
@@ -99,7 +87,7 @@ class PresentationViewModel: ObservableObject {
         // Show last dominant speaker
         if let dominantSpeaker = roomManager.remoteParticipants.first(where: { $0.isDominantSpeaker }) {
             return speakerVideoViewModelFactory.makeSpeaker(participant: dominantSpeaker)
-        } else if let dominantSpeaker = dominantSpeaker.first, roomManager.remoteParticipants.first(where: { $0.identity == dominantSpeaker.identity }) != nil {
+        } else if !dominantSpeaker.identity.isEmpty, roomManager.remoteParticipants.first(where: { $0.identity == dominantSpeaker.identity }) != nil {
             return dominantSpeaker
         } else if let firstRemoteParticipant = roomManager.remoteParticipants.first {
             return speakerVideoViewModelFactory.makeSpeaker(participant: firstRemoteParticipant)

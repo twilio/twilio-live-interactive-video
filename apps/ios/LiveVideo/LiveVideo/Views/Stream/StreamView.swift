@@ -10,7 +10,7 @@ struct StreamView: View {
     @EnvironmentObject var speakerSettingsManager: SpeakerSettingsManager
     @EnvironmentObject var participantsViewModel: ParticipantsViewModel
     @EnvironmentObject var speakerGridViewModel: SpeakerGridViewModel
-    @EnvironmentObject var presentationViewModel: PresentationViewModel
+    @EnvironmentObject var presentationLayoutViewModel: PresentationLayoutViewModel
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
@@ -35,8 +35,8 @@ struct StreamView: View {
                         HStack(spacing: 0) {
                             switch streamManager.config.role {
                             case .host, .speaker:
-                                if presentationViewModel.presenterDisplayName != nil {
-                                    PresentationView(spacing: gridSpacing)
+                                if presentationLayoutViewModel.isPresenting {
+                                    PresentationLayoutView(spacing: gridSpacing)
                                 } else {
                                     SpeakerGridView(spacing: gridSpacing, role: streamManager.config.role)
                                 }

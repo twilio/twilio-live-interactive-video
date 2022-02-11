@@ -15,6 +15,17 @@ struct SpeakerVideoViewModel {
     var cameraTrack: VideoTrack?
     var shouldMirrorCameraVideo: Bool
 
+    init() {
+        identity = ""
+        displayName = ""
+        isYou = false
+        isMuted = false
+        dominantSpeakerStartTime = .distantPast
+        isDominantSpeaker = false
+        cameraTrack = nil
+        shouldMirrorCameraVideo = false
+    }
+    
     init(participant: LocalParticipantManager, isHost: Bool) {
         identity = participant.identity
         displayName = DisplayNameFactory().makeDisplayName(identity: participant.identity, isHost: isHost, isYou: true)
