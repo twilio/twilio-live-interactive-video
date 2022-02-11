@@ -51,7 +51,7 @@ class PresentationLayoutViewModel: ObservableObject {
     }
 
     private func update() {
-        guard let newPresenter = findPresenter() else {
+        guard let presenter = findPresenter() else {
             isPresenting = false
             presenter = Presenter()
             dominantSpeaker = SpeakerVideoViewModel()
@@ -59,14 +59,9 @@ class PresentationLayoutViewModel: ObservableObject {
         }
 
         isPresenting = true
-        
-        if newPresenter.identity != presenter.identity {
-            presenter = newPresenter
-        }
-        
-        // Dominant speaker
+        self.presenter = presenter
         dominantSpeaker = findDominantSpeaker()
-        dominantSpeaker.isDominantSpeaker = false // Don't show outline in UI
+        dominantSpeaker.isDominantSpeaker = false // No need to distinguish in the UI since only 1 speaker is shown
     }
     
     private func findPresenter() -> Presenter? {
@@ -84,15 +79,21 @@ class PresentationLayoutViewModel: ObservableObject {
     }
     
     private func findDominantSpeaker() -> SpeakerVideoViewModel {
-        // Show last dominant speaker
-        if let dominantSpeaker = roomManager.remoteParticipants.first(where: { $0.isDominantSpeaker }) {
-            return speakerVideoViewModelFactory.makeSpeaker(participant: dominantSpeaker)
-        } else if !dominantSpeaker.identity.isEmpty, roomManager.remoteParticipants.first(where: { $0.identity == dominantSpeaker.identity }) != nil {
-            return dominantSpeaker
-        } else if let firstRemoteParticipant = roomManager.remoteParticipants.first {
-            return speakerVideoViewModelFactory.makeSpeaker(participant: firstRemoteParticipant)
+        if let activeDominantSpeaker = roomManager.remoteParticipants.first(where: { $0.isDominantSpeaker }) {
+            // There is an active dominant speaker
+            return speakerVideoViewModelFactory.makeSpeaker(participant: activeDominantSpeaker)
+        } else if let previousDominantSpeaker = roomManager.remoteParticipants.first(where: { $0.identity == dominantSpeaker.identity }) {
+            // The previous dominant speaker is still connected so use them
+            return speakerVideoViewModelFactory.makeSpeaker(participant: previousDominantSpeaker)
         } else {
-            return speakerVideoViewModelFactory.makeSpeaker(participant: roomManager.localParticipant)
+            // Dominant speaker is not yet known or the previous dominant speaker disconnected
+            if let firstRemoteParticipant = roomManager.remoteParticipants.first {
+                // Keep it simple and just use first remote participant, someone will start talking soon
+                return speakerVideoViewModelFactory.makeSpeaker(participant: firstRemoteParticipant)
+            } else {
+                // Use local participant
+                return speakerVideoViewModelFactory.makeSpeaker(participant: roomManager.localParticipant)
+            }
         }
     }
 }

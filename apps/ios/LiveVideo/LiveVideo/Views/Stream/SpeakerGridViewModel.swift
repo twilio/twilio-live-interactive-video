@@ -40,7 +40,10 @@ class SpeakerGridViewModel: ObservableObject {
             .store(in: &subscriptions)
         
         roomManager.roomDisconnectPublisher
-            .sink { [weak self] _ in self?.onscreenSpeakers.removeAll() } // Remove offscreen speakers?
+            .sink { [weak self] _ in
+                self?.onscreenSpeakers.removeAll()
+                self?.offscreenSpeakers.removeAll()
+            }
             .store(in: &subscriptions)
 
         roomManager.localParticipant.changePublisher

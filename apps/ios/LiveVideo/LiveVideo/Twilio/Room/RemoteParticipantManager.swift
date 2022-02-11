@@ -33,7 +33,7 @@ class RemoteParticipantManager: NSObject {
     }
     var presentationTrack: VideoTrack? {
         guard
-            let publication = participant.remoteVideoTracks.first(where: { $0.trackName.contains(TrackName.screen) }),
+            let publication = participant.remoteVideoTracks.first(where: { $0.trackName == TrackName.presentation }),
             let track = publication.remoteTrack
         else {
             return nil
@@ -65,8 +65,6 @@ extension RemoteParticipantManager: RemoteParticipantDelegate {
         publication: RemoteVideoTrackPublication,
         participant: RemoteParticipant
     ) {
-        print("track name: \(videoTrack.name)")
-        
         delegate?.participantDidChange(self)
     }
     

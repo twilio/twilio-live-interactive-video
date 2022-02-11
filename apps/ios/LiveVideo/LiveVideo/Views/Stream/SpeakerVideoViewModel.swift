@@ -6,33 +6,20 @@ import TwilioVideo
 
 /// Speaker abstraction so the UI can handle local and remote participants the same way.
 struct SpeakerVideoViewModel {
-    let identity: String
-    let displayName: String
-    let isYou: Bool
-    let isMuted: Bool
-    let dominantSpeakerStartTime: Date
-    var isDominantSpeaker: Bool
+    var identity = ""
+    var displayName = ""
+    var isYou = false
+    var isMuted = false
+    var dominantSpeakerStartTime: Date = .distantPast
+    var isDominantSpeaker = false
     var cameraTrack: VideoTrack?
-    var shouldMirrorCameraVideo: Bool
+    var shouldMirrorCameraVideo = false
 
-    init() {
-        identity = ""
-        displayName = ""
-        isYou = false
-        isMuted = false
-        dominantSpeakerStartTime = .distantPast
-        isDominantSpeaker = false
-        cameraTrack = nil
-        shouldMirrorCameraVideo = false
-    }
-    
     init(participant: LocalParticipantManager, isHost: Bool) {
         identity = participant.identity
         displayName = DisplayNameFactory().makeDisplayName(identity: participant.identity, isHost: isHost, isYou: true)
         isYou = true
         isMuted = !participant.isMicOn
-        isDominantSpeaker = false
-        dominantSpeakerStartTime = .distantPast
 
         if let cameraTrack = participant.cameraTrack, cameraTrack.isEnabled {
             self.cameraTrack = cameraTrack
@@ -46,12 +33,10 @@ struct SpeakerVideoViewModel {
     init(participant: RemoteParticipantManager, isHost: Bool) {
         identity = participant.identity
         displayName = DisplayNameFactory().makeDisplayName(identity: participant.identity, isHost: isHost, isYou: false)
-        isYou = false
         isMuted = !participant.isMicOn
         isDominantSpeaker = participant.isDominantSpeaker
         dominantSpeakerStartTime = participant.dominantSpeakerStartTime
         cameraTrack = participant.cameraTrack
-        shouldMirrorCameraVideo = false
     }
 }
 
