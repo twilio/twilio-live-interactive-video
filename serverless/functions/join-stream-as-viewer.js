@@ -7,8 +7,11 @@ const ChatGrant = AccessToken.ChatGrant;
 const MAX_ALLOWED_SESSION_DURATION = 14400;
 
 module.exports.handler = async (context, event, callback) => {
+  const authHandler = require(Runtime.getAssets()['/auth.js'].path);
+  authHandler(context, event, callback);
+
   const common = require(Runtime.getAssets()['/common.js'].path);
-  const { getPlaybackGrant } = common(context, event, callback);
+  const { getPlaybackGrant, getStreamMapItem } = common(context, event, callback);
 
   const { user_identity, stream_name } = event;
 
@@ -37,10 +40,9 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  let room, streamDocument, viewerDocument;
+  let room, streamMapItem, userDocument;
 
   const client = context.getTwilioClient();
-  const syncClient = client.sync.services(context.SYNC_SERVICE_SID);
 
   try {
     // See if a room already exists
@@ -57,11 +59,27 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  const viewerDocumentName = `viewer-${room.sid}-${user_identity}`;
-  // Create viewer document
+  // Fetch stream map item
   try {
-    viewerDocument = await syncClient.documents.create({
-      uniqueName: viewerDocumentName,
+    streamMapItem = await getStreamMapItem(room.sid);
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error fetching stream map item',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  const streamSyncClient = client.sync.services(streamMapItem.data.sync_service_sid);
+
+  const userDocumentName = `user-${user_identity}`;
+  // Create user document
+  try {
+    userDocument = await streamSyncClient.documents.create({
+      uniqueName: userDocumentName,
     });
   } catch (e) {
     // Ignore "Unique name already exists" error
@@ -70,7 +88,7 @@ module.exports.handler = async (context, event, callback) => {
       response.setStatusCode(500);
       response.setBody({
         error: {
-          message: 'error creating viewer document',
+          message: 'error creating user document',
           explanation: e.message,
         },
       });
@@ -78,11 +96,11 @@ module.exports.handler = async (context, event, callback) => {
     }
   }
 
-  // Update viewer document to set speaker_invite to false.
-  // This is done outside of the viewer document creation to account
-  // for viewers that may already have a viewer document
+  // Update user document to set speaker_invite to false.
+  // This is done outside of the user document creation to account
+  // for users that may already have a user document
   try {
-    await syncClient.documents(viewerDocumentName).update({
+    await streamSyncClient.documents(userDocumentName).update({
       data: { speaker_invite: false },
     });
   } catch (e) {
@@ -90,30 +108,80 @@ module.exports.handler = async (context, event, callback) => {
     response.setStatusCode(500);
     response.setBody({
       error: {
-        message: 'error updating viewer  document',
+        message: 'error updating user  document',
         explanation: e.message,
       },
     });
     return callback(null, response);
   }
 
+  // Give user read access to user document
   try {
-    // Get playerStreamerSid from stream document
-    streamDocument = await syncClient.documents(`stream-${room.sid}`).fetch();
+    await streamSyncClient.documents(userDocumentName)
+      .documentPermissions(user_identity)
+      .update({ read: true, write: false, manage: false });
   } catch (e) {
     response.setStatusCode(500);
     response.setBody({
       error: {
-        message: 'error finding stream document',
+        message: 'error adding read access to user document',
         explanation: e.message,
       },
     });
     return callback(null, response);
   }
 
+  // Give user read access to speakers map
+  try {
+    await streamSyncClient.syncMaps('speakers')
+      .syncMapPermissions(user_identity)
+      .update({ read: true, write: false, manage: false })
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error adding read access to speakers map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+  
+  // Give user read access to raised hands map
+  try {
+    await streamSyncClient.syncMaps(`raised_hands`)
+      .syncMapPermissions(user_identity)
+      .update({ read: true, write: false, manage: false });
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error adding read access to raised hands map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  // Give user read access to viewers map
+  try {
+    await streamSyncClient.syncMaps('viewers')
+      .syncMapPermissions(user_identity)
+      .update({ read: true, write: false, manage: false })
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error adding read access to viewers map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+  
   let playbackGrant;
   try {
-    playbackGrant = await getPlaybackGrant(streamDocument.data.player_streamer_sid);
+    playbackGrant = await getPlaybackGrant(streamMapItem.data.player_streamer_sid);
   } catch (e) {
     console.error(e);
     response.setStatusCode(500);
@@ -132,7 +200,9 @@ module.exports.handler = async (context, event, callback) => {
   });
 
   // Add chat grant to token
-  const chatGrant = new ChatGrant({ serviceSid: context.CONVERSATIONS_SERVICE_SID });
+  const chatGrant = new ChatGrant({
+    serviceSid: context.CONVERSATIONS_SERVICE_SID,
+  });
   token.addGrant(chatGrant);
 
   // Add participant's identity to token
@@ -146,7 +216,7 @@ module.exports.handler = async (context, event, callback) => {
   });
 
   // Add sync grant to token
-  const syncGrant = new SyncGrant({ serviceSid: context.SYNC_SERVICE_SID });
+  const syncGrant = new SyncGrant({ serviceSid: streamMapItem.data.sync_service_sid });
   token.addGrant(syncGrant);
 
   // Return token
@@ -154,8 +224,10 @@ module.exports.handler = async (context, event, callback) => {
   response.setBody({
     token: token.toJwt(),
     sync_object_names: {
-      raised_hands_map: `raised_hands-${room.sid}`,
-      viewer_document: `viewer-${room.sid}-${user_identity}`,
+      speakers_map: 'speakers',
+      viewers_map: 'viewers',
+      raised_hands_map: `raised_hands`,
+      user_document: `user-${user_identity}`,
     },
     room_sid: room.sid,
   });

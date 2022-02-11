@@ -31,7 +31,7 @@ describe('the useScreenShareParticipant hook', () => {
 
   it('should return the localParticipant when they are sharing their screen', () => {
     const mockRoom = MockRoom();
-    mockRoom.localParticipant.tracks = new Map([[0, { trackName: 'screen' }]]);
+    mockRoom.localParticipant.tracks = new Map([[0, { trackName: 'video-composer-presentation' }]]);
     mockUseVideoContext.mockImplementation(() => ({
       room: mockRoom,
       onError: () => {},
@@ -44,7 +44,7 @@ describe('the useScreenShareParticipant hook', () => {
   it('should return a remoteParticipant when they are sharing their screen', () => {
     const mockRoom = MockRoom();
     const mockParticipant = {
-      tracks: new Map([[0, { trackName: 'screen' }]]),
+      tracks: new Map([[0, { trackName: 'video-composer-presentation' }]]),
     };
     mockRoom.participants = new Map([[0, mockParticipant]]);
     mockUseVideoContext.mockImplementation(() => ({
@@ -67,7 +67,7 @@ describe('the useScreenShareParticipant hook', () => {
     expect(result.current).toEqual(undefined);
 
     act(() => {
-      mockRoom.localParticipant.tracks = new Map([[0, { trackName: 'screen' }]]);
+      mockRoom.localParticipant.tracks = new Map([[0, { trackName: 'video-composer-presentation' }]]);
       mockRoom.localParticipant.emit('trackPublished');
     });
 
@@ -84,7 +84,7 @@ describe('the useScreenShareParticipant hook', () => {
   it('should respond to "trackPublished" and "trackUnpublished" events emitted from the room', () => {
     const mockRoom = MockRoom();
     const mockParticipant = {
-      tracks: new Map([[0, { trackName: 'screen' }]]),
+      tracks: new Map([[0, { trackName: 'video-composer-presentation' }]]),
     };
     mockUseVideoContext.mockImplementation(() => ({
       room: mockRoom,
@@ -112,7 +112,7 @@ describe('the useScreenShareParticipant hook', () => {
   it('should respond to "participantDisconnected" events emitted from the room', () => {
     const mockRoom = MockRoom();
     const mockParticipant = {
-      tracks: new Map([[0, { trackName: 'screen' }]]),
+      tracks: new Map([[0, { trackName: 'video-composer-presentation' }]]),
     };
     mockRoom.participants = new Map([[0, mockParticipant]]);
 

@@ -11,6 +11,7 @@ import TwilioVideo
 class LocalParticipantManager: NSObject {
     let changePublisher = PassthroughSubject<LocalParticipantManager, Never>()
     let errorPublisher = PassthroughSubject<Error, Never>()
+    let dataTrack = LocalDataTrack()
     var identity: String { authManager.userIdentity }
     var isMicOn: Bool {
         get {
@@ -91,6 +92,14 @@ class LocalParticipantManager: NSObject {
     
     init(authManager: AuthManager) {
         self.authManager = authManager
+    }
+    
+    func sendMessage(_ message: RoomMessage) {
+        guard let data = try? JSONEncoder(keyEncodingStrategy: .convertToSnakeCase).encode(message) else {
+            return
+        }
+        
+        dataTrack?.send(data)
     }
 }
 

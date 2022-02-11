@@ -16,12 +16,14 @@ struct FormStack<Content>: View where Content: View {
     var body: some View {
         ZStack {
             Color.background.ignoresSafeArea()
-            VStack(alignment: .leading, spacing: spacing) {
-                content()
-                Spacer()
+            ScrollView(.vertical) {
+                VStack(alignment: .leading, spacing: spacing) {
+                    content()
+                    Spacer()
+                }
+                .padding(.top, 20)
+                .padding([.horizontal, .bottom], 40)
             }
-            .padding(.top, 20)
-            .padding([.horizontal, .bottom], 40)
         }
     }
 }

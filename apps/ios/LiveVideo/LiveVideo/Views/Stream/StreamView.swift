@@ -8,10 +8,18 @@ struct StreamView: View {
     @EnvironmentObject var viewModel: StreamViewModel
     @EnvironmentObject var streamManager: StreamManager
     @EnvironmentObject var speakerSettingsManager: SpeakerSettingsManager
-    @EnvironmentObject var raisedHandsStore: RaisedHandsStore
+    @EnvironmentObject var participantsViewModel: ParticipantsViewModel
+    @EnvironmentObject var speakerGridViewModel: SpeakerGridViewModel
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.verticalSizeClass) var verticalSizeClass
     @State private var isShowingParticipants = false
     private let app = UIApplication.shared
+    private let gridSpacing: CGFloat = 6
+    
+    private var isPortraitOrientation: Bool {
+        verticalSizeClass == .regular && horizontalSizeClass == .compact
+    }
     
     var body: some View {
         GeometryReader { geometry in
@@ -21,40 +29,44 @@ struct StreamView: View {
                 VStack(spacing: 0) {
                     VStack(spacing: 0) {
                         StreamStatusView(streamName: streamManager.config.streamName, streamState: $streamManager.state)
-                            .padding([.horizontal, .bottom], 6)
-                            .alert(isPresented: $viewModel.showError) {
-                                if let error = viewModel.error as? LiveVideoError, error.isStreamEndedByHostError {
-                                    return Alert(
-                                        title: Text("Event is no longer available"),
-                                        message: Text("This event has been ended by the host."),
-                                        dismissButton: .default(Text("OK")) {
-                                            presentationMode.wrappedValue.dismiss()
-                                        }
-                                    )
-                                } else {
-                                    return Alert(error: viewModel.error!) {
-                                        presentationMode.wrappedValue.dismiss()
-                                    }
-                                }
-                            }
+                            .padding(.bottom, gridSpacing)
 
-                        switch streamManager.config.role {
-                        case .host, .speaker:
-                            SpeakerGridView()
-                        case .viewer:
-                            SwiftUIPlayerView(player: $streamManager.player)
+                        HStack(spacing: 0) {
+                            switch streamManager.config.role {
+                            case .host, .speaker:
+                                SpeakerGridView(spacing: gridSpacing, role: streamManager.config.role)
+                            case .viewer:
+                                SwiftUIPlayerView(player: $streamManager.player)
+                            }
+                            
+                            if !isPortraitOrientation && !speakerGridViewModel.offscreenSpeakers.isEmpty {
+                                OffscreenSpeakersView()
+                                    .frame(width: 100)
+                                    .padding([.leading, .bottom], gridSpacing)
+                            }
+                        }
+                        
+                        if isPortraitOrientation && !speakerGridViewModel.offscreenSpeakers.isEmpty {
+                            OffscreenSpeakersView()
+                                .padding(.bottom, gridSpacing)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                     }
-                    .padding(.leading, geometry.safeAreaInsets.leading)
-                    .padding(.trailing, geometry.safeAreaInsets.trailing)
+                    .padding(.leading, geometry.safeAreaInsets.leading.isZero ? gridSpacing : geometry.safeAreaInsets.leading)
+                    .padding(.trailing, geometry.safeAreaInsets.trailing.isZero ? gridSpacing : geometry.safeAreaInsets.trailing)
+                    .padding(.top, geometry.safeAreaInsets.top.isZero ? 3 : 0)
                     
                     StreamToolbar {
                         StreamToolbarButton(
                             image: Image(systemName: "arrow.left"),
                             role: .destructive
                         ) {
-                            streamManager.disconnect()
-                            presentationMode.wrappedValue.dismiss()
+                            switch streamManager.config.role {
+                            case .host:
+                                viewModel.alertIdentifier = .streamWillEndIfHostLeaves
+                            case .speaker, .viewer:
+                                leaveStream()
+                            }
                         }
                         
                         switch streamManager.config.role {
@@ -69,26 +81,6 @@ struct StreamView: View {
                             ) {
                                 speakerSettingsManager.isCameraOn.toggle()
                             }
-                            StreamToolbarButton(
-                                image: Image(systemName: "person.2"),
-                                shouldShowBadge: raisedHandsStore.haveNew
-                            ) {
-                                isShowingParticipants = true
-                            }
-                            
-                            if streamManager.config.role != .host {
-                                Menu {
-                                    Button("Move to Viewers") {
-                                        streamManager.changeRole(to: .viewer)
-                                    }
-                                } label: {
-                                    StreamToolbarButton(
-                                        image: Image(systemName: "ellipsis")
-                                    ) {
-
-                                    }
-                                }
-                            }
                         case .viewer:
                             StreamToolbarButton(
                                 image: Image(systemName: "hand.raised"),
@@ -96,13 +88,26 @@ struct StreamView: View {
                             ) {
                                 viewModel.isHandRaised.toggle()
                             }
-                            .alert(isPresented: $viewModel.haveSpeakerInvite) {
-                                Alert(
-                                    title: Text("It’s your time to shine! ✨"),
-                                    message: Text("The host has invited you to join as a Speaker. Your audio and video will be shared."),
-                                    primaryButton: .default(Text("Join now")) { streamManager.changeRole(to: .speaker) },
-                                    secondaryButton: .destructive(Text("Never mind")) { viewModel.isHandRaised = false }
-                                )
+                        }
+
+                        StreamToolbarButton(
+                            image: Image(systemName: "person.2"),
+                            shouldShowBadge: streamManager.config.role != .viewer && participantsViewModel.haveNewRaisedHand
+                        ) {
+                            isShowingParticipants = true
+                        }
+
+                        if streamManager.config.role == .speaker {
+                            Menu {
+                                Button("Move to Viewers") {
+                                    streamManager.changeRole(to: .viewer)
+                                }
+                            } label: {
+                                StreamToolbarButton(
+                                    image: Image(systemName: "ellipsis")
+                                ) {
+
+                                }
                             }
                         }
                     }
@@ -130,6 +135,59 @@ struct StreamView: View {
         .sheet(isPresented: $isShowingParticipants) {
             ParticipantsView()
         }
+        .alert(item: $viewModel.alertIdentifier) { alertIdentifier in
+            switch alertIdentifier {
+            case .error:
+                return Alert(error: viewModel.error!) {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            case .receivedSpeakerInvite:
+                return Alert(
+                    title: Text("It’s your time to shine! ✨"),
+                    message: Text("The host has invited you to join as a Speaker. Your audio and video will be shared."),
+                    primaryButton: .default(Text("Join now")) {
+                        streamManager.changeRole(to: .speaker)
+                    },
+                    secondaryButton: .destructive(Text("Never mind")) {
+                        viewModel.isHandRaised = false
+                    }
+                )
+            case .speakerMovedToViewersByHost:
+                return Alert(
+                    title: Text("Moved to viewers"),
+                    message: Text("You have been moved to viewers by the host."),
+                    dismissButton: .default(Text("OK"))
+                )
+            case .streamEndedByHost:
+                return Alert(
+                    title: Text("Event is no longer available"),
+                    message: Text("This event has been ended by the host."),
+                    dismissButton: .default(Text("OK")) {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                )
+            case .streamWillEndIfHostLeaves:
+                return Alert(
+                    title: Text("Are you sure?"),
+                    message: Text("This will end the event for everyone."),
+                    primaryButton: .destructive(Text("End event")) {
+                        leaveStream()
+                    },
+                    secondaryButton: .cancel(Text("Never mind"))
+                )
+            case .viewerConnected:
+                return Alert(
+                    title: Text("Welcome!"),
+                    message: Text("You are now in the audience as a Viewer. Raise your hand anytime to join the Speakers and chime in!"),
+                    dismissButton: .default(Text("Got it!"))
+                )
+            }
+        }
+    }
+    
+    private func leaveStream() {
+        streamManager.disconnect()
+        presentationMode.wrappedValue.dismiss()
     }
 }
 
@@ -144,8 +202,13 @@ struct StreamView_Previews: PreviewProvider {
                     .previewDisplayName("Speaker")
                     .environmentObject(StreamManager(config: .stub(role: .speaker)))
             }
-            .environmentObject(SpeakerGridViewModel(speakerCount: 6))
+            .environmentObject(SpeakerGridViewModel.stub())
 
+            StreamView()
+                .previewDisplayName("Offscreen Speakers")
+                .environmentObject(StreamManager(config: .stub(role: .speaker)))
+                .environmentObject(SpeakerGridViewModel.stub(offscreenSpeakerCount: 10))
+            
             Group {
                 StreamView()
                     .previewDisplayName("Viewer")
@@ -157,7 +220,7 @@ struct StreamView_Previews: PreviewProvider {
             .environmentObject(SpeakerGridViewModel())
         }
         .environmentObject(SpeakerSettingsManager())
-        .environmentObject(RaisedHandsStore())
+        .environmentObject(ParticipantsViewModel())
         .environmentObject(StreamViewModel())
     }
 }

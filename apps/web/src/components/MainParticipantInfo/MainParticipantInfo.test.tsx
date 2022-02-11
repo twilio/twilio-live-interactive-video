@@ -53,7 +53,7 @@ describe('the MainParticipantInfo component', () => {
   });
 
   it('should not render the AvatarIcon component when the user has disabled their video and is sharing their screen', () => {
-    mockUsePublications.mockImplementationOnce(() => [{ trackName: 'screen-123456' }]);
+    mockUsePublications.mockImplementationOnce(() => [{ trackName: 'video-composer-presentation-123456' }]);
     const wrapper = shallow(
       <MainParticipantInfo participant={{ identity: 'mockIdentity' } as any}>mock children</MainParticipantInfo>
     );
@@ -87,9 +87,12 @@ describe('the MainParticipantInfo component', () => {
   });
 
   it('should use the switchOff status of the screen share track when it is available', () => {
-    mockUsePublications.mockImplementationOnce(() => [{ trackName: 'screen' }, { trackName: 'camera-123456' }]);
+    mockUsePublications.mockImplementationOnce(() => [
+      { trackName: 'video-composer-presentation' },
+      { trackName: 'camera-123456' },
+    ]);
     shallow(<MainParticipantInfo participant={{ identity: 'mockIdentity' } as any}>mock children</MainParticipantInfo>);
-    expect(mockUseTrack).toHaveBeenCalledWith({ trackName: 'screen' });
+    expect(mockUseTrack).toHaveBeenCalledWith({ trackName: 'video-composer-presentation' });
   });
 
   it('should use the switchOff status of the camera track when the screen share track is not available', () => {
@@ -113,7 +116,10 @@ describe('the MainParticipantInfo component', () => {
   });
 
   it('should add "- Screen" to the participants identity when they are screen sharing', () => {
-    mockUsePublications.mockImplementationOnce(() => [{ trackName: 'screen' }, { trackName: 'camera-123456' }]);
+    mockUsePublications.mockImplementationOnce(() => [
+      { trackName: 'video-composer-presentation' },
+      { trackName: 'camera-123456' },
+    ]);
     const wrapper = shallow(
       <MainParticipantInfo participant={{ identity: 'mockIdentity' } as any}>mock children</MainParticipantInfo>
     );

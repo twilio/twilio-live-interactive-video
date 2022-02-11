@@ -9,11 +9,11 @@
 /* Begin PBXBuildFile section */
 		DC175F2D270E232F00D9D1FE /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F2C270E232F00D9D1FE /* SyncManager.swift */; };
 		DC175F30270E238F00D9D1FE /* TwilioSyncClient in Frameworks */ = {isa = PBXBuildFile; productRef = DC175F2F270E238F00D9D1FE /* TwilioSyncClient */; };
-		DC175F32270E23F900D9D1FE /* ViewerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F31270E23F900D9D1FE /* ViewerStore.swift */; };
-		DC175F34270E3FD200D9D1FE /* RaisedHandsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F33270E3FD200D9D1FE /* RaisedHandsStore.swift */; };
+		DC175F32270E23F900D9D1FE /* SyncUserDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F31270E23F900D9D1FE /* SyncUserDocument.swift */; };
+		DC175F34270E3FD200D9D1FE /* SyncUsersMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F33270E3FD200D9D1FE /* SyncUsersMap.swift */; };
 		DC175F37270E5B6F00D9D1FE /* ParticipantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F36270E5B6F00D9D1FE /* ParticipantsView.swift */; };
 		DC175F39270F673600D9D1FE /* SendSpeakerInviteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F38270F673600D9D1FE /* SendSpeakerInviteRequest.swift */; };
-		DC175F3E2717530D00D9D1FE /* SyncStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F3D2717530D00D9D1FE /* SyncStoring.swift */; };
+		DC175F3E2717530D00D9D1FE /* SyncObjectConnecting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F3D2717530D00D9D1FE /* SyncObjectConnecting.swift */; };
 		DC175F402718852B00D9D1FE /* DeleteStreamRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F3F2718852A00D9D1FE /* DeleteStreamRequest.swift */; };
 		DC1ED0F026DFCD3C00FFA769 /* LiveBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED0EF26DFCD3C00FFA769 /* LiveBadge.swift */; };
 		DC1ED0F726E12C7400FFA769 /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED0F626E12C7400FFA769 /* ProgressHUD.swift */; };
@@ -27,6 +27,8 @@
 		DC1ED12E26E94B5900FFA769 /* CreateOrJoinStreamRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED12D26E94B5900FFA769 /* CreateOrJoinStreamRequest.swift */; };
 		DC1ED13026E960C600FFA769 /* SpeakerGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED12F26E960C600FFA769 /* SpeakerGridView.swift */; };
 		DC1ED13226E9666E00FFA769 /* SwiftUIVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED13126E9666E00FFA769 /* SwiftUIVideoView.swift */; };
+		DC3BB82527445F9A005D0327 /* ParticipantsHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BB82427445F99005D0327 /* ParticipantsHeader.swift */; };
+		DC3BB82727480A9E005D0327 /* RemoveSpeakerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BB82627480A9E005D0327 /* RemoveSpeakerRequest.swift */; };
 		DC44BB3F2703C8AD00DB656D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC44BB3E2703C8AD00DB656D /* AppDelegate.swift */; };
 		DC44BB412703C8DD00DB656D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC44BB402703C8DD00DB656D /* SceneDelegate.swift */; };
 		DC4AA65926D0133600E677D5 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA65826D0133600E677D5 /* Color.swift */; };
@@ -41,13 +43,17 @@
 		DC4F45EF27286AF300BE730B /* TipStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4F45EE27286AF300BE730B /* TipStyle.swift */; };
 		DC504A7526F0F18700C37EC9 /* SpeakerGridViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC504A7426F0F18600C37EC9 /* SpeakerGridViewModel.swift */; };
 		DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC504A7626F1468E00C37EC9 /* SpeakerVideoView.swift */; };
+		DC50A5752739E26300E29580 /* ViewerConnectedToPlayerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50A5742739E26300E29580 /* ViewerConnectedToPlayerRequest.swift */; };
+		DC50A579273D78E900E29580 /* RoomMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50A578273D78E800E29580 /* RoomMessage.swift */; };
+		DC50A57B273DBB2700E29580 /* JSONEncoderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50A57A273DBB2700E29580 /* JSONEncoderExtension.swift */; };
+		DC50A57D273DBD6D00E29580 /* JSONDecoderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50A57C273DBD6D00E29580 /* JSONDecoderExtension.swift */; };
 		DC5F453926CC061A009C5C79 /* LiveVideoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */; };
 		DC5F453B26CC061A009C5C79 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F453A26CC061A009C5C79 /* HomeView.swift */; };
 		DC5F453D26CC061F009C5C79 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC5F453C26CC061F009C5C79 /* Assets.xcassets */; };
 		DC5F454026CC061F009C5C79 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC5F453F26CC061F009C5C79 /* Preview Assets.xcassets */; };
-		DC5F454B26CC061F009C5C79 /* LiveVideoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F454A26CC061F009C5C79 /* LiveVideoTests.swift */; };
+		DC5F454B26CC061F009C5C79 /* PasscodeComponentsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F454A26CC061F009C5C79 /* PasscodeComponentsSpec.swift */; };
 		DC5F455626CC061F009C5C79 /* LiveVideoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F455526CC061F009C5C79 /* LiveVideoUITests.swift */; };
-		DC5F458326CDBA0B009C5C79 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F458226CDBA0B009C5C79 /* SignInView.swift */; };
+		DC5F458326CDBA0B009C5C79 /* EnterUserIdentityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F458226CDBA0B009C5C79 /* EnterUserIdentityView.swift */; };
 		DC5F458626CEA6CE009C5C79 /* InAppSettingsKit in Frameworks */ = {isa = PBXBuildFile; productRef = DC5F458526CEA6CE009C5C79 /* InAppSettingsKit */; };
 		DC5F458826CEA7CB009C5C79 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F458726CEA7CB009C5C79 /* SettingsView.swift */; };
 		DC5F458A26CEB413009C5C79 /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DC5F458926CEB413009C5C79 /* InAppSettings.bundle */; };
@@ -59,6 +65,14 @@
 		DC6404D4271B3BF8004730C6 /* StreamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6404D3271B3BF8004730C6 /* StreamViewModel.swift */; };
 		DC6404D8271B68D4004730C6 /* ParticipantsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6404D7271B68D4004730C6 /* ParticipantsViewModel.swift */; };
 		DC6404DA271E217C004730C6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC6404D9271E217B004730C6 /* LaunchScreen.storyboard */; };
+		DC9E18372729B68B0070F53F /* TitleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9E18362729B68B0070F53F /* TitleStyle.swift */; };
+		DC9E18392729DC740070F53F /* OffscreenSpeakersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9E18382729DC740070F53F /* OffscreenSpeakersView.swift */; };
+		DCB1BDFE27568D70006CE9D1 /* VerifyPasscodeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BDFD27568D70006CE9D1 /* VerifyPasscodeRequest.swift */; };
+		DCB1BE0027568F5B006CE9D1 /* PasscodeComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BDFF27568F5B006CE9D1 /* PasscodeComponents.swift */; };
+		DCB1BE032756A288006CE9D1 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = DCB1BE022756A288006CE9D1 /* KeychainAccess */; };
+		DCB1BE052756D954006CE9D1 /* EnterPasscodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BE042756D954006CE9D1 /* EnterPasscodeView.swift */; };
+		DCB1BE0827581BC6006CE9D1 /* Quick in Frameworks */ = {isa = PBXBuildFile; productRef = DCB1BE0727581BC6006CE9D1 /* Quick */; };
+		DCB1BE0B27581C11006CE9D1 /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = DCB1BE0A27581C11006CE9D1 /* Nimble */; };
 		DCB4497426F5496400B52774 /* SpeakerSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */; };
 		DCB4497626F65A7000B52774 /* SpeakerVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */; };
 		DCC1D62626D9396400892038 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC1D62526D9396400892038 /* StreamManager.swift */; };
@@ -95,11 +109,11 @@
 
 /* Begin PBXFileReference section */
 		DC175F2C270E232F00D9D1FE /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
-		DC175F31270E23F900D9D1FE /* ViewerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewerStore.swift; sourceTree = "<group>"; };
-		DC175F33270E3FD200D9D1FE /* RaisedHandsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaisedHandsStore.swift; sourceTree = "<group>"; };
+		DC175F31270E23F900D9D1FE /* SyncUserDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncUserDocument.swift; sourceTree = "<group>"; };
+		DC175F33270E3FD200D9D1FE /* SyncUsersMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncUsersMap.swift; sourceTree = "<group>"; };
 		DC175F36270E5B6F00D9D1FE /* ParticipantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsView.swift; sourceTree = "<group>"; };
 		DC175F38270F673600D9D1FE /* SendSpeakerInviteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendSpeakerInviteRequest.swift; sourceTree = "<group>"; };
-		DC175F3D2717530D00D9D1FE /* SyncStoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStoring.swift; sourceTree = "<group>"; };
+		DC175F3D2717530D00D9D1FE /* SyncObjectConnecting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncObjectConnecting.swift; sourceTree = "<group>"; };
 		DC175F3F2718852A00D9D1FE /* DeleteStreamRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteStreamRequest.swift; sourceTree = "<group>"; };
 		DC1ED0EF26DFCD3C00FFA769 /* LiveBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBadge.swift; sourceTree = "<group>"; };
 		DC1ED0F626E12C7400FFA769 /* ProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
@@ -113,6 +127,8 @@
 		DC1ED12D26E94B5900FFA769 /* CreateOrJoinStreamRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateOrJoinStreamRequest.swift; sourceTree = "<group>"; };
 		DC1ED12F26E960C600FFA769 /* SpeakerGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerGridView.swift; sourceTree = "<group>"; };
 		DC1ED13126E9666E00FFA769 /* SwiftUIVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIVideoView.swift; sourceTree = "<group>"; };
+		DC3BB82427445F99005D0327 /* ParticipantsHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsHeader.swift; sourceTree = "<group>"; };
+		DC3BB82627480A9E005D0327 /* RemoveSpeakerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveSpeakerRequest.swift; sourceTree = "<group>"; };
 		DC44BB3E2703C8AD00DB656D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DC44BB402703C8DD00DB656D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		DC4AA65826D0133600E677D5 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
@@ -125,6 +141,10 @@
 		DC4F45EE27286AF300BE730B /* TipStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipStyle.swift; sourceTree = "<group>"; };
 		DC504A7426F0F18600C37EC9 /* SpeakerGridViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerGridViewModel.swift; sourceTree = "<group>"; };
 		DC504A7626F1468E00C37EC9 /* SpeakerVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoView.swift; sourceTree = "<group>"; };
+		DC50A5742739E26300E29580 /* ViewerConnectedToPlayerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewerConnectedToPlayerRequest.swift; sourceTree = "<group>"; };
+		DC50A578273D78E800E29580 /* RoomMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomMessage.swift; sourceTree = "<group>"; };
+		DC50A57A273DBB2700E29580 /* JSONEncoderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONEncoderExtension.swift; sourceTree = "<group>"; };
+		DC50A57C273DBD6D00E29580 /* JSONDecoderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDecoderExtension.swift; sourceTree = "<group>"; };
 		DC5F453526CC061A009C5C79 /* LiveVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC5F453826CC061A009C5C79 /* LiveVideoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoApp.swift; sourceTree = "<group>"; };
 		DC5F453A26CC061A009C5C79 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -132,12 +152,12 @@
 		DC5F453F26CC061F009C5C79 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		DC5F454126CC061F009C5C79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DC5F454626CC061F009C5C79 /* LiveVideoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LiveVideoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		DC5F454A26CC061F009C5C79 /* LiveVideoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoTests.swift; sourceTree = "<group>"; };
+		DC5F454A26CC061F009C5C79 /* PasscodeComponentsSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeComponentsSpec.swift; sourceTree = "<group>"; };
 		DC5F454C26CC061F009C5C79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DC5F455126CC061F009C5C79 /* LiveVideoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LiveVideoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC5F455526CC061F009C5C79 /* LiveVideoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoUITests.swift; sourceTree = "<group>"; };
 		DC5F455726CC061F009C5C79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DC5F458226CDBA0B009C5C79 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		DC5F458226CDBA0B009C5C79 /* EnterUserIdentityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterUserIdentityView.swift; sourceTree = "<group>"; };
 		DC5F458726CEA7CB009C5C79 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		DC5F458926CEB413009C5C79 /* InAppSettings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InAppSettings.bundle; sourceTree = "<group>"; };
 		DC5F458E26CEBEC8009C5C79 /* AppInfoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoStore.swift; sourceTree = "<group>"; };
@@ -147,6 +167,11 @@
 		DC6404D3271B3BF8004730C6 /* StreamViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamViewModel.swift; sourceTree = "<group>"; };
 		DC6404D7271B68D4004730C6 /* ParticipantsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsViewModel.swift; sourceTree = "<group>"; };
 		DC6404D9271E217B004730C6 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		DC9E18362729B68B0070F53F /* TitleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleStyle.swift; sourceTree = "<group>"; };
+		DC9E18382729DC740070F53F /* OffscreenSpeakersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffscreenSpeakersView.swift; sourceTree = "<group>"; };
+		DCB1BDFD27568D70006CE9D1 /* VerifyPasscodeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyPasscodeRequest.swift; sourceTree = "<group>"; };
+		DCB1BDFF27568F5B006CE9D1 /* PasscodeComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeComponents.swift; sourceTree = "<group>"; };
+		DCB1BE042756D954006CE9D1 /* EnterPasscodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPasscodeView.swift; sourceTree = "<group>"; };
 		DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerSettingsManager.swift; sourceTree = "<group>"; };
 		DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoViewModel.swift; sourceTree = "<group>"; };
 		DCC1D62526D9396400892038 /* StreamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamManager.swift; sourceTree = "<group>"; };
@@ -170,6 +195,7 @@
 			files = (
 				DCC48F9826D828E500EE49EF /* Alamofire in Frameworks */,
 				DC4F45E7271F5A3700BE730B /* TwilioLivePlayer in Frameworks */,
+				DCB1BE032756A288006CE9D1 /* KeychainAccess in Frameworks */,
 				DC5F458D26CEBCC9009C5C79 /* TwilioVideo in Frameworks */,
 				DC175F30270E238F00D9D1FE /* TwilioSyncClient in Frameworks */,
 				DC4AA66826D175A600E677D5 /* SwiftyUserDefaults in Frameworks */,
@@ -181,6 +207,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCB1BE0827581BC6006CE9D1 /* Quick in Frameworks */,
+				DCB1BE0B27581C11006CE9D1 /* Nimble in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,6 +233,7 @@
 		DC175F35270E5B5700D9D1FE /* Participants */ = {
 			isa = PBXGroup;
 			children = (
+				DC3BB82427445F99005D0327 /* ParticipantsHeader.swift */,
 				DC175F36270E5B6F00D9D1FE /* ParticipantsView.swift */,
 				DC6404D7271B68D4004730C6 /* ParticipantsViewModel.swift */,
 			);
@@ -214,10 +243,10 @@
 		DC175F3A2715DC4500D9D1FE /* Sync */ = {
 			isa = PBXGroup;
 			children = (
-				DC175F33270E3FD200D9D1FE /* RaisedHandsStore.swift */,
 				DC175F2C270E232F00D9D1FE /* SyncManager.swift */,
-				DC175F3D2717530D00D9D1FE /* SyncStoring.swift */,
-				DC175F31270E23F900D9D1FE /* ViewerStore.swift */,
+				DC175F3D2717530D00D9D1FE /* SyncObjectConnecting.swift */,
+				DC175F31270E23F900D9D1FE /* SyncUserDocument.swift */,
+				DC175F33270E3FD200D9D1FE /* SyncUsersMap.swift */,
 			);
 			path = Sync;
 			sourceTree = "<group>";
@@ -228,6 +257,7 @@
 				DC1ED10726E92DE900FFA769 /* LocalParticipantManager.swift */,
 				DC1ED10526E92DE900FFA769 /* RemoteParticipantManager.swift */,
 				DC1ED10226E92DE800FFA769 /* RoomManager.swift */,
+				DC50A578273D78E800E29580 /* RoomMessage.swift */,
 				DC1ED10E26E92DE900FFA769 /* TrackName.swift */,
 			);
 			path = Room;
@@ -297,6 +327,7 @@
 				DC4AA66126D0493E00E677D5 /* PrimaryButtonStyle.swift */,
 				DC1ED0F626E12C7400FFA769 /* ProgressHUD.swift */,
 				DC4F45EE27286AF300BE730B /* TipStyle.swift */,
+				DC9E18362729B68B0070F53F /* TitleStyle.swift */,
 			);
 			path = Style;
 			sourceTree = "<group>";
@@ -312,7 +343,8 @@
 		DC4AA65D26D03DF100E677D5 /* SignIn */ = {
 			isa = PBXGroup;
 			children = (
-				DC5F458226CDBA0B009C5C79 /* SignInView.swift */,
+				DCB1BE042756D954006CE9D1 /* EnterPasscodeView.swift */,
+				DC5F458226CDBA0B009C5C79 /* EnterUserIdentityView.swift */,
 			);
 			path = SignIn;
 			sourceTree = "<group>";
@@ -329,6 +361,7 @@
 			isa = PBXGroup;
 			children = (
 				DC4AA66426D1456100E677D5 /* AuthManager.swift */,
+				DCB1BDFF27568F5B006CE9D1 /* PasscodeComponents.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -381,7 +414,7 @@
 		DC5F454926CC061F009C5C79 /* LiveVideoTests */ = {
 			isa = PBXGroup;
 			children = (
-				DC5F454A26CC061F009C5C79 /* LiveVideoTests.swift */,
+				DC5F454A26CC061F009C5C79 /* PasscodeComponentsSpec.swift */,
 				DC5F454C26CC061F009C5C79 /* Info.plist */,
 			);
 			path = LiveVideoTests;
@@ -420,6 +453,7 @@
 			isa = PBXGroup;
 			children = (
 				DC1ED0EF26DFCD3C00FFA769 /* LiveBadge.swift */,
+				DC9E18382729DC740070F53F /* OffscreenSpeakersView.swift */,
 				DC1ED12F26E960C600FFA769 /* SpeakerGridView.swift */,
 				DC504A7426F0F18600C37EC9 /* SpeakerGridViewModel.swift */,
 				DC504A7626F1468E00C37EC9 /* SpeakerVideoView.swift */,
@@ -440,10 +474,13 @@
 				DCC48F7B26D8288B00EE49EF /* API.swift */,
 				DCC48F7A26D8288B00EE49EF /* APIErrorResponse.swift */,
 				DCC48F7C26D8288B00EE49EF /* APIRequest.swift */,
+				DC1ED12D26E94B5900FFA769 /* CreateOrJoinStreamRequest.swift */,
 				DC175F3F2718852A00D9D1FE /* DeleteStreamRequest.swift */,
 				DC6404D12719E549004730C6 /* RaiseHandRequest.swift */,
+				DC3BB82627480A9E005D0327 /* RemoveSpeakerRequest.swift */,
 				DC175F38270F673600D9D1FE /* SendSpeakerInviteRequest.swift */,
-				DC1ED12D26E94B5900FFA769 /* CreateOrJoinStreamRequest.swift */,
+				DCB1BDFD27568D70006CE9D1 /* VerifyPasscodeRequest.swift */,
+				DC50A5742739E26300E29580 /* ViewerConnectedToPlayerRequest.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -451,6 +488,8 @@
 		DCC48F9926D8294900EE49EF /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				DC50A57C273DBD6D00E29580 /* JSONDecoderExtension.swift */,
+				DC50A57A273DBB2700E29580 /* JSONEncoderExtension.swift */,
 				DCC48F9A26D8296300EE49EF /* LiveVideoError.swift */,
 			);
 			path = Helpers;
@@ -498,6 +537,7 @@
 				DCC48F9726D828E500EE49EF /* Alamofire */,
 				DC175F2F270E238F00D9D1FE /* TwilioSyncClient */,
 				DC4F45E6271F5A3700BE730B /* TwilioLivePlayer */,
+				DCB1BE022756A288006CE9D1 /* KeychainAccess */,
 			);
 			productName = LiveVideo;
 			productReference = DC5F453526CC061A009C5C79 /* LiveVideo.app */;
@@ -517,6 +557,10 @@
 				DC5F454826CC061F009C5C79 /* PBXTargetDependency */,
 			);
 			name = LiveVideoTests;
+			packageProductDependencies = (
+				DCB1BE0727581BC6006CE9D1 /* Quick */,
+				DCB1BE0A27581C11006CE9D1 /* Nimble */,
+			);
 			productName = LiveVideoTests;
 			productReference = DC5F454626CC061F009C5C79 /* LiveVideoTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -577,6 +621,9 @@
 				DCC48F9626D828E500EE49EF /* XCRemoteSwiftPackageReference "Alamofire" */,
 				DC175F2E270E238F00D9D1FE /* XCRemoteSwiftPackageReference "twilio-sync-ios" */,
 				DC4F45E5271F5A3700BE730B /* XCRemoteSwiftPackageReference "twilio-live-player-ios" */,
+				DCB1BE012756A288006CE9D1 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				DCB1BE0627581BC6006CE9D1 /* XCRemoteSwiftPackageReference "Quick" */,
+				DCB1BE0927581C11006CE9D1 /* XCRemoteSwiftPackageReference "Nimble" */,
 			);
 			productRefGroup = DC5F453626CC061A009C5C79 /* Products */;
 			projectDirPath = "";
@@ -622,41 +669,50 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCB1BDFE27568D70006CE9D1 /* VerifyPasscodeRequest.swift in Sources */,
 				DC1ED13226E9666E00FFA769 /* SwiftUIVideoView.swift in Sources */,
 				DCB4497626F65A7000B52774 /* SpeakerVideoViewModel.swift in Sources */,
-				DC5F458326CDBA0B009C5C79 /* SignInView.swift in Sources */,
+				DC5F458326CDBA0B009C5C79 /* EnterUserIdentityView.swift in Sources */,
 				DC44BB412703C8DD00DB656D /* SceneDelegate.swift in Sources */,
+				DC9E18392729DC740070F53F /* OffscreenSpeakersView.swift in Sources */,
+				DC50A57B273DBB2700E29580 /* JSONEncoderExtension.swift in Sources */,
 				DC1ED11A26E92DEA00FFA769 /* RoomManager.swift in Sources */,
 				DC4AA66526D1456100E677D5 /* AuthManager.swift in Sources */,
 				DC6404D22719E549004730C6 /* RaiseHandRequest.swift in Sources */,
 				DC6404D8271B68D4004730C6 /* ParticipantsViewModel.swift in Sources */,
+				DCB1BE0027568F5B006CE9D1 /* PasscodeComponents.swift in Sources */,
 				DC1ED0FD26E14D0B00FFA769 /* StreamToolbar.swift in Sources */,
 				DC1ED0F926E1440200FFA769 /* StreamStatusView.swift in Sources */,
 				DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */,
-				DC175F34270E3FD200D9D1FE /* RaisedHandsStore.swift in Sources */,
+				DC175F34270E3FD200D9D1FE /* SyncUsersMap.swift in Sources */,
 				DCC48FA326D8322900EE49EF /* SwiftUIPlayerView.swift in Sources */,
 				DC4F45E92723135500BE730B /* CardButtonLabel.swift in Sources */,
 				DC1ED0F726E12C7400FFA769 /* ProgressHUD.swift in Sources */,
-				DC175F32270E23F900D9D1FE /* ViewerStore.swift in Sources */,
+				DC175F32270E23F900D9D1FE /* SyncUserDocument.swift in Sources */,
 				DCC1D62626D9396400892038 /* StreamManager.swift in Sources */,
 				DCC48F9B26D8296300EE49EF /* LiveVideoError.swift in Sources */,
 				DC4F45EF27286AF300BE730B /* TipStyle.swift in Sources */,
 				DC4AA66226D0493E00E677D5 /* PrimaryButtonStyle.swift in Sources */,
 				DCC48F7426D80BC300EE49EF /* EnterStreamNameView.swift in Sources */,
+				DC50A579273D78E900E29580 /* RoomMessage.swift in Sources */,
 				DCC48F8A26D8288B00EE49EF /* API.swift in Sources */,
 				DC5F459626CEC247009C5C79 /* UserDefaultsKeys.swift in Sources */,
 				DC1ED13026E960C600FFA769 /* SpeakerGridView.swift in Sources */,
 				DC5F458826CEA7CB009C5C79 /* SettingsView.swift in Sources */,
 				DC44BB3F2703C8AD00DB656D /* AppDelegate.swift in Sources */,
-				DC175F3E2717530D00D9D1FE /* SyncStoring.swift in Sources */,
+				DC175F3E2717530D00D9D1FE /* SyncObjectConnecting.swift in Sources */,
 				DC504A7526F0F18700C37EC9 /* SpeakerGridViewModel.swift in Sources */,
+				DC50A5752739E26300E29580 /* ViewerConnectedToPlayerRequest.swift in Sources */,
 				DCC48F8926D8288B00EE49EF /* APIErrorResponse.swift in Sources */,
 				DC5F459426CEC1FF009C5C79 /* UserDefaultsManager.swift in Sources */,
+				DC9E18372729B68B0070F53F /* TitleStyle.swift in Sources */,
+				DCB1BE052756D954006CE9D1 /* EnterPasscodeView.swift in Sources */,
 				DC5F458F26CEBEC8009C5C79 /* AppInfoStore.swift in Sources */,
 				DCC1D62C26D97BB200892038 /* ErrorAlert.swift in Sources */,
 				DC175F2D270E232F00D9D1FE /* SyncManager.swift in Sources */,
 				DC1ED12326E92DEA00FFA769 /* TrackName.swift in Sources */,
 				DC4AA65926D0133600E677D5 /* Color.swift in Sources */,
+				DC3BB82527445F9A005D0327 /* ParticipantsHeader.swift in Sources */,
 				DCC1D62826D9568700892038 /* StreamConfig.swift in Sources */,
 				DC1ED11C26E92DEA00FFA769 /* RemoteParticipantManager.swift in Sources */,
 				DC5F453B26CC061A009C5C79 /* HomeView.swift in Sources */,
@@ -666,6 +722,7 @@
 				DC1ED0FB26E144AE00FFA769 /* StreamToolbarButton.swift in Sources */,
 				DC5F453926CC061A009C5C79 /* LiveVideoApp.swift in Sources */,
 				DC175F37270E5B6F00D9D1FE /* ParticipantsView.swift in Sources */,
+				DC3BB82727480A9E005D0327 /* RemoveSpeakerRequest.swift in Sources */,
 				DCC48F7726D8116C00EE49EF /* StreamView.swift in Sources */,
 				DC1ED11E26E92DEA00FFA769 /* LocalParticipantManager.swift in Sources */,
 				DC4F45EB2723695D00BE730B /* SelectRoleView.swift in Sources */,
@@ -674,6 +731,7 @@
 				DC175F39270F673600D9D1FE /* SendSpeakerInviteRequest.swift in Sources */,
 				DC175F402718852B00D9D1FE /* DeleteStreamRequest.swift in Sources */,
 				DC1ED0F026DFCD3C00FFA769 /* LiveBadge.swift in Sources */,
+				DC50A57D273DBD6D00E29580 /* JSONDecoderExtension.swift in Sources */,
 				DC4F45ED2728591900BE730B /* StreamConfigFlowModel.swift in Sources */,
 				DCC48FA126D8311700EE49EF /* PlayerManager.swift in Sources */,
 				DC4AA66026D047DD00E677D5 /* FormTextFieldStyle.swift in Sources */,
@@ -684,7 +742,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DC5F454B26CC061F009C5C79 /* LiveVideoTests.swift in Sources */,
+				DC5F454B26CC061F009C5C79 /* PasscodeComponentsSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1040,6 +1098,30 @@
 				minimumVersion = 4.4.0;
 			};
 		};
+		DCB1BE012756A288006CE9D1 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+		DCB1BE0627581BC6006CE9D1 /* XCRemoteSwiftPackageReference "Quick" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Quick/Quick";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+		DCB1BE0927581C11006CE9D1 /* XCRemoteSwiftPackageReference "Nimble" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Quick/Nimble";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
 		DCC48F9626D828E500EE49EF /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire";
@@ -1075,6 +1157,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DC5F458B26CEBCC8009C5C79 /* XCRemoteSwiftPackageReference "twilio-video-ios" */;
 			productName = TwilioVideo;
+		};
+		DCB1BE022756A288006CE9D1 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DCB1BE012756A288006CE9D1 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
+		DCB1BE0727581BC6006CE9D1 /* Quick */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DCB1BE0627581BC6006CE9D1 /* XCRemoteSwiftPackageReference "Quick" */;
+			productName = Quick;
+		};
+		DCB1BE0A27581C11006CE9D1 /* Nimble */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DCB1BE0927581C11006CE9D1 /* XCRemoteSwiftPackageReference "Nimble" */;
+			productName = Nimble;
 		};
 		DCC48F9726D828E500EE49EF /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;

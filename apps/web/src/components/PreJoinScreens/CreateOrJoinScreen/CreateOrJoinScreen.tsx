@@ -1,6 +1,5 @@
 import React from 'react';
-import clsx from 'clsx';
-import { Typography, makeStyles, Button, Theme, Paper } from '@material-ui/core';
+import { Typography, makeStyles, Button, Theme, Paper, ButtonBase } from '@material-ui/core';
 import { appActionTypes, ActiveScreen, appStateTypes } from '../../../state/appState/appReducer';
 import BackArrowIcon from '../../../icons/BackArrowIcon';
 import CreateEventIcon from '../../../icons/CreateEventIcon';
@@ -19,48 +18,32 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-evenly',
   },
   paper: {
-    width: '475px',
+    width: '100%',
     height: '75px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    cursor: 'pointer',
     transition: 'all 0.2s linear',
     '&:hover': {
       backgroundColor: '#EFEFEF',
+    },
+    [theme.breakpoints.down('sm')]: {
+      margin: '0.8em 0',
     },
   },
   innerPaperContainer: {
     display: 'flex',
     alignItems: 'center',
   },
-  disabledPaper: {
-    pointerEvents: 'none',
-    opacity: 0.2,
-  },
   bodyTypography: {
     color: '#606B85',
     fontWeight: 'bold',
   },
   leftIcon: {
-    margin: '0 1em 0',
+    margin: '0 0.7em 0 0.5em',
   },
   rightArrowIcon: {
-    margin: '0.5em 1em 0 0',
-  },
-  inputContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    margin: '1.5em 0 3.5em',
-    '& div:not(:last-child)': {
-      marginRight: '1em',
-    },
-    [theme.breakpoints.down('sm')]: {
-      margin: '1.5em 0 2em',
-    },
-  },
-  textFieldContainer: {
-    width: '100%',
+    margin: '0.5em 0.5em 0 0',
   },
   backButton: {
     marginTop: '0.8em',
@@ -89,12 +72,8 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
       </Typography>
 
       <div className={classes.paperContainer}>
-        <div>
-          <Paper
-            onClick={() => dispatch({ type: 'set-participant-type', participantType: 'host' })}
-            className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
-            elevation={3}
-          >
+        <ButtonBase focusRipple onClick={() => dispatch({ type: 'set-participant-type', participantType: 'host' })}>
+          <Paper className={classes.paper} elevation={3}>
             <div className={classes.innerPaperContainer}>
               <div className={classes.leftIcon}>
                 <CreateEventIcon />
@@ -107,15 +86,10 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
               <RightArrowIcon />
             </div>
           </Paper>
-        </div>
+        </ButtonBase>
 
-        <div>
-          <Paper
-            onClick={() => dispatch({ type: 'set-participant-type', participantType: null })}
-            elevation={3}
-            color="primary"
-            className={clsx(classes.paper, { [classes.disabledPaper]: !state.participantName })}
-          >
+        <ButtonBase focusRipple onClick={() => dispatch({ type: 'set-participant-type', participantType: null })}>
+          <Paper className={classes.paper} elevation={3}>
             <div className={classes.innerPaperContainer}>
               <div className={classes.leftIcon}>
                 <JoinEventIcon />
@@ -128,8 +102,9 @@ export default function CreateOrJoinScreen({ state, dispatch }: CreateOrJoinScre
               <RightArrowIcon />
             </div>
           </Paper>
-        </div>
+        </ButtonBase>
       </div>
+
       <div>
         <Button
           startIcon={<BackArrowIcon />}

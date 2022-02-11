@@ -44,7 +44,10 @@ describe('the useScreenShareToggle hook', () => {
       result.current[1]();
       await waitForNextUpdate();
       expect(navigator.mediaDevices.getDisplayMedia).toHaveBeenCalled();
-      expect(mockLocalParticipant.publishTrack).toHaveBeenCalledWith(mockTrack, { name: 'screen', priority: 'low' });
+      expect(mockLocalParticipant.publishTrack).toHaveBeenCalledWith(mockTrack, {
+        name: 'video-composer-presentation',
+        priority: 'low',
+      });
       expect(result.current[0]).toEqual(true);
     });
 

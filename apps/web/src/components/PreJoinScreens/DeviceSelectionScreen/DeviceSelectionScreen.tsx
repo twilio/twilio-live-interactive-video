@@ -107,7 +107,13 @@ export default function DeviceSelectionScreen({ state, dispatch, connect }: Devi
               <Button variant="outlined" color="primary" onClick={handleGoBack}>
                 Go Back
               </Button>
-              <Button variant="contained" color="primary" data-cy-join-now onClick={connect}>
+              <Button
+                variant="contained"
+                color="primary"
+                data-cy-join-now
+                onClick={connect}
+                disabled={isAcquiringLocalTracks}
+              >
                 {state.participantType === 'host' ? 'Create Event' : 'Join Event'}
               </Button>
             </div>

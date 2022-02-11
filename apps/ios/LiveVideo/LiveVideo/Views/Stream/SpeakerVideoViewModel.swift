@@ -8,15 +8,17 @@ import TwilioVideo
 struct SpeakerVideoViewModel {
     let identity: String
     let displayName: String
+    let isYou: Bool
     let isMuted: Bool
     let isDominantSpeaker: Bool
     let dominantSpeakerStartTime: Date
     var cameraTrack: VideoTrack?
     var shouldMirrorCameraVideo: Bool
 
-    init(participant: LocalParticipantManager) {
+    init(participant: LocalParticipantManager, isHost: Bool) {
         identity = participant.identity
-        displayName = "You"
+        displayName = isHost ? "You (Host)" : "You"
+        isYou = true
         isMuted = !participant.isMicOn
         isDominantSpeaker = false
         dominantSpeakerStartTime = .distantPast
@@ -30,9 +32,10 @@ struct SpeakerVideoViewModel {
         shouldMirrorCameraVideo = true
     }
     
-    init(participant: RemoteParticipantManager) {
+    init(participant: RemoteParticipantManager, isHost: Bool) {
         identity = participant.identity
-        displayName = participant.identity
+        displayName = isHost ? "\(participant.identity) (Host)" : participant.identity
+        isYou = false
         isMuted = !participant.isMicOn
         isDominantSpeaker = participant.isDominantSpeaker
         dominantSpeakerStartTime = participant.dominantSpeakerStartTime

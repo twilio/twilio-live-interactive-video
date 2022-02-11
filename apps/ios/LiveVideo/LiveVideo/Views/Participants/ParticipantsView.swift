@@ -6,21 +6,28 @@ import SwiftUI
 
 struct ParticipantsView: View {
     @EnvironmentObject var viewModel: ParticipantsViewModel
-    @EnvironmentObject var raisedHandsStore: RaisedHandsStore
     @EnvironmentObject var streamManager: StreamManager
     @Environment(\.presentationMode) var presentationMode
-
+    
     var body: some View {
         NavigationView {
             List {
-                Section(header: Text("Raised hands")) {
-                    ForEach(raisedHandsStore.raisedHands) { participant in
+                Section(header: ParticipantsHeader(title: "Speakers (\(viewModel.speakers.count))")) {
+                    ForEach(viewModel.speakers) { speaker in
                         HStack {
-                            Text("\(participant.userIdentity) 🖐")
+                            Text(speaker.displayName)
+                            Spacer()
+                        }
+                    }
+                }
+                Section(header: ParticipantsHeader(title: "Viewers (\(viewModel.viewerCount))")) {
+                    ForEach(viewModel.viewersWithRaisedHand) { viewer in
+                        HStack {
+                            Text("\(viewer.identity) 👋")
                                 .alert(isPresented: $viewModel.showSpeakerInviteSent) {
                                     Alert(
                                         title: Text("Invitation sent"),
-                                        message: Text("You invited \(participant.userIdentity) to be a speaker. They’ll be able to share audio and video."),
+                                        message: Text("You invited \(viewer.identity) to be a speaker. They’ll be able to share audio and video."),
                                         dismissButton: .default(Text("Got it!"))
                                     )
                                 }
@@ -28,7 +35,7 @@ struct ParticipantsView: View {
                             
                             if streamManager.config.role == .host {
                                 Button("Invite to speak") {
-                                    viewModel.sendSpeakerInvite(userIdentity: participant.userIdentity)
+                                    viewModel.sendSpeakerInvite(userIdentity: viewer.identity)
                                 }
                                 .foregroundColor(.backgroundPrimary)
                                 .alert(isPresented: $viewModel.showError) {
@@ -40,10 +47,18 @@ struct ParticipantsView: View {
                         }
                         .buttonStyle(PlainButtonStyle())
                     }
+                    
+                    ForEach(viewModel.viewersWithoutRaisedHand) { viewer in
+                        HStack {
+                            Text(viewer.identity)
+                            Spacer()
+                        }
+                    }
                 }
             }
             .listStyle(.plain)
-            .navigationTitle("Participants")
+            .animation(.default)
+            .navigationTitle("Participants (\(viewModel.speakers.count + viewModel.viewerCount))")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
@@ -54,7 +69,7 @@ struct ParticipantsView: View {
             }
         }
         .onAppear {
-            raisedHandsStore.haveNew = false
+            viewModel.haveNewRaisedHand = false
         }
     }
 }
@@ -63,31 +78,51 @@ struct ParticipantsView_Previews: PreviewProvider {
     static var previews: some View {
         return Group {
             ParticipantsView()
-                .previewDisplayName("No Raised Hands")
-                .environmentObject(RaisedHandsStore())
-                .environmentObject(StreamManager())
-            ParticipantsView()
                 .previewDisplayName("Host")
-                .environmentObject(RaisedHandsStore(raisedHands: [.init()]))
+                .environmentObject(
+                    ParticipantsViewModel.stub(
+                        speakers: ["Sam"],
+                        viewersWithRaisedHand: ["Alice"],
+                        viewersWithoutRaisedHand: ["Bob"]
+                    )
+                )
                 .environmentObject(StreamManager(config: .stub(role: .host)))
             ParticipantsView()
                 .previewDisplayName("Speaker")
-                .environmentObject(RaisedHandsStore(raisedHands: [.init()]))
+                .environmentObject(
+                    ParticipantsViewModel.stub(
+                        speakers: ["Sam"],
+                        viewersWithRaisedHand: ["Alice"],
+                        viewersWithoutRaisedHand: ["Bob"]
+                    )
+                )
                 .environmentObject(StreamManager(config: .stub(role: .speaker)))
+            ParticipantsView()
+                .previewDisplayName("No Viewers")
+                .environmentObject(ParticipantsViewModel.stub(speakers: ["Sam"]))
+                .environmentObject(StreamManager())
         }
-        .environmentObject(ParticipantsViewModel())
     }
 }
 
-private extension RaisedHandsStore {
-    convenience init(raisedHands: [RaisedHand] = []) {
-        self.init()
-        self.raisedHands = raisedHands
+private extension ParticipantsViewModel {
+    static func stub(
+        speakers: [String] = [],
+        viewersWithRaisedHand: [String] = [],
+        viewersWithoutRaisedHand: [String] = []
+    ) -> ParticipantsViewModel {
+        let viewModel = ParticipantsViewModel()
+        viewModel.speakers = speakers.map { SyncUsersMap.User(identity: $0) }
+        viewModel.viewersWithRaisedHand = viewersWithRaisedHand.map { SyncUsersMap.User(identity: $0) }
+        viewModel.viewersWithoutRaisedHand = viewersWithoutRaisedHand.map { SyncUsersMap.User(identity: $0) }
+        viewModel.viewerCount = viewersWithRaisedHand.count + viewersWithoutRaisedHand.count
+        return viewModel
     }
 }
 
-private extension RaisedHandsStore.RaisedHand {
-    init(userIdentity: String = "Alice") {
-        self.userIdentity = userIdentity
+private extension SyncUsersMap.User {
+    init(identity: String, isHost: Bool = false) {
+        self.identity = identity
+        self.isHost = isHost
     }
 }

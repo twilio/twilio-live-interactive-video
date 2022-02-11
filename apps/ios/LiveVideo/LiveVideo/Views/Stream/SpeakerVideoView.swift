@@ -84,6 +84,7 @@ extension SpeakerVideoViewModel {
     init(
         identity: String = "Alice",
         displayName: String? = nil,
+        isYou: Bool = false,
         isMuted: Bool = false,
         isDominantSpeaker: Bool = false,
         dominantSpeakerTimestamp: Date = .distantPast,
@@ -92,6 +93,7 @@ extension SpeakerVideoViewModel {
     ) {
         self.identity = identity
         self.displayName = displayName ?? identity
+        self.isYou = isYou
         self.isMuted = isMuted
         self.isDominantSpeaker = isDominantSpeaker
         self.dominantSpeakerStartTime = dominantSpeakerTimestamp

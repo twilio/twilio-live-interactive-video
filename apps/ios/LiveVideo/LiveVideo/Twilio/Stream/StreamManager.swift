@@ -66,7 +66,7 @@ class StreamManager: ObservableObject {
         }
 
         state = .connecting
-        privateConnect()
+        fetchAccessToken()
     }
     
     func disconnect() {
@@ -90,13 +90,15 @@ class StreamManager: ObservableObject {
             fatalError("The host cannot change.")
         }
         
-        disconnect()
+        roomManager.disconnect()
+        playerManager.disconnect()
+        player = nil
         config.role = role
         state = .changingRole
-        privateConnect()
+        fetchAccessToken()
     }
-        
-    private func privateConnect() {
+
+    private func fetchAccessToken() {
         let request = CreateOrJoinStreamRequest(
             userIdentity: config.userIdentity,
             streamName: config.streamName,
@@ -106,30 +108,42 @@ class StreamManager: ObservableObject {
         api.request(request) { [weak self] result in
             switch result {
             case let .success(response):
-                self?.syncManager.connect(
-                    token: response.token,
-                    raisedHandsMapName: response.syncObjectNames.raisedHandsMap,
-                    viewerDocumentName: response.syncObjectNames.viewerDocument
-                ) { error in
-                    guard let config = self?.config else {
-                        return
-                    }
-                    
-                    if let error = error {
-                        self?.handleError(error)
-                        return
-                    }
-
-                    switch config.role {
-                    case .host, .speaker:
-                        self?.roomManager.connect(roomName: config.streamName, accessToken: response.token)
-                    case .viewer:
-                        self?.playerManager.connect(accessToken: response.token)
-                    }
-                }
+                let objectNames = SyncManager.ObjectNames(
+                    speakersMap: response.syncObjectNames.speakersMap,
+                    viewersMap: response.syncObjectNames.viewersMap,
+                    raisedHandsMap: response.syncObjectNames.raisedHandsMap,
+                    userDocument: response.syncObjectNames.userDocument
+                )
+                
+                self?.connectSync(accessToken: response.token, objectNames: objectNames)
             case let .failure(error):
                 self?.handleError(error)
             }
+        }
+    }
+    
+    private func connectSync(accessToken: String, objectNames: SyncManager.ObjectNames) {
+        guard !syncManager.isConnected else {
+            connectRoomOrPlayer(accessToken: accessToken)
+            return
+        }
+
+        syncManager.connect(token: accessToken, objectNames: objectNames) { [weak self] error in
+            if let error = error {
+                self?.handleError(error)
+                return
+            }
+
+            self?.connectRoomOrPlayer(accessToken: accessToken)
+        }
+    }
+    
+    private func connectRoomOrPlayer(accessToken: String) {
+        switch config.role {
+        case .host, .speaker:
+            roomManager.connect(roomName: config.streamName, accessToken: accessToken)
+        case .viewer:
+            playerManager.connect(accessToken: accessToken)
         }
     }
     
@@ -143,6 +157,17 @@ extension StreamManager: PlayerManagerDelegate {
     func playerManagerDidConnect(_ playerManager: PlayerManager) {
         player = playerManager.player
         state = .connected
+        
+        let request = ViewerConnectedToPlayerRequest(userIdentity: config.userIdentity, streamName: config.streamName)
+        
+        api.request(request) { [weak self] result in
+            switch result {
+            case .success:
+                break
+            case let .failure(error):
+                self?.handleError(error)
+            }
+        }
     }
     
     func playerManager(_ playerManager: PlayerManager, didDisconnectWithError error: Error) {

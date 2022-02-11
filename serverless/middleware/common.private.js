@@ -6,7 +6,8 @@ module.exports = (context, event, callback) => {
   let response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  const { region } = context.getTwilioClient();
+  const client = context.getTwilioClient();
+  const region = client.region;  
 
   const axiosClient = axios.create({
     headers: {
@@ -25,9 +26,16 @@ module.exports = (context, event, callback) => {
     return playbackGrant.data.grant;
   }
 
+  async function getStreamMapItem(roomSid) {
+    const backendStorageSyncClient = await client.sync.services(context.BACKEND_STORAGE_SYNC_SERVICE_SID);
+    const mapItem = await backendStorageSyncClient.syncMaps('streams').syncMapItems(roomSid).fetch();
+    return mapItem;
+  }
+
   return {
     axiosClient,
     response,
     getPlaybackGrant,
+    getStreamMapItem
   };
 };

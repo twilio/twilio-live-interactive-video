@@ -14,9 +14,13 @@ module.exports.handler = async (context, event, callback) => {
     TWILIO_API_KEY_SID,
     TWILIO_API_KEY_SECRET,
     CONVERSATIONS_SERVICE_SID,
-    SYNC_SERVICE_SID,
+    BACKEND_STORAGE_SYNC_SERVICE_SID,
+    SYNC_SERVICE_NAME_PREFIX,
     DOMAIN_NAME,
   } = context;
+
+  const authHandler = require(Runtime.getAssets()['/auth.js'].path);
+  authHandler(context, event, callback);
 
   const common = require(Runtime.getAssets()['/common.js'].path);
   const { axiosClient } = common(context, event, callback);
@@ -48,10 +52,9 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  let room, playerStreamer, mediaProcessor, streamDocument, conversation, raisedHandsMap;
+  let room, playerStreamer, mediaProcessor, streamSyncService, streamSyncClient, conversation;
 
   const client = context.getTwilioClient();
-  const syncClient = client.sync.services(context.SYNC_SERVICE_SID);
 
   try {
     room = await client.video.rooms.create({
@@ -82,10 +85,12 @@ module.exports.handler = async (context, event, callback) => {
     mediaProcessor = await axiosClient('MediaProcessors', {
       method: 'post',
       data: querystring.stringify({
+        MaxDuration: 60 * 30, // Set maxDuration to 30 minutes
         Extension: context.MEDIA_EXTENSION,
         ExtensionContext: JSON.stringify({
           room: { name: room.sid },
           outputs: [playerStreamer.data.sid],
+          resolution: '1920x1080',
         }),
       }),
     });
@@ -111,11 +116,36 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  // Create stream document
+  // Create stream sync service
   try {
-    streamDocument = await syncClient.documents.create({
-      uniqueName: `stream-${room.sid}`,
+    streamSyncService = await client.sync.services.create({
+      friendlyName: SYNC_SERVICE_NAME_PREFIX + 'Stream ' + room.sid,
+      aclEnabled: true,
+      webhookUrl: 'https://' + DOMAIN_NAME + '/sync-webhook',
+      reachabilityWebhooksEnabled: true,
+      reachabilityDebouncingEnabled: true, // To prevent disconnect event when connections are rebalanced
+    });
+    streamSyncClient = await client.sync.services(streamSyncService.sid);
+  } catch (e) {
+    console.error(e);
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error creating stream sync service',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  // Add stream to streams map
+  try {
+    const backendStorageSyncService = client.sync.services(BACKEND_STORAGE_SYNC_SERVICE_SID);
+
+    await backendStorageSyncService.syncMaps('streams').syncMapItems.create({
+      key: room.sid,
       data: {
+        sync_service_sid: streamSyncService.sid,
         player_streamer_sid: playerStreamer.data.sid,
         media_processor_sid: mediaProcessor.data.sid,
       },
@@ -125,17 +155,78 @@ module.exports.handler = async (context, event, callback) => {
     response.setStatusCode(500);
     response.setBody({
       error: {
-        message: 'error creating stream document',
+        message: 'error adding stream to streams map',
         explanation: e.message,
       },
     });
     return callback(null, response);
   }
 
+  const speakersMapName = `speakers`;
+
+  // Create speakers map
+  try {
+    await streamSyncClient.syncMaps.create({
+      uniqueName: speakersMapName,
+    });
+  } catch (e) {
+    console.error(e);
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error creating speakers map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  // Add the host to the speakers map when the stream is created so that:
+  //
+  //   1. The speakers map is gauranteed to contain the host before any user connects to the stream.
+  //   2. We don't need a separate way to keep track of who the host is.
+  //
+  // There is only one host and it is the user that creates the stream. Other users are added to
+  // the speakers map in rooms-webhook when they connect to the video room.
+  try {
+    await streamSyncClient.syncMaps('speakers').syncMapItems.create({
+      key: user_identity,
+      data: { host: true },
+    });
+  } catch (e) {
+    console.error(e);
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error adding host to speakers map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  // Give user read access to speakers map
+  try {
+    await streamSyncClient
+      .syncMaps(speakersMapName)
+      .syncMapPermissions(user_identity)
+      .update({ read: true, write: false, manage: false });
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error adding read access to speakers map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  const raisedHandsMapName = `raised_hands`;
   // Create raised hands map
   try {
-    raisedHandsMap = await syncClient.syncMaps.create({
-      uniqueName: `raised_hands-${room.sid}`,
+    await streamSyncClient.syncMaps.create({
+      uniqueName: raisedHandsMapName,
     });
   } catch (e) {
     console.error(e);
@@ -143,6 +234,59 @@ module.exports.handler = async (context, event, callback) => {
     response.setBody({
       error: {
         message: 'error creating raised hands map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  // Give user read access to raised hands map
+  try {
+    await streamSyncClient
+      .syncMaps(raisedHandsMapName)
+      .syncMapPermissions(user_identity)
+      .update({ read: true, write: false, manage: false });
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error adding read access to raised hands map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  const viewersMapName = `viewers`;
+
+  // Create viewers map
+  try {
+    await streamSyncClient.syncMaps.create({
+      uniqueName: viewersMapName,
+    });
+  } catch (e) {
+    console.error(e);
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error creating viewers map',
+        explanation: e.message,
+      },
+    });
+    return callback(null, response);
+  }
+
+  // Give user read access to viewers map
+  try {
+    await streamSyncClient
+      .syncMaps(viewersMapName)
+      .syncMapPermissions(user_identity)
+      .update({ read: true, write: false, manage: false });
+  } catch (e) {
+    response.setStatusCode(500);
+    response.setBody({
+      error: {
+        message: 'error adding read access to viewers map',
         explanation: e.message,
       },
     });
@@ -206,7 +350,7 @@ module.exports.handler = async (context, event, callback) => {
   token.addGrant(chatGrant);
 
   // Add sync grant to token
-  const syncGrant = new SyncGrant({ serviceSid: SYNC_SERVICE_SID });
+  const syncGrant = new SyncGrant({ serviceSid: streamSyncService.sid });
   token.addGrant(syncGrant);
 
   // Return token
@@ -214,7 +358,9 @@ module.exports.handler = async (context, event, callback) => {
   response.setBody({
     token: token.toJwt(),
     sync_object_names: {
-      raised_hands_map: `raised_hands-${room.sid}`,
+      speakers_map: 'speakers',
+      viewers_map: 'viewers',
+      raised_hands_map: `raised_hands`,
     },
   });
   return callback(null, response);

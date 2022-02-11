@@ -16,7 +16,7 @@ struct HomeView: View {
         NavigationView {
             FormStack {
                 Text("Create or join?")
-                    .font(.system(size: 28, weight: .bold))
+                    .modifier(TitleStyle())
                 Text("Create your own event or join one that’s already happening.")
                     .modifier(TipStyle())
                 Button(
@@ -26,11 +26,7 @@ struct HomeView: View {
                         streamConfigFlowModel.isShowing = true
                     },
                     label: {
-                        CardButtonLabel(
-                            title: "Create event",
-                            image: Image(systemName: "plus.square"),
-                            imageColor: .backgroundSuccess
-                        )
+                        CardButtonLabel(title: "Create event", image: Image(systemName: "plus.square"))
                     }
                 )
                 Button(
@@ -39,11 +35,7 @@ struct HomeView: View {
                         streamConfigFlowModel.isShowing = true
                     },
                     label: {
-                        CardButtonLabel(
-                            title: "Join event",
-                            image: Image(systemName: "person.3"),
-                            imageColor: .iconPurple
-                        )
+                        CardButtonLabel(title: "Join event", image: Image(systemName: "person.3"))
                     }
                 )
             }
@@ -72,7 +64,12 @@ struct HomeView: View {
                     }
                     
                     streamManager.config = config
-                    showStream = true
+
+                    // Had to make this async because sometimes there was an error reporting multiple sheets
+                    // presented at the same time. This seems like a SwiftUI bug.
+                    DispatchQueue.main.async {
+                        showStream = true
+                    }
                 },
                 content: {
                     EnterStreamNameView()
@@ -80,7 +77,7 @@ struct HomeView: View {
                 }
             )
             .fullScreenCover(isPresented: $authManager.isSignedOut) {
-                SignInView()
+                EnterUserIdentityView()
             }
             .fullScreenCover(isPresented: $showStream) {
                 StreamView()
@@ -91,10 +88,16 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        let authManager = AuthManager()
-        authManager.signIn(userIdentity: "Alice")
-        
         return HomeView()
-            .environmentObject(authManager)
+            .environmentObject(AuthManager.stub(isSignedOut: false))
+    }
+}
+
+private extension AuthManager {
+    static func stub(userIdentity: String = "", isSignedOut: Bool = true) -> AuthManager {
+        let authManager = AuthManager()
+        authManager.userIdentity = userIdentity
+        authManager.isSignedOut = isSignedOut
+        return authManager
     }
 }

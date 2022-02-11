@@ -5,25 +5,26 @@
 import TwilioSyncClient
 import Combine
 
-class RaisedHandsStore: NSObject, SyncStoring, ObservableObject {
-    struct RaisedHand: Identifiable {
-        let userIdentity: String
-        var id: String { userIdentity }
-        
+/// Reusable store that fetches users from a sync map.
+///
+/// Set `uniqueName` to specify the name of the sync map to fetch users from.
+class SyncUsersMap: NSObject, SyncObjectConnecting {
+    struct User: Identifiable {
+        let identity: String
+        let isHost: Bool
+        var id: String { identity }
+     
         init(mapItem: TWSMapItem) {
-            userIdentity = mapItem.key
+            identity = mapItem.key
+            isHost = mapItem.data["host"] as? Bool ?? false
         }
     }
 
-    @Published var raisedHands: [RaisedHand] = []
-    @Published var haveNew = false
-    private var newRaisedHands: [RaisedHand] = [] {
-        didSet {
-            haveNew = !newRaisedHands.isEmpty
-        }
-    }
+    let userAddedPublisher = PassthroughSubject<User, Never>()
+    let userRemovedPublisher = PassthroughSubject<User, Never>()
     var uniqueName: String!
     var errorHandler: ((Error) -> Void)?
+    private(set) var users: [User] = []
     private var map: TWSMap?
 
     func connect(client: TwilioSyncClient, completion: @escaping (Error?) -> Void) {
@@ -41,7 +42,7 @@ class RaisedHandsStore: NSObject, SyncStoring, ObservableObject {
             
             self.map = map
 
-            /// Only fetch the first page because showing more than 100 raised hands is not useful.
+            /// Only fetch the first page because showing more than 100 is not useful for this app
             let queryOptions = TWSMapQueryOptions().withPageSize(100)
 
             map.queryItems(with: queryOptions) { result, paginator in
@@ -50,8 +51,7 @@ class RaisedHandsStore: NSObject, SyncStoring, ObservableObject {
                     return
                 }
 
-                self.raisedHands = paginator.getItems().map { RaisedHand(mapItem: $0) }
-                self.newRaisedHands = self.raisedHands
+                self.users = paginator.getItems().map { User(mapItem: $0) }
                 completion(nil)
             }
         }
@@ -59,16 +59,15 @@ class RaisedHandsStore: NSObject, SyncStoring, ObservableObject {
     
     func disconnect() {
         map = nil
-        raisedHands = []
-        newRaisedHands = []
+        users = []
     }
 }
 
-extension RaisedHandsStore: TWSMapDelegate {
+extension SyncUsersMap: TWSMapDelegate {
     func onMap(_ map: TWSMap, itemAdded item: TWSMapItem, eventContext: TWSEventContext) {
-        let raisedHand = RaisedHand(mapItem: item)
-        raisedHands.append(raisedHand)
-        newRaisedHands.append(raisedHand)
+        let user = User(mapItem: item)
+        users.append(user)
+        userAddedPublisher.send(user)
     }
     
     func onMap(
@@ -77,8 +76,13 @@ extension RaisedHandsStore: TWSMapDelegate {
         previousItemData: [String : Any],
         eventContext: TWSEventContext
     ) {
-        raisedHands.removeAll { $0.userIdentity == itemKey }
-        newRaisedHands.removeAll { $0.userIdentity == itemKey }
+        guard let index = users.firstIndex(where: { $0.identity == itemKey }) else {
+            return
+        }
+
+        let user = users[index]
+        users.remove(at: index)
+        userRemovedPublisher.send(user)
     }
     
     func onMap(_ map: TWSMap, errorOccurred error: TWSError) {

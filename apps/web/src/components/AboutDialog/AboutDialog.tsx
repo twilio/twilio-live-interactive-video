@@ -9,7 +9,6 @@ import Divider from '@material-ui/core/Divider';
 
 import { version as appVersion } from '../../../package.json';
 import Video from 'twilio-video';
-import { useAppState } from '../../state';
 
 interface AboutDialogProps {
   open: boolean;
@@ -17,8 +16,6 @@ interface AboutDialogProps {
 }
 
 function AboutDialog({ open, onClose }: PropsWithChildren<AboutDialogProps>) {
-  const { roomType } = useAppState();
-
   return (
     <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="xs">
       <DialogTitle>About</DialogTitle>
@@ -29,7 +26,6 @@ function AboutDialog({ open, onClose }: PropsWithChildren<AboutDialogProps>) {
         <DialogContentText>App Version: {appVersion}</DialogContentText>
         <DialogContentText>Deployed Tag: {process.env.REACT_APP_GIT_TAG || 'N/A'}</DialogContentText>
         <DialogContentText>Deployed Commit Hash: {process.env.REACT_APP_GIT_COMMIT || 'N/A'}</DialogContentText>
-        {roomType && <DialogContentText>Room Type: {roomType}</DialogContentText>}
       </DialogContent>
       <Divider />
       <DialogActions>

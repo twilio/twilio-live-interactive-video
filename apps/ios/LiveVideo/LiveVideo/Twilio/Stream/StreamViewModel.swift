@@ -6,6 +6,17 @@ import Combine
 import TwilioLivePlayer
 
 class StreamViewModel: ObservableObject {
+    enum AlertIdentifier: String, Identifiable {
+        case error
+        case receivedSpeakerInvite
+        case speakerMovedToViewersByHost
+        case streamEndedByHost
+        case streamWillEndIfHostLeaves
+        case viewerConnected
+        
+        var id: String { rawValue }
+    }
+    
     @Published var isHandRaised = false {
         didSet {
             guard streamManager.state == .connected else {
@@ -28,16 +39,12 @@ class StreamViewModel: ObservableObject {
             }
         }
     }
-    @Published var haveSpeakerInvite = false
-    @Published var showError = false
-    private(set) var error: Error? {
-        didSet {
-            showError = error != nil
-        }
-    }
+    @Published var alertIdentifier: AlertIdentifier?
+    private(set) var error: Error?
+    private var haveShownViewerConnectedAlert = false
     private var streamManager: StreamManager!
     private var api: API!
-    private var viewerStore: ViewerStore!
+    private var userDocument: SyncUserDocument!
     private var speakerSettingsManager: SpeakerSettingsManager!
     private var subscriptions = Set<AnyCancellable>()
 
@@ -45,12 +52,12 @@ class StreamViewModel: ObservableObject {
         streamManager: StreamManager,
         speakerSettingsManager: SpeakerSettingsManager,
         api: API,
-        viewerStore: ViewerStore
+        userDocument: SyncUserDocument
     ) {
         self.streamManager = streamManager
         self.speakerSettingsManager = speakerSettingsManager
         self.api = api
-        self.viewerStore = viewerStore
+        self.userDocument = userDocument
 
         streamManager.$state
             .sink { [weak self] state in
@@ -73,24 +80,59 @@ class StreamViewModel: ObservableObject {
                     self.speakerSettingsManager.isMicOn = false
                     self.speakerSettingsManager.isCameraOn = false
                 case .connected:
-                    break
+                    switch streamManager.config.role {
+                    case .viewer:
+                        if !self.haveShownViewerConnectedAlert {
+                            self.haveShownViewerConnectedAlert = true
+                            self.alertIdentifier = .viewerConnected
+                        }
+                    case .host, .speaker:
+                        break
+                    }
                 }
             }
             .store(in: &subscriptions)
 
         streamManager.errorPublisher
-            .sink { [weak self] error in self?.error = error }
+            .sink { [weak self] error in self?.handleError(error) }
             .store(in: &subscriptions)
 
-        viewerStore.speakerInvitePublisher
+        userDocument.speakerInvitePublisher
             .sink { [weak self] in
-                self?.haveSpeakerInvite = true
+                self?.alertIdentifier = .receivedSpeakerInvite
             }
             .store(in: &subscriptions)
     }
 
     private func handleError(_ error: Error) {
         streamManager.disconnect()
-        self.error = error
+        
+        if error.isStreamEndedByHostError {
+            alertIdentifier = .streamEndedByHost
+        } else if error.isSpeakerMovedToViewersByHostError {
+            alertIdentifier = .speakerMovedToViewersByHost
+            streamManager.changeRole(to: .viewer)
+        } else {
+            self.error = error
+            alertIdentifier = .error
+        }
+    }
+}
+
+private extension Error {
+    var isSpeakerMovedToViewersByHostError: Bool {
+        if case .speakerMovedToViewersByHost = self as? LiveVideoError {
+            return true
+        }
+
+        return false
+    }
+
+    var isStreamEndedByHostError: Bool {
+        if case .streamEndedByHost = self as? LiveVideoError {
+            return true
+        }
+
+        return false
     }
 }

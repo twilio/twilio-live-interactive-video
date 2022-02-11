@@ -16,6 +16,7 @@ import usePublications from '../../hooks/usePublications/usePublications';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useTrack from '../../hooks/useTrack/useTrack';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import { useSpeakersMap } from '../../hooks/useSpeakersMap/useSpeakersMap';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -121,12 +122,15 @@ export default function MainParticipantInfo({ participant, children }: MainParti
   const localParticipant = room!.localParticipant;
   const isLocal = localParticipant === participant;
 
+  const { host } = useSpeakersMap();
+  const isHost = host === participant.identity;
+
   const screenShareParticipant = useScreenShareParticipant();
   const isRemoteParticipantScreenSharing = screenShareParticipant && screenShareParticipant !== localParticipant;
 
   const publications = usePublications(participant);
   const videoPublication = publications.find(p => p.trackName.includes('camera'));
-  const screenSharePublication = publications.find(p => p.trackName.includes('screen'));
+  const screenSharePublication = publications.find(p => p.trackName.includes('video-composer-presentation'));
 
   const videoTrack = useTrack(screenSharePublication || videoPublication);
   const isVideoEnabled = Boolean(videoTrack);
@@ -152,12 +156,12 @@ export default function MainParticipantInfo({ participant, children }: MainParti
           <div className={classes.identity}>
             <AudioLevelIndicator audioTrack={audioTrack} />
             <Typography variant="body1" color="inherit">
-              {participant.identity}
-              {isLocal && ' (You)'}
+              {isLocal ? 'You' : participant.identity}
+              {isHost && ' (Host)'}
               {screenSharePublication && ' - Screen'}
             </Typography>
           </div>
-          <NetworkQualityLevel participant={localParticipant} />
+          <NetworkQualityLevel participant={participant} />
         </div>
         {isRecording && (
           <Tooltip

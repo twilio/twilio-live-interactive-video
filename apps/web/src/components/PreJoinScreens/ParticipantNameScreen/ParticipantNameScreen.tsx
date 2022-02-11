@@ -77,6 +77,7 @@ export default function ParticipantNameScreen({ state, dispatch }: ParticipantNa
             </InputLabel>
             <TextField
               id="input-user-name"
+              autoFocus
               variant="outlined"
               fullWidth
               size="small"

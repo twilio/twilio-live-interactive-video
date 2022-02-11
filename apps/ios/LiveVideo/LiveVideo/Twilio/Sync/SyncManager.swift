@@ -7,35 +7,49 @@ import TwilioSyncClient
 
 /// Consolidates configuration and error handling for stores that are backed by [Twilio Sync](https://www.twilio.com/sync).
 class SyncManager: NSObject {
-    let errorPublisher = PassthroughSubject<Error, Never>()
-    private var client: TwilioSyncClient?
-    private var raisedHandsStore: RaisedHandsStore
-    private var viewerStore: ViewerStore
-    private var stores: [SyncStoring] = []
-
-    init(raisedHandsStore: RaisedHandsStore, viewerStore: ViewerStore) {
-        self.raisedHandsStore = raisedHandsStore
-        self.viewerStore = viewerStore
+    struct ObjectNames {
+        let speakersMap: String
+        let viewersMap: String
+        let raisedHandsMap: String
+        let userDocument: String?
     }
 
-    /// Connects all sync stores that have a configuration.
+    let errorPublisher = PassthroughSubject<Error, Never>()
+    var isConnected: Bool { client != nil }
+    private var client: TwilioSyncClient?
+    private var speakersMap: SyncUsersMap
+    private var raisedHandsMap: SyncUsersMap
+    private var viewersMap: SyncUsersMap
+    private var userDocument: SyncUserDocument
+    private var objects: [SyncObjectConnecting] = []
+
+    init(
+        speakersMap: SyncUsersMap,
+        viewersMap: SyncUsersMap,
+        raisedHandsMap: SyncUsersMap,
+        userDocument: SyncUserDocument
+    ) {
+        self.speakersMap = speakersMap
+        self.viewersMap = viewersMap
+        self.raisedHandsMap = raisedHandsMap
+        self.userDocument = userDocument
+    }
+
+    /// Connects all sync objects.
     ///
     /// - Parameter token: An access token with sync grant.
-    /// - Parameter raisedHandsMapName: The unique name for the raised hands map.
-    /// - Parameter viewerDocumentName: The unique name for the viewer document.
-    /// - Parameter completion: Called when all configured stores are synchronnized or an error is encountered.
-    func connect(
-        token: String,
-        raisedHandsMapName: String,
-        viewerDocumentName: String?,
-        completion: @escaping (Error?) -> Void
+    /// - Parameter objectNames: Unique names for the sync objects.
+    /// - Parameter completion: Called when all configured objects are synchronnized or an error is encountered.
+    func connect(token: String, objectNames: ObjectNames, completion: @escaping (Error?) -> Void
     ) {
-        raisedHandsStore.uniqueName = raisedHandsMapName
-        stores.append(raisedHandsStore)
+        speakersMap.uniqueName = objectNames.speakersMap
+        viewersMap.uniqueName = objectNames.viewersMap
+        raisedHandsMap.uniqueName = objectNames.raisedHandsMap
+        objects = [speakersMap, viewersMap, raisedHandsMap]
         
-        if let viewerDocumentName = viewerDocumentName {
-            viewerStore.uniqueName = viewerDocumentName
-            stores.append(viewerStore)
+        if let userDocumentName = objectNames.userDocument {
+            userDocument.uniqueName = userDocumentName
+            objects.append(userDocument)
         }
         
         TwilioSyncClient.syncClient(
@@ -50,23 +64,23 @@ class SyncManager: NSObject {
 
             self?.client = client
 
-            var connectedStoreCount = 0
+            var connectedObjectCount = 0
             
-            self?.stores.forEach { store in
-                store.errorHandler = { error in
+            self?.objects.forEach { object in
+                object.errorHandler = { error in
                     self?.handleError(error)
                 }
                 
-                store.connect(client: client) { error in
+                object.connect(client: client) { error in
                     if let error = error {
                         self?.disconnect()
                         completion(error)
                         return
                     }
                     
-                    connectedStoreCount += 1
+                    connectedObjectCount += 1
                     
-                    if connectedStoreCount == self?.stores.count {
+                    if connectedObjectCount == self?.objects.count {
                         completion(nil)
                     }
                 }
@@ -77,8 +91,8 @@ class SyncManager: NSObject {
     func disconnect() {
         client?.shutdown()
         client = nil
-        stores.forEach { $0.disconnect() }
-        stores = []
+        objects.forEach { $0.disconnect() }
+        objects = []
     }
     
     private func handleError(_ error: Error) {

@@ -4,7 +4,6 @@ import { useAppState } from '../../state';
 import Button from '@material-ui/core/Button';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import Grid from '@material-ui/core/Grid';
-import { ReactComponent as GoogleLogo } from './google-logo.svg';
 import { InputLabel, Theme } from '@material-ui/core';
 import IntroContainer from '../IntroContainer/IntroContainer';
 import TextField from '@material-ui/core/TextField';
@@ -62,8 +61,6 @@ export default function LoginPage() {
   const [passcode, setPasscode] = useState('');
   const [authError, setAuthError] = useState<Error | null>(null);
 
-  const isAuthEnabled = Boolean(process.env.REACT_APP_SET_AUTH);
-
   const login = () => {
     setAuthError(null);
     signIn?.(passcode)
@@ -78,7 +75,7 @@ export default function LoginPage() {
     login();
   };
 
-  if (user || !isAuthEnabled) {
+  if (user) {
     history.replace('/');
   }
 
@@ -88,60 +85,47 @@ export default function LoginPage() {
 
   return (
     <IntroContainer>
-      {process.env.REACT_APP_SET_AUTH === 'firebase' && (
-        <>
-          <Typography variant="h5" className={classes.gutterBottom}>
-            Sign in to join a room
-          </Typography>
-          <Typography variant="body1">Sign in using your Twilio Google Account</Typography>
-          <Button variant="contained" className={classes.googleButton} onClick={login} startIcon={<GoogleLogo />}>
-            Sign in with Google
-          </Button>
-        </>
-      )}
-
-      {process.env.REACT_APP_SET_AUTH === 'passcode' && (
-        <>
-          <Typography variant="h5" className={classes.gutterBottom}>
-            Enter passcode to join a room
-          </Typography>
-          <form onSubmit={handleSubmit}>
-            <Grid container justifyContent="space-between">
-              <div className={classes.passcodeContainer}>
-                <InputLabel shrink htmlFor="input-passcode">
-                  Passcode
-                </InputLabel>
-                <TextField
-                  id="input-passcode"
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setPasscode(e.target.value)}
-                  type="password"
-                  variant="outlined"
-                  size="small"
-                />
-                <div>
-                  {authError && (
-                    <Typography variant="caption" className={classes.errorMessage}>
-                      <ErrorOutlineIcon />
-                      {authError.message}
-                    </Typography>
-                  )}
-                </div>
+      <>
+        <Typography variant="h5" className={classes.gutterBottom}>
+          Enter passcode to join a room
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <Grid container justifyContent="space-between">
+            <div className={classes.passcodeContainer}>
+              <InputLabel shrink htmlFor="input-passcode">
+                Passcode
+              </InputLabel>
+              <TextField
+                id="input-passcode"
+                autoFocus
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setPasscode(e.target.value)}
+                type="password"
+                variant="outlined"
+                size="small"
+              />
+              <div>
+                {authError && (
+                  <Typography variant="caption" className={classes.errorMessage}>
+                    <ErrorOutlineIcon />
+                    {authError.message}
+                  </Typography>
+                )}
               </div>
-            </Grid>
-            <Grid container justifyContent="flex-end">
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                disabled={!passcode.length}
-                className={classes.submitButton}
-              >
-                Submit
-              </Button>
-            </Grid>
-          </form>
-        </>
-      )}
+            </div>
+          </Grid>
+          <Grid container justifyContent="flex-end">
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              disabled={!passcode.length}
+              className={classes.submitButton}
+            >
+              Submit
+            </Button>
+          </Grid>
+        </form>
+      </>
     </IntroContainer>
   );
 }

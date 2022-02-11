@@ -13,6 +13,11 @@ struct SwiftUIPlayerView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: PlayerView, context: Context) {
+        guard player?.playerView !== uiView else {
+            /// If `playerView` is already set don't set it again. This prevents the view from flickering sometimes.
+            return
+        }
+        
         player?.playerView = uiView
     }
 }

@@ -32,7 +32,7 @@ async function findExistingConfiguration() {
     const envVariables = await serverlessClient.getEnvironmentVariables({
       serviceSid: service.sid,
       environment: 'dev',
-      keys: ['TWILIO_API_KEY_SID', 'TWILIO_API_KEY_SECRET', 'CONVERSATIONS_SERVICE_SID', 'SYNC_SERVICE_SID'],
+      keys: ['TWILIO_API_KEY_SID', 'TWILIO_API_KEY_SECRET', 'CONVERSATIONS_SERVICE_SID', 'BACKEND_STORAGE_SYNC_SERVICE_SID'],
       getValues: true,
     });
 
@@ -49,7 +49,7 @@ async function findExistingConfiguration() {
 }
 
 async function deployFunctions() {
-  let apiKey, conversationsService, syncService;
+  let apiKey, conversationsService, backendStorageSyncService, backendStorageSyncClient;
   const existingConfiguration = await findExistingConfiguration();
 
   if (!options.override && existingConfiguration) {
@@ -62,15 +62,19 @@ async function deployFunctions() {
   // Create new services if they don't already exist
   if (!existingConfiguration) {
     cli.action.start('Creating Api Key');
-    apiKey = await client.newKeys.create({ friendlyName: constants.API_KEY_NAME });
+    apiKey = await client.newKeys.create({
+      friendlyName: constants.API_KEY_NAME,
+    });
 
     cli.action.start('Creating Conversations Service');
     conversationsService = await client.conversations.services.create({
       friendlyName: constants.TWILIO_CONVERSATIONS_SERVICE_NAME,
     });
 
-    cli.action.start('Creating Sync Service');
-    syncService = await client.sync.services.create({ friendlyName: constants.TWILIO_SYNC_SERVICE_NAME });
+    cli.action.start('Creating Backend Storage Sync Service');
+    backendStorageSyncService = await client.sync.services.create({ friendlyName: constants.BACKEND_STORAGE_SYNC_SERVICE_NAME, aclEnabled: true });
+    backendStorageSyncClient = await client.sync.services(backendStorageSyncService.sid); 
+    await backendStorageSyncClient.syncMaps.create({ uniqueName: 'streams' });
   }
 
   const { assets, functions } = await getListOfFunctionsAndAssets(__dirname, {
@@ -106,7 +110,8 @@ async function deployFunctions() {
       TWILIO_API_KEY_SID: existingConfiguration?.TWILIO_API_KEY_SID || apiKey.sid,
       TWILIO_API_KEY_SECRET: existingConfiguration?.TWILIO_API_KEY_SECRET || apiKey.secret,
       CONVERSATIONS_SERVICE_SID: existingConfiguration?.CONVERSATIONS_SERVICE_SID || conversationsService.sid,
-      SYNC_SERVICE_SID: existingConfiguration?.SYNC_SERVICE_SID || syncService.sid,
+      BACKEND_STORAGE_SYNC_SERVICE_SID: existingConfiguration?.BACKEND_STORAGE_SYNC_SERVICE_SID || backendStorageSyncService.sid,
+      SYNC_SERVICE_NAME_PREFIX: constants.SYNC_SERVICE_NAME_PREFIX,
       MEDIA_EXTENSION: constants.MEDIA_EXTENSION,
       APP_EXPIRY: Date.now() + 1000 * 60 * 60 * 24 * 7, // One week
       PASSCODE: getRandomInt(6),
@@ -115,6 +120,7 @@ async function deployFunctions() {
       dependencies: {
         axios: '^0.21.4',
         twilio: '^3.68.0', // This determines the version of the Twilio client returned by context.getTwilioClient()
+        '@twilio/runtime-handler': '1.2.1',
       },
     },
     functionsEnv: 'dev',

@@ -134,6 +134,7 @@ interface ParticipantInfoProps {
   isSelected?: boolean;
   isLocalParticipant?: boolean;
   hideParticipant?: boolean;
+  isHost?: boolean;
 }
 
 export default function ParticipantInfo({
@@ -143,6 +144,7 @@ export default function ParticipantInfo({
   children,
   isLocalParticipant,
   hideParticipant,
+  isHost,
 }: ParticipantInfoProps) {
   const publications = usePublications(participant);
 
@@ -150,7 +152,7 @@ export default function ParticipantInfo({
   const videoPublication = publications.find(p => p.trackName.includes('camera'));
 
   const isVideoEnabled = Boolean(videoPublication);
-  const isScreenShareEnabled = publications.find(p => p.trackName.includes('screen'));
+  const isScreenShareEnabled = publications.find(p => p.trackName.includes('video-composer-presentation'));
 
   const videoTrack = useTrack(videoPublication);
   const isVideoSwitchedOff = useIsTrackSwitchedOff(videoTrack as LocalVideoTrack | RemoteVideoTrack);
@@ -180,8 +182,8 @@ export default function ParticipantInfo({
           <span className={classes.identity}>
             <AudioLevelIndicator audioTrack={audioTrack} />
             <Typography variant="body1" className={classes.typeography} component="span">
-              {participant.identity}
-              {isLocalParticipant && ' (You)'}
+              {isLocalParticipant ? 'You' : participant.identity}
+              {isHost && ' (Host)'}
             </Typography>
           </span>
         </div>

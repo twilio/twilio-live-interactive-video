@@ -47,7 +47,8 @@ export default function VideoTrack({ track, isLocal, priority }: VideoTrackProps
   const isFrontFacing = mediaStreamTrack?.getSettings().facingMode !== 'environment';
   const style = {
     transform: isLocal && isFrontFacing ? 'rotateY(180deg)' : '',
-    objectFit: isPortrait || track.name.includes('screen') ? ('contain' as const) : ('cover' as const),
+    objectFit:
+      isPortrait || track.name.includes('video-composer-presentation') ? ('contain' as const) : ('cover' as const),
   };
 
   return <Video ref={ref} style={style} />;

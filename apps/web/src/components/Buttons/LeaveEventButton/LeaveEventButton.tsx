@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Button, Menu as MenuContainer, MenuItem, Typography } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { joinStreamAsViewer } from '../../../state/api/api';
+import { joinStreamAsViewer, connectViewerToPlayer } from '../../../state/api/api';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useAppState } from '../../../state';
 import usePlayerContext from '../../../hooks/usePlayerContext/usePlayerContext';
@@ -26,7 +26,7 @@ export default function LeaveEventButton(props: { buttonClassName?: string }) {
   const { room } = useVideoContext();
   const { appState, appDispatch } = useAppState();
   const { connect: playerConnect } = usePlayerContext();
-  const { registerViewerDocument } = useSyncContext();
+  const { registerUserDocument } = useSyncContext();
 
   const anchorRef = useRef<HTMLButtonElement>(null);
 
@@ -34,12 +34,15 @@ export default function LeaveEventButton(props: { buttonClassName?: string }) {
     setMenuOpen(false);
     const { data } = await joinStreamAsViewer(appState.participantName, appState.eventName);
     await playerConnect(data.token);
-    registerViewerDocument(data.sync_object_names.viewer_document);
+    await connectViewerToPlayer(appState.participantName, appState.eventName);
+    registerUserDocument(data.sync_object_names.user_document);
+    room!.emit('setPreventAutomaticJoinStreamAsViewer');
     room!.disconnect();
   }
 
   function disconnect() {
     setMenuOpen(false);
+    room!.emit('setPreventAutomaticJoinStreamAsViewer');
     room!.disconnect();
     appDispatch({ type: 'reset-state' });
   }

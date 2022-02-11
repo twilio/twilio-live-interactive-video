@@ -6,6 +6,7 @@ import { raiseHand } from '../../../state/api/api';
 import { useEnqueueSnackbar } from '../../../hooks/useSnackbar/useSnackbar';
 import LowerHandIcon from '../../../icons/LowerHandIcon';
 import RaiseHandIcon from '../../../icons/RaiseHandIcon';
+import ParticipantIcon from '../../../icons/ParticipantIcon';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,6 +58,13 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
     }
   }, [isHandRaised, appState.participantName, appState.eventName, enqueueSnackbar]);
 
+  const toggleParticipantWindow = () => {
+    appDispatch({
+      type: 'set-is-participant-window-open',
+      isParticipantWindowOpen: !appState.isParticipantWindowOpen,
+    });
+  };
+
   return (
     <footer className={classes.container}>
       <Grid container justifyContent="space-around" alignItems="center">
@@ -67,6 +75,9 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
           <Grid container justifyContent="center">
             <Button onClick={handleRaiseHand} startIcon={isHandRaised ? <LowerHandIcon /> : <RaiseHandIcon />}>
               {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
+            </Button>
+            <Button onClick={() => toggleParticipantWindow()} startIcon={<ParticipantIcon />}>
+              Participants
             </Button>
           </Grid>
         </Grid>

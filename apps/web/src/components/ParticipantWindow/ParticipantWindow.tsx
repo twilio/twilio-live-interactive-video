@@ -1,13 +1,10 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { useAppState } from '../../state';
 import ParticipantWindowHeader from './ParticipantWindowHeader/ParticipantWindowHeader';
-import { useRaisedHandsMap } from '../../hooks/useRaisedHandsMap/useRaisedHandsMap';
-import { RaisedHand } from './RaisedHand/RaisedHand';
-import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-import { sendSpeakerInvite } from '../../state/api/api';
-import { useEnqueueSnackbar } from '../../hooks/useSnackbar/useSnackbar';
+import ViewersList from '../ViewersList/ViewersList';
+import SpeakersList from '../SpeakersList/SpeakersList';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,33 +32,12 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function ParticipantWindow() {
   const classes = useStyles();
   const { appState } = useAppState();
-  const raisedHands = useRaisedHandsMap();
-  const { room } = useVideoContext();
-  const enqueueSnackbar = useEnqueueSnackbar();
-
-  const handleInvite = useCallback(
-    (raisedHand: string) => {
-      sendSpeakerInvite(raisedHand, room!.sid);
-      enqueueSnackbar({
-        headline: 'Invite Sent',
-        message: `You invited ${raisedHand} to be a speaker. They will now be able to share audio and video.`,
-        variant: 'info',
-      });
-    },
-    [room, enqueueSnackbar]
-  );
 
   return (
     <aside className={clsx(classes.participantWindowContainer, { [classes.hide]: !appState.isParticipantWindowOpen })}>
       <ParticipantWindowHeader />
-      {raisedHands.map(raisedHand => (
-        <RaisedHand
-          key={raisedHand}
-          name={raisedHand}
-          handleInvite={handleInvite}
-          isHost={appState.participantType === 'host'}
-        />
-      ))}
+      <SpeakersList />
+      <ViewersList />
     </aside>
   );
 }
