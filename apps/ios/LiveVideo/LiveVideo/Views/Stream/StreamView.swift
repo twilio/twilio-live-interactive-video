@@ -36,7 +36,7 @@ struct StreamView: View {
                             switch streamManager.config.role {
                             case .host, .speaker:
                                 if presentationLayoutViewModel.isPresenting {
-                                    PresentationLayoutView(spacing: spacing)
+                                    PresentationLayoutView(spacing: spacing, role: streamManager.config.role)
                                 } else {
                                     SpeakerGridView(spacing: spacing, role: streamManager.config.role)
                                 }

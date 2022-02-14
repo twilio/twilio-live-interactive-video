@@ -9,6 +9,7 @@ struct PresentationLayoutView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     let spacing: CGFloat
+    let role: StreamConfig.Role
 
     private var isPortraitOrientation: Bool {
         verticalSizeClass == .regular && horizontalSizeClass == .compact
@@ -19,7 +20,7 @@ struct PresentationLayoutView: View {
             HStack(spacing: spacing) {
                 VStack(spacing: spacing) {
                     PresentationStatusView(presenterDisplayName: viewModel.presenter.displayName)
-                    SpeakerVideoView(speaker: $viewModel.dominantSpeaker)
+                    SpeakerVideoView(speaker: $viewModel.dominantSpeaker, showHostControls: role == .host)
 
                     if isPortraitOrientation {
                         PresentationVideoView(videoTrack: $viewModel.presenter.presentationTrack)
@@ -40,10 +41,10 @@ struct PresentationLayoutView: View {
 struct PresentationLayoutView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            PresentationLayoutView(spacing: 6)
+            PresentationLayoutView(spacing: 6, role: .speaker)
                 .previewDisplayName("Portrait")
                 .frame(width: 300, height: 600)
-            PresentationLayoutView(spacing: 6)
+            PresentationLayoutView(spacing: 6, role: .speaker)
                 .previewDisplayName("Landscape")
                 .frame(width: 600, height: 300)
         }

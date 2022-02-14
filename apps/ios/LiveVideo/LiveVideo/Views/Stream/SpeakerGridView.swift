@@ -46,30 +46,8 @@ struct SpeakerGridView: View {
                 GeometryReader { geometry in
                     LazyVGrid(columns: columns, spacing: spacing) {
                         ForEach($viewModel.onscreenSpeakers, id: \.self) { $speaker in
-                            Group {
-                                if role == .host && !speaker.isYou {
-                                    Menu(
-                                        content: {
-                                            if !speaker.isMuted {
-                                                Button(
-                                                    action: { viewModel.muteSpeaker(speaker) },
-                                                    label: { Label("Mute", systemImage: "mic.slash") }
-                                                )
-                                            }
-                                            Button(
-                                                action: { viewModel.removeSpeaker(speaker) },
-                                                label: { Label("Move to viewers", systemImage: "minus.circle") }
-                                            )
-                                        },
-                                        label: {
-                                            SpeakerVideoView(speaker: $speaker)
-                                        }
-                                    )
-                                } else {
-                                    SpeakerVideoView(speaker: $speaker)
-                                }
-                            }
-                            .frame(height: geometry.size.height / CGFloat(rowCount) - spacing)
+                            SpeakerVideoView(speaker: $speaker, showHostControls: role == .host)
+                                .frame(height: geometry.size.height / CGFloat(rowCount) - spacing)
                         }
                     }
                 }
@@ -82,13 +60,13 @@ struct SpeakerGridView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             ForEach((1...6), id: \.self) {
-                SpeakerGridView(spacing: 6, role: .host)
+                SpeakerGridView(spacing: 6, role: .speaker)
                     .environmentObject(SpeakerGridViewModel.stub(onscreenSpeakerCount: $0))
             }
             .frame(width: 400, height: 700)
 
             ForEach((1...6), id: \.self) {
-                SpeakerGridView(spacing: 6, role: .host)
+                SpeakerGridView(spacing: 6, role: .speaker)
                     .environmentObject(SpeakerGridViewModel.stub(onscreenSpeakerCount: $0))
             }
             .frame(width: 700, height: 300)

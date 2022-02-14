@@ -65,6 +65,7 @@
 		DC6404D4271B3BF8004730C6 /* StreamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6404D3271B3BF8004730C6 /* StreamViewModel.swift */; };
 		DC6404D8271B68D4004730C6 /* ParticipantsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6404D7271B68D4004730C6 /* ParticipantsViewModel.swift */; };
 		DC6404DA271E217C004730C6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC6404D9271E217B004730C6 /* LaunchScreen.storyboard */; };
+		DC83671327BABF7500A90BF2 /* HostControlsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC83671227BABF7500A90BF2 /* HostControlsManager.swift */; };
 		DC9E18372729B68B0070F53F /* TitleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9E18362729B68B0070F53F /* TitleStyle.swift */; };
 		DC9E18392729DC740070F53F /* OffscreenSpeakersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9E18382729DC740070F53F /* OffscreenSpeakersView.swift */; };
 		DCB1BDFE27568D70006CE9D1 /* VerifyPasscodeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BDFD27568D70006CE9D1 /* VerifyPasscodeRequest.swift */; };
@@ -173,6 +174,7 @@
 		DC6404D3271B3BF8004730C6 /* StreamViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamViewModel.swift; sourceTree = "<group>"; };
 		DC6404D7271B68D4004730C6 /* ParticipantsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsViewModel.swift; sourceTree = "<group>"; };
 		DC6404D9271E217B004730C6 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		DC83671227BABF7500A90BF2 /* HostControlsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostControlsManager.swift; sourceTree = "<group>"; };
 		DC9E18362729B68B0070F53F /* TitleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleStyle.swift; sourceTree = "<group>"; };
 		DC9E18382729DC740070F53F /* OffscreenSpeakersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffscreenSpeakersView.swift; sourceTree = "<group>"; };
 		DCB1BDFD27568D70006CE9D1 /* VerifyPasscodeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyPasscodeRequest.swift; sourceTree = "<group>"; };
@@ -305,6 +307,7 @@
 				DCC48F7826D8288B00EE49EF /* API */,
 				DC4AA65526D0125900E677D5 /* AppInfo */,
 				DC4AA66326D1454A00E677D5 /* Auth */,
+				DC83671427BAD78400A90BF2 /* HostControls */,
 				DC14B78626FA385E003BDABC /* SpeakerSettings */,
 				DC4AA65626D0126A00E677D5 /* UserDefaults */,
 			);
@@ -439,6 +442,14 @@
 				DC5F455726CC061F009C5C79 /* Info.plist */,
 			);
 			path = LiveVideoUITests;
+			sourceTree = "<group>";
+		};
+		DC83671427BAD78400A90BF2 /* HostControls */ = {
+			isa = PBXGroup;
+			children = (
+				DC83671227BABF7500A90BF2 /* HostControlsManager.swift */,
+			);
+			path = HostControls;
 			sourceTree = "<group>";
 		};
 		DCC1D62426D9393900892038 /* Stream */ = {
@@ -727,6 +738,7 @@
 				DC1ED13026E960C600FFA769 /* SpeakerGridView.swift in Sources */,
 				DC5F458826CEA7CB009C5C79 /* SettingsView.swift in Sources */,
 				DC44BB3F2703C8AD00DB656D /* AppDelegate.swift in Sources */,
+				DC83671327BABF7500A90BF2 /* HostControlsManager.swift in Sources */,
 				DC175F3E2717530D00D9D1FE /* SyncObjectConnecting.swift in Sources */,
 				DC504A7526F0F18700C37EC9 /* SpeakerGridViewModel.swift in Sources */,
 				DC50A5752739E26300E29580 /* ViewerConnectedToPlayerRequest.swift in Sources */,
