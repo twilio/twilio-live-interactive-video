@@ -13,6 +13,7 @@ struct LiveVideoApp: App {
     @StateObject private var streamManager = StreamManager()
     @StateObject private var speakerSettingsManager = SpeakerSettingsManager()
     @StateObject private var speakerGridViewModel = SpeakerGridViewModel()
+    @StateObject private var presentationLayoutViewModel = PresentationLayoutViewModel()
     @StateObject private var api = API()
 
     var body: some Scene {
@@ -23,6 +24,7 @@ struct LiveVideoApp: App {
                 .environmentObject(participantsViewModel)
                 .environmentObject(streamManager)
                 .environmentObject(speakerGridViewModel)
+                .environmentObject(presentationLayoutViewModel)
                 .environmentObject(speakerSettingsManager)
                 .environmentObject(api)
                 .onAppear {
@@ -34,6 +36,7 @@ struct LiveVideoApp: App {
                     let speakersMap = SyncUsersMap()
                     let raisedHandsMap = SyncUsersMap()
                     let viewersMap = SyncUsersMap()
+                    let speakerVideoViewModelFactory = SpeakerVideoViewModelFactory()
                     let syncManager = SyncManager(
                         speakersMap: speakersMap,
                         viewersMap: viewersMap,
@@ -61,7 +64,18 @@ struct LiveVideoApp: App {
                         raisedHandsMap: raisedHandsMap
                     )
                     speakerSettingsManager.configure(roomManager: roomManager)
-                    speakerGridViewModel.configure(roomManager: roomManager, speakersMap: speakersMap, api: api)
+                    speakerVideoViewModelFactory.configure(speakersMap: speakersMap)
+                    speakerGridViewModel.configure(
+                        roomManager: roomManager,
+                        speakersMap: speakersMap,
+                        api: api,
+                        speakerVideoViewModelFactory: speakerVideoViewModelFactory
+                    )
+                    presentationLayoutViewModel.configure(
+                        roomManager: roomManager,
+                        speakersMap: speakersMap,
+                        speakerVideoViewModelFactory: speakerVideoViewModelFactory
+                    )
                 }
         }
     }
