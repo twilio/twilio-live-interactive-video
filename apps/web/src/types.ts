@@ -6,6 +6,10 @@ declare module 'twilio-video' {
     isSwitchedOff: undefined;
     setPriority: undefined;
   }
+
+  interface Room {
+    on(event: 'setPreventAutomaticJoinStreamAsViewer', listener: () => void): this;
+  }
 }
 
 declare global {

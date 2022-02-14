@@ -9,10 +9,11 @@ import TwilioVideo
 struct SwiftUIVideoView: UIViewRepresentable {
     @Binding var videoTrack: VideoTrack?
     @Binding var shouldMirror: Bool
+    var fill: Bool = true
 
     func makeUIView(context: Context) -> VideoTrackStoringVideoView {
         let videoView = VideoTrackStoringVideoView()
-        videoView.contentMode = .scaleAspectFill
+        videoView.contentMode = fill ? .scaleAspectFill : .scaleAspectFit
         return videoView
     }
 

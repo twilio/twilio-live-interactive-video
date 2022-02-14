@@ -24,6 +24,9 @@ class SyncUsersMap: NSObject, SyncObjectConnecting {
     let userRemovedPublisher = PassthroughSubject<User, Never>()
     var uniqueName: String!
     var errorHandler: ((Error) -> Void)?
+    var host: User? {
+        users.first { $0.isHost } // This app only has one host and it is the user that created the stream
+    }
     private(set) var users: [User] = []
     private var map: TWSMap?
 

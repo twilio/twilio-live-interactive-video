@@ -90,6 +90,7 @@ module.exports.handler = async (context, event, callback) => {
         ExtensionContext: JSON.stringify({
           room: { name: room.sid },
           outputs: [playerStreamer.data.sid],
+          resolution: '1920x1080',
         }),
       }),
     });

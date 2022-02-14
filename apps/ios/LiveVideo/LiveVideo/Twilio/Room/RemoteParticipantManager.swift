@@ -31,6 +31,16 @@ class RemoteParticipantManager: NSObject {
         
         return track
     }
+    var presentationTrack: VideoTrack? {
+        guard
+            let publication = participant.remoteVideoTracks.first(where: { $0.trackName == TrackName.presentation }),
+            let track = publication.remoteTrack
+        else {
+            return nil
+        }
+        
+        return track
+    }
     var isDominantSpeaker = false {
         didSet {
             dominantSpeakerStartTime = Date()
