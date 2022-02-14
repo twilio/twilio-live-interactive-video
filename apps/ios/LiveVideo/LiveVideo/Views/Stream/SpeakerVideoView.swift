@@ -5,7 +5,9 @@
 import SwiftUI
 
 struct SpeakerVideoView: View {
+    @EnvironmentObject var hostControlsManager: HostControlsManager
     @Binding var speaker: SpeakerVideoViewModel
+    let showHostControls: Bool
     
     var body: some View {
         ZStack {
@@ -35,7 +37,7 @@ struct SpeakerVideoView: View {
                     }
                 }
                 Spacer()
-                HStack {
+                HStack(alignment: .bottom) {
                     Text(speaker.displayName)
                         .lineLimit(1)
                         .foregroundColor(.white)
@@ -45,6 +47,29 @@ struct SpeakerVideoView: View {
                         .cornerRadius(2)
                         .font(.system(size: 14))
                     Spacer()
+
+                    if showHostControls && !speaker.isYou {
+                        Menu(
+                            content: {
+                                if !speaker.isMuted {
+                                    Button(
+                                        action: { hostControlsManager.muteSpeaker(identity: speaker.identity) },
+                                        label: { Label("Mute", systemImage: "mic.slash") }
+                                    )
+                                }
+                                Button(
+                                    action: { hostControlsManager.removeSpeaker(identity: speaker.identity) },
+                                    label: { Label("Move to viewers", systemImage: "minus.circle") }
+                                )
+                            },
+                            label: {
+                                Image(systemName: "ellipsis")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 22, weight: .heavy))
+                                    .frame(minWidth: 44, minHeight: 44)
+                            }
+                        )
+                    }
                 }
                 .padding(4)
             }
@@ -62,15 +87,19 @@ struct SpeakerVideoView: View {
 
 struct SpeakerVideoView_Previews: PreviewProvider {
     static var previews: some View {
+        let longIdentity = String(repeating: "Long ", count: 20)
+        
         Group {
-            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel()))
-                .previewDisplayName("Not Muted")
-            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(identity: String(repeating: "Long ", count: 20))))
-                .previewDisplayName("Long Identity")
-            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(isMuted: true)))
+            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel()), showHostControls: true)
+                .previewDisplayName("Not muted")
+            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(identity: longIdentity)), showHostControls: true)
+                .previewDisplayName("Long identity")
+            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(identity: longIdentity)), showHostControls: false)
+                .previewDisplayName("Long identity without host controls")
+            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(isMuted: true)), showHostControls: true)
                 .previewDisplayName("Muted")
-            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(isDominantSpeaker: true)))
-                .previewDisplayName("Dominant Speaker")
+            SpeakerVideoView(speaker: .constant(SpeakerVideoViewModel(isDominantSpeaker: true)), showHostControls: true)
+                .previewDisplayName("Dominant speaker")
         }
         .frame(width: 200, height: 200)
         .previewLayout(.sizeThatFits)

@@ -12,6 +12,7 @@ struct LiveVideoApp: App {
     @StateObject private var participantsViewModel = ParticipantsViewModel()
     @StateObject private var streamManager = StreamManager()
     @StateObject private var speakerSettingsManager = SpeakerSettingsManager()
+    @StateObject private var hostControlsManager = HostControlsManager()
     @StateObject private var speakerGridViewModel = SpeakerGridViewModel()
     @StateObject private var presentationLayoutViewModel = PresentationLayoutViewModel()
     @StateObject private var api = API()
@@ -26,6 +27,7 @@ struct LiveVideoApp: App {
                 .environmentObject(speakerGridViewModel)
                 .environmentObject(presentationLayoutViewModel)
                 .environmentObject(speakerSettingsManager)
+                .environmentObject(hostControlsManager)
                 .environmentObject(api)
                 .onAppear {
                     authManager.configure(api: api)
@@ -64,11 +66,11 @@ struct LiveVideoApp: App {
                         raisedHandsMap: raisedHandsMap
                     )
                     speakerSettingsManager.configure(roomManager: roomManager)
+                    hostControlsManager.configure(roomManager: roomManager, api: api)
                     speakerVideoViewModelFactory.configure(speakersMap: speakersMap)
                     speakerGridViewModel.configure(
                         roomManager: roomManager,
                         speakersMap: speakersMap,
-                        api: api,
                         speakerVideoViewModelFactory: speakerVideoViewModelFactory
                     )
                     presentationLayoutViewModel.configure(

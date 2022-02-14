@@ -12,19 +12,16 @@ class SpeakerGridViewModel: ObservableObject {
     private let maxOnscreenSpeakerCount = 6
     private var roomManager: RoomManager!
     private var speakersMap: SyncUsersMap!
-    private var api: API!
     private var speakerVideoViewModelFactory: SpeakerVideoViewModelFactory!
     private var subscriptions = Set<AnyCancellable>()
 
     func configure(
         roomManager: RoomManager,
         speakersMap: SyncUsersMap,
-        api: API,
         speakerVideoViewModelFactory: SpeakerVideoViewModelFactory
     ) {
         self.roomManager = roomManager
         self.speakersMap = speakersMap
-        self.api = api
         self.speakerVideoViewModelFactory = speakerVideoViewModelFactory
         
         roomManager.roomConnectPublisher
@@ -71,20 +68,6 @@ class SpeakerGridViewModel: ObservableObject {
 
                 self.updateSpeaker(self.speakerVideoViewModelFactory.makeSpeaker(participant: participant)) }
             .store(in: &subscriptions)
-    }
-
-    func muteSpeaker(_ speaker: SpeakerVideoViewModel) {
-        let message = RoomMessage(messageType: .mute, toParticipantIdentity: speaker.identity)
-        roomManager.localParticipant.sendMessage(message)
-    }
-
-    func removeSpeaker(_ speaker: SpeakerVideoViewModel) {
-        guard let roomName = roomManager.roomName else {
-            return
-        }
-        
-        let request = RemoveSpeakerRequest(roomName: roomName, userIdentity: speaker.identity)
-        api.request(request)
     }
     
     private func addSpeaker(_ speaker: SpeakerVideoViewModel) {
