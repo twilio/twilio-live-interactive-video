@@ -67,7 +67,7 @@ The application uses the [`video-composer-v1` Media Extension](https://www.twili
 
 #### Web app local development
 
-To run the web app locally, you must first deploy the backend functions to Twilio Serverless. First, run `npm run serverless:deploy`, and then copy the URL of the deployed app to your `.env` file as the `WEB_PROXY_URL` variable (see [.env.example](.env.example) for an example). Then, run `npm run develop:web` to start the local development server. Any API requests made by the locally running app will be proxied to to the URL provided as the `WEB_PROXY_URL`. 
+To run the web app locally, you must first deploy the backend functions to Twilio Serverless. First, run `npm run serverless:deploy`, and then copy the URL of the deployed app to your `.env` file as the `WEB_PROXY_URL` variable (see [.env.example](.env.example) for an example). Then, run `npm run develop:web` to start the local development server. Any API requests made by the locally running app will be proxied to the URL provided as the `WEB_PROXY_URL`. 
 
 If you want to edit the functions that have been deployed to Twilio Serverless, you can do so in the [Twilio Console Functions Editor](https://www.twilio.com/changelog/all-new-functions-and-assets-ui-now-available). 
 
