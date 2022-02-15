@@ -45,7 +45,7 @@ If you make any changes to this application, you can run `npm run serverless:rem
 
 **NOTE:** The Twilio Function that provides access tokens via a passcode should _NOT_ be used in a production environment. This token server supports seamlessly getting started with the collaboration app, and while convenient, the passcode is not secure enough for production environments. You should use an authentication provider to securely provide access tokens to your client applications. You can find more information about Programmable Video access tokens [in this tutorial](https://www.twilio.com/docs/video/tutorials/user-identity-access-tokens).
 
-The passcode will expire after one week. To generate a new passcode, run `npm run serverless:deploy -- --override`.
+The passcode will expire after one week. To generate a new passcode, run `npm run serverless:deploy -- --override`. Additionally, you may run `npm run serverless:list` to see your deployed app's URL and passcode, or you can run `npm run serverless:remove` to delete the Serverless app from Twilio.
 
 #### Max Stream Duration
 
@@ -64,6 +64,12 @@ The first person to enter the Video Room as a speaker will be the event's host. 
 If you join a stream as an audience member, you can raise your hand to request to join the stream as a speaker. The host can then send you an invitation to join the stream, and send you back to the audience when you are done.
 
 The application uses the [`video-composer-v1` Media Extension](https://www.twilio.com/docs/live/video-composer), which formats the Video Room contents in a responsive grid for streaming to audience members. People viewing the live stream will see all of the Video Room participants, and the grid will change as participants enter or exit.
+
+#### Web app local development
+
+To run the web app locally, you must first deploy the backend functions to Twilio Serverless. First, run `npm run serverless:deploy`, and then copy the URL of the deployed app to your `.env` file as the `WEB_PROXY_URL` variable (see [.env.example](.env.example) for an example). Then, run `npm run develop:web` to start the local development server. Any API requests made by the locally running app will be proxied to the URL provided as the `WEB_PROXY_URL`. 
+
+If you want to edit the functions that have been deployed to Twilio Serverless, you can do so in the [Twilio Console Functions Editor](https://www.twilio.com/changelog/all-new-functions-and-assets-ui-now-available). 
 
 ### Run the iOS App
 
