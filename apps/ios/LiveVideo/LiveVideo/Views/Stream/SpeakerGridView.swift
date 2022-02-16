@@ -45,11 +45,17 @@ struct SpeakerGridView: View {
             } else {
                 TabView(selection: $viewModel.selectedPage) {
                     ForEach($viewModel.pages, id: \.self) { $page in
-                        SpeakerVideoView(speaker: $page.speaker, showHostControls: role == .host)
-                            .tabItem {
-                                
+                        ZStack {
+                            SpeakerVideoView(speaker: $page.speaker, showHostControls: role == .host)
+                            VStack {
+                                Text("Hi")
+                                    .foregroundColor(.green)
                             }
-                            .tag(page.identifier)
+                        }
+                        .tabItem {
+                            
+                        }
+                        .tag(page.identifier)
                     }
                 }
                 .tabViewStyle(PageTabViewStyle())

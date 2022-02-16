@@ -49,4 +49,14 @@ class VideoTrackStoringVideoView: VideoView {
             }
         }
     }
+    
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        print("didMoveToWindow: \(window.debugDescription)")
+    }
+    
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        print("didMoveToSuperview: \(superview.debugDescription)")
+    }
 }
