@@ -127,6 +127,14 @@ extension RemoteParticipantManager: RemoteParticipantDelegate {
     ) {
         dataTrack.delegate = self
     }
+
+    func remoteParticipantSwitchedOnVideoTrack(participant: RemoteParticipant, track: RemoteVideoTrack) {
+        print("\(participant.identity) \(track.name) switched on")
+    }
+
+    func remoteParticipantSwitchedOffVideoTrack(participant: RemoteParticipant, track: RemoteVideoTrack) {
+        print("\(participant.identity) \(track.name) switched off")
+    }
 }
 
 extension RemoteParticipantManager: RemoteDataTrackDelegate {

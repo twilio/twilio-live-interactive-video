@@ -123,19 +123,21 @@ class StreamManager: ObservableObject {
     }
     
     private func connectSync(accessToken: String, objectNames: SyncManager.ObjectNames) {
-        guard !syncManager.isConnected else {
-            connectRoomOrPlayer(accessToken: accessToken)
-            return
-        }
+        connectRoomOrPlayer(accessToken: accessToken)
 
-        syncManager.connect(token: accessToken, objectNames: objectNames) { [weak self] error in
-            if let error = error {
-                self?.handleError(error)
-                return
-            }
-
-            self?.connectRoomOrPlayer(accessToken: accessToken)
-        }
+//        guard !syncManager.isConnected else {
+//            connectRoomOrPlayer(accessToken: accessToken)
+//            return
+//        }
+//
+//        syncManager.connect(token: accessToken, objectNames: objectNames) { [weak self] error in
+//            if let error = error {
+//                self?.handleError(error)
+//                return
+//            }
+//
+//            self?.connectRoomOrPlayer(accessToken: accessToken)
+//        }
     }
     
     private func connectRoomOrPlayer(accessToken: String) {

@@ -23,6 +23,7 @@ struct SwiftUIVideoView: UIViewRepresentable {
     }
     
     static func dismantleUIView(_ uiView: VideoTrackStoringVideoView, coordinator: ()) {
+        print("dismantleUIView")
         uiView.videoTrack?.removeRenderer(uiView)
     }
 }
@@ -39,9 +40,11 @@ class VideoTrackStoringVideoView: VideoView {
         didSet {
             guard oldValue != videoTrack else { return }
             
+            print("Stop rendering \(oldValue?.name ?? nil)")
             oldValue?.removeRenderer(self)
             
             if let videoTrack = videoTrack {
+                print("Start rendering \(videoTrack.name)")
                 videoTrack.addRenderer(self)
             }
         }

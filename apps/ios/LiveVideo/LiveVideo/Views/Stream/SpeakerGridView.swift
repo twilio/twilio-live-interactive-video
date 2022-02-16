@@ -40,18 +40,35 @@ struct SpeakerGridView: View {
     
     var body: some View {
         VStack {
-            if viewModel.onscreenSpeakers.isEmpty {
+            if viewModel.pages.isEmpty {
                 Spacer()
             } else {
-                GeometryReader { geometry in
-                    LazyVGrid(columns: columns, spacing: spacing) {
-                        ForEach($viewModel.onscreenSpeakers, id: \.self) { $speaker in
-                            SpeakerVideoView(speaker: $speaker, showHostControls: role == .host)
-                                .frame(height: geometry.size.height / CGFloat(rowCount) - spacing)
-                        }
+                TabView(selection: $viewModel.selectedPage) {
+                    ForEach($viewModel.pages, id: \.self) { $page in
+                        SpeakerVideoView(speaker: $page.speaker, showHostControls: role == .host)
+                            .tabItem {
+                                
+                            }
+                            .tag(page.identifier)
                     }
                 }
+                .tabViewStyle(PageTabViewStyle())
             }
+            
+            
+            
+//            if viewModel.onscreenSpeakers.isEmpty {
+//                Spacer()
+//            } else {
+//                GeometryReader { geometry in
+//                    LazyVGrid(columns: columns, spacing: spacing) {
+//                        ForEach($viewModel.onscreenSpeakers, id: \.self) { $speaker in
+//                            SpeakerVideoView(speaker: $speaker, showHostControls: role == .host)
+//                                .frame(height: geometry.size.height / CGFloat(rowCount) - spacing)
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 }

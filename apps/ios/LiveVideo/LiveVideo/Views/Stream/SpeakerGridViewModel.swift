@@ -7,6 +7,28 @@ import Combine
 
 /// Subscribes to room and participant state changes to provide speaker state for the UI to display in a grid
 class SpeakerGridViewModel: ObservableObject {
+    struct Page: Hashable {
+        let identifier: Int
+        var speaker: SpeakerVideoViewModel
+
+        static func == (lhs: Page, rhs: Page) -> Bool {
+            lhs.identifier == rhs.identifier
+        }
+
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(identifier)
+        }
+    }
+    
+    @Published var pages: [Page] = []
+    @Published var selectedPage = 0 {
+        didSet {
+            print("Selected page: \(selectedPage)")
+        }
+    }
+
+    
+
     @Published var onscreenSpeakers: [SpeakerVideoViewModel] = []
     @Published var offscreenSpeakers: [SpeakerVideoViewModel] = []
     private let maxOnscreenSpeakerCount = 6
@@ -71,6 +93,15 @@ class SpeakerGridViewModel: ObservableObject {
     }
     
     private func addSpeaker(_ speaker: SpeakerVideoViewModel) {
+        let newPage = Page(identifier: pages.count, speaker: speaker)
+        pages.append(newPage)
+        
+
+        
+        
+        
+        
+        
         if onscreenSpeakers.count < maxOnscreenSpeakerCount {
             onscreenSpeakers.append(speaker)
         } else {
@@ -79,9 +110,16 @@ class SpeakerGridViewModel: ObservableObject {
     }
     
     private func removeSpeaker(with identity: String) {
+
+        
+        
+        
+        
+        
+        
         if let index = onscreenSpeakers.firstIndex(where: { $0.identity == identity }) {
             onscreenSpeakers.remove(at: index)
-            
+
             if !offscreenSpeakers.isEmpty {
                 onscreenSpeakers.append(offscreenSpeakers.removeFirst())
             }
@@ -91,6 +129,20 @@ class SpeakerGridViewModel: ObservableObject {
     }
 
     private func updateSpeaker(_ speaker: SpeakerVideoViewModel) {
+        guard let index = pages.firstIndex(where: { $0.speaker.identity == speaker.identity }) else {
+            return
+        }
+        
+        pages[index].speaker = speaker
+        
+
+        
+        
+        
+        
+        
+        
+        
         if let index = onscreenSpeakers.firstIndex(of: speaker) {
             onscreenSpeakers[index] = speaker
         } else if let index = offscreenSpeakers.firstIndex(of: speaker) {
@@ -104,9 +156,9 @@ class SpeakerGridViewModel: ObservableObject {
                 let oldestDominantSpeaker = onscreenSpeakers[1...] // Skip local user at 0
                     .sorted { $0.dominantSpeakerStartTime < $1.dominantSpeakerStartTime }
                     .first!
-                
+
                 let oldestDominantSpeakerIndex = onscreenSpeakers.firstIndex(of: oldestDominantSpeaker)!
-                
+
                 onscreenSpeakers.remove(at: oldestDominantSpeakerIndex)
                 onscreenSpeakers.insert(speaker, at: oldestDominantSpeakerIndex)
                 offscreenSpeakers.remove(at: index)
