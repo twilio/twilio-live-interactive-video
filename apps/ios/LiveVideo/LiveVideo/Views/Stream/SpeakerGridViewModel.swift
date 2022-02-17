@@ -9,7 +9,11 @@ import Combine
 class SpeakerGridViewModel: ObservableObject {
     struct Page: Hashable {
         let identifier: Int
-        var speaker: SpeakerVideoViewModel
+        var speakers: [SpeakerVideoViewModel]
+        
+        func indexOf(identity: String) -> Int? {
+            speakers.firstIndex { $0.identity == identity }
+        }
 
         static func == (lhs: Page, rhs: Page) -> Bool {
             lhs.identifier == rhs.identifier
@@ -93,19 +97,11 @@ class SpeakerGridViewModel: ObservableObject {
     }
     
     private func addSpeaker(_ speaker: SpeakerVideoViewModel) {
-        let newPage = Page(identifier: pages.count, speaker: speaker)
-        pages.append(newPage)
-        
-
-        
-        
-        
-        
-        
-        if onscreenSpeakers.count < maxOnscreenSpeakerCount {
-            onscreenSpeakers.append(speaker)
+        if !pages.isEmpty && pages.last!.speakers.count < maxOnscreenSpeakerCount {
+            pages[pages.count - 1].speakers.append(speaker)
         } else {
-            offscreenSpeakers.append(speaker)
+            let newPage = Page(identifier: pages.count, speakers: [speaker])
+            pages.append(newPage)
         }
     }
     
@@ -117,23 +113,39 @@ class SpeakerGridViewModel: ObservableObject {
         
         
         
-        if let index = onscreenSpeakers.firstIndex(where: { $0.identity == identity }) {
-            onscreenSpeakers.remove(at: index)
-
-            if !offscreenSpeakers.isEmpty {
-                onscreenSpeakers.append(offscreenSpeakers.removeFirst())
-            }
-        } else {
-            offscreenSpeakers.removeAll { $0.identity == identity }
-        }
+//        if let index = onscreenSpeakers.firstIndex(where: { $0.identity == identity }) {
+//            onscreenSpeakers.remove(at: index)
+//
+//            if !offscreenSpeakers.isEmpty {
+//                onscreenSpeakers.append(offscreenSpeakers.removeFirst())
+//            }
+//        } else {
+//            offscreenSpeakers.removeAll { $0.identity == identity }
+//        }
     }
 
+    private func pageIndexForSpeaker(identity: String) -> Int? {
+        pages.firstIndex { $0.indexOf(identity: identity) != nil }
+    }
+    
     private func updateSpeaker(_ speaker: SpeakerVideoViewModel) {
-        guard let index = pages.firstIndex(where: { $0.speaker.identity == speaker.identity }) else {
+        guard
+            let pageIndex = pageIndexForSpeaker(identity: speaker.identity),
+            let speakerIndex = pages[pageIndex].indexOf(identity: speaker.identity)
+        else {
             return
         }
         
-        pages[index].speaker = speaker
+        pages[pageIndex].speakers[speakerIndex] = speaker
+        
+        
+        
+        
+//        guard let index = pages.firstIndex(where: { $0.speaker.identity == speaker.identity }) else {
+//            return
+//        }
+//
+//        pages[index].speaker = speaker
         
 
         
@@ -143,27 +155,27 @@ class SpeakerGridViewModel: ObservableObject {
         
         
         
-        if let index = onscreenSpeakers.firstIndex(of: speaker) {
-            onscreenSpeakers[index] = speaker
-        } else if let index = offscreenSpeakers.firstIndex(of: speaker) {
-            offscreenSpeakers[index] = speaker
-
-            // If an offscreen speaker becomes dominant speaker move them to onscreen speakers.
-            // The oldest dominant speaker that is onscreen is moved to the start of offscreen users.
-            // The new dominant speaker is moved onscreen where the oldest dominant speaker was located.
-            // This approach always keeps the most recent dominant speakers visible.
-            if speaker.isDominantSpeaker {
-                let oldestDominantSpeaker = onscreenSpeakers[1...] // Skip local user at 0
-                    .sorted { $0.dominantSpeakerStartTime < $1.dominantSpeakerStartTime }
-                    .first!
-
-                let oldestDominantSpeakerIndex = onscreenSpeakers.firstIndex(of: oldestDominantSpeaker)!
-
-                onscreenSpeakers.remove(at: oldestDominantSpeakerIndex)
-                onscreenSpeakers.insert(speaker, at: oldestDominantSpeakerIndex)
-                offscreenSpeakers.remove(at: index)
-                offscreenSpeakers.insert(oldestDominantSpeaker, at: 0)
-            }
-        }
+//        if let index = onscreenSpeakers.firstIndex(of: speaker) {
+//            onscreenSpeakers[index] = speaker
+//        } else if let index = offscreenSpeakers.firstIndex(of: speaker) {
+//            offscreenSpeakers[index] = speaker
+//
+//            // If an offscreen speaker becomes dominant speaker move them to onscreen speakers.
+//            // The oldest dominant speaker that is onscreen is moved to the start of offscreen users.
+//            // The new dominant speaker is moved onscreen where the oldest dominant speaker was located.
+//            // This approach always keeps the most recent dominant speakers visible.
+//            if speaker.isDominantSpeaker {
+//                let oldestDominantSpeaker = onscreenSpeakers[1...] // Skip local user at 0
+//                    .sorted { $0.dominantSpeakerStartTime < $1.dominantSpeakerStartTime }
+//                    .first!
+//
+//                let oldestDominantSpeakerIndex = onscreenSpeakers.firstIndex(of: oldestDominantSpeaker)!
+//
+//                onscreenSpeakers.remove(at: oldestDominantSpeakerIndex)
+//                onscreenSpeakers.insert(speaker, at: oldestDominantSpeakerIndex)
+//                offscreenSpeakers.remove(at: index)
+//                offscreenSpeakers.insert(oldestDominantSpeaker, at: 0)
+//            }
+//        }
     }
 }

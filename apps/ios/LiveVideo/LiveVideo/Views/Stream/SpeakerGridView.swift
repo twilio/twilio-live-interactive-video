@@ -43,38 +43,22 @@ struct SpeakerGridView: View {
             if viewModel.pages.isEmpty {
                 Spacer()
             } else {
-                TabView(selection: $viewModel.selectedPage) {
+                TabView {
                     ForEach($viewModel.pages, id: \.self) { $page in
-                        ZStack {
-                            SpeakerVideoView(speaker: $page.speaker, showHostControls: role == .host)
-                            VStack {
-                                Text("Hi")
-                                    .foregroundColor(.green)
+                        GeometryReader { geometry in
+                            LazyVGrid(columns: columns, spacing: spacing) {
+                                ForEach($page.speakers, id: \.self) { $speaker in
+                                    SpeakerVideoView(speaker: $speaker, showHostControls: role == .host)
+                                        .frame(height: geometry.size.height / CGFloat(rowCount) - spacing)
+                                }
                             }
+                            .padding(.horizontal, spacing)
                         }
-                        .tabItem {
-                            
-                        }
-                        .tag(page.identifier)
+                        .padding(.bottom, 40)
                     }
                 }
-                .tabViewStyle(PageTabViewStyle())
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
             }
-            
-            
-            
-//            if viewModel.onscreenSpeakers.isEmpty {
-//                Spacer()
-//            } else {
-//                GeometryReader { geometry in
-//                    LazyVGrid(columns: columns, spacing: spacing) {
-//                        ForEach($viewModel.onscreenSpeakers, id: \.self) { $speaker in
-//                            SpeakerVideoView(speaker: $speaker, showHostControls: role == .host)
-//                                .frame(height: geometry.size.height / CGFloat(rowCount) - spacing)
-//                        }
-//                    }
-//                }
-//            }
         }
     }
 }

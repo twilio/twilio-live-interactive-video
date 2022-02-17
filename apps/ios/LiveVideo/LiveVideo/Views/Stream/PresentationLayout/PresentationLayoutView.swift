@@ -33,7 +33,7 @@ struct PresentationLayoutView: View {
                     PresentationVideoView(videoTrack: $viewModel.presenter.presentationTrack)
                 }
             }
-            .padding(.bottom, spacing)
+            .padding([.bottom, .horizontal], spacing)
         }
     }
 }
