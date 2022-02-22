@@ -31,6 +31,16 @@ class RemoteParticipantManager: NSObject {
         
         return track
     }
+    var isCameraTrackSwitchedOff: Bool {
+        guard
+            let publication = participant.remoteVideoTracks.first(where: { $0.trackName.contains(TrackName.camera) }),
+            let track = publication.remoteTrack
+        else {
+            return false
+        }
+        
+        return track.isSwitchedOff
+    }
     var presentationTrack: VideoTrack? {
         guard
             let publication = participant.remoteVideoTracks.first(where: { $0.trackName == TrackName.presentation }),
@@ -130,10 +140,12 @@ extension RemoteParticipantManager: RemoteParticipantDelegate {
 
     func remoteParticipantSwitchedOnVideoTrack(participant: RemoteParticipant, track: RemoteVideoTrack) {
         print("\(participant.identity) \(track.name) switched on")
+        delegate?.participantDidChange(self)
     }
 
     func remoteParticipantSwitchedOffVideoTrack(participant: RemoteParticipant, track: RemoteVideoTrack) {
         print("\(participant.identity) \(track.name) switched off")
+        delegate?.participantDidChange(self)
     }
 }
 

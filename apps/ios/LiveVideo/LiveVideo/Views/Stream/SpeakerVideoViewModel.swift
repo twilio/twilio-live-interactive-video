@@ -14,6 +14,7 @@ struct SpeakerVideoViewModel {
     var isDominantSpeaker = false
     var cameraTrack: VideoTrack?
     var shouldMirrorCameraVideo = false
+    var isVideoTrackSwitchedOff = false
 
     init(participant: LocalParticipantManager, isHost: Bool) {
         identity = participant.identity
@@ -37,6 +38,7 @@ struct SpeakerVideoViewModel {
         isDominantSpeaker = participant.isDominantSpeaker
         dominantSpeakerStartTime = participant.dominantSpeakerStartTime
         cameraTrack = participant.cameraTrack
+        isVideoTrackSwitchedOff = participant.isCameraTrackSwitchedOff
     }
 }
 

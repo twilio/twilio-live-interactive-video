@@ -22,6 +22,11 @@ struct SpeakerVideoView: View {
             if speaker.cameraTrack != nil {
                 SwiftUIVideoView(videoTrack: $speaker.cameraTrack, shouldMirror: $speaker.shouldMirrorCameraVideo)
             }
+            
+            if speaker.isVideoTrackSwitchedOff {
+                Color.red
+                    .opacity(0.5)
+            }
 
             VStack {
                 HStack {

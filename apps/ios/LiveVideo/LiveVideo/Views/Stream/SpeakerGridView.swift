@@ -15,26 +15,29 @@ struct SpeakerGridView: View {
         verticalSizeClass == .regular && horizontalSizeClass == .compact
     }
 
+    // Will have to make these more complex
     private var rowCount: Int {
-        if isPortraitOrientation {
-            return (viewModel.onscreenSpeakers.count + viewModel.onscreenSpeakers.count % columnCount) / columnCount
-        } else {
-            return viewModel.onscreenSpeakers.count < 5 ? 1 : 2
-        }
+        return (viewModel.pages[0].speakers.count + viewModel.pages[0].speakers.count % columnCount) / columnCount
+        
+//        if isPortraitOrientation {
+//            return (viewModel.onscreenSpeakers.count + viewModel.onscreenSpeakers.count % columnCount) / columnCount
+//        } else {
+//            return viewModel.onscreenSpeakers.count < 5 ? 1 : 2
+//        }
     }
     
     private var columnCount: Int {
-        if isPortraitOrientation {
-            return viewModel.onscreenSpeakers.count < 4 ? 1 : 2
-        } else {
-            return (viewModel.onscreenSpeakers.count + viewModel.onscreenSpeakers.count % rowCount) / rowCount
-        }
+//        if isPortraitOrientation {
+            return viewModel.pages[0].speakers.count < 4 ? 1 : 2
+//        } else {
+//            return (viewModel.onscreenSpeakers.count + viewModel.onscreenSpeakers.count % rowCount) / rowCount
+//        }
     }
     
-    private var columns: [GridItem] {
+    private func columns(pageIndex: Int) -> [GridItem] {
         [GridItem](
             repeating: GridItem(.flexible(), spacing: spacing),
-            count: columnCount
+            count: pageIndex == .zero ? columnCount : 2
         )
     }
     
@@ -46,7 +49,7 @@ struct SpeakerGridView: View {
                 TabView {
                     ForEach($viewModel.pages, id: \.self) { $page in
                         GeometryReader { geometry in
-                            LazyVGrid(columns: columns, spacing: spacing) {
+                            LazyVGrid(columns: columns(pageIndex: page.identifier), spacing: spacing) {
                                 ForEach($page.speakers, id: \.self) { $speaker in
                                     SpeakerVideoView(speaker: $speaker, showHostControls: role == .host)
                                         .frame(height: geometry.size.height / CGFloat(rowCount) - spacing)
@@ -57,7 +60,7 @@ struct SpeakerGridView: View {
                         .padding(.bottom, 40)
                     }
                 }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+                .tabViewStyle(PageTabViewStyle())
             }
         }
     }

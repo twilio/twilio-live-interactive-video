@@ -23,7 +23,7 @@ struct SwiftUIVideoView: UIViewRepresentable {
     }
     
     static func dismantleUIView(_ uiView: VideoTrackStoringVideoView, coordinator: ()) {
-        print("dismantleUIView")
+//        print("dismantleUIView")
         uiView.videoTrack?.removeRenderer(uiView)
     }
 }
@@ -40,11 +40,11 @@ class VideoTrackStoringVideoView: VideoView {
         didSet {
             guard oldValue != videoTrack else { return }
             
-            print("Stop rendering \(oldValue?.name ?? nil)")
+//            print("Stop rendering \(oldValue?.name ?? nil)")
             oldValue?.removeRenderer(self)
             
             if let videoTrack = videoTrack {
-                print("Start rendering \(videoTrack.name)")
+//                print("Start rendering \(videoTrack.name)")
                 videoTrack.addRenderer(self)
             }
         }
@@ -52,11 +52,11 @@ class VideoTrackStoringVideoView: VideoView {
     
     override func didMoveToWindow() {
         super.didMoveToWindow()
-        print("didMoveToWindow: \(window.debugDescription)")
+//        print("didMoveToWindow: \(window.debugDescription)")
     }
     
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
-        print("didMoveToSuperview: \(superview.debugDescription)")
+//        print("didMoveToSuperview: \(superview.debugDescription)")
     }
 }
