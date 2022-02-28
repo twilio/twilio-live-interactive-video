@@ -1,6 +1,6 @@
 # 1.0.0 (February 24, 2022)
 
-This is the official release of the Twilio Live Interactive Video iOS and web Apps. This project demonstrates an interactive live video streaming app that uses [Twilio Live](https://www.twilio.com/docs/live) and [Twilio Video](https://www.twilio.com/docs/video).
+This is the initial release of the Twilio Live Interactive Video iOS and web Apps. This project demonstrates an interactive live video streaming app that uses [Twilio Live](https://www.twilio.com/docs/live), [Twilio Video](https://www.twilio.com/docs/video) and [Twilio Sync](https://www.twilio.com/docs/sync).
 
 This release includes the following features:
 
