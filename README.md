@@ -1,6 +1,6 @@
 # Twilio Live Interactive Video
 
-This project demonstrates an interactive live video streaming app that uses [Twilio Live](https://www.twilio.com/docs/live) and [Twilio Video](https://www.twilio.com/docs/video). The project is setup as a monorepo that contains the frontend reference applications for the Web and iOS (Android coming soon).
+This project demonstrates an interactive live video streaming app that uses [Twilio Live](https://www.twilio.com/docs/live), [Twilio Video](https://www.twilio.com/docs/video), and [Twilio Sync](https://www.twilio.com/docs/sync). Check out [this blog post](https://www.twilio.com/blog/interactive-live-streaming-app-programmable-video-live-sync) for more details about the app's features and how it was built. The project is setup as a monorepo that contains the frontend reference applications for the Web and iOS (Android coming soon).
 
 ## Features
 
