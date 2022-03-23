@@ -23,7 +23,7 @@ module.exports.handler = async (context, event, callback) => {
   authHandler(context, event, callback);
 
   const common = require(Runtime.getAssets()['/common.js'].path);
-  const { axiosClient } = common(context, event, callback);
+  const { axiosClient, createErrorHandler } = common(context, event, callback);
 
   const { user_identity, stream_name } = event;
 
@@ -56,130 +56,79 @@ module.exports.handler = async (context, event, callback) => {
 
   const client = context.getTwilioClient();
 
-  try {
-    room = await client.video.rooms.create({
+  room = await client.video.rooms
+    .create({
       uniqueName: stream_name,
       type: 'group',
       statusCallback: 'https://' + DOMAIN_NAME + '/rooms-webhook',
-    });
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error creating room',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+    })
+    .catch(createErrorHandler('error creating room.'));
 
-  try {
-    // Create playerStreamer
-    playerStreamer = await axiosClient('PlayerStreamers', {
-      method: 'post',
-      data: 'Video=true',
-    });
+  // Create playerStreamer
+  playerStreamer = await axiosClient('PlayerStreamers', {
+    method: 'post',
+    data: 'Video=true',
+  }).catch(createErrorHandler('error creating PlayerStreamer.'));
 
-    // Create mediaProcessor
-    mediaProcessor = await axiosClient('MediaProcessors', {
-      method: 'post',
-      data: querystring.stringify({
-        MaxDuration: 60 * 30, // Set maxDuration to 30 minutes
-        Extension: context.MEDIA_EXTENSION,
-        ExtensionContext: JSON.stringify({
-          room: { name: room.sid },
-          outputs: [playerStreamer.data.sid],
-          resolution: '1920x1080',
-        }),
+  // Create mediaProcessor
+  mediaProcessor = await axiosClient('MediaProcessors', {
+    method: 'post',
+    data: querystring.stringify({
+      MaxDuration: 60 * 30, // Set maxDuration to 30 minutes
+      Extension: context.MEDIA_EXTENSION,
+      ExtensionContext: JSON.stringify({
+        room: { name: room.sid },
+        outputs: [playerStreamer.data.sid],
+        resolution: '1920x1080',
       }),
-    });
+    }),
+  }).catch(createErrorHandler('error creating MediaProcessor.'));
 
-    console.log(
-      'created stream: ',
-      JSON.stringify({
-        stream_url: playerStreamer.data.playback_url,
-        playerStreamerSid: playerStreamer.data.sid,
-        mediaProcessorSid: mediaProcessor.data.sid,
-      })
-    );
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error creating stream',
-        explanation: e.message,
-      },
-    });
-
-    return callback(null, response);
-  }
+  console.log(
+    'created stream: ',
+    JSON.stringify({
+      stream_url: playerStreamer.data.playback_url,
+      playerStreamerSid: playerStreamer.data.sid,
+      mediaProcessorSid: mediaProcessor.data.sid,
+    })
+  );
 
   // Create stream sync service
-  try {
-    streamSyncService = await client.sync.services.create({
+  streamSyncService = await client.sync.services
+    .create({
       friendlyName: SYNC_SERVICE_NAME_PREFIX + 'Stream ' + room.sid,
       aclEnabled: true,
       webhookUrl: 'https://' + DOMAIN_NAME + '/sync-webhook',
       reachabilityWebhooksEnabled: true,
       reachabilityDebouncingEnabled: true, // To prevent disconnect event when connections are rebalanced
-    });
-    streamSyncClient = await client.sync.services(streamSyncService.sid);
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error creating stream sync service',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+    })
+    .catch(createErrorHandler('error creating stream sync service.'));
+
+  streamSyncClient = client.sync.services(streamSyncService.sid);
 
   // Add stream to streams map
-  try {
-    const backendStorageSyncService = client.sync.services(BACKEND_STORAGE_SYNC_SERVICE_SID);
-
-    await backendStorageSyncService.syncMaps('streams').syncMapItems.create({
+  const backendStorageSyncService = client.sync.services(BACKEND_STORAGE_SYNC_SERVICE_SID);
+  await backendStorageSyncService
+    .syncMaps('streams')
+    .syncMapItems.create({
       key: room.sid,
       data: {
         sync_service_sid: streamSyncService.sid,
         player_streamer_sid: playerStreamer.data.sid,
         media_processor_sid: mediaProcessor.data.sid,
       },
-    });
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error adding stream to streams map',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+    })
+    .catch(createErrorHandler('error adding stream to streams map.'));
 
   const speakersMapName = `speakers`;
 
   // Create speakers map
-  try {
-    await streamSyncClient.syncMaps.create({
+
+  await streamSyncClient.syncMaps
+    .create({
       uniqueName: speakersMapName,
-    });
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error creating speakers map',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+    })
+    .catch(createErrorHandler('error creating speakers map.'));
 
   // Add the host to the speakers map when the stream is created so that:
   //
@@ -188,150 +137,74 @@ module.exports.handler = async (context, event, callback) => {
   //
   // There is only one host and it is the user that creates the stream. Other users are added to
   // the speakers map in rooms-webhook when they connect to the video room.
-  try {
-    await streamSyncClient.syncMaps('speakers').syncMapItems.create({
+
+  await streamSyncClient
+    .syncMaps('speakers')
+    .syncMapItems.create({
       key: user_identity,
       data: { host: true },
-    });
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error adding host to speakers map',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+    })
+    .catch(createErrorHandler('error adding host to speakers map.'));
 
   // Give user read access to speakers map
-  try {
-    await streamSyncClient
-      .syncMaps(speakersMapName)
-      .syncMapPermissions(user_identity)
-      .update({ read: true, write: false, manage: false });
-  } catch (e) {
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error adding read access to speakers map',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+  await streamSyncClient
+    .syncMaps(speakersMapName)
+    .syncMapPermissions(user_identity)
+    .update({ read: true, write: false, manage: false })
+    .catch(createErrorHandler('error adding read access to speakers map.'));
 
   const raisedHandsMapName = `raised_hands`;
   // Create raised hands map
-  try {
-    await streamSyncClient.syncMaps.create({
+  await streamSyncClient.syncMaps
+    .create({
       uniqueName: raisedHandsMapName,
-    });
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error creating raised hands map',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+    })
+    .catch(createErrorHandler('error creating raised hands map.'));
 
   // Give user read access to raised hands map
-  try {
-    await streamSyncClient
-      .syncMaps(raisedHandsMapName)
-      .syncMapPermissions(user_identity)
-      .update({ read: true, write: false, manage: false });
-  } catch (e) {
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error adding read access to raised hands map',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+  await streamSyncClient
+    .syncMaps(raisedHandsMapName)
+    .syncMapPermissions(user_identity)
+    .update({ read: true, write: false, manage: false })
+    .catch(createErrorHandler('error adding read access to raised hands map.'));
 
   const viewersMapName = `viewers`;
 
   // Create viewers map
-  try {
-    await streamSyncClient.syncMaps.create({
+  await streamSyncClient.syncMaps
+    .create({
       uniqueName: viewersMapName,
-    });
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error creating viewers map',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+    })
+    .catch(createErrorHandler('error creating viewers map.'));
 
   // Give user read access to viewers map
-  try {
-    await streamSyncClient
-      .syncMaps(viewersMapName)
-      .syncMapPermissions(user_identity)
-      .update({ read: true, write: false, manage: false });
-  } catch (e) {
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error adding read access to viewers map',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+  await streamSyncClient
+    .syncMaps(viewersMapName)
+    .syncMapPermissions(user_identity)
+    .update({ read: true, write: false, manage: false })
+    .catch(createErrorHandler('error adding read access to viewers map.'));
 
   const conversationsClient = client.conversations.services(CONVERSATIONS_SERVICE_SID);
 
-  try {
-    // Here we add a timer to close the conversation after the maximum length of a room (24 hours).
-    // This helps to clean up old conversations since there is a limit that a single participant
-    // can not be added to more than 1,000 open conversations.
-    conversation = await conversationsClient.conversations.create({
+  // Here we add a timer to close the conversation after the maximum length of a room (24 hours).
+  // This helps to clean up old conversations since there is a limit that a single participant
+  // can not be added to more than 1,000 open conversations.
+  conversation = await conversationsClient.conversations
+    .create({
       uniqueName: room.sid,
       'timers.closed': 'P1D',
-    });
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error creating conversation',
-        explanation: 'Something went wrong when creating a conversation.',
-      },
-    });
-    return callback(null, response);
-  }
+    })
+    .catch(createErrorHandler('error creating conversation.'));
 
-  try {
-    // Add participant to conversation
-    await conversationsClient.conversations(room.sid).participants.create({ identity: user_identity });
-  } catch (e) {
-    // Ignore "Participant already exists" error (50433)
-    if (e.code !== 50433) {
-      console.error(e);
-      response.setStatusCode(500);
-      response.setBody({
-        error: {
-          message: 'error creating conversation participant',
-          explanation: 'Something went wrong when creating a conversation participant.',
-        },
-      });
-      return callback(null, response);
-    }
-  }
+  // Add participant to conversation
+  await conversationsClient
+    .conversations(room.sid)
+    .participants.create({ identity: user_identity })
+    .catch((error) => {
+      if (error.code !== 50433) {
+        createErrorHandler('error creating stream sync service.')(error);
+      }
+    });
 
   // Create token
   const token = new AccessToken(ACCOUNT_SID, TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, {
