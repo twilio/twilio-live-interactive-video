@@ -25,7 +25,7 @@ module.exports.handler = async (context, event, callback) => {
   const common = require(Runtime.getAssets()['/common.js'].path);
   const { axiosClient, createErrorHandler } = common(context, event, callback);
 
-  const { user_identity, stream_name } = event;
+  const { user_identity, stream_name, record_stream = false } = event;
 
   let response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
@@ -55,6 +55,39 @@ module.exports.handler = async (context, event, callback) => {
   let room, playerStreamer, mediaProcessor, streamSyncService, streamSyncClient, conversation;
 
   const client = context.getTwilioClient();
+
+  // Create stream sync service
+  streamSyncService = await client.sync.services
+    .create({
+      friendlyName: SYNC_SERVICE_NAME_PREFIX + 'Stream ' + room.sid,
+      aclEnabled: true,
+      webhookUrl: 'https://' + DOMAIN_NAME + '/sync-webhook',
+      reachabilityWebhooksEnabled: true,
+      reachabilityDebouncingEnabled: true, // To prevent disconnect event when connections are rebalanced
+    })
+    .catch(createErrorHandler('error creating stream sync service.'));
+
+  streamSyncClient = client.sync.services(streamSyncService.sid);
+
+  // Create stream document
+  await streamSyncClient.documents
+    .create({
+      uniqueName: 'stream',
+      data: {
+        recording: {
+          is_recording: record_stream,
+          error: null,
+        },
+      },
+    })
+    .catch(createErrorHandler('error creating stream document.'));
+
+  // Give user read access to stream document
+  await streamSyncClient
+    .documents('stream')
+    .documentPermissions(user_identity)
+    .update({ read: true, write: false, manage: false })
+    .catch(createErrorHandler('error adding read access to stream document.'));
 
   room = await client.video.rooms
     .create({
@@ -93,19 +126,6 @@ module.exports.handler = async (context, event, callback) => {
     })
   );
 
-  // Create stream sync service
-  streamSyncService = await client.sync.services
-    .create({
-      friendlyName: SYNC_SERVICE_NAME_PREFIX + 'Stream ' + room.sid,
-      aclEnabled: true,
-      webhookUrl: 'https://' + DOMAIN_NAME + '/sync-webhook',
-      reachabilityWebhooksEnabled: true,
-      reachabilityDebouncingEnabled: true, // To prevent disconnect event when connections are rebalanced
-    })
-    .catch(createErrorHandler('error creating stream sync service.'));
-
-  streamSyncClient = client.sync.services(streamSyncService.sid);
-
   // Add stream to streams map
   const backendStorageSyncService = client.sync.services(BACKEND_STORAGE_SYNC_SERVICE_SID);
   await backendStorageSyncService
@@ -123,7 +143,6 @@ module.exports.handler = async (context, event, callback) => {
   const speakersMapName = `speakers`;
 
   // Create speakers map
-
   await streamSyncClient.syncMaps
     .create({
       uniqueName: speakersMapName,
@@ -132,7 +151,7 @@ module.exports.handler = async (context, event, callback) => {
 
   // Add the host to the speakers map when the stream is created so that:
   //
-  //   1. The speakers map is gauranteed to contain the host before any user connects to the stream.
+  //   1. The speakers map is guaranteed to contain the host before any user connects to the stream.
   //   2. We don't need a separate way to keep track of who the host is.
   //
   // There is only one host and it is the user that creates the stream. Other users are added to
