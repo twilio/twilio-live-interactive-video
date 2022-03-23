@@ -140,12 +140,10 @@ module.exports.handler = async (context, event, callback) => {
     })
     .catch(createErrorHandler('error adding stream to streams map.'));
 
-  const speakersMapName = `speakers`;
-
   // Create speakers map
   await streamSyncClient.syncMaps
     .create({
-      uniqueName: speakersMapName,
+      uniqueName: 'speakers',
     })
     .catch(createErrorHandler('error creating speakers map.'));
 
@@ -167,38 +165,35 @@ module.exports.handler = async (context, event, callback) => {
 
   // Give user read access to speakers map
   await streamSyncClient
-    .syncMaps(speakersMapName)
+    .syncMaps('speakers')
     .syncMapPermissions(user_identity)
     .update({ read: true, write: false, manage: false })
     .catch(createErrorHandler('error adding read access to speakers map.'));
 
-  const raisedHandsMapName = `raised_hands`;
   // Create raised hands map
   await streamSyncClient.syncMaps
     .create({
-      uniqueName: raisedHandsMapName,
+      uniqueName: 'raised_hands',
     })
     .catch(createErrorHandler('error creating raised hands map.'));
 
   // Give user read access to raised hands map
   await streamSyncClient
-    .syncMaps(raisedHandsMapName)
+    .syncMaps('raised_hands')
     .syncMapPermissions(user_identity)
     .update({ read: true, write: false, manage: false })
     .catch(createErrorHandler('error adding read access to raised hands map.'));
 
-  const viewersMapName = `viewers`;
-
   // Create viewers map
   await streamSyncClient.syncMaps
     .create({
-      uniqueName: viewersMapName,
+      uniqueName: 'viewers',
     })
     .catch(createErrorHandler('error creating viewers map.'));
 
   // Give user read access to viewers map
   await streamSyncClient
-    .syncMaps(viewersMapName)
+    .syncMaps('viewers')
     .syncMapPermissions(user_identity)
     .update({ read: true, write: false, manage: false })
     .catch(createErrorHandler('error adding read access to viewers map.'));
@@ -220,6 +215,7 @@ module.exports.handler = async (context, event, callback) => {
     .conversations(room.sid)
     .participants.create({ identity: user_identity })
     .catch((error) => {
+      // Ignore "Participant already exists" error (50433)
       if (error.code !== 50433) {
         createErrorHandler('error creating stream sync service.')(error);
       }
@@ -252,7 +248,8 @@ module.exports.handler = async (context, event, callback) => {
     sync_object_names: {
       speakers_map: 'speakers',
       viewers_map: 'viewers',
-      raised_hands_map: `raised_hands`,
+      raised_hands_map: 'raised_hands',
+      stream_document: 'stream',
     },
   });
   return callback(null, response);
