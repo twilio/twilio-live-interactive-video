@@ -56,6 +56,14 @@ module.exports.handler = async (context, event, callback) => {
 
   const client = context.getTwilioClient();
 
+  room = await client.video.rooms
+    .create({
+      uniqueName: stream_name,
+      type: 'group',
+      statusCallback: 'https://' + DOMAIN_NAME + '/rooms-webhook',
+    })
+    .catch(createErrorHandler('error creating room.'));
+
   // Create stream sync service
   streamSyncService = await client.sync.services
     .create({
@@ -88,14 +96,6 @@ module.exports.handler = async (context, event, callback) => {
     .documentPermissions(user_identity)
     .update({ read: true, write: false, manage: false })
     .catch(createErrorHandler('error adding read access to stream document.'));
-
-  room = await client.video.rooms
-    .create({
-      uniqueName: stream_name,
-      type: 'group',
-      statusCallback: 'https://' + DOMAIN_NAME + '/rooms-webhook',
-    })
-    .catch(createErrorHandler('error creating room.'));
 
   // Create playerStreamer
   playerStreamer = await axiosClient('PlayerStreamers', {
