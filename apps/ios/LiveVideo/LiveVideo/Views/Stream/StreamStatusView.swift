@@ -5,6 +5,7 @@
 import SwiftUI
 
 struct StreamStatusView: View {
+    @EnvironmentObject var streamDocument: SyncStreamDocument
     let streamName: String
     @Binding var streamState: StreamManager.State
     
@@ -12,6 +13,10 @@ struct StreamStatusView: View {
         HStack {
             if streamState == .connected {
                 LiveBadge()
+
+                if streamDocument.isRecording {
+                    RecordingBadge()
+                }
             }
 
             Spacer(minLength: 20)
@@ -26,17 +31,27 @@ struct StreamStatusView: View {
 
 struct StreamStatusView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            StreamStatusView(streamName: "Room name", streamState: .constant(.connecting))
-                .previewDisplayName("Loading")
-            StreamStatusView(streamName: "Short room name", streamState: .constant(.connected))
-                .previewDisplayName("Short Room Name")
-            StreamStatusView(
-                streamName: "A very long room name that doesn't fit completely",
-                streamState: .constant(.connected)
-            )
-                .previewDisplayName("Long Room Name")
+        let streamNames = ["Short room name", "Long room name that is truncated because it does not fit"]
+        let streamStates: [StreamManager.State] = [.connecting, .connected]
+        
+        ForEach([false, true], id: \.self) { isRecording in
+            ForEach(streamStates, id: \.self) { streamState in
+                ForEach(streamNames, id: \.self) { streamName in
+                    StreamStatusView(streamName: streamName, streamState: .constant(streamState))
+                        .environmentObject(SyncStreamDocument.stub(isRecording: isRecording))
+                        .frame(width: 400)
+                        .background(Color.backgroundStronger)
+                        .previewLayout(.sizeThatFits)
+                }
+            }
         }
-        .previewLayout(.sizeThatFits)
+    }
+}
+
+extension SyncStreamDocument {
+    static func stub(isRecording: Bool = false) -> SyncStreamDocument {
+        let streamDocument = SyncStreamDocument()
+        streamDocument.isRecording = isRecording
+        return streamDocument
     }
 }

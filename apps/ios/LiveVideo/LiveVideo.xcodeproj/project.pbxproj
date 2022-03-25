@@ -76,6 +76,8 @@
 		DCB1BE0B27581C11006CE9D1 /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = DCB1BE0A27581C11006CE9D1 /* Nimble */; };
 		DCB4497426F5496400B52774 /* SpeakerSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */; };
 		DCB4497626F65A7000B52774 /* SpeakerVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */; };
+		DCB8FA7B27EE17E00001EEB1 /* SyncStreamDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB8FA7A27EE17DF0001EEB1 /* SyncStreamDocument.swift */; };
+		DCB8FA8127EE51630001EEB1 /* RecordingBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB8FA8027EE51630001EEB1 /* RecordingBadge.swift */; };
 		DCC1D62626D9396400892038 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC1D62526D9396400892038 /* StreamManager.swift */; };
 		DCC1D62826D9568700892038 /* StreamConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC1D62726D9568700892038 /* StreamConfig.swift */; };
 		DCC1D62A26D9643400892038 /* FormStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC1D62926D9643400892038 /* FormStack.swift */; };
@@ -182,6 +184,8 @@
 		DCB1BE042756D954006CE9D1 /* EnterPasscodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPasscodeView.swift; sourceTree = "<group>"; };
 		DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerSettingsManager.swift; sourceTree = "<group>"; };
 		DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoViewModel.swift; sourceTree = "<group>"; };
+		DCB8FA7A27EE17DF0001EEB1 /* SyncStreamDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStreamDocument.swift; sourceTree = "<group>"; };
+		DCB8FA8027EE51630001EEB1 /* RecordingBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingBadge.swift; sourceTree = "<group>"; };
 		DCC1D62526D9396400892038 /* StreamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamManager.swift; sourceTree = "<group>"; };
 		DCC1D62726D9568700892038 /* StreamConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamConfig.swift; sourceTree = "<group>"; };
 		DCC1D62926D9643400892038 /* FormStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormStack.swift; sourceTree = "<group>"; };
@@ -259,6 +263,7 @@
 			children = (
 				DC175F2C270E232F00D9D1FE /* SyncManager.swift */,
 				DC175F3D2717530D00D9D1FE /* SyncObjectConnecting.swift */,
+				DCB8FA7A27EE17DF0001EEB1 /* SyncStreamDocument.swift */,
 				DC175F31270E23F900D9D1FE /* SyncUserDocument.swift */,
 				DC175F33270E3FD200D9D1FE /* SyncUsersMap.swift */,
 			);
@@ -479,6 +484,7 @@
 				DCCA726E27B590F6006B0441 /* DisplayNameFactory.swift */,
 				DC1ED0EF26DFCD3C00FFA769 /* LiveBadge.swift */,
 				DC9E18382729DC740070F53F /* OffscreenSpeakersView.swift */,
+				DCB8FA8027EE51630001EEB1 /* RecordingBadge.swift */,
 				DC1ED12F26E960C600FFA769 /* SpeakerGridView.swift */,
 				DC504A7426F0F18600C37EC9 /* SpeakerGridViewModel.swift */,
 				DC504A7626F1468E00C37EC9 /* SpeakerVideoView.swift */,
@@ -721,10 +727,12 @@
 				DC1ED0FD26E14D0B00FFA769 /* StreamToolbar.swift in Sources */,
 				DC1ED0F926E1440200FFA769 /* StreamStatusView.swift in Sources */,
 				DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */,
+				DCB8FA7B27EE17E00001EEB1 /* SyncStreamDocument.swift in Sources */,
 				DC175F34270E3FD200D9D1FE /* SyncUsersMap.swift in Sources */,
 				DCC48FA326D8322900EE49EF /* SwiftUIPlayerView.swift in Sources */,
 				DC4F45E92723135500BE730B /* CardButtonLabel.swift in Sources */,
 				DC1ED0F726E12C7400FFA769 /* ProgressHUD.swift in Sources */,
+				DCB8FA8127EE51630001EEB1 /* RecordingBadge.swift in Sources */,
 				DC175F32270E23F900D9D1FE /* SyncUserDocument.swift in Sources */,
 				DCC1D62626D9396400892038 /* StreamManager.swift in Sources */,
 				DCCA727127B5BFE8006B0441 /* PresentationStatusView.swift in Sources */,

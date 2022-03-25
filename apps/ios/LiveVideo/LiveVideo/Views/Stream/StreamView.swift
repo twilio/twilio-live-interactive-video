@@ -142,10 +142,12 @@ struct StreamView: View {
         }
         .alert(item: $viewModel.alertIdentifier) { alertIdentifier in
             switch alertIdentifier {
-            case .error:
+            case .fatalError:
                 return Alert(error: viewModel.error!) {
                     presentationMode.wrappedValue.dismiss()
                 }
+            case .informativeError:
+                return Alert(error: viewModel.error!)
             case .receivedSpeakerInvite:
                 return Alert(
                     title: Text("It’s your time to shine! ✨"),
@@ -156,6 +158,11 @@ struct StreamView: View {
                     secondaryButton: .destructive(Text("Never mind")) {
                         viewModel.isHandRaised = false
                     }
+                )
+            case .recordingIsInProgress:
+                return Alert(
+                    title: Text("Recording Is in Progress"),
+                    dismissButton: .default(Text("OK"))
                 )
             case .speakerMovedToViewersByHost:
                 return Alert(
@@ -248,7 +255,17 @@ extension StreamManager {
 }
 
 extension StreamConfig {
-    static func stub(streamName: String = "Demo", userIdentity: String = "Alice", role: Role = .host) -> Self {
-        StreamConfig(streamName: streamName, userIdentity: userIdentity, role: role)
+    static func stub(
+        streamName: String = "Demo",
+        userIdentity: String = "Alice",
+        shouldRecord: Bool? = nil,
+        role: Role = .host
+    ) -> Self {
+        StreamConfig(
+            streamName: streamName,
+            userIdentity: userIdentity,
+            shouldRecord: shouldRecord,
+            role: role
+        )
     }
 }

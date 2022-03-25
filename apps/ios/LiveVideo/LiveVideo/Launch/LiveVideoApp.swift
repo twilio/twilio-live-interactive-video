@@ -16,6 +16,7 @@ struct LiveVideoApp: App {
     @StateObject private var speakerGridViewModel = SpeakerGridViewModel()
     @StateObject private var presentationLayoutViewModel = PresentationLayoutViewModel()
     @StateObject private var api = API()
+    @StateObject private var streamDocument = SyncStreamDocument()
 
     var body: some Scene {
         WindowGroup {
@@ -29,21 +30,23 @@ struct LiveVideoApp: App {
                 .environmentObject(speakerSettingsManager)
                 .environmentObject(hostControlsManager)
                 .environmentObject(api)
+                .environmentObject(streamDocument)
                 .onAppear {
                     authManager.configure(api: api)
                     let localParticipant = LocalParticipantManager(authManager: authManager)
                     let roomManager = RoomManager()
                     roomManager.configure(localParticipant: localParticipant)
                     let userDocument = SyncUserDocument()
-                    let speakersMap = SyncUsersMap()
-                    let raisedHandsMap = SyncUsersMap()
-                    let viewersMap = SyncUsersMap()
+                    let speakersMap = SyncUsersMap(uniqueName: "speakers")
+                    let raisedHandsMap = SyncUsersMap(uniqueName: "raised_hands")
+                    let viewersMap = SyncUsersMap(uniqueName: "viewers")
                     let speakerVideoViewModelFactory = SpeakerVideoViewModelFactory()
                     let syncManager = SyncManager(
                         speakersMap: speakersMap,
                         viewersMap: viewersMap,
                         raisedHandsMap: raisedHandsMap,
-                        userDocument: userDocument
+                        userDocument: userDocument,
+                        streamDocument: streamDocument
                     )
                     streamManager.configure(
                         roomManager: roomManager,
@@ -55,7 +58,8 @@ struct LiveVideoApp: App {
                         streamManager: streamManager,
                         speakerSettingsManager: speakerSettingsManager,
                         api: api,
-                        userDocument: userDocument
+                        userDocument: userDocument,
+                        streamDocument: streamDocument
                     )
                     participantsViewModel.configure(
                         streamManager: streamManager,

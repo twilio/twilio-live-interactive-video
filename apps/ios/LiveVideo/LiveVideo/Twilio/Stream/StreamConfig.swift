@@ -15,5 +15,15 @@ struct StreamConfig {
 
     let streamName: String
     let userIdentity: String
+    let shouldRecord: Bool?
     var role: Role
+
+    var hasUserDocument: Bool {
+        switch role {
+        case .host:
+            return false
+        case .speaker, .viewer:
+            return true
+        }
+    }
 }

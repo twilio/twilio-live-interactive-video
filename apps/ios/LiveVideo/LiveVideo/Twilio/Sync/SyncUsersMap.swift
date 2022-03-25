@@ -22,14 +22,18 @@ class SyncUsersMap: NSObject, SyncObjectConnecting {
 
     let userAddedPublisher = PassthroughSubject<User, Never>()
     let userRemovedPublisher = PassthroughSubject<User, Never>()
-    var uniqueName: String!
     var errorHandler: ((Error) -> Void)?
     var host: User? {
         users.first { $0.isHost } // This app only has one host and it is the user that created the stream
     }
     private(set) var users: [User] = []
+    private let uniqueName: String
     private var map: TWSMap?
 
+    init(uniqueName: String) {
+        self.uniqueName = uniqueName
+    }
+    
     func connect(client: TwilioSyncClient, completion: @escaping (Error?) -> Void) {
         guard let openOptions = TWSOpenOptions.open(withSidOrUniqueName: uniqueName) else { return }
 

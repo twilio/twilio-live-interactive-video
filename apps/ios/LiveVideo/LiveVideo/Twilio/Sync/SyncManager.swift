@@ -7,13 +7,6 @@ import TwilioSyncClient
 
 /// Consolidates configuration and error handling for stores that are backed by [Twilio Sync](https://www.twilio.com/sync).
 class SyncManager: NSObject {
-    struct ObjectNames {
-        let speakersMap: String
-        let viewersMap: String
-        let raisedHandsMap: String
-        let userDocument: String?
-    }
-
     let errorPublisher = PassthroughSubject<Error, Never>()
     var isConnected: Bool { client != nil }
     private var client: TwilioSyncClient?
@@ -21,34 +14,39 @@ class SyncManager: NSObject {
     private var raisedHandsMap: SyncUsersMap
     private var viewersMap: SyncUsersMap
     private var userDocument: SyncUserDocument
+    private var streamDocument: SyncStreamDocument
     private var objects: [SyncObjectConnecting] = []
 
     init(
         speakersMap: SyncUsersMap,
         viewersMap: SyncUsersMap,
         raisedHandsMap: SyncUsersMap,
-        userDocument: SyncUserDocument
+        userDocument: SyncUserDocument,
+        streamDocument: SyncStreamDocument
     ) {
         self.speakersMap = speakersMap
         self.viewersMap = viewersMap
         self.raisedHandsMap = raisedHandsMap
         self.userDocument = userDocument
+        self.streamDocument = streamDocument
     }
 
     /// Connects all sync objects.
     ///
     /// - Parameter token: An access token with sync grant.
-    /// - Parameter objectNames: Unique names for the sync objects.
+    /// - Parameter userIdentity: Identity of the user.
+    /// - Parameter hasUserDocument: If there is a user document to open.
     /// - Parameter completion: Called when all configured objects are synchronnized or an error is encountered.
-    func connect(token: String, objectNames: ObjectNames, completion: @escaping (Error?) -> Void
+    func connect(
+        token: String,
+        userIdentity: String,
+        hasUserDocument: Bool,
+        completion: @escaping (Error?) -> Void
     ) {
-        speakersMap.uniqueName = objectNames.speakersMap
-        viewersMap.uniqueName = objectNames.viewersMap
-        raisedHandsMap.uniqueName = objectNames.raisedHandsMap
-        objects = [speakersMap, viewersMap, raisedHandsMap]
-        
-        if let userDocumentName = objectNames.userDocument {
-            userDocument.uniqueName = userDocumentName
+        objects = [speakersMap, viewersMap, raisedHandsMap, streamDocument]
+
+        if hasUserDocument {
+            userDocument.uniqueName = "user-" + userIdentity
             objects.append(userDocument)
         }
         
