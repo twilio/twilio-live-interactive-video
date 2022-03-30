@@ -21,7 +21,7 @@ exports.handler = async function (context, event, callback) {
     createErrorHandler('error getting the stream client.')(e);
   }
 
-  if (recording_error) {
+  if (recording_error === 'true') {
     const doc = await streamSyncClient.documents('stream').fetch();
     await streamSyncClient
       .documents(doc.sid)
