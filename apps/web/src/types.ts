@@ -49,3 +49,10 @@ export type RecordingRule = {
 };
 
 export type RecordingRules = RecordingRule[];
+
+export type StreamDocument = {
+  recording: {
+    is_recording: boolean;
+    error: null | string;
+  };
+};
