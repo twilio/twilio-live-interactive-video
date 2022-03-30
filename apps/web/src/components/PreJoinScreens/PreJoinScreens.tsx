@@ -35,7 +35,7 @@ export default function PreJoinScreens() {
         const { data } = await joinStreamAsSpeaker(appState.participantName, appState.eventName);
         await videoConnect(data.token);
         chatConnect(data.token);
-        registerSyncMaps(data.sync_object_names);
+        registerSyncMaps();
         playerDisconnect();
         appDispatch({ type: 'set-is-loading', isLoading: false });
         appDispatch({ type: 'set-has-speaker-invite', hasSpeakerInvite: false });
@@ -44,10 +44,10 @@ export default function PreJoinScreens() {
 
       switch (appState.participantType) {
         case 'host': {
-          const { data } = await createStream(appState.participantName, appState.eventName);
+          const { data } = await createStream(appState.participantName, appState.eventName, appState.recordStream);
           syncConnect(data.token);
           await videoConnect(data.token);
-          registerSyncMaps(data.sync_object_names);
+          registerSyncMaps();
           chatConnect(data.token);
           break;
         }
@@ -56,7 +56,7 @@ export default function PreJoinScreens() {
           const { data } = await joinStreamAsSpeaker(appState.participantName, appState.eventName);
           syncConnect(data.token);
           await videoConnect(data.token);
-          registerSyncMaps(data.sync_object_names);
+          registerSyncMaps();
           chatConnect(data.token);
           break;
         }
@@ -65,8 +65,8 @@ export default function PreJoinScreens() {
           const { data } = await joinStreamAsViewer(appState.participantName, appState.eventName);
           syncConnect(data.token);
           await playerConnect(data.token);
-          registerUserDocument(data.sync_object_names.user_document);
-          registerSyncMaps(data.sync_object_names);
+          registerUserDocument(`user-${appState.participantName}`);
+          registerSyncMaps();
           await connectViewerToPlayer(appState.participantName, appState.eventName);
           // chatConnect(data.token);
           break;

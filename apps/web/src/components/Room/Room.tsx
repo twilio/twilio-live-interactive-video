@@ -77,7 +77,7 @@ export default function Room() {
             const { data } = await joinStreamAsViewer(room.localParticipant.identity, room.name);
             await playerConnect(data.token);
             await connectViewerToPlayer(appState.participantName, appState.eventName);
-            registerUserDocument(data.sync_object_names.user_document);
+            registerUserDocument(`user-${room.localParticipant.identity}`);
             enqueueSnackbar({
               headline: 'Moved to viewers',
               message: 'You have been moved to viewers by the host.',
