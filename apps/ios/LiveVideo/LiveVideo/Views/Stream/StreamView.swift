@@ -243,6 +243,7 @@ struct StreamView_Previews: PreviewProvider {
         .environmentObject(SpeakerSettingsManager())
         .environmentObject(ParticipantsViewModel())
         .environmentObject(StreamViewModel())
+        .environmentObject(SyncStreamDocument.stub(isRecording: true))
     }
 }
 

@@ -15,8 +15,8 @@ struct LiveBadge: View {
                 .fixedSize()
                 .font(.system(size: 13))
         }
-        .padding(.vertical, 4)
-        .padding(.horizontal, 8)
+        .frame(height: 14)
+        .padding(6)
         .foregroundColor(.black)
         .background(Color.backgroundLiveBadge)
         .cornerRadius(2)
