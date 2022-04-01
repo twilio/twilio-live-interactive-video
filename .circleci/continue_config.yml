@@ -36,6 +36,7 @@ jobs:
       - run:
           name: Setup code signing
           command: |
+            cd "apps/ios/LiveVideo"
             bundle exec fastlane ci_match_install
       - run:
           name: Build and test
