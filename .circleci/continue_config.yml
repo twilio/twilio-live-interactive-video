@@ -34,9 +34,9 @@ jobs:
             sed -i '' "s/ARTIFACTORY_USERNAME/${ARTIFACTORY_USERNAME}/g" ~/.netrc
             sed -i '' "s/ARTIFACTORY_API_KEY/${ARTIFACTORY_API_KEY}/g" ~/.netrc
       - run:
-          name: Configure backend URL
+          name: Setup code signing
           command: |
-            sed -i '' 's/<#BACKEND_URL#>/\"#{ENV['BACKEND_URL']}\"/' "apps/ios/LiveVideo/LiveVideo/Managers/API/API.swift"
+            bundle exec fastlane ci_match_install
       - run:
           name: Build and test
           command: |
