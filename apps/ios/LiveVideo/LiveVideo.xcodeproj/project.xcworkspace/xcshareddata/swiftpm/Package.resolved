@@ -29,15 +29,6 @@
         }
       },
       {
-        "package": "InAppSettingsKit",
-        "repositoryURL": "https://github.com/futuretap/InAppSettingsKit",
-        "state": {
-          "branch": null,
-          "revision": "e4b97046bb88f7a289d5f5a1e2b92b751c172bab",
-          "version": "3.3.5"
-        }
-      },
-      {
         "package": "KeychainAccess",
         "repositoryURL": "https://github.com/kishikawakatsumi/KeychainAccess",
         "state": {

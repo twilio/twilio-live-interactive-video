@@ -4,6 +4,7 @@
 
 import Combine
 import KeychainAccess
+import SwiftyUserDefaults
 
 class AuthManager: ObservableObject {
     @Published var isSignedOut = true
@@ -57,7 +58,7 @@ class AuthManager: ObservableObject {
     
     private func configureAPI(passcode: String) throws {
         let passcodeComponents = try PasscodeComponents(string: passcode)
-        let backendURL = "https://twilio-live-interactive-video-" + passcodeComponents.appID + "-" + passcodeComponents.serverlessID + "-dev.twil.io"
+        let backendURL = "https://twilio-live-interactive-video-" + passcodeComponents.appID + "-" + passcodeComponents.serverlessID + "-dev." + Defaults.twilioEnvironment.domain
         api.configure(backendURL: backendURL, passcode: passcodeComponents.passcode)
     }
 }

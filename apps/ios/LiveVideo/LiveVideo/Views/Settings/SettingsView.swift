@@ -1,65 +1,61 @@
 //
-//  Copyright (C) 2021 Twilio, Inc.
+//  Copyright (C) 2022 Twilio, Inc.
 //
 
-import InAppSettingsKit
 import SwiftUI
-import UIKit
+import SwiftyUserDefaults
+import TwilioLivePlayer
+import TwilioVideo
 
-struct SettingsView: UIViewControllerRepresentable {
+struct SettingsView: View {
     @Environment(\.presentationMode) var presentationMode
+    @AppStorage(DefaultsKeys().twilioEnvironment._key) var environment: TwilioEnvironment = DefaultsKeys().twilioEnvironment.defaultValue!
     @Binding var signOut: Bool
 
-    func makeUIViewController(context: Context) -> UINavigationController {
-        signOut = false
-        UserDefaultsManager().sync()
-
-        let settingsViewController = IASKAppSettingsViewController()
-        settingsViewController.delegate = context.coordinator
-        settingsViewController.neverShowPrivacySettings = true
-
-        let navigationController = UINavigationController()
-        navigationController.viewControllers = [settingsViewController]
-
-        return navigationController
-    }
-
-    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
-
-    }
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(settingsView: self)
-    }
-
-    class Coordinator: NSObject, IASKSettingsDelegate {
-        private let settingsView: SettingsView
-
-        init(settingsView: SettingsView) {
-            self.settingsView = settingsView
-        }
-        
-        func settingsViewControllerDidEnd(_ settingsViewController: IASKAppSettingsViewController) {
-            settingsView.presentationMode.wrappedValue.dismiss()
-        }
-        
-        func settingsViewController(
-            _ settingsViewController: IASKAppSettingsViewController,
-            buttonTappedFor specifier: IASKSpecifier
-        ) {
-            switch specifier.key {
-            case "SignOut":
-                let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                let signOutAction = UIAlertAction(title: "Sign Out", style: .destructive) { _ in
-                    self.settingsView.signOut = true
-                    self.settingsView.presentationMode.wrappedValue.dismiss()
+    var body: some View {
+        NavigationView {
+            Form {
+                Section {
+                    TitleValueView(title: "App Version", value: AppInfoStore().version)
+                    TitleValueView(title: "Player SDK Version", value: Player.sdkVersion())
+                    TitleValueView(title: "Video SDK Version", value: TwilioVideoSDK.sdkVersion())
                 }
-                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-                [signOutAction, cancelAction].forEach { alertController.addAction($0) }
-                settingsViewController.present(alertController, animated: true, completion: nil)
-            default:
-                break
+                
+                Section(
+                    header: Text("Internal"),
+                    footer: Text("Settings used by Twilio for internal testing.")
+                ) {
+                    Picker("Environment", selection: $environment) {
+                        ForEach(TwilioEnvironment.allCases) {
+                            Text($0.rawValue.capitalized)
+                        }
+                    }
+                }
+                
+                Section {
+                    Button("Sign Out") {
+                        signOut = true
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+            }
+            .navigationTitle("Settings")
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+            }
+            .onAppear {
+                signOut = false
             }
         }
+    }
+}
+
+struct SettingsView_Previews: PreviewProvider {
+    static var previews: some View {
+        SettingsView(signOut: .constant(false))
     }
 }

@@ -4,6 +4,7 @@
 
 import Combine
 import TwilioSyncClient
+import SwiftyUserDefaults
 
 /// Consolidates configuration and error handling for stores that are backed by [Twilio Sync](https://www.twilio.com/sync).
 class SyncManager: NSObject {
@@ -52,9 +53,15 @@ class SyncManager: NSObject {
             objects.append(userDocument)
         }
         
+        let properties = TwilioSyncClientProperties()
+        
+        if let region = Defaults.twilioEnvironment.region {
+            properties.region = region
+        }
+        
         TwilioSyncClient.syncClient(
             withToken: token,
-            properties: nil,
+            properties: properties,
             delegate: self
         ) { [weak self] result, client in
             guard let client = client else {

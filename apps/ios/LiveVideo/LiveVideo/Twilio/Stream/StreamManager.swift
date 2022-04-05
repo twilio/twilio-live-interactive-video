@@ -3,6 +3,7 @@
 //
 
 import Combine
+import SwiftyUserDefaults
 import TwilioLivePlayer
 
 /// Connects to a stream and can reconnect as speaker or viewer to change role.
@@ -66,6 +67,10 @@ class StreamManager: ObservableObject {
         }
 
         state = .connecting
+
+        /// Set environment variable used by `TwilioVideo` and `TwilioLivePlayer`
+        setenv("TWILIO_ENVIRONMENT", Defaults.twilioEnvironment.rawValue.capitalized, 1)
+
         fetchAccessToken()
     }
     
