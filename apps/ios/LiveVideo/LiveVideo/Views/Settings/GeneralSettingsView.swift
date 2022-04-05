@@ -7,9 +7,8 @@ import SwiftyUserDefaults
 import TwilioLivePlayer
 import TwilioVideo
 
-struct SettingsView: View {
+struct GeneralSettingsView: View {
     @Environment(\.presentationMode) var presentationMode
-    @AppStorage(DefaultsKeys().twilioEnvironment._key) var environment: TwilioEnvironment = DefaultsKeys().twilioEnvironment.defaultValue!
     @Binding var signOut: Bool
 
     var body: some View {
@@ -21,14 +20,9 @@ struct SettingsView: View {
                     TitleValueView(title: "Video SDK Version", value: TwilioVideoSDK.sdkVersion())
                 }
                 
-                Section(
-                    header: Text("Internal"),
-                    footer: Text("Settings used by Twilio for internal testing.")
-                ) {
-                    Picker("Environment", selection: $environment) {
-                        ForEach(TwilioEnvironment.allCases) {
-                            Text($0.rawValue.capitalized)
-                        }
+                Section {
+                    NavigationLink("Advanced") {
+                        AdvancedSettings()
                     }
                 }
                 
@@ -54,8 +48,8 @@ struct SettingsView: View {
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
+struct GeneralSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(signOut: .constant(false))
+        GeneralSettingsView(signOut: .constant(false))
     }
 }

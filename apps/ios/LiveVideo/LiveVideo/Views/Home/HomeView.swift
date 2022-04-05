@@ -53,7 +53,7 @@ struct HomeView: View {
                     }
                 },
                 content: {
-                    SettingsView(signOut: $signOut)
+                    GeneralSettingsView(signOut: $signOut)
                 }
             )
             .sheet(
