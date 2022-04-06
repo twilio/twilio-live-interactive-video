@@ -21,7 +21,7 @@ struct TitleValueView: View {
 struct TitleValueView_Previews: PreviewProvider {
     static var previews: some View {
         Form {
-            TitleValueView(title: "Title", value: "Info")
+            TitleValueView(title: "Title", value: "Value")
         }
     }
 }

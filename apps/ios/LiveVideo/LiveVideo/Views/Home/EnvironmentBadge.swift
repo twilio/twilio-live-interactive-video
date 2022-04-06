@@ -22,12 +22,10 @@ struct EnvironmentBadge: View {
 
 struct EnvironmentBadge_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
+        ForEach(TwilioEnvironment.allCases, id: \.self) { environment in
             EnvironmentBadge()
-                .environmentObject(AppSettingsManager.stub(environment: .stage))
-            EnvironmentBadge()
-                .environmentObject(AppSettingsManager.stub(environment: .dev))
+                .environmentObject(AppSettingsManager.stub(environment: environment))
+                .previewLayout(.sizeThatFits)
         }
-        .previewLayout(.sizeThatFits)
     }
 }
