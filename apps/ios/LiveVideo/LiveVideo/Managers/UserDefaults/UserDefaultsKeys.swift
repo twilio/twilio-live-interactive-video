@@ -5,5 +5,5 @@
 import SwiftyUserDefaults
 
 extension DefaultsKeys {
-    var twilioEnvironment: DefaultsKey<TwilioEnvironment> { .init("TwilioEnvironment", defaultValue: .production) }
+    var twilioEnvironment: DefaultsKey<TwilioEnvironment> { .init("TwilioEnvironment", defaultValue: .prod) }
 }

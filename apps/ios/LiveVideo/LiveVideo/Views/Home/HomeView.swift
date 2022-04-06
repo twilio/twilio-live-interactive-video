@@ -3,10 +3,12 @@
 //
 
 import SwiftUI
+import SwiftyUserDefaults
 
 struct HomeView: View {
     @EnvironmentObject var authManager: AuthManager
     @EnvironmentObject var streamManager: StreamManager
+    @AppStorage(DefaultsKeys().twilioEnvironment._key) var environment: TwilioEnvironment = DefaultsKeys().twilioEnvironment.defaultValue!
     @State private var showSettings = false
     @State private var showStream = false
     @State private var signOut = false
@@ -38,6 +40,10 @@ struct HomeView: View {
                         CardButtonLabel(title: "Join event", image: Image(systemName: "person.3"))
                     }
                 )
+                
+                if environment != .prod {
+                    EnvironmentBadge(environment: $environment)
+                }
             }
             .toolbar {
                 Button(action: { showSettings.toggle() }) {
@@ -88,7 +94,12 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        return HomeView()
+        Group {
+            HomeView(environment: .prod)
+                .previewDisplayName("Prod")
+            HomeView(environment: .stage)
+                .previewDisplayName("Stage")
+        }
             .environmentObject(AuthManager.stub(isSignedOut: false))
     }
 }

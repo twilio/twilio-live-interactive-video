@@ -5,9 +5,9 @@
 import SwiftyUserDefaults
 
 enum TwilioEnvironment: String, CaseIterable, Identifiable, DefaultsSerializable {
-    case production
-    case staging
-    case development
+    case prod
+    case stage
+    case dev
 
     var id: Self {
         self
@@ -15,17 +15,17 @@ enum TwilioEnvironment: String, CaseIterable, Identifiable, DefaultsSerializable
     
     var domain: String {
         switch self {
-        case .production: return "twil.io"
-        case .staging: return "stage.twil.io"
-        case .development: return "dev.twil.io"
+        case .prod: return "twil.io"
+        case .stage: return "stage.twil.io"
+        case .dev: return "dev.twil.io"
         }
     }
     
-    var region: String? {
+    var region: String {
         switch self {
-        case .production: return nil
-        case .staging: return "stage-us1"
-        case .development: return "dev-us1"
+        case .prod: return "us1"
+        case .stage: return "stage-us1"
+        case .dev: return "dev-us1"
         }
     }
 }

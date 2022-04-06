@@ -68,7 +68,7 @@ class StreamManager: ObservableObject {
 
         state = .connecting
 
-        /// Set environment variable used by `TwilioVideo` and `TwilioLivePlayer`
+        /// Set environment variable used by `TwilioVideo` and `TwilioLivePlayer`. This is only used by Twilio employees for internal testing.
         setenv("TWILIO_ENVIRONMENT", Defaults.twilioEnvironment.rawValue.capitalized, 1)
 
         fetchAccessToken()
