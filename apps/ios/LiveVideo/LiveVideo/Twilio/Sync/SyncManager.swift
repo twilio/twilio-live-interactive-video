@@ -4,7 +4,6 @@
 
 import Combine
 import TwilioSyncClient
-import SwiftyUserDefaults
 
 /// Consolidates configuration and error handling for stores that are backed by [Twilio Sync](https://www.twilio.com/sync).
 class SyncManager: NSObject {
@@ -23,17 +22,20 @@ class SyncManager: NSObject {
     private var viewersMap: SyncUsersMap
     private var userDocument: SyncUserDocument
     private var objects: [SyncObjectConnecting] = []
+    private var appSettingsManager: AppSettingsManager
 
     init(
         speakersMap: SyncUsersMap,
         viewersMap: SyncUsersMap,
         raisedHandsMap: SyncUsersMap,
-        userDocument: SyncUserDocument
+        userDocument: SyncUserDocument,
+        appSettingsManager: AppSettingsManager
     ) {
         self.speakersMap = speakersMap
         self.viewersMap = viewersMap
         self.raisedHandsMap = raisedHandsMap
         self.userDocument = userDocument
+        self.appSettingsManager = appSettingsManager
     }
 
     /// Connects all sync objects.
@@ -54,7 +56,7 @@ class SyncManager: NSObject {
         }
         
         let properties = TwilioSyncClientProperties()
-        properties.region = Defaults.twilioEnvironment.region /// Only used by Twilio employees for internal testing
+        properties.region = appSettingsManager.environment.region /// Only used by Twilio employees for internal testing
         
         TwilioSyncClient.syncClient(
             withToken: token,

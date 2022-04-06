@@ -3,7 +3,6 @@
 //
 
 import SwiftUI
-import SwiftyUserDefaults
 import TwilioLivePlayer
 import TwilioVideo
 

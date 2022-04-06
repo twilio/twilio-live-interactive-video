@@ -3,12 +3,11 @@
 //
 
 import SwiftUI
-import SwiftyUserDefaults
 
 struct HomeView: View {
     @EnvironmentObject var authManager: AuthManager
     @EnvironmentObject var streamManager: StreamManager
-    @AppStorage(DefaultsKeys().twilioEnvironment._key) var environment: TwilioEnvironment = DefaultsKeys().twilioEnvironment.defaultValue!
+    @EnvironmentObject var appSettingsManager: AppSettingsManager
     @State private var showSettings = false
     @State private var showStream = false
     @State private var signOut = false
@@ -41,8 +40,8 @@ struct HomeView: View {
                     }
                 )
                 
-                if environment != .prod {
-                    EnvironmentBadge(environment: $environment)
+                if appSettingsManager.environment != .prod {
+                    EnvironmentBadge()
                 }
             }
             .toolbar {
@@ -95,10 +94,12 @@ struct HomeView: View {
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            HomeView(environment: .prod)
+            HomeView()
                 .previewDisplayName("Prod")
-            HomeView(environment: .stage)
+                .environmentObject(AppSettingsManager.stub(environment: .prod))
+            HomeView()
                 .previewDisplayName("Stage")
+                .environmentObject(AppSettingsManager.stub(environment: .stage))
         }
             .environmentObject(AuthManager.stub(isSignedOut: false))
     }

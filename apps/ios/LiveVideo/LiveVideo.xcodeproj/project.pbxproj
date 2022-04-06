@@ -35,7 +35,6 @@
 		DC4AA66026D047DD00E677D5 /* FormTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA65F26D047DD00E677D5 /* FormTextFieldStyle.swift */; };
 		DC4AA66226D0493E00E677D5 /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA66126D0493E00E677D5 /* PrimaryButtonStyle.swift */; };
 		DC4AA66526D1456100E677D5 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4AA66426D1456100E677D5 /* AuthManager.swift */; };
-		DC4AA66826D175A600E677D5 /* SwiftyUserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = DC4AA66726D175A600E677D5 /* SwiftyUserDefaults */; };
 		DC4F45E7271F5A3700BE730B /* TwilioLivePlayer in Frameworks */ = {isa = PBXBuildFile; productRef = DC4F45E6271F5A3700BE730B /* TwilioLivePlayer */; };
 		DC4F45E92723135500BE730B /* CardButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4F45E82723135500BE730B /* CardButtonLabel.swift */; };
 		DC4F45EB2723695D00BE730B /* SelectRoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4F45EA2723695D00BE730B /* SelectRoleView.swift */; };
@@ -56,7 +55,6 @@
 		DC5F458326CDBA0B009C5C79 /* EnterUserIdentityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F458226CDBA0B009C5C79 /* EnterUserIdentityView.swift */; };
 		DC5F458D26CEBCC9009C5C79 /* TwilioVideo in Frameworks */ = {isa = PBXBuildFile; productRef = DC5F458C26CEBCC9009C5C79 /* TwilioVideo */; };
 		DC5F458F26CEBEC8009C5C79 /* AppInfoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F458E26CEBEC8009C5C79 /* AppInfoStore.swift */; };
-		DC5F459626CEC247009C5C79 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F459526CEC246009C5C79 /* UserDefaultsKeys.swift */; };
 		DC6404D22719E549004730C6 /* RaiseHandRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6404D12719E549004730C6 /* RaiseHandRequest.swift */; };
 		DC6404D4271B3BF8004730C6 /* StreamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6404D3271B3BF8004730C6 /* StreamViewModel.swift */; };
 		DC6404D8271B68D4004730C6 /* ParticipantsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6404D7271B68D4004730C6 /* ParticipantsViewModel.swift */; };
@@ -69,6 +67,7 @@
 		DCADF33B27FCA94A0093A9FE /* TwilioEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCADF33A27FCA94A0093A9FE /* TwilioEnvironment.swift */; };
 		DCADF34227FCF4950093A9FE /* AdvancedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCADF34127FCF4950093A9FE /* AdvancedSettings.swift */; };
 		DCADF35027FE264E0093A9FE /* EnvironmentBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCADF34F27FE264E0093A9FE /* EnvironmentBadge.swift */; };
+		DCADF35227FE342F0093A9FE /* AppSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCADF35127FE342F0093A9FE /* AppSettingsManager.swift */; };
 		DCB1BDFE27568D70006CE9D1 /* VerifyPasscodeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BDFD27568D70006CE9D1 /* VerifyPasscodeRequest.swift */; };
 		DCB1BE0027568F5B006CE9D1 /* PasscodeComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BDFF27568F5B006CE9D1 /* PasscodeComponents.swift */; };
 		DCB1BE032756A288006CE9D1 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = DCB1BE022756A288006CE9D1 /* KeychainAccess */; };
@@ -167,7 +166,6 @@
 		DC5F455726CC061F009C5C79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DC5F458226CDBA0B009C5C79 /* EnterUserIdentityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterUserIdentityView.swift; sourceTree = "<group>"; };
 		DC5F458E26CEBEC8009C5C79 /* AppInfoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoStore.swift; sourceTree = "<group>"; };
-		DC5F459526CEC246009C5C79 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
 		DC6404D12719E549004730C6 /* RaiseHandRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaiseHandRequest.swift; sourceTree = "<group>"; };
 		DC6404D3271B3BF8004730C6 /* StreamViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamViewModel.swift; sourceTree = "<group>"; };
 		DC6404D7271B68D4004730C6 /* ParticipantsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsViewModel.swift; sourceTree = "<group>"; };
@@ -180,6 +178,7 @@
 		DCADF33A27FCA94A0093A9FE /* TwilioEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioEnvironment.swift; sourceTree = "<group>"; };
 		DCADF34127FCF4950093A9FE /* AdvancedSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedSettings.swift; sourceTree = "<group>"; };
 		DCADF34F27FE264E0093A9FE /* EnvironmentBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentBadge.swift; sourceTree = "<group>"; };
+		DCADF35127FE342F0093A9FE /* AppSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsManager.swift; sourceTree = "<group>"; };
 		DCB1BDFD27568D70006CE9D1 /* VerifyPasscodeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyPasscodeRequest.swift; sourceTree = "<group>"; };
 		DCB1BDFF27568F5B006CE9D1 /* PasscodeComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeComponents.swift; sourceTree = "<group>"; };
 		DCB1BE042756D954006CE9D1 /* EnterPasscodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPasscodeView.swift; sourceTree = "<group>"; };
@@ -215,7 +214,6 @@
 				DCB1BE032756A288006CE9D1 /* KeychainAccess in Frameworks */,
 				DC5F458D26CEBCC9009C5C79 /* TwilioVideo in Frameworks */,
 				DC175F30270E238F00D9D1FE /* TwilioSyncClient in Frameworks */,
-				DC4AA66826D175A600E677D5 /* SwiftyUserDefaults in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,10 +306,10 @@
 			children = (
 				DCC48F7826D8288B00EE49EF /* API */,
 				DC4AA65526D0125900E677D5 /* AppInfo */,
+				DCDE1C8927FE3F2E003FBD12 /* AppSettings */,
 				DC4AA66326D1454A00E677D5 /* Auth */,
 				DC83671427BAD78400A90BF2 /* HostControls */,
 				DC14B78626FA385E003BDABC /* SpeakerSettings */,
-				DC4AA65626D0126A00E677D5 /* UserDefaults */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -322,14 +320,6 @@
 				DC5F458E26CEBEC8009C5C79 /* AppInfoStore.swift */,
 			);
 			path = AppInfo;
-			sourceTree = "<group>";
-		};
-		DC4AA65626D0126A00E677D5 /* UserDefaults */ = {
-			isa = PBXGroup;
-			children = (
-				DC5F459526CEC246009C5C79 /* UserDefaultsKeys.swift */,
-			);
-			path = UserDefaults;
 			sourceTree = "<group>";
 		};
 		DC4AA65726D0127900E677D5 /* Style */ = {
@@ -354,7 +344,6 @@
 				DCADF34127FCF4950093A9FE /* AdvancedSettings.swift */,
 				DCADF33627FC95DF0093A9FE /* GeneralSettingsView.swift */,
 				DCADF33827FCA7780093A9FE /* TitleValueView.swift */,
-				DCADF33A27FCA94A0093A9FE /* TwilioEnvironment.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -544,6 +533,15 @@
 			path = Player;
 			sourceTree = "<group>";
 		};
+		DCDE1C8927FE3F2E003FBD12 /* AppSettings */ = {
+			isa = PBXGroup;
+			children = (
+				DCADF35127FE342F0093A9FE /* AppSettingsManager.swift */,
+				DCADF33A27FCA94A0093A9FE /* TwilioEnvironment.swift */,
+			);
+			path = AppSettings;
+			sourceTree = "<group>";
+		};
 		DCE90C3327B41BC700D85D9F /* PresentationLayout */ = {
 			isa = PBXGroup;
 			children = (
@@ -573,7 +571,6 @@
 			name = LiveVideo;
 			packageProductDependencies = (
 				DC5F458C26CEBCC9009C5C79 /* TwilioVideo */,
-				DC4AA66726D175A600E677D5 /* SwiftyUserDefaults */,
 				DCC48F9726D828E500EE49EF /* Alamofire */,
 				DC175F2F270E238F00D9D1FE /* TwilioSyncClient */,
 				DC4F45E6271F5A3700BE730B /* TwilioLivePlayer */,
@@ -656,7 +653,6 @@
 			mainGroup = DC5F452C26CC061A009C5C79;
 			packageReferences = (
 				DC5F458B26CEBCC8009C5C79 /* XCRemoteSwiftPackageReference "twilio-video-ios" */,
-				DC4AA66626D175A600E677D5 /* XCRemoteSwiftPackageReference "SwiftyUserDefaults" */,
 				DCC48F9626D828E500EE49EF /* XCRemoteSwiftPackageReference "Alamofire" */,
 				DC175F2E270E238F00D9D1FE /* XCRemoteSwiftPackageReference "twilio-sync-ios" */,
 				DC4F45E5271F5A3700BE730B /* XCRemoteSwiftPackageReference "twilio-live-player-ios" */,
@@ -738,7 +734,7 @@
 				DCC48F7426D80BC300EE49EF /* EnterStreamNameView.swift in Sources */,
 				DC50A579273D78E900E29580 /* RoomMessage.swift in Sources */,
 				DCC48F8A26D8288B00EE49EF /* API.swift in Sources */,
-				DC5F459626CEC247009C5C79 /* UserDefaultsKeys.swift in Sources */,
+				DCADF35227FE342F0093A9FE /* AppSettingsManager.swift in Sources */,
 				DC1ED13026E960C600FFA769 /* SpeakerGridView.swift in Sources */,
 				DC44BB3F2703C8AD00DB656D /* AppDelegate.swift in Sources */,
 				DC83671327BABF7500A90BF2 /* HostControlsManager.swift in Sources */,
@@ -1132,14 +1128,6 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		DC4AA66626D175A600E677D5 /* XCRemoteSwiftPackageReference "SwiftyUserDefaults" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sunshinejr/SwiftyUserDefaults";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.3.0;
-			};
-		};
 		DC4F45E5271F5A3700BE730B /* XCRemoteSwiftPackageReference "twilio-live-player-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/twilio/twilio-live-player-ios";
@@ -1195,11 +1183,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DC175F2E270E238F00D9D1FE /* XCRemoteSwiftPackageReference "twilio-sync-ios" */;
 			productName = TwilioSyncClient;
-		};
-		DC4AA66726D175A600E677D5 /* SwiftyUserDefaults */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DC4AA66626D175A600E677D5 /* XCRemoteSwiftPackageReference "SwiftyUserDefaults" */;
-			productName = SwiftyUserDefaults;
 		};
 		DC4F45E6271F5A3700BE730B /* TwilioLivePlayer */ = {
 			isa = XCSwiftPackageProductDependency;

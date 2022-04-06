@@ -3,15 +3,14 @@
 //
 
 import SwiftUI
-import SwiftyUserDefaults
 
 struct AdvancedSettings: View {
-    @AppStorage(DefaultsKeys().twilioEnvironment._key) var environment: TwilioEnvironment = DefaultsKeys().twilioEnvironment.defaultValue!
+    @EnvironmentObject var appSettingsManager: AppSettingsManager
 
     var body: some View {
         Form {
             Section(footer: Text("Environment is used by Twilio employees for internal testing only.")) {
-                Picker("Environment", selection: $environment) {
+                Picker("Environment", selection: $appSettingsManager.environment) {
                     ForEach(TwilioEnvironment.allCases) {
                         Text($0.rawValue.capitalized)
                     }
@@ -27,6 +26,15 @@ struct AdvancedSettings_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             AdvancedSettings()
+                .environmentObject(AppSettingsManager.stub())
         }
+    }
+}
+
+extension AppSettingsManager {
+    static func stub(environment: TwilioEnvironment = .prod) -> AppSettingsManager {
+        let appSettingsManager = AppSettingsManager()
+        appSettingsManager.environment = environment
+        return appSettingsManager
     }
 }

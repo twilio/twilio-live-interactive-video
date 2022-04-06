@@ -2,9 +2,9 @@
 //  Copyright (C) 2022 Twilio, Inc.
 //
 
-import SwiftyUserDefaults
+import Foundation
 
-enum TwilioEnvironment: String, CaseIterable, Identifiable, DefaultsSerializable {
+enum TwilioEnvironment: String, CaseIterable, Identifiable {
     case prod
     case stage
     case dev

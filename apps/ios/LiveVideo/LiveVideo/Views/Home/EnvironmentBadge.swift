@@ -5,12 +5,12 @@
 import SwiftUI
 
 struct EnvironmentBadge: View {
-    @Binding var environment: TwilioEnvironment
-    
+    @EnvironmentObject var appSettingsManager: AppSettingsManager
+
     var body: some View {
         HStack {
             Spacer()
-            Text(environment.rawValue.capitalized)
+            Text(appSettingsManager.environment.rawValue.capitalized)
                 .font(.title2.bold())
                 .padding(7)
                 .background(Color.orange)
@@ -23,8 +23,10 @@ struct EnvironmentBadge: View {
 struct EnvironmentBadge_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            EnvironmentBadge(environment: .constant(.stage))
-            EnvironmentBadge(environment: .constant(.dev))
+            EnvironmentBadge()
+                .environmentObject(AppSettingsManager.stub(environment: .stage))
+            EnvironmentBadge()
+                .environmentObject(AppSettingsManager.stub(environment: .dev))
         }
         .previewLayout(.sizeThatFits)
     }
