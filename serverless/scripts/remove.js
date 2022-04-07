@@ -1,7 +1,5 @@
 require('dotenv').config();
-const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN, {
-  region: process.env.TWILIO_ENVIRONMENT || undefined,
-});
+const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
 const cli = require('cli-ux').default;
 const constants = require('../constants');
 

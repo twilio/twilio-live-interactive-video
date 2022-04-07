@@ -17,14 +17,11 @@ program.option('-o, --override', 'Override existing deployment');
 program.parse(process.argv);
 const options = program.opts();
 
-const { ACCOUNT_SID, AUTH_TOKEN, TWILIO_ENVIRONMENT } = process.env;
-const client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN, {
-  region: TWILIO_ENVIRONMENT || undefined,
-});
+const { ACCOUNT_SID, AUTH_TOKEN } = process.env;
+const client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
 const serverlessClient = new TwilioServerlessApiClient({
   username: ACCOUNT_SID,
   password: AUTH_TOKEN,
-  region: TWILIO_ENVIRONMENT || undefined,
 });
 
 // Returns an object of the previously deployed environment variables if they exist.
@@ -142,8 +139,8 @@ async function deployFunctions() {
     overrideExistingService: options.override,
   };
 
-  if (TWILIO_ENVIRONMENT) {
-    deployConfig.env.TWILIO_REGION = TWILIO_ENVIRONMENT;
+  if (process.env.TWILIO_REGION) {
+    deployConfig.env.TWILIO_REGION = process.env.TWILIO_REGION;
   }
 
   if (existingConfiguration) {
