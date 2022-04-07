@@ -65,7 +65,7 @@
 		DCADF33727FC95DF0093A9FE /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCADF33627FC95DF0093A9FE /* GeneralSettingsView.swift */; };
 		DCADF33927FCA7780093A9FE /* TitleValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCADF33827FCA7780093A9FE /* TitleValueView.swift */; };
 		DCADF33B27FCA94A0093A9FE /* TwilioEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCADF33A27FCA94A0093A9FE /* TwilioEnvironment.swift */; };
-		DCADF34227FCF4950093A9FE /* AdvancedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCADF34127FCF4950093A9FE /* AdvancedSettings.swift */; };
+		DCADF34227FCF4950093A9FE /* SignInSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCADF34127FCF4950093A9FE /* SignInSettingsView.swift */; };
 		DCADF35027FE264E0093A9FE /* EnvironmentBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCADF34F27FE264E0093A9FE /* EnvironmentBadge.swift */; };
 		DCADF35227FE342F0093A9FE /* AppSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCADF35127FE342F0093A9FE /* AppSettingsManager.swift */; };
 		DCB1BDFE27568D70006CE9D1 /* VerifyPasscodeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BDFD27568D70006CE9D1 /* VerifyPasscodeRequest.swift */; };
@@ -176,7 +176,7 @@
 		DCADF33627FC95DF0093A9FE /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		DCADF33827FCA7780093A9FE /* TitleValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleValueView.swift; sourceTree = "<group>"; };
 		DCADF33A27FCA94A0093A9FE /* TwilioEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioEnvironment.swift; sourceTree = "<group>"; };
-		DCADF34127FCF4950093A9FE /* AdvancedSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedSettings.swift; sourceTree = "<group>"; };
+		DCADF34127FCF4950093A9FE /* SignInSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSettingsView.swift; sourceTree = "<group>"; };
 		DCADF34F27FE264E0093A9FE /* EnvironmentBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentBadge.swift; sourceTree = "<group>"; };
 		DCADF35127FE342F0093A9FE /* AppSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsManager.swift; sourceTree = "<group>"; };
 		DCB1BDFD27568D70006CE9D1 /* VerifyPasscodeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyPasscodeRequest.swift; sourceTree = "<group>"; };
@@ -341,8 +341,8 @@
 		DC4AA65C26D03DDF00E677D5 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				DCADF34127FCF4950093A9FE /* AdvancedSettings.swift */,
 				DCADF33627FC95DF0093A9FE /* GeneralSettingsView.swift */,
+				DCADF34127FCF4950093A9FE /* SignInSettingsView.swift */,
 				DCADF33827FCA7780093A9FE /* TitleValueView.swift */,
 			);
 			path = Settings;
@@ -710,7 +710,7 @@
 				DC44BB412703C8DD00DB656D /* SceneDelegate.swift in Sources */,
 				DCADF35027FE264E0093A9FE /* EnvironmentBadge.swift in Sources */,
 				DC9E18392729DC740070F53F /* OffscreenSpeakersView.swift in Sources */,
-				DCADF34227FCF4950093A9FE /* AdvancedSettings.swift in Sources */,
+				DCADF34227FCF4950093A9FE /* SignInSettingsView.swift in Sources */,
 				DC50A57B273DBB2700E29580 /* JSONEncoderExtension.swift in Sources */,
 				DC1ED11A26E92DEA00FFA769 /* RoomManager.swift in Sources */,
 				DC4AA66526D1456100E677D5 /* AuthManager.swift in Sources */,

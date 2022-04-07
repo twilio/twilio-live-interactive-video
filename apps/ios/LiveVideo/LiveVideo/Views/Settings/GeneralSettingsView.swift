@@ -20,12 +20,6 @@ struct GeneralSettingsView: View {
                 }
                 
                 Section {
-                    NavigationLink("Advanced") {
-                        AdvancedSettings()
-                    }
-                }
-                
-                Section {
                     Button("Sign Out") {
                         signOut = true
                         presentationMode.wrappedValue.dismiss()

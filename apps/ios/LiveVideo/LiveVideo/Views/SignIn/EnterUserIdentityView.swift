@@ -5,8 +5,10 @@
 import SwiftUI
 
 struct EnterUserIdentityView: View {
+    @EnvironmentObject var appSettingsManager: AppSettingsManager
     @State private var userIdentity = ""
-    @State private var isShowingPasscodeView = false
+    @State private var isShowingPasscode = false
+    @State private var isShowingSettings = false
 
     var body: some View {
         NavigationView {
@@ -33,7 +35,7 @@ struct EnterUserIdentityView: View {
                     .disableAutocorrection(true)
                 
                 Button("Continue") {
-                    isShowingPasscodeView = true
+                    isShowingPasscode = true
                 }
                 .buttonStyle(PrimaryButtonStyle(isEnabled: !userIdentity.isEmpty))
                 .disabled(userIdentity.isEmpty)
@@ -41,7 +43,7 @@ struct EnterUserIdentityView: View {
                     /// Set the `NavigationLink` as background with 0 opacity so it is completely invisible and doesn't alter spacing
                     NavigationLink(
                         destination: EnterPasscodeView(userIdentity: userIdentity),
-                        isActive: $isShowingPasscodeView
+                        isActive: $isShowingPasscode
                     ) {
                         EmptyView()
                     }
@@ -49,6 +51,18 @@ struct EnterUserIdentityView: View {
                 )
             }
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                Button(action: { isShowingSettings.toggle() }) {
+                    Image(systemName: "gear")
+                }
+            }
+            .onAppear {
+                /// Reset settings in case the user changed environment from this screen but didn't finish signing in
+                appSettingsManager.reset()
+            }
+            .sheet(isPresented: $isShowingSettings) {
+                SignInSettingsView(isPresented: $isShowingSettings)
+            }
         }
     }
 }

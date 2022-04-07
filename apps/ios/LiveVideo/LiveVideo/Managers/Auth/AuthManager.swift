@@ -55,6 +55,7 @@ class AuthManager: ObservableObject {
         isSignedOut = true
         userIdentity = ""
         try? keychain.removeAll()
+        appSettingsManager.reset()
     }
     
     private func configureAPI(passcode: String) throws {
