@@ -21,6 +21,14 @@ enum TwilioEnvironment: String, CaseIterable, Identifiable {
         }
     }
     
+    var environmentVariableValue: String {
+        switch self {
+        case .prod: return "Production"
+        case .stage: return "Staging"
+        case .dev: return "Development"
+        }
+    }
+    
     var region: String {
         switch self {
         case .prod: return "us1"
