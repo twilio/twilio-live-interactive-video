@@ -10,12 +10,23 @@ struct EnvironmentBadge: View {
     var body: some View {
         HStack {
             Spacer()
-            Text(appSettingsManager.environment.rawValue.capitalized)
+            Text(appSettingsManager.environment.rawValue.uppercased())// capitalized)
                 .font(.title2.bold())
                 .padding(7)
-                .background(Color.orange)
+                .foregroundColor(.white)
+                .background(appSettingsManager.environment.backgroundColor)
                 .cornerRadius(6)
             Spacer()
+        }
+    }
+}
+
+private extension TwilioEnvironment {
+    var backgroundColor: Color {
+        switch self {
+        case .prod: return .red
+        case .stage: return .orange
+        case .dev: return .green
         }
     }
 }
