@@ -142,6 +142,10 @@ async function deployFunctions() {
     overrideExistingService: options.override,
   };
 
+  if (TWILIO_ENVIRONMENT) {
+    deployConfig.env.TWILIO_REGION = TWILIO_ENVIRONMENT;
+  }
+
   if (existingConfiguration) {
     // Deploy to existing service if it exists
     deployConfig.serviceSid = existingConfiguration.serviceSid;
