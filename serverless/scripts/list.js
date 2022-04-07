@@ -1,6 +1,8 @@
 const constants = require('../constants');
 require('dotenv').config();
-const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
+const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN, {
+  region: process.env.TWILIO_ENVIRONMENT || undefined,
+});
 
 async function findApp() {
   const services = await client.serverless.services.list();
@@ -17,7 +19,7 @@ async function getAppInfo() {
   const expiryVar = variables.find((v) => v.key === 'APP_EXPIRY');
   const expiryDate = new Date(Number(expiryVar.value)).toString();
   const passcode = variables.find((v) => v.key === 'PASSCODE').value;
-  const [, appID, serverlessID] = environment.domainName.match(/-?(\d*)-(\d+)(?:-\w+)?.twil.io$/);
+  const [, appID, serverlessID] = environment.domainName.match(/-?(\d*)-(\d+)(?:-\w+)?(?:\.\w+)?\.twil\.io$/);
   const fullPasscode = `${passcode}${appID}${serverlessID}`;
 
   console.log(`App deployed to: https://${environment.domainName}?passcode=${fullPasscode}`);
