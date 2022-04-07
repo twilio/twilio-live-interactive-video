@@ -31,7 +31,11 @@ export const SyncProvider: React.FC = ({ children }) => {
   const syncClientRef = useRef<SyncClient>();
 
   function connect(token: string) {
-    syncClientRef.current = new SyncClient(token);
+    let syncOptions;
+    if (process.env.REACT_APP_TWILIO_ENVIRONMENT) {
+      syncOptions = { region: `${process.env.REACT_APP_TWILIO_ENVIRONMENT}-us1` };
+    }
+    syncClientRef.current = new SyncClient(token, syncOptions);
   }
 
   function registerUserDocument(userDocumentName: string) {
