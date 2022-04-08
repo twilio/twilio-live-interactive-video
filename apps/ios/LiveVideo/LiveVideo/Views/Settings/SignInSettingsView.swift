@@ -5,14 +5,14 @@
 import SwiftUI
 
 struct SignInSettingsView: View {
-    @EnvironmentObject var appSettingsManager: AppSettingsManager
+    @Binding var environment: TwilioEnvironment
     @Binding var isPresented: Bool
 
     var body: some View {
         NavigationView {
             Form {
                 Section(footer: Text("Environment is used by Twilio employees for internal testing only.")) {
-                    Picker("Environment", selection: $appSettingsManager.environment) {
+                    Picker("Environment", selection: $environment) {
                         ForEach(TwilioEnvironment.allCases) {
                             Text($0.rawValue.capitalized)
                         }
@@ -34,15 +34,6 @@ struct SignInSettingsView: View {
 
 struct SignInSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SignInSettingsView(isPresented: .constant(true))
-            .environmentObject(AppSettingsManager.stub())
-    }
-}
-
-extension AppSettingsManager {
-    static func stub(environment: TwilioEnvironment = .prod) -> AppSettingsManager {
-        let appSettingsManager = AppSettingsManager()
-        appSettingsManager.environment = environment
-        return appSettingsManager
+        SignInSettingsView(environment: .constant(.prod), isPresented: .constant(true))
     }
 }

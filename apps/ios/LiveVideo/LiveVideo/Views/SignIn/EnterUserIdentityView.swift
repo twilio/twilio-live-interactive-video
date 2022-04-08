@@ -7,9 +7,9 @@ import SwiftUI
 struct EnterUserIdentityView: View {
     @EnvironmentObject var appSettingsManager: AppSettingsManager
     @State private var userIdentity = ""
+    @State private var environment: TwilioEnvironment = .prod
     @State private var isShowingPasscode = false
     @State private var isShowingSettings = false
-    @State private var isFirstAppear = true
 
     var body: some View {
         NavigationView {
@@ -36,6 +36,7 @@ struct EnterUserIdentityView: View {
                     .disableAutocorrection(true)
                 
                 Button("Continue") {
+                    appSettingsManager.environment = environment
                     isShowingPasscode = true
                 }
                 .buttonStyle(PrimaryButtonStyle(isEnabled: !userIdentity.isEmpty))
@@ -57,17 +58,8 @@ struct EnterUserIdentityView: View {
                     Image(systemName: "gear")
                 }
             }
-            .onAppear {
-                // https://stackoverflow.com/questions/63080830/swifui-onappear-gets-called-twice
-                if isFirstAppear {
-                    isFirstAppear = false
-                    
-                    /// Always start sign in with environment defaulted to prod
-                    appSettingsManager.environment = .prod
-                }
-            }
             .sheet(isPresented: $isShowingSettings) {
-                SignInSettingsView(isPresented: $isShowingSettings)
+                SignInSettingsView(environment: $environment, isPresented: $isShowingSettings)
             }
         }
     }

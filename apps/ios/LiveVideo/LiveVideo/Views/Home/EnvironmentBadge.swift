@@ -40,3 +40,11 @@ struct EnvironmentBadge_Previews: PreviewProvider {
         }
     }
 }
+
+extension AppSettingsManager {
+    static func stub(environment: TwilioEnvironment = .prod) -> AppSettingsManager {
+        let appSettingsManager = AppSettingsManager()
+        appSettingsManager.environment = environment
+        return appSettingsManager
+    }
+}
