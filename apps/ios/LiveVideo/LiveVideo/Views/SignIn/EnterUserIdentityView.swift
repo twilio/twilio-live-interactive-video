@@ -9,6 +9,7 @@ struct EnterUserIdentityView: View {
     @State private var userIdentity = ""
     @State private var isShowingPasscode = false
     @State private var isShowingSettings = false
+    @State private var isFirstAppear = true
 
     var body: some View {
         NavigationView {
@@ -57,8 +58,13 @@ struct EnterUserIdentityView: View {
                 }
             }
             .onAppear {
-                /// Reset settings in case the user changed environment from this screen but didn't finish signing in
-                appSettingsManager.reset()
+                // https://stackoverflow.com/questions/63080830/swifui-onappear-gets-called-twice
+                if isFirstAppear {
+                    isFirstAppear = false
+                    
+                    /// Always start sign in with environment defaulted to prod
+                    appSettingsManager.environment = .prod
+                }
             }
             .sheet(isPresented: $isShowingSettings) {
                 SignInSettingsView(isPresented: $isShowingSettings)
