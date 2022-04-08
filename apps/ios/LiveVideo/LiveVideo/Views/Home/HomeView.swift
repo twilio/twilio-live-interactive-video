@@ -101,7 +101,7 @@ struct HomeView_Previews: PreviewProvider {
                 .previewDisplayName("Stage")
                 .environmentObject(AppSettingsManager.stub(environment: .stage))
         }
-            .environmentObject(AuthManager.stub(isSignedOut: false))
+        .environmentObject(AuthManager.stub(isSignedOut: false))
     }
 }
 

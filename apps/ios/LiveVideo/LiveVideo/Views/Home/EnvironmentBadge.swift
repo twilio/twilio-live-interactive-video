@@ -10,7 +10,7 @@ struct EnvironmentBadge: View {
     var body: some View {
         HStack {
             Spacer()
-            Text(appSettingsManager.environment.rawValue.uppercased())// capitalized)
+            Text(appSettingsManager.environment.rawValue.uppercased())
                 .font(.title2.bold())
                 .padding(7)
                 .foregroundColor(.white)
