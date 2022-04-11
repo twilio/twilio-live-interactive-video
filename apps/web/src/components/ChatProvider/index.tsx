@@ -26,7 +26,11 @@ export const ChatProvider: React.FC = ({ children }) => {
 
   const connect = useCallback(
     (token: string) => {
-      Client.create(token)
+      let conversationOptions;
+      if (process.env.REACT_APP_TWILIO_ENVIRONMENT) {
+        conversationOptions = { region: `${process.env.REACT_APP_TWILIO_ENVIRONMENT}-us1` };
+      }
+      Client.create(token, conversationOptions)
         .then(client => {
           //@ts-ignore
           window.chatClient = client;
