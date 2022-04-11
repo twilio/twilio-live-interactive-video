@@ -21,7 +21,7 @@ enum TwilioEnvironment: String, CaseIterable, Identifiable {
         }
     }
     
-    var environmentVariableValue: String {
+    var videoEnvironment: String {
         switch self {
         case .prod: return "Production"
         case .stage: return "Staging"
@@ -29,9 +29,9 @@ enum TwilioEnvironment: String, CaseIterable, Identifiable {
         }
     }
     
-    var region: String {
+    var region: String? {
         switch self {
-        case .prod: return "us1"
+        case .prod: return nil
         case .stage: return "stage-us1"
         case .dev: return "dev-us1"
         }

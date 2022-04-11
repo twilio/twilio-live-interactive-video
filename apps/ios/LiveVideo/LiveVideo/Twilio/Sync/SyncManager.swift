@@ -56,7 +56,10 @@ class SyncManager: NSObject {
         }
         
         let properties = TwilioSyncClientProperties()
-        properties.region = appSettingsManager.environment.region /// Only used by Twilio employees for internal testing
+        
+        if let region = appSettingsManager.environment.region {
+            properties.region = region /// Only used by Twilio employees for internal testing
+        }
         
         TwilioSyncClient.syncClient(
             withToken: token,
