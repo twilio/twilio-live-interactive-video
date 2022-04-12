@@ -5,8 +5,11 @@
 import SwiftUI
 
 struct EnterUserIdentityView: View {
+    @EnvironmentObject var appSettingsManager: AppSettingsManager
     @State private var userIdentity = ""
-    @State private var isShowingPasscodeView = false
+    @State private var environment: TwilioEnvironment = .prod
+    @State private var isShowingPasscode = false
+    @State private var isShowingSettings = false
 
     var body: some View {
         NavigationView {
@@ -33,7 +36,8 @@ struct EnterUserIdentityView: View {
                     .disableAutocorrection(true)
                 
                 Button("Continue") {
-                    isShowingPasscodeView = true
+                    appSettingsManager.environment = environment
+                    isShowingPasscode = true
                 }
                 .buttonStyle(PrimaryButtonStyle(isEnabled: !userIdentity.isEmpty))
                 .disabled(userIdentity.isEmpty)
@@ -41,7 +45,7 @@ struct EnterUserIdentityView: View {
                     /// Set the `NavigationLink` as background with 0 opacity so it is completely invisible and doesn't alter spacing
                     NavigationLink(
                         destination: EnterPasscodeView(userIdentity: userIdentity),
-                        isActive: $isShowingPasscodeView
+                        isActive: $isShowingPasscode
                     ) {
                         EmptyView()
                     }
@@ -49,6 +53,14 @@ struct EnterUserIdentityView: View {
                 )
             }
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                Button(action: { isShowingSettings.toggle() }) {
+                    Image(systemName: "gear")
+                }
+            }
+            .sheet(isPresented: $isShowingSettings) {
+                SignInSettingsView(environment: $environment, isPresented: $isShowingSettings)
+            }
         }
     }
 }

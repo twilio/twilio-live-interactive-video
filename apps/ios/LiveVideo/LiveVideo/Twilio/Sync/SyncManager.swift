@@ -16,19 +16,22 @@ class SyncManager: NSObject {
     private var userDocument: SyncUserDocument
     private var streamDocument: SyncStreamDocument
     private var objects: [SyncObjectConnecting] = []
+    private var appSettingsManager: AppSettingsManager
 
     init(
         speakersMap: SyncUsersMap,
         viewersMap: SyncUsersMap,
         raisedHandsMap: SyncUsersMap,
         userDocument: SyncUserDocument,
-        streamDocument: SyncStreamDocument
+        streamDocument: SyncStreamDocument,
+        appSettingsManager: AppSettingsManager
     ) {
         self.speakersMap = speakersMap
         self.viewersMap = viewersMap
         self.raisedHandsMap = raisedHandsMap
         self.userDocument = userDocument
         self.streamDocument = streamDocument
+        self.appSettingsManager = appSettingsManager
     }
 
     /// Connects all sync objects.
@@ -50,9 +53,15 @@ class SyncManager: NSObject {
             objects.append(userDocument)
         }
         
+        let properties = TwilioSyncClientProperties()
+        
+        if let region = appSettingsManager.environment.region {
+            properties.region = region /// Only used by Twilio employees for internal testing
+        }
+        
         TwilioSyncClient.syncClient(
             withToken: token,
-            properties: nil,
+            properties: properties,
             delegate: self
         ) { [weak self] result, client in
             guard let client = client else {

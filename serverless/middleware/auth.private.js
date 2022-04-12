@@ -5,9 +5,7 @@ module.exports = async (context, event, callback) => {
   const { PASSCODE, APP_EXPIRY, DOMAIN_NAME } = context;
 
   const passcode = event.request.headers.authorization;
-  const [, appID, serverlessID] = DOMAIN_NAME.match(
-    /-?(\d*)-(\d+)(?:-\w+)?.twil.io$/
-  );
+  const [, appID, serverlessID] = DOMAIN_NAME.match(/-?(\d*)-(\d+)(?:-\w+)?(?:\.\w+)?\.twil\.io$/);
 
   let response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
@@ -29,8 +27,7 @@ module.exports = async (context, event, callback) => {
     response.setBody({
       error: {
         message: `passcode incorrect`,
-        explanation:
-          'The passcode used to validate application users is incorrect.',
+        explanation: 'The passcode used to validate application users is incorrect.',
       },
     });
     return callback(null, response);

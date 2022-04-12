@@ -24,18 +24,21 @@ class StreamManager: ObservableObject {
     private var playerManager: PlayerManager!
     private var syncManager: SyncManager!
     private var api: API!
+    private var appSettingsManager: AppSettingsManager!
     private var subscriptions = Set<AnyCancellable>()
 
     func configure(
         roomManager: RoomManager,
         playerManager: PlayerManager,
         syncManager: SyncManager,
-        api: API
+        api: API,
+        appSettingsManager: AppSettingsManager
     ) {
         self.roomManager = roomManager
         self.playerManager = playerManager
         self.syncManager = syncManager
         self.api = api
+        self.appSettingsManager = appSettingsManager
         
         roomManager.roomConnectPublisher
             .sink { [weak self] in self?.state = .connected }
@@ -66,6 +69,10 @@ class StreamManager: ObservableObject {
         }
 
         state = .connecting
+
+        /// Set environment variable used by `TwilioVideo` and `TwilioLivePlayer`. This is only used by Twilio employees for internal testing.
+        setenv("TWILIO_ENVIRONMENT", appSettingsManager.environment.videoEnvironment, 1)
+
         fetchAccessToken()
     }
     

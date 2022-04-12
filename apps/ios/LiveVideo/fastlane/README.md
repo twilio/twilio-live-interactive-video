@@ -21,6 +21,21 @@ or alternatively using `brew install fastlane`
 fastlane ios tests
 ```
 Tests
+### ios ci_match_install
+```
+fastlane ios ci_match_install
+```
+
+### ios match_install
+```
+fastlane ios match_install
+```
+Install existing match certs and profiles without updating/overwriting
+### ios match_update
+```
+fastlane ios match_update
+```
+Update and overwrite match certs and profiles if needed - destructive and may require other devs to match_install
 
 ----
 

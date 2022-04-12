@@ -29,15 +29,6 @@
         }
       },
       {
-        "package": "InAppSettingsKit",
-        "repositoryURL": "https://github.com/futuretap/InAppSettingsKit",
-        "state": {
-          "branch": null,
-          "revision": "e4b97046bb88f7a289d5f5a1e2b92b751c172bab",
-          "version": "3.3.5"
-        }
-      },
-      {
         "package": "KeychainAccess",
         "repositoryURL": "https://github.com/kishikawakatsumi/KeychainAccess",
         "state": {
@@ -62,15 +53,6 @@
           "branch": null,
           "revision": "bd86ca0141e3cfb333546de5a11ede63f0c4a0e6",
           "version": "4.0.0"
-        }
-      },
-      {
-        "package": "SwiftyUserDefaults",
-        "repositoryURL": "https://github.com/sunshinejr/SwiftyUserDefaults",
-        "state": {
-          "branch": null,
-          "revision": "f66bcd04088582c8fbb5cb8554d577e303bae396",
-          "version": "5.3.0"
         }
       },
       {

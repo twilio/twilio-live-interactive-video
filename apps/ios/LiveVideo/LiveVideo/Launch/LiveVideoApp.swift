@@ -17,6 +17,7 @@ struct LiveVideoApp: App {
     @StateObject private var presentationLayoutViewModel = PresentationLayoutViewModel()
     @StateObject private var api = API()
     @StateObject private var streamDocument = SyncStreamDocument()
+    @StateObject private var appSettingsManager = AppSettingsManager()
 
     var body: some Scene {
         WindowGroup {
@@ -31,8 +32,9 @@ struct LiveVideoApp: App {
                 .environmentObject(hostControlsManager)
                 .environmentObject(api)
                 .environmentObject(streamDocument)
+                .environmentObject(appSettingsManager)
                 .onAppear {
-                    authManager.configure(api: api)
+                    authManager.configure(api: api, appSettingsManager: appSettingsManager)
                     let localParticipant = LocalParticipantManager(authManager: authManager)
                     let roomManager = RoomManager()
                     roomManager.configure(localParticipant: localParticipant)
@@ -46,13 +48,15 @@ struct LiveVideoApp: App {
                         viewersMap: viewersMap,
                         raisedHandsMap: raisedHandsMap,
                         userDocument: userDocument,
-                        streamDocument: streamDocument
+                        streamDocument: streamDocument,
+                        appSettingsManager: appSettingsManager
                     )
                     streamManager.configure(
                         roomManager: roomManager,
                         playerManager: PlayerManager(),
                         syncManager: syncManager,
-                        api: api
+                        api: api,
+                        appSettingsManager: appSettingsManager
                     )
                     streamViewModel.configure(
                         streamManager: streamManager,

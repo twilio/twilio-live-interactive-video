@@ -17,10 +17,11 @@ program.option('-o, --override', 'Override existing deployment');
 program.parse(process.argv);
 const options = program.opts();
 
-const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
+const { ACCOUNT_SID, AUTH_TOKEN } = process.env;
+const client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
 const serverlessClient = new TwilioServerlessApiClient({
-  username: process.env.ACCOUNT_SID,
-  password: process.env.AUTH_TOKEN,
+  username: ACCOUNT_SID,
+  password: AUTH_TOKEN,
 });
 
 // Returns an object of the previously deployed environment variables if they exist.
@@ -32,7 +33,12 @@ async function findExistingConfiguration() {
     const envVariables = await serverlessClient.getEnvironmentVariables({
       serviceSid: service.sid,
       environment: 'dev',
-      keys: ['TWILIO_API_KEY_SID', 'TWILIO_API_KEY_SECRET', 'CONVERSATIONS_SERVICE_SID', 'BACKEND_STORAGE_SYNC_SERVICE_SID'],
+      keys: [
+        'TWILIO_API_KEY_SID',
+        'TWILIO_API_KEY_SECRET',
+        'CONVERSATIONS_SERVICE_SID',
+        'BACKEND_STORAGE_SYNC_SERVICE_SID',
+      ],
       getValues: true,
     });
 
@@ -72,8 +78,11 @@ async function deployFunctions() {
     });
 
     cli.action.start('Creating Backend Storage Sync Service');
-    backendStorageSyncService = await client.sync.services.create({ friendlyName: constants.BACKEND_STORAGE_SYNC_SERVICE_NAME, aclEnabled: true });
-    backendStorageSyncClient = await client.sync.services(backendStorageSyncService.sid); 
+    backendStorageSyncService = await client.sync.services.create({
+      friendlyName: constants.BACKEND_STORAGE_SYNC_SERVICE_NAME,
+      aclEnabled: true,
+    });
+    backendStorageSyncClient = await client.sync.services(backendStorageSyncService.sid);
     await backendStorageSyncClient.syncMaps.create({ uniqueName: 'streams' });
   }
 
@@ -110,7 +119,8 @@ async function deployFunctions() {
       TWILIO_API_KEY_SID: existingConfiguration?.TWILIO_API_KEY_SID || apiKey.sid,
       TWILIO_API_KEY_SECRET: existingConfiguration?.TWILIO_API_KEY_SECRET || apiKey.secret,
       CONVERSATIONS_SERVICE_SID: existingConfiguration?.CONVERSATIONS_SERVICE_SID || conversationsService.sid,
-      BACKEND_STORAGE_SYNC_SERVICE_SID: existingConfiguration?.BACKEND_STORAGE_SYNC_SERVICE_SID || backendStorageSyncService.sid,
+      BACKEND_STORAGE_SYNC_SERVICE_SID:
+        existingConfiguration?.BACKEND_STORAGE_SYNC_SERVICE_SID || backendStorageSyncService.sid,
       SYNC_SERVICE_NAME_PREFIX: constants.SYNC_SERVICE_NAME_PREFIX,
       MEDIA_EXTENSION: constants.MEDIA_EXTENSION,
       APP_EXPIRY: Date.now() + 1000 * 60 * 60 * 24 * 7, // One week
@@ -128,6 +138,10 @@ async function deployFunctions() {
     functions,
     overrideExistingService: options.override,
   };
+
+  if (process.env.TWILIO_REGION) {
+    deployConfig.env.TWILIO_REGION = process.env.TWILIO_REGION;
+  }
 
   if (existingConfiguration) {
     // Deploy to existing service if it exists
