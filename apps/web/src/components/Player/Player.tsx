@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     recordingIndicator: {
       position: 'absolute',
-      bottom: 0,
+      bottom: theme.footerHeight + 'px',
       display: 'flex',
       alignItems: 'center',
       background: 'rgba(0, 0, 0, 0.5)',
@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: '0.1em 0.3em 0.1em 0',
       fontSize: '1.2rem',
       height: '28px',
+      zIndex: 10,
       [theme.breakpoints.down('sm')]: {
         bottom: 'auto',
         right: 0,
