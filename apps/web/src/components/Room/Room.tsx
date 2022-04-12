@@ -14,6 +14,7 @@ import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import useSyncContext from '../../hooks/useSyncContext/useSyncContext';
 import { useEnqueueSnackbar } from '../../hooks/useSnackbar/useSnackbar';
 import { Room as IRoom, TwilioError } from 'twilio-video';
+import useRecordingNotifications from '../../hooks/useRecordingNotifications/useRecordingNotifications';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
@@ -105,6 +106,8 @@ export default function Room() {
     appState.eventName,
     enqueueSnackbar,
   ]);
+
+  useRecordingNotifications();
 
   return (
     <div
