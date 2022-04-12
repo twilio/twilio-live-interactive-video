@@ -141,7 +141,7 @@ export default function MainParticipantInfo({ participant, children }: MainParti
   const isVideoSwitchedOff = useIsTrackSwitchedOff(videoTrack as LocalVideoTrack | RemoteVideoTrack);
   const isParticipantReconnecting = useParticipantIsReconnecting(participant);
 
-  const isRecording = useIsRecording();
+  const { isRecording } = useIsRecording();
 
   return (
     <div

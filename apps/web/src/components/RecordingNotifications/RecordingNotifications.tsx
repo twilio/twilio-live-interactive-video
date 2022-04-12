@@ -13,7 +13,7 @@ enum Snackbars {
 export default function RecordingNotifications() {
   const [activeSnackbar, setActiveSnackbar] = useState(Snackbars.none);
   const prevIsRecording = useRef<boolean | null>(null);
-  const isRecording = useIsRecording();
+  const { isRecording } = useIsRecording();
 
   useEffect(() => {
     // Show "Recording in progress" snackbar when a user joins a room that is recording
