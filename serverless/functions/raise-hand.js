@@ -8,7 +8,7 @@ module.exports.handler = async (context, event, callback) => {
   const { user_identity, stream_name, hand_raised } = event;
 
   const common = require(Runtime.getAssets()['/common.js'].path);
-  const { getStreamMapItem } = common(context, event, callback);
+  const { getStreamMapItem, createErrorHandler } = common(context, event, callback);
 
   if (!user_identity) {
     response.setStatusCode(400);
@@ -48,58 +48,29 @@ module.exports.handler = async (context, event, callback) => {
 
   const client = context.getTwilioClient();
 
-  let room, streamSyncClient;
+  let streamSyncClient;
 
-  try {
-    // See if a room already exists
-    room = await client.video.rooms(stream_name).fetch();
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error finding room',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+  // See if a room already exists
+  const room = await client.video.rooms(stream_name).fetch().catch(createErrorHandler('error finding room'));
 
   // Get stream sync client
   try {
     let streamMapItem = await getStreamMapItem(room.sid);
     streamSyncClient = await client.sync.services(streamMapItem.data.sync_service_sid);
   } catch (e) {
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error getting stream sync client',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
+    createErrorHandler('error getting stream sync client')(e);
   }
-
-  const raisedHandsMapName = `raised_hands`;
 
   try {
     if (hand_raised) {
-      await streamSyncClient.syncMaps(raisedHandsMapName).syncMapItems.create({ key: user_identity, data: { } });
+      await streamSyncClient.syncMaps('raised_hands').syncMapItems.create({ key: user_identity, data: {} });
     } else {
-      await streamSyncClient.syncMaps(raisedHandsMapName).syncMapItems(user_identity).remove();
+      await streamSyncClient.syncMaps('raised_hands').syncMapItems(user_identity).remove();
     }
   } catch (e) {
     // Ignore errors relating to removing a syncMapItem that doesn't exist (20404), or creating one that already does exist (54208)
     if (e.code !== 20404 && e.code !== 54208) {
-      console.error(e);
-      response.setStatusCode(500);
-      response.setBody({
-        error: {
-          message: 'error updating raised hands map',
-          explanation: e.message,
-        },
-      });
-      return callback(null, response);
+      createErrorHandler('error updating raised hands map')(e);
     }
   }
 
