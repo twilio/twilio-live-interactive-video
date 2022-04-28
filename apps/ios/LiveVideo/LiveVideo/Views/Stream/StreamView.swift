@@ -15,6 +15,7 @@ struct StreamView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @State private var isShowingParticipants = false
+    @State private var isShowingChat = false
     private let app = UIApplication.shared
     private let spacing: CGFloat = 6
     
@@ -102,6 +103,12 @@ struct StreamView: View {
                             isShowingParticipants = true
                         }
 
+                        StreamToolbarButton(
+                            image: Image(systemName: "message")
+                        ) {
+                            isShowingChat = true
+                        }
+                        
                         if streamManager.config.role == .speaker {
                             Menu {
                                 Button("Move to Viewers") {
@@ -139,6 +146,9 @@ struct StreamView: View {
         }
         .sheet(isPresented: $isShowingParticipants) {
             ParticipantsView()
+        }
+        .sheet(isPresented: $isShowingChat) {
+            ChatView()
         }
         .alert(item: $viewModel.alertIdentifier) { alertIdentifier in
             switch alertIdentifier {

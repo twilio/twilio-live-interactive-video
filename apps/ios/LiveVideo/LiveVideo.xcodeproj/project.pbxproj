@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC0A95F62819DB7500E7678C /* TwilioConversationsClient in Frameworks */ = {isa = PBXBuildFile; productRef = DC0A95F52819DB7500E7678C /* TwilioConversationsClient */; };
+		DC0A95F92819E1C800E7678C /* ChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0A95F82819E1C800E7678C /* ChatManager.swift */; };
+		DC0A96052819E2C600E7678C /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0A96042819E2C600E7678C /* ChatMessage.swift */; };
+		DC0A9607281B2F0F00E7678C /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0A9606281B2F0F00E7678C /* ChatView.swift */; };
 		DC175F2D270E232F00D9D1FE /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F2C270E232F00D9D1FE /* SyncManager.swift */; };
 		DC175F30270E238F00D9D1FE /* TwilioSyncClient in Frameworks */ = {isa = PBXBuildFile; productRef = DC175F2F270E238F00D9D1FE /* TwilioSyncClient */; };
 		DC175F32270E23F900D9D1FE /* SyncUserDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F31270E23F900D9D1FE /* SyncUserDocument.swift */; };
@@ -115,6 +119,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DC0A95F82819E1C800E7678C /* ChatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatManager.swift; sourceTree = "<group>"; };
+		DC0A96042819E2C600E7678C /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		DC0A9606281B2F0F00E7678C /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		DC175F2C270E232F00D9D1FE /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		DC175F31270E23F900D9D1FE /* SyncUserDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncUserDocument.swift; sourceTree = "<group>"; };
 		DC175F33270E3FD200D9D1FE /* SyncUsersMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncUsersMap.swift; sourceTree = "<group>"; };
@@ -209,6 +216,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC0A95F62819DB7500E7678C /* TwilioConversationsClient in Frameworks */,
 				DCC48F9826D828E500EE49EF /* Alamofire in Frameworks */,
 				DC4F45E7271F5A3700BE730B /* TwilioLivePlayer in Frameworks */,
 				DCB1BE032756A288006CE9D1 /* KeychainAccess in Frameworks */,
@@ -236,6 +244,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DC0A95F72819E19100E7678C /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				DC0A95F82819E1C800E7678C /* ChatManager.swift */,
+				DC0A96042819E2C600E7678C /* ChatMessage.swift */,
+				DC0A9606281B2F0F00E7678C /* ChatView.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
 		DC14B78626FA385E003BDABC /* SpeakerSettings */ = {
 			isa = PBXGroup;
 			children = (
@@ -517,6 +535,7 @@
 		DCC48F9E26D830D300EE49EF /* Twilio */ = {
 			isa = PBXGroup;
 			children = (
+				DC0A95F72819E19100E7678C /* Chat */,
 				DCC48F9F26D830E300EE49EF /* Player */,
 				DC1ED0FE26E92D7C00FFA769 /* Room */,
 				DCC1D62426D9393900892038 /* Stream */,
@@ -575,6 +594,7 @@
 				DC175F2F270E238F00D9D1FE /* TwilioSyncClient */,
 				DC4F45E6271F5A3700BE730B /* TwilioLivePlayer */,
 				DCB1BE022756A288006CE9D1 /* KeychainAccess */,
+				DC0A95F52819DB7500E7678C /* TwilioConversationsClient */,
 			);
 			productName = LiveVideo;
 			productReference = DC5F453526CC061A009C5C79 /* LiveVideo.app */;
@@ -659,6 +679,7 @@
 				DCB1BE012756A288006CE9D1 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				DCB1BE0627581BC6006CE9D1 /* XCRemoteSwiftPackageReference "Quick" */,
 				DCB1BE0927581C11006CE9D1 /* XCRemoteSwiftPackageReference "Nimble" */,
+				DC0A95F42819DB7500E7678C /* XCRemoteSwiftPackageReference "conversations-ios" */,
 			);
 			productRefGroup = DC5F453626CC061A009C5C79 /* Products */;
 			projectDirPath = "";
@@ -718,6 +739,7 @@
 				DC6404D8271B68D4004730C6 /* ParticipantsViewModel.swift in Sources */,
 				DCB1BE0027568F5B006CE9D1 /* PasscodeComponents.swift in Sources */,
 				DC1ED0FD26E14D0B00FFA769 /* StreamToolbar.swift in Sources */,
+				DC0A96052819E2C600E7678C /* ChatMessage.swift in Sources */,
 				DC1ED0F926E1440200FFA769 /* StreamStatusView.swift in Sources */,
 				DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */,
 				DC175F34270E3FD200D9D1FE /* SyncUsersMap.swift in Sources */,
@@ -753,6 +775,7 @@
 				DCCA727327B5C142006B0441 /* PresentationVideoView.swift in Sources */,
 				DCADF33727FC95DF0093A9FE /* GeneralSettingsView.swift in Sources */,
 				DC4AA65926D0133600E677D5 /* Color.swift in Sources */,
+				DC0A9607281B2F0F00E7678C /* ChatView.swift in Sources */,
 				DCCA726D27B5890E006B0441 /* SpeakerVideoViewModelFactory.swift in Sources */,
 				DC3BB82527445F9A005D0327 /* ParticipantsHeader.swift in Sources */,
 				DCC1D62826D9568700892038 /* StreamConfig.swift in Sources */,
@@ -762,6 +785,7 @@
 				DC6404D4271B3BF8004730C6 /* StreamViewModel.swift in Sources */,
 				DCB4497426F5496400B52774 /* SpeakerSettingsManager.swift in Sources */,
 				DC1ED0FB26E144AE00FFA769 /* StreamToolbarButton.swift in Sources */,
+				DC0A95F92819E1C800E7678C /* ChatManager.swift in Sources */,
 				DC5F453926CC061A009C5C79 /* LiveVideoApp.swift in Sources */,
 				DC175F37270E5B6F00D9D1FE /* ParticipantsView.swift in Sources */,
 				DC3BB82727480A9E005D0327 /* RemoveSpeakerRequest.swift in Sources */,
@@ -1120,6 +1144,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		DC0A95F42819DB7500E7678C /* XCRemoteSwiftPackageReference "conversations-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twilio/conversations-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.0;
+			};
+		};
 		DC175F2E270E238F00D9D1FE /* XCRemoteSwiftPackageReference "twilio-sync-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/twilio/twilio-sync-ios";
@@ -1179,6 +1211,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		DC0A95F52819DB7500E7678C /* TwilioConversationsClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC0A95F42819DB7500E7678C /* XCRemoteSwiftPackageReference "conversations-ios" */;
+			productName = TwilioConversationsClient;
+		};
 		DC175F2F270E238F00D9D1FE /* TwilioSyncClient */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DC175F2E270E238F00D9D1FE /* XCRemoteSwiftPackageReference "twilio-sync-ios" */;
