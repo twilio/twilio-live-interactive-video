@@ -47,7 +47,7 @@ class StreamManager: ObservableObject {
         roomManager.roomConnectPublisher
             .sink { [weak self] in
                 self?.state = .connected
-                self?.connectChat()
+                self?.connectChat() /// Chat is not essential so connect it separately
             }
             .store(in: &subscriptions)
 

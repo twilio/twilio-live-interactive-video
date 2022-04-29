@@ -25,6 +25,7 @@ struct ChatView: View {
 
                 HStack {
                     TextField("Write a message...", text: $messageText)
+                    
                     Button("Send") {
                         chatManager.sendMessage(messageText)
                         messageText = ""
@@ -53,9 +54,9 @@ struct ChatView_Previews: PreviewProvider {
 }
 
 extension ChatManager {
-    static func stub() -> ChatManager {
+    static func stub(messages: [ChatMessage] = [.stub()]) -> ChatManager {
         let chatManager = ChatManager()
-        chatManager.messages = Array(1...3).map { ChatMessage.stub(body: "Message \($0)") }
+        chatManager.messages = messages
         return chatManager
     }
 }

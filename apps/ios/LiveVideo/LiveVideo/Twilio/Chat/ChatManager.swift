@@ -2,7 +2,6 @@
 //  Copyright (C) 2022 Twilio, Inc.
 //
 
-import Combine
 import TwilioConversationsClient
 
 class ChatManager: NSObject, ObservableObject {
