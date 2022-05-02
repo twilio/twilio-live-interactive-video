@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "TwilioConversationsClient",
+        "repositoryURL": "https://github.com/twilio/conversations-ios",
+        "state": {
+          "branch": null,
+          "revision": "df44d958cdc810d343b06e555107d1ab0f66b491",
+          "version": "2.2.2"
+        }
+      },
+      {
         "package": "CwlCatchException",
         "repositoryURL": "https://github.com/mattgallagher/CwlCatchException.git",
         "state": {
@@ -60,8 +69,8 @@
         "repositoryURL": "https://github.com/twilio/twilio-live-player-ios",
         "state": {
           "branch": null,
-          "revision": "7c4827e0bdb3b935aecdce9fa3c1b3c42ba60dd5",
-          "version": "1.0.1"
+          "revision": "97dff98041229cfe90c9d2e5b930c836279a9a48",
+          "version": "1.1.0"
         }
       },
       {

@@ -23,8 +23,10 @@ class StreamManager: ObservableObject {
     private var roomManager: RoomManager!
     private var playerManager: PlayerManager!
     private var syncManager: SyncManager!
+    private var chatManager: ChatManager!
     private var api: API!
     private var appSettingsManager: AppSettingsManager!
+    private var accessToken: String?
     private var subscriptions = Set<AnyCancellable>()
 
     func configure(
@@ -32,16 +34,21 @@ class StreamManager: ObservableObject {
         playerManager: PlayerManager,
         syncManager: SyncManager,
         api: API,
-        appSettingsManager: AppSettingsManager
+        appSettingsManager: AppSettingsManager,
+        chatManager: ChatManager
     ) {
         self.roomManager = roomManager
         self.playerManager = playerManager
         self.syncManager = syncManager
         self.api = api
         self.appSettingsManager = appSettingsManager
+        self.chatManager = chatManager
         
         roomManager.roomConnectPublisher
-            .sink { [weak self] in self?.state = .connected }
+            .sink { [weak self] in
+                self?.state = .connected
+                self?.connectChat() /// Chat is not essential so connect it separately
+            }
             .store(in: &subscriptions)
 
         roomManager.roomDisconnectPublisher
@@ -80,6 +87,7 @@ class StreamManager: ObservableObject {
         roomManager.disconnect()
         playerManager.disconnect()
         syncManager.disconnect()
+        chatManager.disconnect()
         player = nil
         state = .disconnected
         
@@ -115,6 +123,8 @@ class StreamManager: ObservableObject {
         api.request(request) { [weak self] result in
             switch result {
             case let .success(response):
+                self?.accessToken = response.token
+                
                 let objectNames = SyncManager.ObjectNames(
                     speakersMap: response.syncObjectNames.speakersMap,
                     viewersMap: response.syncObjectNames.viewersMap,
@@ -152,6 +162,14 @@ class StreamManager: ObservableObject {
         case .viewer:
             playerManager.connect(accessToken: accessToken)
         }
+    }
+    
+    private func connectChat() {
+        guard let accessToken = accessToken, let roomSID = roomManager.roomSID else {
+            return
+        }
+        
+        chatManager.connect(accessToken: accessToken, conversationName: roomSID)
     }
     
     private func handleError(_ error: Error) {
