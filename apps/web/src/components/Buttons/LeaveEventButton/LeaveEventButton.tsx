@@ -4,6 +4,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { joinStreamAsViewer, connectViewerToPlayer } from '../../../state/api/api';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useAppState } from '../../../state';
+import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import usePlayerContext from '../../../hooks/usePlayerContext/usePlayerContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useSyncContext from '../../../hooks/useSyncContext/useSyncContext';
@@ -26,7 +27,8 @@ export default function LeaveEventButton(props: { buttonClassName?: string }) {
   const { room } = useVideoContext();
   const { appState, appDispatch } = useAppState();
   const { connect: playerConnect } = usePlayerContext();
-  const { registerUserDocument } = useSyncContext();
+  const { registerUserDocument, disconnect: syncDisconnect } = useSyncContext();
+  const { disconnect: chatDisconnect } = useChatContext();
 
   const anchorRef = useRef<HTMLButtonElement>(null);
 
@@ -44,6 +46,8 @@ export default function LeaveEventButton(props: { buttonClassName?: string }) {
     setMenuOpen(false);
     room!.emit('setPreventAutomaticJoinStreamAsViewer');
     room!.disconnect();
+    syncDisconnect();
+    chatDisconnect();
     appDispatch({ type: 'reset-state' });
   }
 
