@@ -8,6 +8,7 @@ type ChatContextType = {
   isChatWindowOpen: boolean;
   setIsChatWindowOpen: (isChatWindowOpen: boolean) => void;
   connect: (token: string) => void;
+  disconnect: () => void;
   hasUnreadMessages: boolean;
   messages: Message[];
   conversation: Conversation | null;
@@ -26,22 +27,30 @@ export const ChatProvider: React.FC = ({ children }) => {
 
   const connect = useCallback(
     (token: string) => {
-      let conversationOptions;
-      if (process.env.REACT_APP_TWILIO_ENVIRONMENT) {
-        conversationOptions = { region: `${process.env.REACT_APP_TWILIO_ENVIRONMENT}-us1` };
+      if (!chatClient) {
+        let conversationOptions;
+        if (process.env.REACT_APP_TWILIO_ENVIRONMENT) {
+          conversationOptions = { region: `${process.env.REACT_APP_TWILIO_ENVIRONMENT}-us1` };
+        }
+        Client.create(token, conversationOptions)
+          .then(client => {
+            //@ts-ignore
+            window.chatClient = client;
+            setChatClient(client);
+          })
+          .catch(e => {
+            console.error(e);
+            onError(new Error("There was a problem connecting to Twilio's conversation service."));
+          });
       }
-      Client.create(token, conversationOptions)
-        .then(client => {
-          //@ts-ignore
-          window.chatClient = client;
-          setChatClient(client);
-        })
-        .catch(() => {
-          onError(new Error("There was a problem connecting to Twilio's conversation service."));
-        });
     },
-    [onError]
+    [onError, chatClient]
   );
+
+  const disconnect = useCallback(() => {
+    setChatClient(undefined);
+    chatClient?.shutdown();
+  }, [chatClient]);
 
   useEffect(() => {
     if (conversation) {
@@ -75,7 +84,8 @@ export const ChatProvider: React.FC = ({ children }) => {
           window.chatConversation = newConversation;
           setConversation(newConversation);
         })
-        .catch(() => {
+        .catch(e => {
+          console.error(e);
           onError(new Error('There was a problem getting the Conversation associated with this room.'));
         });
     }
@@ -83,7 +93,7 @@ export const ChatProvider: React.FC = ({ children }) => {
 
   return (
     <ChatContext.Provider
-      value={{ isChatWindowOpen, setIsChatWindowOpen, connect, hasUnreadMessages, messages, conversation }}
+      value={{ isChatWindowOpen, setIsChatWindowOpen, connect, disconnect, hasUnreadMessages, messages, conversation }}
     >
       {children}
     </ChatContext.Provider>
