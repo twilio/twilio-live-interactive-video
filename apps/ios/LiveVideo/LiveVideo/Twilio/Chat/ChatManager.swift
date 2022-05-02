@@ -5,11 +5,15 @@
 import TwilioConversationsClient
 
 class ChatManager: NSObject, ObservableObject {
-    @Published var messages: [ChatMessage] = []
+    @Published private(set) var messages: [ChatMessage] = []
     private var client: TwilioConversationsClient?
     private var conversation: TCHConversation?
     private var conversationName = ""
     private var appSettingsManager: AppSettingsManager!
+
+    init(messages: [ChatMessage] = []) {
+        self.messages = messages
+    }
     
     func configure(appSettingsManager: AppSettingsManager) {
         self.appSettingsManager = appSettingsManager

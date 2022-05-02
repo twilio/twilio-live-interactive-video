@@ -5,17 +5,10 @@
 import TwilioConversationsClient
 
 struct ChatMessage: Identifiable {
-    var id: String
-    var author: String
-    var dateCreated: Date
-    var body: String
-    
-    init() {
-        id = UUID().uuidString
-        author = ""
-        dateCreated = Date()
-        body = ""
-    }
+    let id: String
+    let author: String
+    let dateCreated: Date
+    let body: String
 
     init?(message: TCHMessage) {
         guard

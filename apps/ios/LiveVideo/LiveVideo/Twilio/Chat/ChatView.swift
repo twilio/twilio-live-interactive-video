@@ -55,17 +55,24 @@ struct ChatView_Previews: PreviewProvider {
 
 extension ChatManager {
     static func stub(messages: [ChatMessage] = [.stub()]) -> ChatManager {
-        let chatManager = ChatManager()
-        chatManager.messages = messages
-        return chatManager
+        ChatManager(messages: messages)
     }
 }
 
 extension ChatMessage {
-    static func stub(body: String = "Message", author: String = "Bob") -> ChatMessage {
-        var message = ChatMessage()
-        message.body = body
-        message.author = author
-        return message
+    static func stub(
+        id: String = UUID().uuidString,
+        author: String = "Bob",
+        dateCreated: Date = Date(),
+        body: String = "Message"
+    ) -> ChatMessage {
+        ChatMessage(id: id, author: author, dateCreated: dateCreated, body: body)
+    }
+    
+    private init(id: String, author: String, dateCreated: Date, body: String) {
+        self.id = id
+        self.author = author
+        self.dateCreated = dateCreated
+        self.body = body
     }
 }
