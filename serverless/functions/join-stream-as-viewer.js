@@ -143,13 +143,6 @@ module.exports.handler = async (context, event, callback) => {
   response.setStatusCode(200);
   response.setBody({
     token: token.toJwt(),
-    sync_object_names: {
-      speakers_map: 'speakers',
-      viewers_map: 'viewers',
-      raised_hands_map: 'raised_hands',
-      user_document: userDocumentName,
-      stream_document: 'stream',
-    },
     room_sid: room.sid,
   });
 
