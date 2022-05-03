@@ -2,7 +2,7 @@
 
 exports.handler = async function (context, event, callback) {
   const common = require(Runtime.getAssets()['/common.js'].path);
-  const { axiosClient, response, getStreamMapItem, createErrorHandler } = common(context, event, callback);
+  const { getStreamMapItem, createErrorHandler } = common(context, event, callback);
 
   const client = context.getTwilioClient();
 
@@ -25,7 +25,7 @@ exports.handler = async function (context, event, callback) {
     const doc = await streamSyncClient.documents('stream').fetch();
     await streamSyncClient
       .documents(doc.sid)
-      .update({ data: { ...doc.data, recording: { is_recording: false, error: 'A recording error has occured' } } })
+      .update({ data: { ...doc.data, recording: { is_recording: false, error: 'A recording error has occurred' } } })
       .catch(createErrorHandler('error updating stream document'));
   }
 

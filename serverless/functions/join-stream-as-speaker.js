@@ -118,7 +118,7 @@ module.exports.handler = async (context, event, callback) => {
     .catch((error) => {
       // Ignore "Participant already exists" error (50433)
       if (error.code !== 50433) {
-        createErrorHandler('error adding read access to user document')(error);
+        createErrorHandler('error creating conversation participant')(error);
       }
     });
 
