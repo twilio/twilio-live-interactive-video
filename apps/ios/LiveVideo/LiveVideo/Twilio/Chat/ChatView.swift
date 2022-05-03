@@ -8,13 +8,14 @@ struct ChatView: View {
     @EnvironmentObject var chatManager: ChatManager
     @Environment(\.presentationMode) var presentationMode
     @State private var newMessageBody = ""
+    @State private var isFirstLoadComplete = false
 
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
                 ScrollViewReader { scrollViewProxy in
                     ScrollView {
-                        VStack(alignment: .leading) {
+                        LazyVStack(alignment: .leading) {
                             ForEach(chatManager.messages) { message in
                                 VStack(alignment: .leading) {
                                     ChatHeaderView(author: message.author, date: message.date)
@@ -30,16 +31,20 @@ struct ChatView: View {
                             return
                         }
                         
-                        withAnimation {
+                        withAnimation(isFirstLoadComplete ? .default : nil) {
                             scrollViewProxy.scrollTo(chatManager.messages.last?.id)
                         }
 
+                        isFirstLoadComplete = true
                         chatManager.hasUnreadMessage = false
                     }
                     .onAppear {
                         UIScrollView.appearance().keyboardDismissMode = .interactive
-                        scrollViewProxy.scrollTo(chatManager.messages.last?.id)
-                        chatManager.hasUnreadMessage = false
+
+                        DispatchQueue.main.async {
+                            /// This is a hack so that after the view is loaded we scroll to the bottom
+                            chatManager.hasUnreadMessage = true
+                        }
                     }
                 }
                 
