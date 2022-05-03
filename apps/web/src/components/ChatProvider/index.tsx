@@ -27,22 +27,20 @@ export const ChatProvider: React.FC = ({ children }) => {
 
   const connect = useCallback(
     (token: string) => {
-      if (!chatClient) {
-        let conversationOptions;
-        if (process.env.REACT_APP_TWILIO_ENVIRONMENT) {
-          conversationOptions = { region: `${process.env.REACT_APP_TWILIO_ENVIRONMENT}-us1` };
-        }
-        Client.create(token, conversationOptions)
-          .then(client => {
-            //@ts-ignore
-            window.chatClient = client;
-            setChatClient(client);
-          })
-          .catch(e => {
-            console.error(e);
-            onError(new Error("There was a problem connecting to Twilio's conversation service."));
-          });
+      let conversationOptions;
+      if (process.env.REACT_APP_TWILIO_ENVIRONMENT) {
+        conversationOptions = { region: `${process.env.REACT_APP_TWILIO_ENVIRONMENT}-us1` };
       }
+      Client.create(token, conversationOptions)
+        .then(client => {
+          //@ts-ignore
+          window.chatClient = client;
+          setChatClient(client);
+        })
+        .catch(e => {
+          console.error(e);
+          onError(new Error("There was a problem connecting to Twilio's conversation service."));
+        });
     },
     [onError, chatClient]
   );
