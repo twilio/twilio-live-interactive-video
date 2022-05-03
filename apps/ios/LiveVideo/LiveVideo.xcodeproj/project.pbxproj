@@ -78,6 +78,7 @@
 		DCB1BE052756D954006CE9D1 /* EnterPasscodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BE042756D954006CE9D1 /* EnterPasscodeView.swift */; };
 		DCB1BE0827581BC6006CE9D1 /* Quick in Frameworks */ = {isa = PBXBuildFile; productRef = DCB1BE0727581BC6006CE9D1 /* Quick */; };
 		DCB1BE0B27581C11006CE9D1 /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = DCB1BE0A27581C11006CE9D1 /* Nimble */; };
+		DCB3DA34282193210020DE6C /* ChatBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB3DA33282193210020DE6C /* ChatBubbleView.swift */; };
 		DCB4497426F5496400B52774 /* SpeakerSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */; };
 		DCB4497626F65A7000B52774 /* SpeakerVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */; };
 		DCC1D62626D9396400892038 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC1D62526D9396400892038 /* StreamManager.swift */; };
@@ -189,6 +190,7 @@
 		DCB1BDFD27568D70006CE9D1 /* VerifyPasscodeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyPasscodeRequest.swift; sourceTree = "<group>"; };
 		DCB1BDFF27568F5B006CE9D1 /* PasscodeComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeComponents.swift; sourceTree = "<group>"; };
 		DCB1BE042756D954006CE9D1 /* EnterPasscodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPasscodeView.swift; sourceTree = "<group>"; };
+		DCB3DA33282193210020DE6C /* ChatBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubbleView.swift; sourceTree = "<group>"; };
 		DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerSettingsManager.swift; sourceTree = "<group>"; };
 		DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoViewModel.swift; sourceTree = "<group>"; };
 		DCC1D62526D9396400892038 /* StreamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamManager.swift; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 				DC0A95F82819E1C800E7678C /* ChatManager.swift */,
 				DC0A96042819E2C600E7678C /* ChatMessage.swift */,
 				DC0A9606281B2F0F00E7678C /* ChatView.swift */,
+				DCB3DA33282193210020DE6C /* ChatBubbleView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -778,6 +781,7 @@
 				DC0A9607281B2F0F00E7678C /* ChatView.swift in Sources */,
 				DCCA726D27B5890E006B0441 /* SpeakerVideoViewModelFactory.swift in Sources */,
 				DC3BB82527445F9A005D0327 /* ParticipantsHeader.swift in Sources */,
+				DCB3DA34282193210020DE6C /* ChatBubbleView.swift in Sources */,
 				DCC1D62826D9568700892038 /* StreamConfig.swift in Sources */,
 				DC1ED11C26E92DEA00FFA769 /* RemoteParticipantManager.swift in Sources */,
 				DC5F453B26CC061A009C5C79 /* HomeView.swift in Sources */,
