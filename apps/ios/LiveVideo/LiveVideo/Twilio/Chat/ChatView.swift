@@ -7,7 +7,6 @@ import SwiftUI
 struct ChatView: View {
     @EnvironmentObject var chatManager: ChatManager
     @Environment(\.presentationMode) var presentationMode
-    @State private var newMessageBody = ""
     @State private var isFirstLoadComplete = false
 
     var body: some View {
@@ -49,25 +48,7 @@ struct ChatView: View {
                 }
                 
                 Divider()
-                
-                HStack {
-                    TextField("Write a message...", text: $newMessageBody)
-                    
-                    Button {
-                        chatManager.sendMessage(newMessageBody)
-                        newMessageBody = ""
-                    } label: {
-                        Image(systemName: "paperplane")
-                            .resizable()
-                            .scaledToFit()
-                            .padding(10)
-                            .foregroundColor(.white)
-                            .background(Color.accentColor)
-                            .cornerRadius(4)
-                            .frame(height: 44)
-                    }
-                }
-                .padding()
+                ChatInputBar()
             }
             .navigationTitle("Chat")
             .navigationBarTitleDisplayMode(.inline)
