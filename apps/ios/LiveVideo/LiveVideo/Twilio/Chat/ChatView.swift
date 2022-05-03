@@ -7,58 +7,50 @@ import SwiftUI
 struct ChatView: View {
     @EnvironmentObject var chatManager: ChatManager
     @Environment(\.presentationMode) var presentationMode
-    @State private var messageText = ""
+    @State private var newMessageBody = ""
 
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                ScrollViewReader { proxy in
+                ScrollViewReader { scrollViewProxy in
                     ScrollView {
-                        VStack(alignment: .leading) { // TODO: Use LazyVStack
+                        VStack(alignment: .leading) {
                             ForEach(chatManager.messages) { message in
                                 VStack(alignment: .leading) {
-                                    Text(message.author)
-                                        .foregroundColor(.textWeak)
-                                    
-                                    HStack {
-                                        Text(message.body)
-                                            .padding(10)
-                                            .background(Color.backgroundPrimaryWeaker)
-                                            .cornerRadius(20)
-                                        Spacer()
-                                    }
+                                    ChatHeaderView(author: message.author, date: message.date)
+                                    ChatBubbleView(messageBody: message.body)
                                 }
                                 .padding()
-                                .id(message.id)
+                                .id(message.id) /// So we can programmatically scroll to this view
                             }
+                        }
+                    }
+                    .onChange(of: chatManager.hasUnreadMessage) { hasUnreadMessage in
+                        guard hasUnreadMessage else {
+                            return
+                        }
+                        
+                        withAnimation {
+                            scrollViewProxy.scrollTo(chatManager.messages.last?.id)
+                        }
 
-                            Spacer()
-                                .frame(height: 1)
-                                .id("bottom")
-                        }
-                        .onChange(of: chatManager.hasUnreadMessage) { value in
-                            if value {
-                                withAnimation {
-                                    proxy.scrollTo(chatManager.messages.last?.id)
-                                }
-                                chatManager.hasUnreadMessage = false
-                            }
-                        }
-                        .onAppear {
-                            proxy.scrollTo(chatManager.messages.last?.id)
-                        }
+                        chatManager.hasUnreadMessage = false
+                    }
+                    .onAppear {
+                        UIScrollView.appearance().keyboardDismissMode = .interactive
+                        scrollViewProxy.scrollTo(chatManager.messages.last?.id)
+                        chatManager.hasUnreadMessage = false
                     }
                 }
                 
                 Divider()
                 
                 HStack {
-                    TextField("Write a message...", text: $messageText)
+                    TextField("Write a message...", text: $newMessageBody)
                     
-                    // TODO: Disable when there is no text
                     Button {
-                        chatManager.sendMessage(messageText)
-                        messageText = ""
+                        chatManager.sendMessage(newMessageBody)
+                        newMessageBody = ""
                     } label: {
                         Image(systemName: "paperplane")
                             .resizable()
@@ -81,9 +73,6 @@ struct ChatView: View {
                     }
                 }
             }
-            .onAppear {
-                UIScrollView.appearance().keyboardDismissMode = .interactive
-            }
         }
     }
 }
@@ -96,7 +85,7 @@ struct ChatView_Previews: PreviewProvider {
 }
 
 extension ChatManager {
-    static func stub(messages: [ChatMessage] = [.stub(), .stub()]) -> ChatManager {
+    static func stub(messages: [ChatMessage] = [.stub()]) -> ChatManager {
         ChatManager(messages: messages)
     }
 }
@@ -105,27 +94,16 @@ extension ChatMessage {
     static func stub(
         id: String = UUID().uuidString,
         author: String = "Bob",
-        dateCreated: Date = Date(),
+        date: Date = Date(),
         body: String = "Message"
     ) -> ChatMessage {
-        ChatMessage(id: id, author: author, dateCreated: dateCreated, body: body)
+        ChatMessage(id: id, author: author, date: date, body: body)
     }
     
-    private init(id: String, author: String, dateCreated: Date, body: String) {
+    private init(id: String, author: String, date: Date, body: String) {
         self.id = id
         self.author = author
-        self.dateCreated = dateCreated
+        self.date = date
         self.body = body
-    }
-}
-
-
-
-
-
-
-extension View {
-    func hideKeyboard() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }

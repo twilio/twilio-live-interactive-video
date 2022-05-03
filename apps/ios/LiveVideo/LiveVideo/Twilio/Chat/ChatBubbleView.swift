@@ -5,11 +5,11 @@
 import SwiftUI
 
 struct ChatBubbleView: View {
-    let message: String
+    let messageBody: String
     
     var body: some View {
         HStack {
-            Text(message)
+            Text(messageBody)
                 .padding(10)
                 .background(Color.backgroundPrimaryWeaker)
                 .cornerRadius(20)
@@ -20,6 +20,7 @@ struct ChatBubbleView: View {
 
 struct ChatBubbleView_Previews: PreviewProvider {
     static var previews: some View {
-        ChatBubbleView(message: "Message")
+        ChatBubbleView(messageBody: "Body")
+            .previewLayout(.sizeThatFits)
     }
 }
