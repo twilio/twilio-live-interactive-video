@@ -42,7 +42,7 @@ export const ChatProvider: React.FC = ({ children }) => {
           onError(new Error("There was a problem connecting to Twilio's conversation service."));
         });
     },
-    [onError, chatClient]
+    [onError]
   );
 
   const disconnect = useCallback(() => {
