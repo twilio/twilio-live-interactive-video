@@ -30,6 +30,7 @@ struct ChatView: View {
 struct ChatView_Previews: PreviewProvider {
     static var previews: some View {
         ChatView()
-            .environmentObject(ChatManager.stub())
+            .environmentObject(ChatManager.stub(messages: [.stub(author: "Bob"), .stub(author: "Alice")]))
+            .environmentObject(AuthManager.stub(userIdentity: "Bob"))
     }
 }

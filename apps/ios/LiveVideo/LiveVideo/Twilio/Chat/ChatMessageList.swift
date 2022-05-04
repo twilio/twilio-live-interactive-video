@@ -6,6 +6,7 @@ import SwiftUI
 
 struct ChatMessageList: View {
     @EnvironmentObject var chatManager: ChatManager
+    @EnvironmentObject var authManager: AuthManager
     @State private var isFirstLoadComplete = false
 
     var body: some View {
@@ -14,8 +15,15 @@ struct ChatMessageList: View {
                 LazyVStack(alignment: .leading) {
                     ForEach(chatManager.messages) { message in
                         VStack(alignment: .leading) {
-                            ChatHeaderView(author: message.author, date: message.date)
-                            ChatBubbleView(messageBody: message.body)
+                            ChatHeaderView(
+                                author: message.author,
+                                isAuthorYou: message.author == authManager.userIdentity,
+                                date: message.date
+                            )
+                            ChatBubbleView(
+                                messageBody: message.body,
+                                isAuthorYou: message.author == authManager.userIdentity
+                            )
                         }
                         .padding()
                         .id(message.id) /// So we can programmatically scroll to this view
@@ -49,12 +57,13 @@ struct ChatMessageList: View {
 struct ChatMessageList_Previews: PreviewProvider {
     static var previews: some View {
         ChatMessageList()
-            .environmentObject(ChatManager.stub())
+            .environmentObject(ChatManager.stub(messages: [.stub(author: "Bob"), .stub(author: "Alice")]))
+            .environmentObject(AuthManager.stub(userIdentity: "Bob"))
     }
 }
 
 extension ChatManager {
-    static func stub(messages: [ChatMessage] = [.stub()]) -> ChatManager {
+    static func stub(messages: [ChatMessage] = []) -> ChatManager {
         ChatManager(messages: messages)
     }
 }

@@ -105,7 +105,7 @@ struct HomeView_Previews: PreviewProvider {
     }
 }
 
-private extension AuthManager {
+extension AuthManager {
     static func stub(userIdentity: String = "", isSignedOut: Bool = true) -> AuthManager {
         let authManager = AuthManager()
         authManager.userIdentity = userIdentity
