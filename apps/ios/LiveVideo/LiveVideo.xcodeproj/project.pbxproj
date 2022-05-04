@@ -257,11 +257,6 @@
 			children = (
 				DC0A95F82819E1C800E7678C /* ChatManager.swift */,
 				DC0A96042819E2C600E7678C /* ChatMessage.swift */,
-				DC0A9606281B2F0F00E7678C /* ChatView.swift */,
-				DCB3DA33282193210020DE6C /* ChatBubbleView.swift */,
-				DCB3DA35282195FC0020DE6C /* ChatHeaderView.swift */,
-				DCB3DA372821BBDC0020DE6C /* ChatInputBar.swift */,
-				DCB3DA392821BE270020DE6C /* ChatMessageList.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -310,6 +305,7 @@
 		DC4AA65226D0118200E677D5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				DCB3DA3B2822F8820020DE6C /* Chat */,
 				DC175F35270E5B5700D9D1FE /* Participants */,
 				DC4AA65E26D03E0600E677D5 /* Home */,
 				DC4AA65C26D03DDF00E677D5 /* Settings */,
@@ -473,6 +469,18 @@
 				DC83671227BABF7500A90BF2 /* HostControlsManager.swift */,
 			);
 			path = HostControls;
+			sourceTree = "<group>";
+		};
+		DCB3DA3B2822F8820020DE6C /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				DCB3DA33282193210020DE6C /* ChatBubbleView.swift */,
+				DCB3DA35282195FC0020DE6C /* ChatHeaderView.swift */,
+				DCB3DA372821BBDC0020DE6C /* ChatInputBar.swift */,
+				DCB3DA392821BE270020DE6C /* ChatMessageList.swift */,
+				DC0A9606281B2F0F00E7678C /* ChatView.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		DCC1D62426D9393900892038 /* Stream */ = {
