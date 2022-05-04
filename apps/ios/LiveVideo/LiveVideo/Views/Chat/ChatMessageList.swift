@@ -14,7 +14,7 @@ struct ChatMessageList: View {
             ScrollView {
                 LazyVStack {
                     ForEach(chatManager.messages) { message in
-                        VStack {
+                        VStack(spacing: 9) {
                             ChatHeaderView(
                                 author: message.author,
                                 isAuthorYou: message.author == authManager.userIdentity,
@@ -25,7 +25,8 @@ struct ChatMessageList: View {
                                 isAuthorYou: message.author == authManager.userIdentity
                             )
                         }
-                        .padding()
+                        .padding(.horizontal)
+                        .padding(.vertical, 7)
                         .id(message.id) /// So we can programmatically scroll to this view
                     }
                 }
