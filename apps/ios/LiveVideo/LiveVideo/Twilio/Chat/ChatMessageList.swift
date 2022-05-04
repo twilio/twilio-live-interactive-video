@@ -10,11 +10,11 @@ struct ChatMessageList: View {
     @State private var isFirstLoadComplete = false
 
     var body: some View {
-        ScrollViewReader { scrollViewProxy in
+        ScrollViewReader { scrollView in
             ScrollView {
-                LazyVStack(alignment: .leading) {
+                LazyVStack {
                     ForEach(chatManager.messages) { message in
-                        VStack(alignment: .leading) {
+                        VStack {
                             ChatHeaderView(
                                 author: message.author,
                                 isAuthorYou: message.author == authManager.userIdentity,
@@ -36,7 +36,7 @@ struct ChatMessageList: View {
                 }
                 
                 withAnimation(isFirstLoadComplete ? .default : nil) {
-                    scrollViewProxy.scrollTo(chatManager.messages.last?.id)
+                    scrollView.scrollTo(chatManager.messages.last?.id)
                 }
 
                 isFirstLoadComplete = true
@@ -45,8 +45,10 @@ struct ChatMessageList: View {
             .onAppear {
                 UIScrollView.appearance().keyboardDismissMode = .interactive
 
+                /// Must do this async so that initial scroll to bottom works. This seems like
+                /// an Apple bug since people on the web say it used to just work.
                 DispatchQueue.main.async {
-                    /// This is a hack so that after the view is loaded we scroll to the bottom
+                    /// A convenient way to make the list scroll to the most recent messages at the bottom
                     chatManager.hasUnreadMessage = true
                 }
             }

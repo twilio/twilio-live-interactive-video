@@ -35,7 +35,9 @@ struct ChatInputBar_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             ChatInputBar()
+                .previewDisplayName("Empty")
             ChatInputBar(messageBody: "Hello")
+                .previewDisplayName("Not empty")
         }
         .previewLayout(.sizeThatFits)
     }
