@@ -27,8 +27,10 @@ struct ChatMessageList: View {
                         }
                         .padding(.horizontal)
                         .padding(.vertical, 7)
-                        .id(message.id) /// So we can programmatically scroll to this view
                     }
+                    
+                    Spacer(minLength: 6)
+                        .id("bottom") /// So we can programmatically scroll to this view
                 }
             }
             .onChange(of: chatManager.hasUnreadMessage) { hasUnreadMessage in
@@ -37,7 +39,7 @@ struct ChatMessageList: View {
                 }
                 
                 withAnimation(isFirstLoadComplete ? .default : nil) {
-                    scrollView.scrollTo(chatManager.messages.last?.id)
+                    scrollView.scrollTo("bottom")
                 }
 
                 isFirstLoadComplete = true
