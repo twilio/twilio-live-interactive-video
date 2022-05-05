@@ -33,8 +33,8 @@ class ChatManager: NSObject, ObservableObject {
             withToken: accessToken,
             properties: properties,
             delegate: self
-        ) { [weak self] _, client in
-            self?.client = client
+        ) { _, client in
+            self.client = client
         }
     }
 
