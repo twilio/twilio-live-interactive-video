@@ -229,6 +229,7 @@ module.exports.handler = async (context, event, callback) => {
       raised_hands_map: `raised_hands`,
       user_document: `user-${user_identity}`,
     },
+    room_sid: room.sid,
   });
   return callback(null, response);
 };

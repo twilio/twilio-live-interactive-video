@@ -362,6 +362,7 @@ module.exports.handler = async (context, event, callback) => {
       viewers_map: 'viewers',
       raised_hands_map: `raised_hands`,
     },
+    room_sid: room.sid,
   });
   return callback(null, response);
 };
