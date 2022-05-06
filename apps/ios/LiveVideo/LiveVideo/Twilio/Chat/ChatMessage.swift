@@ -7,13 +7,13 @@ import TwilioConversationsClient
 struct ChatMessage: Identifiable {
     let id: String
     let author: String
-    let dateCreated: Date
+    let date: Date
     let body: String
 
     init?(message: TCHMessage) {
         guard
             let sid = message.sid,
-            let dateCreated = message.dateCreatedAsDate,
+            let date = message.dateCreatedAsDate,
             let author = message.author,
             let body = message.body
         else {
@@ -22,7 +22,7 @@ struct ChatMessage: Identifiable {
 
         id = sid
         self.author = author
-        self.dateCreated = dateCreated
+        self.date = date
         self.body = body
     }
 }

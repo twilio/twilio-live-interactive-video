@@ -78,6 +78,10 @@
 		DCB1BE052756D954006CE9D1 /* EnterPasscodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BE042756D954006CE9D1 /* EnterPasscodeView.swift */; };
 		DCB1BE0827581BC6006CE9D1 /* Quick in Frameworks */ = {isa = PBXBuildFile; productRef = DCB1BE0727581BC6006CE9D1 /* Quick */; };
 		DCB1BE0B27581C11006CE9D1 /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = DCB1BE0A27581C11006CE9D1 /* Nimble */; };
+		DCB3DA34282193210020DE6C /* ChatBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB3DA33282193210020DE6C /* ChatBubbleView.swift */; };
+		DCB3DA36282195FC0020DE6C /* ChatHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB3DA35282195FC0020DE6C /* ChatHeaderView.swift */; };
+		DCB3DA382821BBDC0020DE6C /* ChatInputBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB3DA372821BBDC0020DE6C /* ChatInputBar.swift */; };
+		DCB3DA3A2821BE270020DE6C /* ChatMessageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB3DA392821BE270020DE6C /* ChatMessageList.swift */; };
 		DCB4497426F5496400B52774 /* SpeakerSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */; };
 		DCB4497626F65A7000B52774 /* SpeakerVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */; };
 		DCC1D62626D9396400892038 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC1D62526D9396400892038 /* StreamManager.swift */; };
@@ -189,6 +193,10 @@
 		DCB1BDFD27568D70006CE9D1 /* VerifyPasscodeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyPasscodeRequest.swift; sourceTree = "<group>"; };
 		DCB1BDFF27568F5B006CE9D1 /* PasscodeComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeComponents.swift; sourceTree = "<group>"; };
 		DCB1BE042756D954006CE9D1 /* EnterPasscodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPasscodeView.swift; sourceTree = "<group>"; };
+		DCB3DA33282193210020DE6C /* ChatBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubbleView.swift; sourceTree = "<group>"; };
+		DCB3DA35282195FC0020DE6C /* ChatHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatHeaderView.swift; sourceTree = "<group>"; };
+		DCB3DA372821BBDC0020DE6C /* ChatInputBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBar.swift; sourceTree = "<group>"; };
+		DCB3DA392821BE270020DE6C /* ChatMessageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageList.swift; sourceTree = "<group>"; };
 		DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerSettingsManager.swift; sourceTree = "<group>"; };
 		DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoViewModel.swift; sourceTree = "<group>"; };
 		DCC1D62526D9396400892038 /* StreamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamManager.swift; sourceTree = "<group>"; };
@@ -249,7 +257,6 @@
 			children = (
 				DC0A95F82819E1C800E7678C /* ChatManager.swift */,
 				DC0A96042819E2C600E7678C /* ChatMessage.swift */,
-				DC0A9606281B2F0F00E7678C /* ChatView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -298,6 +305,7 @@
 		DC4AA65226D0118200E677D5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				DCB3DA3B2822F8820020DE6C /* Chat */,
 				DC175F35270E5B5700D9D1FE /* Participants */,
 				DC4AA65E26D03E0600E677D5 /* Home */,
 				DC4AA65C26D03DDF00E677D5 /* Settings */,
@@ -461,6 +469,18 @@
 				DC83671227BABF7500A90BF2 /* HostControlsManager.swift */,
 			);
 			path = HostControls;
+			sourceTree = "<group>";
+		};
+		DCB3DA3B2822F8820020DE6C /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				DCB3DA33282193210020DE6C /* ChatBubbleView.swift */,
+				DCB3DA35282195FC0020DE6C /* ChatHeaderView.swift */,
+				DCB3DA372821BBDC0020DE6C /* ChatInputBar.swift */,
+				DCB3DA392821BE270020DE6C /* ChatMessageList.swift */,
+				DC0A9606281B2F0F00E7678C /* ChatView.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		DCC1D62426D9393900892038 /* Stream */ = {
@@ -730,6 +750,7 @@
 				DC5F458326CDBA0B009C5C79 /* EnterUserIdentityView.swift in Sources */,
 				DC44BB412703C8DD00DB656D /* SceneDelegate.swift in Sources */,
 				DCADF35027FE264E0093A9FE /* EnvironmentBadge.swift in Sources */,
+				DCB3DA36282195FC0020DE6C /* ChatHeaderView.swift in Sources */,
 				DC9E18392729DC740070F53F /* OffscreenSpeakersView.swift in Sources */,
 				DCADF34227FCF4950093A9FE /* SignInSettingsView.swift in Sources */,
 				DC50A57B273DBB2700E29580 /* JSONEncoderExtension.swift in Sources */,
@@ -775,9 +796,11 @@
 				DCCA727327B5C142006B0441 /* PresentationVideoView.swift in Sources */,
 				DCADF33727FC95DF0093A9FE /* GeneralSettingsView.swift in Sources */,
 				DC4AA65926D0133600E677D5 /* Color.swift in Sources */,
+				DCB3DA382821BBDC0020DE6C /* ChatInputBar.swift in Sources */,
 				DC0A9607281B2F0F00E7678C /* ChatView.swift in Sources */,
 				DCCA726D27B5890E006B0441 /* SpeakerVideoViewModelFactory.swift in Sources */,
 				DC3BB82527445F9A005D0327 /* ParticipantsHeader.swift in Sources */,
+				DCB3DA34282193210020DE6C /* ChatBubbleView.swift in Sources */,
 				DCC1D62826D9568700892038 /* StreamConfig.swift in Sources */,
 				DC1ED11C26E92DEA00FFA769 /* RemoteParticipantManager.swift in Sources */,
 				DC5F453B26CC061A009C5C79 /* HomeView.swift in Sources */,
@@ -800,6 +823,7 @@
 				DC175F402718852B00D9D1FE /* DeleteStreamRequest.swift in Sources */,
 				DC1ED0F026DFCD3C00FFA769 /* LiveBadge.swift in Sources */,
 				DC50A57D273DBD6D00E29580 /* JSONDecoderExtension.swift in Sources */,
+				DCB3DA3A2821BE270020DE6C /* ChatMessageList.swift in Sources */,
 				DC4F45ED2728591900BE730B /* StreamConfigFlowModel.swift in Sources */,
 				DCC48FA126D8311700EE49EF /* PlayerManager.swift in Sources */,
 				DC4AA66026D047DD00E677D5 /* FormTextFieldStyle.swift in Sources */,

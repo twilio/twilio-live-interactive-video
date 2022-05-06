@@ -5,6 +5,7 @@
 import TwilioConversationsClient
 
 class ChatManager: NSObject, ObservableObject {
+    @Published var hasUnreadMessage = false
     @Published private(set) var messages: [ChatMessage] = []
     private var client: TwilioConversationsClient?
     private var conversation: TCHConversation?
@@ -32,8 +33,8 @@ class ChatManager: NSObject, ObservableObject {
             withToken: accessToken,
             properties: properties,
             delegate: self
-        ) { [weak self] _, client in
-            self?.client = client
+        ) { _, client in
+            self.client = client
         }
     }
 
@@ -58,7 +59,15 @@ class ChatManager: NSObject, ObservableObject {
     private func getMessages() {
         /// Just get the last 100 messages since the UI does not have pagination in this app
         conversation?.getLastMessages(withCount: 100) { [weak self] _, messages in
-            self?.messages = messages?.compactMap { ChatMessage(message: $0) } ?? []
+            guard let messages = messages else {
+                return
+            }
+            
+            self?.messages = messages.compactMap { ChatMessage(message: $0) }
+            
+            if !messages.isEmpty {
+                self?.hasUnreadMessage = true
+            }
         }
     }
 }
@@ -90,5 +99,6 @@ extension ChatManager: TwilioConversationsClientDelegate {
         }
 
         messages.append(message)
+        hasUnreadMessage = true
     }
 }
