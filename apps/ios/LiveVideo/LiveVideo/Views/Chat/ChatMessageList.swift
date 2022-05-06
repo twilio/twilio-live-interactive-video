@@ -33,27 +33,23 @@ struct ChatMessageList: View {
                         .id("bottom") /// So we can programmatically scroll to this view
                 }
             }
-            .onChange(of: chatManager.hasUnreadMessage) { hasUnreadMessage in
-                guard hasUnreadMessage else {
-                    return
-                }
-                
-                withAnimation(isFirstLoadComplete ? .default : nil) {
+            .onChange(of: isFirstLoadComplete) { _ in
+                scrollView.scrollTo("bottom")
+            }
+            .onChange(of: chatManager.messages.count) { count in
+                withAnimation {
                     scrollView.scrollTo("bottom")
                 }
 
-                isFirstLoadComplete = true
                 chatManager.hasUnreadMessage = false
             }
             .onAppear {
                 UIScrollView.appearance().keyboardDismissMode = .interactive
-
-                /// Must do this async so that initial scroll to bottom works. This seems like
-                /// an Apple bug since people on the web say it used to just work.
-                DispatchQueue.main.async {
-                    /// A convenient way to make the list scroll to the most recent messages at the bottom
-                    chatManager.hasUnreadMessage = true
-                }
+                chatManager.hasUnreadMessage = false
+                
+                /// Must use an extra step so that initial scroll to bottom works. We should be able to perform the scroll right
+                /// here directly but I think there is an Apple bug. People on the web said it used to work but not anymore.
+                isFirstLoadComplete = true
             }
         }
     }
