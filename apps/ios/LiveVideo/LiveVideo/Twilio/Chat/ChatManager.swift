@@ -43,6 +43,7 @@ class ChatManager: NSObject, ObservableObject {
         client = nil
         conversation = nil
         messages = []
+        hasUnreadMessage = false
     }
 
     func sendMessage(_ message: String) {

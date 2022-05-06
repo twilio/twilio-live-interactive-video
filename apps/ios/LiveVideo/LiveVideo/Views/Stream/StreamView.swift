@@ -8,6 +8,7 @@ struct StreamView: View {
     @EnvironmentObject var viewModel: StreamViewModel
     @EnvironmentObject var streamManager: StreamManager
     @EnvironmentObject var speakerSettingsManager: SpeakerSettingsManager
+    @EnvironmentObject var chatManager: ChatManager
     @EnvironmentObject var participantsViewModel: ParticipantsViewModel
     @EnvironmentObject var speakerGridViewModel: SpeakerGridViewModel
     @EnvironmentObject var presentationLayoutViewModel: PresentationLayoutViewModel
@@ -104,7 +105,8 @@ struct StreamView: View {
                         }
 
                         StreamToolbarButton(
-                            image: Image(systemName: "message")
+                            image: Image(systemName: "message"),
+                            shouldShowBadge: chatManager.hasUnreadMessage
                         ) {
                             isShowingChat = true
                         }
