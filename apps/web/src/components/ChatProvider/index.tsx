@@ -7,7 +7,7 @@ import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 type ChatContextType = {
   isChatWindowOpen: boolean;
   setIsChatWindowOpen: (isChatWindowOpen: boolean) => void;
-  connect: (token: string) => void;
+  connect: (token: string, roomSid: string) => void;
   hasUnreadMessages: boolean;
   messages: Message[];
   conversation: Conversation | null;
@@ -16,22 +16,24 @@ type ChatContextType = {
 export const ChatContext = createContext<ChatContextType>(null!);
 
 export const ChatProvider: React.FC = ({ children }) => {
-  const { room, onError } = useVideoContext();
+  const { onError } = useVideoContext();
   const isChatWindowOpenRef = useRef(false);
   const [isChatWindowOpen, setIsChatWindowOpen] = useState(false);
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
+  const [videoRoomSid, setVideoRoomSid] = useState('');
   const [chatClient, setChatClient] = useState<Client>();
 
   const connect = useCallback(
-    (token: string) => {
+    (token: string, roomSid: string) => {
+      if (roomSid) setVideoRoomSid(roomSid);
       let conversationOptions;
       if (process.env.REACT_APP_TWILIO_ENVIRONMENT) {
         conversationOptions = { region: `${process.env.REACT_APP_TWILIO_ENVIRONMENT}-us1` };
       }
       Client.create(token, conversationOptions)
-        .then(client => {
+        .then(async client => {
           //@ts-ignore
           window.chatClient = client;
           setChatClient(client);
@@ -67,19 +69,19 @@ export const ChatProvider: React.FC = ({ children }) => {
   }, [isChatWindowOpen]);
 
   useEffect(() => {
-    if (room && chatClient) {
+    if (videoRoomSid && chatClient) {
       chatClient
-        .getConversationByUniqueName(room.sid)
+        .getConversationByUniqueName(videoRoomSid)
         .then(newConversation => {
           //@ts-ignore
           window.chatConversation = newConversation;
           setConversation(newConversation);
         })
-        .catch(() => {
+        .catch(error => {
           onError(new Error('There was a problem getting the Conversation associated with this room.'));
         });
     }
-  }, [room, chatClient, onError]);
+  }, [chatClient, onError, videoRoomSid]);
 
   return (
     <ChatContext.Provider

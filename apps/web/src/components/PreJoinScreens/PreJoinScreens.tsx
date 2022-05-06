@@ -29,38 +29,34 @@ export default function PreJoinScreens() {
 
   async function connect() {
     appDispatch({ type: 'set-is-loading', isLoading: true });
-
     try {
       if (appState.hasSpeakerInvite) {
         const { data } = await joinStreamAsSpeaker(appState.participantName, appState.eventName);
         await videoConnect(data.token);
-        chatConnect(data.token);
+        chatConnect(data.token, data.room_sid);
         registerSyncMaps(data.sync_object_names);
         playerDisconnect();
         appDispatch({ type: 'set-is-loading', isLoading: false });
         appDispatch({ type: 'set-has-speaker-invite', hasSpeakerInvite: false });
         return;
       }
-
       switch (appState.participantType) {
         case 'host': {
           const { data } = await createStream(appState.participantName, appState.eventName);
           syncConnect(data.token);
           await videoConnect(data.token);
           registerSyncMaps(data.sync_object_names);
-          chatConnect(data.token);
+          chatConnect(data.token, data.room_sid);
           break;
         }
-
         case 'speaker': {
           const { data } = await joinStreamAsSpeaker(appState.participantName, appState.eventName);
           syncConnect(data.token);
           await videoConnect(data.token);
           registerSyncMaps(data.sync_object_names);
-          chatConnect(data.token);
+          chatConnect(data.token, data.room_sid);
           break;
         }
-
         case 'viewer': {
           const { data } = await joinStreamAsViewer(appState.participantName, appState.eventName);
           syncConnect(data.token);
@@ -68,7 +64,7 @@ export default function PreJoinScreens() {
           registerUserDocument(data.sync_object_names.user_document);
           registerSyncMaps(data.sync_object_names);
           await connectViewerToPlayer(appState.participantName, appState.eventName);
-          // chatConnect(data.token);
+          chatConnect(data.token, data.room_sid);
           break;
         }
       }
@@ -76,7 +72,6 @@ export default function PreJoinScreens() {
     } catch (e) {
       console.log('Error connecting: ', e.toJSON ? e.toJSON() : e);
       appDispatch({ type: 'set-is-loading', isLoading: false });
-
       if (e.response?.data?.error?.explanation === 'Room exists') {
         enqueueSnackbar({
           headline: 'Error',
@@ -112,7 +107,6 @@ export default function PreJoinScreens() {
   return (
     <IntroContainer transparentBackground={appState.hasSpeakerInvite}>
       <MediaErrorSnackbar error={mediaError} />
-
       {appState.isLoading ? (
         <LoadingScreen state={appState} />
       ) : (

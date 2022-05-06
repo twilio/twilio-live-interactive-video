@@ -7,7 +7,7 @@ import { useEnqueueSnackbar } from '../../../hooks/useSnackbar/useSnackbar';
 import LowerHandIcon from '../../../icons/LowerHandIcon';
 import RaiseHandIcon from '../../../icons/RaiseHandIcon';
 import ParticipantIcon from '../../../icons/ParticipantIcon';
-
+import ChatIcon from '../../../icons/ChatIcon';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -34,14 +34,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
 export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: string; disconnect: () => void }) {
   const classes = useStyles();
   const { appState, appDispatch } = useAppState();
   const [isHandRaised, setIsHandRaised] = useState(false);
   const lastClickTimeRef = useRef(0);
   const enqueueSnackbar = useEnqueueSnackbar();
-
   const handleRaiseHand = useCallback(() => {
     if (Date.now() - lastClickTimeRef.current > 500) {
       lastClickTimeRef.current = Date.now();
@@ -57,14 +55,18 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
       });
     }
   }, [isHandRaised, appState.participantName, appState.eventName, enqueueSnackbar]);
-
   const toggleParticipantWindow = () => {
     appDispatch({
       type: 'set-is-participant-window-open',
       isParticipantWindowOpen: !appState.isParticipantWindowOpen,
     });
   };
-
+  const toggleChatWindow = () => {
+    appDispatch({
+      type: 'set-is-chat-window-open',
+      isChatWindowOpen: !appState.isChatWindowOpen,
+    });
+  };
   return (
     <footer className={classes.container}>
       <Grid container justifyContent="space-around" alignItems="center">
@@ -79,9 +81,11 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
             <Button onClick={() => toggleParticipantWindow()} startIcon={<ParticipantIcon />}>
               Participants
             </Button>
+            <Button onClick={() => toggleChatWindow()} startIcon={<ChatIcon />}>
+              Chat
+            </Button>
           </Grid>
         </Grid>
-
         <Grid style={{ flex: 1 }}>
           <Grid container justifyContent="flex-end">
             <Button

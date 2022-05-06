@@ -10,6 +10,7 @@ export const apiClient = axios.create({
 export const createStream = (user_identity: string, stream_name: string) =>
   apiClient.post<{
     token: string;
+    room_sid: string;
     sync_object_names: {
       speakers_map: string;
       viewers_map: string;
@@ -23,6 +24,7 @@ export const createStream = (user_identity: string, stream_name: string) =>
 export const joinStreamAsSpeaker = (user_identity: string, stream_name: string) =>
   apiClient.post<{
     token: string;
+    room_sid: string;
     sync_object_names: {
       speakers_map: string;
       viewers_map: string;
