@@ -5,6 +5,7 @@ import { useAppState } from '../../state';
 
 type SyncContextType = {
   connect: (token: string) => void;
+  disconnect: () => void;
   registerUserDocument: (userDocumentName: string) => Promise<void>;
   raisedHandsMap: SyncMap | undefined;
   speakersMap: SyncMap | undefined;
@@ -38,6 +39,16 @@ export const SyncProvider: React.FC = ({ children }) => {
     syncClientRef.current = new SyncClient(token, syncOptions);
   }
 
+  function disconnect() {
+    if (syncClientRef.current) {
+      setRaisedHandsMap(undefined);
+      setSpeakersMap(undefined);
+      setViewersMap(undefined);
+      setUserDocument(undefined);
+      syncClientRef.current.shutdown();
+    }
+  }
+
   function registerUserDocument(userDocumentName: string) {
     return syncClientRef.current!.document(userDocumentName).then(document => setUserDocument(document));
   }
@@ -69,6 +80,7 @@ export const SyncProvider: React.FC = ({ children }) => {
     <SyncContext.Provider
       value={{
         connect,
+        disconnect,
         registerUserDocument,
         raisedHandsMap,
         speakersMap,
