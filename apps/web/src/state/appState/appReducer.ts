@@ -1,4 +1,5 @@
 import { produce } from 'immer';
+
 export enum ActiveScreen {
   ParticipantNameScreen,
   CreateOrJoinScreen,
@@ -7,6 +8,7 @@ export enum ActiveScreen {
   JoinEventNameScreen,
   DeviceSelectionScreen,
 }
+
 export type appActionTypes =
   | { type: 'set-active-screen'; activeScreen: ActiveScreen }
   | { type: 'set-participant-name'; participantName: string }
@@ -16,6 +18,7 @@ export type appActionTypes =
   | { type: 'set-has-speaker-invite'; hasSpeakerInvite: boolean }
   | { type: 'reset-state' }
   | { type: 'set-is-participant-window-open'; isParticipantWindowOpen: boolean };
+
 export interface appStateTypes {
   activeScreen: ActiveScreen;
   participantType: 'host' | 'speaker' | 'viewer' | null;
@@ -26,6 +29,7 @@ export interface appStateTypes {
   hasSpeakerInvite: boolean;
   isParticipantWindowOpen: boolean;
 }
+
 export const initialAppState: appStateTypes = {
   activeScreen: ActiveScreen.ParticipantNameScreen,
   participantType: null,
@@ -36,20 +40,25 @@ export const initialAppState: appStateTypes = {
   hasSpeakerInvite: false,
   isParticipantWindowOpen: false,
 };
+
 export const appReducer = produce((draft: appStateTypes, action: appActionTypes) => {
   switch (action.type) {
     case 'set-participant-name':
       draft.participantName = action.participantName;
       break;
+
     case 'set-event-name':
       draft.eventName = action.eventName;
       break;
+
     case 'set-active-screen':
       draft.activeScreen = action.activeScreen;
       break;
+
     case 'set-is-loading':
       draft.isLoading = action.isLoading;
       break;
+
     case 'set-has-speaker-invite':
       // Ignore this action when connecting to a room
       if (!draft.isLoading) {
@@ -59,15 +68,18 @@ export const appReducer = produce((draft: appStateTypes, action: appActionTypes)
         }
       }
       break;
+
     case 'reset-state':
       // Don't reset state while transitioning to a room
       if (!draft.hasSpeakerInvite) {
         return initialAppState;
       }
       break;
+
     case 'set-is-participant-window-open':
       draft.isParticipantWindowOpen = action.isParticipantWindowOpen;
       break;
+
     case 'set-participant-type':
       draft.participantType = action.participantType;
       switch (action.participantType) {
@@ -82,6 +94,7 @@ export const appReducer = produce((draft: appStateTypes, action: appActionTypes)
           draft.activeScreen = ActiveScreen.SpeakerOrViewerScreen;
           break;
       }
+
       break;
   }
 });
