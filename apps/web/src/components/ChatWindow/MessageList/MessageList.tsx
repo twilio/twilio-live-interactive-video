@@ -9,12 +9,15 @@ import { useAppState } from '../../../state';
 interface MessageListProps {
   messages: Message[];
 }
+
 const getFormattedTime = (message?: Message) =>
   message?.dateCreated.toLocaleTimeString('en-us', { hour: 'numeric', minute: 'numeric' }).toLowerCase();
+
 export default function MessageList({ messages }: MessageListProps) {
   const { room } = useVideoContext();
   const { appState } = useAppState();
   const localParticipant = room ? room.localParticipant.identity : appState.participantName;
+
   return (
     <MessageListScrollContainer messages={messages}>
       {messages.map((message, idx) => {

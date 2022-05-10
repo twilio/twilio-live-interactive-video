@@ -9,10 +9,13 @@ import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import { useAppState } from '../../state';
 import { useEnqueueSnackbar } from '../../hooks/useSnackbar/useSnackbar';
 import { usePlayerState } from '../../hooks/usePlayerState/usePlayerState';
+import useChatContext from '../../hooks/useChatContext/useChatContext';
+
 TwilioPlayer.telemetry.subscribe(data => {
   const method = data.name === 'error' ? 'error' : 'log';
   console[method](`[${data.type}.${data.name}] => ${JSON.stringify(data)}`);
 });
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -30,14 +33,17 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+
 function Player() {
   const classes = useStyles();
   const videoElRef = useRef<HTMLVideoElement>(null!);
   const { player, disconnect } = usePlayerContext();
+  const { isChatWindowOpen } = useChatContext();
   const state = usePlayerState();
   const { appState, appDispatch } = useAppState();
   const enqueueSnackbar = useEnqueueSnackbar();
   const [welcomeMessageDisplayed, setWelcomeMessageDisplayed] = useState(false);
+
   useLayoutEffect(() => {
     if (player && state === 'ready') {
       appDispatch({ type: 'set-is-loading', isLoading: false });
@@ -45,6 +51,7 @@ function Player() {
       player.play();
     }
   }, [player, appDispatch, state]);
+
   useEffect(() => {
     if (!welcomeMessageDisplayed) {
       setWelcomeMessageDisplayed(true);
@@ -56,11 +63,12 @@ function Player() {
       });
     }
   }, [enqueueSnackbar, welcomeMessageDisplayed]);
+
   return (
     <div style={{ height: '100vh' }}>
       <div
         className={clsx(classes.container, {
-          [classes.rightDrawerOpen]: appState.isParticipantWindowOpen || appState.isChatWindowOpen,
+          [classes.rightDrawerOpen]: appState.isParticipantWindowOpen || isChatWindowOpen,
         })}
       >
         <video className={classes.video} ref={videoElRef} playsInline></video>
@@ -71,4 +79,5 @@ function Player() {
     </div>
   );
 }
+
 export default React.memo(Player);

@@ -15,8 +15,7 @@ export type appActionTypes =
   | { type: 'set-is-loading'; isLoading: boolean }
   | { type: 'set-has-speaker-invite'; hasSpeakerInvite: boolean }
   | { type: 'reset-state' }
-  | { type: 'set-is-participant-window-open'; isParticipantWindowOpen: boolean }
-  | { type: 'set-is-chat-window-open'; isChatWindowOpen: boolean };
+  | { type: 'set-is-participant-window-open'; isParticipantWindowOpen: boolean };
 export interface appStateTypes {
   activeScreen: ActiveScreen;
   participantType: 'host' | 'speaker' | 'viewer' | null;
@@ -26,7 +25,6 @@ export interface appStateTypes {
   isLoading: boolean;
   hasSpeakerInvite: boolean;
   isParticipantWindowOpen: boolean;
-  isChatWindowOpen: boolean;
 }
 export const initialAppState: appStateTypes = {
   activeScreen: ActiveScreen.ParticipantNameScreen,
@@ -37,7 +35,6 @@ export const initialAppState: appStateTypes = {
   isLoading: false,
   hasSpeakerInvite: false,
   isParticipantWindowOpen: false,
-  isChatWindowOpen: false,
 };
 export const appReducer = produce((draft: appStateTypes, action: appActionTypes) => {
   switch (action.type) {
@@ -70,9 +67,6 @@ export const appReducer = produce((draft: appStateTypes, action: appActionTypes)
       break;
     case 'set-is-participant-window-open':
       draft.isParticipantWindowOpen = action.isParticipantWindowOpen;
-      break;
-    case 'set-is-chat-window-open':
-      draft.isChatWindowOpen = action.isChatWindowOpen;
       break;
     case 'set-participant-type':
       draft.participantType = action.participantType;

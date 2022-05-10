@@ -5,7 +5,7 @@ import ChatInput from './ChatInput/ChatInput';
 import clsx from 'clsx';
 import MessageList from './MessageList/MessageList';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
-import { useAppState } from '../../state';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     chatWindowContainer: {
@@ -34,11 +34,9 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function ChatWindow() {
   const classes = useStyles();
   const { isChatWindowOpen, messages, conversation } = useChatContext();
-  const { appState } = useAppState();
+
   return (
-    <aside
-      className={clsx(classes.chatWindowContainer, { [classes.hide]: !isChatWindowOpen && !appState.isChatWindowOpen })}
-    >
+    <aside className={clsx(classes.chatWindowContainer, { [classes.hide]: !isChatWindowOpen })}>
       <ChatWindowHeader />
       <MessageList messages={messages} />
       <ChatInput conversation={conversation!} isChatWindowOpen={isChatWindowOpen} />

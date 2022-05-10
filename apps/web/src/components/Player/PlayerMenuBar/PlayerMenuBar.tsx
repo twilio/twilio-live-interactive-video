@@ -8,6 +8,8 @@ import LowerHandIcon from '../../../icons/LowerHandIcon';
 import RaiseHandIcon from '../../../icons/RaiseHandIcon';
 import ParticipantIcon from '../../../icons/ParticipantIcon';
 import ChatIcon from '../../../icons/ChatIcon';
+import useChatContext from '../../../hooks/useChatContext/useChatContext';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -34,12 +36,15 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+
 export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: string; disconnect: () => void }) {
   const classes = useStyles();
   const { appState, appDispatch } = useAppState();
+  const { setIsChatWindowOpen, isChatWindowOpen } = useChatContext();
   const [isHandRaised, setIsHandRaised] = useState(false);
   const lastClickTimeRef = useRef(0);
   const enqueueSnackbar = useEnqueueSnackbar();
+
   const handleRaiseHand = useCallback(() => {
     if (Date.now() - lastClickTimeRef.current > 500) {
       lastClickTimeRef.current = Date.now();
@@ -55,18 +60,23 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
       });
     }
   }, [isHandRaised, appState.participantName, appState.eventName, enqueueSnackbar]);
+
   const toggleParticipantWindow = () => {
+    setIsChatWindowOpen(false);
     appDispatch({
       type: 'set-is-participant-window-open',
       isParticipantWindowOpen: !appState.isParticipantWindowOpen,
     });
   };
+
   const toggleChatWindow = () => {
+    setIsChatWindowOpen(!isChatWindowOpen);
     appDispatch({
-      type: 'set-is-chat-window-open',
-      isChatWindowOpen: !appState.isChatWindowOpen,
+      type: 'set-is-participant-window-open',
+      isParticipantWindowOpen: false,
     });
   };
+
   return (
     <footer className={classes.container}>
       <Grid container justifyContent="space-around" alignItems="center">
