@@ -27,13 +27,16 @@ export const ChatProvider: React.FC = ({ children }) => {
 
   const connect = useCallback(
     (token: string, roomSid: string) => {
-      if (roomSid) setVideoRoomSid(roomSid);
+      setVideoRoomSid(roomSid);
+
       let conversationOptions;
+
       if (process.env.REACT_APP_TWILIO_ENVIRONMENT) {
         conversationOptions = { region: `${process.env.REACT_APP_TWILIO_ENVIRONMENT}-us1` };
       }
+
       Client.create(token, conversationOptions)
-        .then(async client => {
+        .then(client => {
           //@ts-ignore
           window.chatClient = client;
           setChatClient(client);
@@ -77,7 +80,7 @@ export const ChatProvider: React.FC = ({ children }) => {
           window.chatConversation = newConversation;
           setConversation(newConversation);
         })
-        .catch(error => {
+        .catch(() => {
           onError(new Error('There was a problem getting the Conversation associated with this room.'));
         });
     }
