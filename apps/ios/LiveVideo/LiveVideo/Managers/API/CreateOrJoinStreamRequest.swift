@@ -19,6 +19,7 @@ struct CreateOrJoinStreamRequest: APIRequest {
         }
         
         let token: String
+        let roomSid: String
         let syncObjectNames: SyncObjectNames
     }
 
