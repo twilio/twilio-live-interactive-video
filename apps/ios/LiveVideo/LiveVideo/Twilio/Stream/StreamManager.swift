@@ -167,7 +167,7 @@ class StreamManager: ObservableObject {
     }
     
     private func connectChat() {
-        guard let accessToken = accessToken, let roomSID = roomSID else {
+        guard !chatManager.isConnected, let accessToken = accessToken, let roomSID = roomSID else {
             return
         }
         
