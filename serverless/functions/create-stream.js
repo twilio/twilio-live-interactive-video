@@ -295,7 +295,7 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  if (process.env.DISABLE_CHAT !== 'true') {
+  if (DISABLE_CHAT !== 'true') {
     const conversationsClient = client.conversations.services(CONVERSATIONS_SERVICE_SID);
 
     try {
@@ -367,7 +367,7 @@ module.exports.handler = async (context, event, callback) => {
       raised_hands_map: `raised_hands`,
     },
     room_sid: room.sid,
-    chat_enabled: process.env.DISABLE_CHAT !== 'true',
+    chat_enabled: DISABLE_CHAT !== 'true',
   });
   return callback(null, response);
 };
