@@ -17,7 +17,8 @@ export type appActionTypes =
   | { type: 'set-is-loading'; isLoading: boolean }
   | { type: 'set-has-speaker-invite'; hasSpeakerInvite: boolean }
   | { type: 'reset-state' }
-  | { type: 'set-is-participant-window-open'; isParticipantWindowOpen: boolean };
+  | { type: 'set-is-participant-window-open'; isParticipantWindowOpen: boolean }
+  | { type: 'set-is-chat-enabled'; isChatEnabled: boolean };
 
 export interface appStateTypes {
   activeScreen: ActiveScreen;
@@ -28,6 +29,7 @@ export interface appStateTypes {
   isLoading: boolean;
   hasSpeakerInvite: boolean;
   isParticipantWindowOpen: boolean;
+  isChatEnabled: boolean;
 }
 
 export const initialAppState: appStateTypes = {
@@ -39,6 +41,7 @@ export const initialAppState: appStateTypes = {
   isLoading: false,
   hasSpeakerInvite: false,
   isParticipantWindowOpen: false,
+  isChatEnabled: false,
 };
 
 export const appReducer = produce((draft: appStateTypes, action: appActionTypes) => {
@@ -94,7 +97,10 @@ export const appReducer = produce((draft: appStateTypes, action: appActionTypes)
           draft.activeScreen = ActiveScreen.SpeakerOrViewerScreen;
           break;
       }
+      break;
 
+    case 'set-is-chat-enabled':
+      draft.isChatEnabled = action.isChatEnabled;
       break;
   }
 });

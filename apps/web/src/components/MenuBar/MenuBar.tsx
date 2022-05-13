@@ -94,7 +94,7 @@ export default function MenuBar() {
               <ToggleVideoButton disabled={isReconnecting} />
               <ToggleParticipantWindowButton />
               {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
-              {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
+              {appState.isChatEnabled && <ToggleChatButton />}
               <Menu />
             </Grid>
           </Grid>
