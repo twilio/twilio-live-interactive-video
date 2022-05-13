@@ -183,38 +183,40 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  const conversationsClient = client.conversations.services(context.CONVERSATIONS_SERVICE_SID);
+  if (process.env.DISABLE_CHAT !== 'true') {
+    const conversationsClient = client.conversations.services(context.CONVERSATIONS_SERVICE_SID);
 
-  try {
-    // Find conversation
-    conversation = await conversationsClient.conversations(room.sid).fetch();
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error finding conversation',
-        explanation: 'Something went wrong when finding a conversation.',
-      },
-    });
-    return callback(null, response);
-  }
-
-  try {
-    // Add participant to conversation
-    await conversationsClient.conversations(room.sid).participants.create({ identity: user_identity });
-  } catch (e) {
-    // Ignore "Participant already exists" error (50433)
-    if (e.code !== 50433) {
+    try {
+      // Find conversation
+      conversation = await conversationsClient.conversations(room.sid).fetch();
+    } catch (e) {
       console.error(e);
       response.setStatusCode(500);
       response.setBody({
         error: {
-          message: 'error creating conversation participant',
-          explanation: 'Something went wrong when creating a conversation participant.',
+          message: 'error finding conversation',
+          explanation: 'Something went wrong when finding a conversation.',
         },
       });
       return callback(null, response);
+    }
+
+    try {
+      // Add participant to conversation
+      await conversationsClient.conversations(room.sid).participants.create({ identity: user_identity });
+    } catch (e) {
+      // Ignore "Participant already exists" error (50433)
+      if (e.code !== 50433) {
+        console.error(e);
+        response.setStatusCode(500);
+        response.setBody({
+          error: {
+            message: 'error creating conversation participant',
+            explanation: 'Something went wrong when creating a conversation participant.',
+          },
+        });
+        return callback(null, response);
+      }
     }
   }
 
@@ -269,6 +271,7 @@ module.exports.handler = async (context, event, callback) => {
       user_document: `user-${user_identity}`,
     },
     room_sid: room.sid,
+    chat_enabled: process.env.DISABLE_CHAT !== 'true',
   });
 
   callback(null, response);
