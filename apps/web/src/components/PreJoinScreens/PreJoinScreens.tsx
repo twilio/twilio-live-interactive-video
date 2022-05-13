@@ -45,7 +45,6 @@ export default function PreJoinScreens() {
       switch (appState.participantType) {
         case 'host': {
           const { data } = await createStream(appState.participantName, appState.eventName);
-          console.log(data.room_sid);
           syncConnect(data.token);
           await videoConnect(data.token);
           registerSyncMaps(data.sync_object_names);
