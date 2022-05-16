@@ -242,10 +242,10 @@ module.exports.handler = async (context, event, callback) => {
   });
 
   // Add chat grant to token
-  const chatGrant = new ChatGrant({
-    serviceSid: context.CONVERSATIONS_SERVICE_SID,
-  });
-  token.addGrant(chatGrant);
+  if (DISABLE_CHAT !== 'true') {
+    const chatGrant = new ChatGrant({ serviceSid: context.CONVERSATIONS_SERVICE_SID });
+    token.addGrant(chatGrant);
+  }
 
   // Add participant's identity to token
   token.identity = event.user_identity;

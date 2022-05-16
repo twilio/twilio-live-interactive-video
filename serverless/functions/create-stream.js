@@ -9,7 +9,6 @@ const SyncGrant = AccessToken.SyncGrant;
 const MAX_ALLOWED_SESSION_DURATION = 14400;
 
 module.exports.handler = async (context, event, callback) => {
-  console.log(process.env)
   const {
     ACCOUNT_SID,
     TWILIO_API_KEY_SID,
@@ -18,7 +17,7 @@ module.exports.handler = async (context, event, callback) => {
     BACKEND_STORAGE_SYNC_SERVICE_SID,
     SYNC_SERVICE_NAME_PREFIX,
     DOMAIN_NAME,
-    DISABLE_CHAT
+    DISABLE_CHAT,
   } = context;
 
   const authHandler = require(Runtime.getAssets()['/auth.js'].path);
@@ -350,8 +349,10 @@ module.exports.handler = async (context, event, callback) => {
   token.addGrant(videoGrant);
 
   // Add chat grant to token
-  const chatGrant = new ChatGrant({ serviceSid: CONVERSATIONS_SERVICE_SID });
-  token.addGrant(chatGrant);
+  if (DISABLE_CHAT !== 'true') {
+    const chatGrant = new ChatGrant({ serviceSid: CONVERSATIONS_SERVICE_SID });
+    token.addGrant(chatGrant);
+  }
 
   // Add sync grant to token
   const syncGrant = new SyncGrant({ serviceSid: streamSyncService.sid });

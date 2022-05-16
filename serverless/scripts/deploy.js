@@ -38,7 +38,7 @@ async function findExistingConfiguration() {
         'TWILIO_API_KEY_SECRET',
         'CONVERSATIONS_SERVICE_SID',
         'BACKEND_STORAGE_SYNC_SERVICE_SID',
-        'DISABLE_CHAT'
+        'DISABLE_CHAT',
       ],
       getValues: true,
     });
@@ -128,7 +128,7 @@ async function deployFunctions() {
       MEDIA_EXTENSION: constants.MEDIA_EXTENSION,
       APP_EXPIRY: Date.now() + 1000 * 60 * 60 * 24 * 7, // One week
       PASSCODE: getRandomInt(6),
-      DISABLE_CHAT: DISABLE_CHAT
+      DISABLE_CHAT: DISABLE_CHAT,
     },
     pkgJson: {
       dependencies: {
