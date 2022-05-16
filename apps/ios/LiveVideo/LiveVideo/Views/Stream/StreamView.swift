@@ -104,11 +104,14 @@ struct StreamView: View {
                             isShowingParticipants = true
                         }
 
-                        StreamToolbarButton(
-                            image: Image(systemName: "message"),
-                            shouldShowBadge: chatManager.hasUnreadMessage
-                        ) {
-                            isShowingChat = true
+                        /// The chat feature can be disabled from the backend
+                        if streamManager.isChatEnabled {
+                            StreamToolbarButton(
+                                image: Image(systemName: "message"),
+                                shouldShowBadge: chatManager.hasUnreadMessage
+                            ) {
+                                isShowingChat = true
+                            }
                         }
                         
                         if streamManager.config.role == .speaker {

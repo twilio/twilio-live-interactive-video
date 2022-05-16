@@ -19,6 +19,7 @@ class StreamManager: ObservableObject {
     let errorPublisher = PassthroughSubject<Error, Never>()
     @Published var state = State.disconnected
     @Published var player: Player?
+    @Published var isChatEnabled = true
     var config: StreamConfig!
     private var roomManager: RoomManager!
     private var playerManager: PlayerManager!
@@ -126,6 +127,7 @@ class StreamManager: ObservableObject {
             case let .success(response):
                 self?.accessToken = response.token
                 self?.roomSID = response.roomSid
+                self?.isChatEnabled = response.chatEnabled
                 
                 let objectNames = SyncManager.ObjectNames(
                     speakersMap: response.syncObjectNames.speakersMap,
@@ -167,7 +169,7 @@ class StreamManager: ObservableObject {
     }
     
     private func connectChat() {
-        guard !chatManager.isConnected, let accessToken = accessToken, let roomSID = roomSID else {
+        guard isChatEnabled, !chatManager.isConnected, let accessToken = accessToken, let roomSID = roomSID else {
             return
         }
         
