@@ -7,6 +7,7 @@ import TwilioConversationsClient
 class ChatManager: NSObject, ObservableObject {
     @Published var hasUnreadMessage = false
     @Published private(set) var messages: [ChatMessage] = []
+    var isConnected: Bool { client != nil }
     private var client: TwilioConversationsClient?
     private var conversation: TCHConversation?
     private var conversationName = ""

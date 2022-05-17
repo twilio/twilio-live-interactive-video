@@ -19,6 +19,7 @@ class StreamManager: ObservableObject {
     let errorPublisher = PassthroughSubject<Error, Never>()
     @Published var state = State.disconnected
     @Published var player: Player?
+    @Published var isChatEnabled = true
     var config: StreamConfig!
     private var roomManager: RoomManager!
     private var playerManager: PlayerManager!
@@ -27,6 +28,7 @@ class StreamManager: ObservableObject {
     private var api: API!
     private var appSettingsManager: AppSettingsManager!
     private var accessToken: String?
+    private var roomSID: String?
     private var subscriptions = Set<AnyCancellable>()
 
     func configure(
@@ -124,6 +126,8 @@ class StreamManager: ObservableObject {
             switch result {
             case let .success(response):
                 self?.accessToken = response.token
+                self?.roomSID = response.roomSid
+                self?.isChatEnabled = response.chatEnabled
                 
                 let objectNames = SyncManager.ObjectNames(
                     speakersMap: response.syncObjectNames.speakersMap,
@@ -165,7 +169,7 @@ class StreamManager: ObservableObject {
     }
     
     private func connectChat() {
-        guard let accessToken = accessToken, let roomSID = roomManager.roomSID else {
+        guard isChatEnabled, !chatManager.isConnected, let accessToken = accessToken, let roomSID = roomSID else {
             return
         }
         
@@ -193,6 +197,8 @@ extension StreamManager: PlayerManagerDelegate {
                 self?.handleError(error)
             }
         }
+
+        connectChat() /// Chat is not essential so connect it separately
     }
     
     func playerManager(_ playerManager: PlayerManager, didDisconnectWithError error: Error) {
