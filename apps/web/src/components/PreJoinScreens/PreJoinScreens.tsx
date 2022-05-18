@@ -34,7 +34,10 @@ export default function PreJoinScreens() {
       if (appState.hasSpeakerInvite) {
         const { data } = await joinStreamAsSpeaker(appState.participantName, appState.eventName);
         await videoConnect(data.token);
-        data.chat_enabled && chatConnect(data.token);
+        if (data.chat_enabled) {
+          chatConnect(data.token);
+          appDispatch({ type: 'set-is-chat-enabled', isChatEnabled: true });
+        }
         registerSyncMaps(data.sync_object_names);
         playerDisconnect();
         appDispatch({ type: 'set-is-loading', isLoading: false });
