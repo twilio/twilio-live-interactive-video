@@ -17,7 +17,7 @@ program.option('-o, --override', 'Override existing deployment');
 program.parse(process.argv);
 const options = program.opts();
 
-const { ACCOUNT_SID, AUTH_TOKEN } = process.env;
+const { ACCOUNT_SID, AUTH_TOKEN, DISABLE_CHAT } = process.env;
 const client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
 const serverlessClient = new TwilioServerlessApiClient({
   username: ACCOUNT_SID,
@@ -38,6 +38,7 @@ async function findExistingConfiguration() {
         'TWILIO_API_KEY_SECRET',
         'CONVERSATIONS_SERVICE_SID',
         'BACKEND_STORAGE_SYNC_SERVICE_SID',
+        'DISABLE_CHAT',
       ],
       getValues: true,
     });
@@ -72,10 +73,12 @@ async function deployFunctions() {
       friendlyName: constants.API_KEY_NAME,
     });
 
-    cli.action.start('Creating Conversations Service');
-    conversationsService = await client.conversations.services.create({
-      friendlyName: constants.TWILIO_CONVERSATIONS_SERVICE_NAME,
-    });
+    if (DISABLE_CHAT !== 'true') {
+      cli.action.start('Creating Conversations Service');
+      conversationsService = await client.conversations.services.create({
+        friendlyName: constants.TWILIO_CONVERSATIONS_SERVICE_NAME,
+      });
+    }
 
     cli.action.start('Creating Backend Storage Sync Service');
     backendStorageSyncService = await client.sync.services.create({
@@ -118,13 +121,14 @@ async function deployFunctions() {
     env: {
       TWILIO_API_KEY_SID: existingConfiguration?.TWILIO_API_KEY_SID || apiKey.sid,
       TWILIO_API_KEY_SECRET: existingConfiguration?.TWILIO_API_KEY_SECRET || apiKey.secret,
-      CONVERSATIONS_SERVICE_SID: existingConfiguration?.CONVERSATIONS_SERVICE_SID || conversationsService.sid,
+      CONVERSATIONS_SERVICE_SID: existingConfiguration?.CONVERSATIONS_SERVICE_SID || conversationsService?.sid,
       BACKEND_STORAGE_SYNC_SERVICE_SID:
         existingConfiguration?.BACKEND_STORAGE_SYNC_SERVICE_SID || backendStorageSyncService.sid,
       SYNC_SERVICE_NAME_PREFIX: constants.SYNC_SERVICE_NAME_PREFIX,
       MEDIA_EXTENSION: constants.MEDIA_EXTENSION,
       APP_EXPIRY: Date.now() + 1000 * 60 * 60 * 24 * 7, // One week
       PASSCODE: getRandomInt(6),
+      DISABLE_CHAT: DISABLE_CHAT,
     },
     pkgJson: {
       dependencies: {

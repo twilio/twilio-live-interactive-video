@@ -8,9 +8,7 @@ const SyncGrant = AccessToken.SyncGrant;
 const MAX_ALLOWED_SESSION_DURATION = 14400;
 
 module.exports.handler = async (context, event, callback) => {
-  const { ACCOUNT_SID, TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, CONVERSATIONS_SERVICE_SID } =
-    context;
-
+  const { ACCOUNT_SID, TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, CONVERSATIONS_SERVICE_SID, DISABLE_CHAT } = context;
   const authHandler = require(Runtime.getAssets()['/auth.js'].path);
   authHandler(context, event, callback);
 
@@ -101,9 +99,10 @@ module.exports.handler = async (context, event, callback) => {
 
   // Give user read access to user document
   try {
-    await streamSyncClient.documents(userDocumentName)
+    await streamSyncClient
+      .documents(userDocumentName)
       .documentPermissions(user_identity)
-      .update({ read: true, write: false, manage: false })
+      .update({ read: true, write: false, manage: false });
   } catch (e) {
     response.setStatusCode(500);
     response.setBody({
@@ -114,12 +113,13 @@ module.exports.handler = async (context, event, callback) => {
     });
     return callback(null, response);
   }
-  
+
   // Give user read access to speakers map
   try {
-    await streamSyncClient.syncMaps('speakers')
+    await streamSyncClient
+      .syncMaps('speakers')
       .syncMapPermissions(user_identity)
-      .update({ read: true, write: false, manage: false })
+      .update({ read: true, write: false, manage: false });
   } catch (e) {
     response.setStatusCode(500);
     response.setBody({
@@ -130,11 +130,12 @@ module.exports.handler = async (context, event, callback) => {
     });
     return callback(null, response);
   }
-  
+
   const raisedHandsMapName = `raised_hands`;
   // Give user read access to raised hands map
   try {
-    await streamSyncClient.syncMaps(raisedHandsMapName)
+    await streamSyncClient
+      .syncMaps(raisedHandsMapName)
       .syncMapPermissions(user_identity)
       .update({ read: true, write: false, manage: false });
   } catch (e) {
@@ -150,9 +151,10 @@ module.exports.handler = async (context, event, callback) => {
 
   // Give user read access to viewers map
   try {
-    await streamSyncClient.syncMaps('viewers')
+    await streamSyncClient
+      .syncMaps('viewers')
       .syncMapPermissions(user_identity)
-      .update({ read: true, write: false, manage: false })
+      .update({ read: true, write: false, manage: false });
   } catch (e) {
     response.setStatusCode(500);
     response.setBody({
@@ -164,38 +166,40 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  const conversationsClient = client.conversations.services(CONVERSATIONS_SERVICE_SID);
+  if (DISABLE_CHAT !== 'true') {
+    const conversationsClient = client.conversations.services(CONVERSATIONS_SERVICE_SID);
 
-  try {
-    // Find conversation
-    conversation = await conversationsClient.conversations(room.sid).fetch();
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error finding conversation',
-        explanation: 'Something went wrong when finding a conversation.',
-      },
-    });
-    return callback(null, response);
-  }
-
-  try {
-    // Add participant to conversation
-    await conversationsClient.conversations(room.sid).participants.create({ identity: user_identity });
-  } catch (e) {
-    // Ignore "Participant already exists" error (50433)
-    if (e.code !== 50433) {
+    try {
+      // Find conversation
+      conversation = await conversationsClient.conversations(room.sid).fetch();
+    } catch (e) {
       console.error(e);
       response.setStatusCode(500);
       response.setBody({
         error: {
-          message: 'error creating conversation participant',
-          explanation: 'Something went wrong when creating a conversation participant.',
+          message: 'error finding conversation',
+          explanation: 'Something went wrong when finding a conversation.',
         },
       });
       return callback(null, response);
+    }
+
+    try {
+      // Add participant to conversation
+      await conversationsClient.conversations(room.sid).participants.create({ identity: user_identity });
+    } catch (e) {
+      // Ignore "Participant already exists" error (50433)
+      if (e.code !== 50433) {
+        console.error(e);
+        response.setStatusCode(500);
+        response.setBody({
+          error: {
+            message: 'error creating conversation participant',
+            explanation: 'Something went wrong when creating a conversation participant.',
+          },
+        });
+        return callback(null, response);
+      }
     }
   }
 
@@ -212,8 +216,10 @@ module.exports.handler = async (context, event, callback) => {
   token.addGrant(videoGrant);
 
   // Add chat grant to token
-  const chatGrant = new ChatGrant({ serviceSid: CONVERSATIONS_SERVICE_SID });
-  token.addGrant(chatGrant);
+  if (DISABLE_CHAT !== 'true') {
+    const chatGrant = new ChatGrant({ serviceSid: CONVERSATIONS_SERVICE_SID });
+    token.addGrant(chatGrant);
+  }
 
   // Add sync grant to token
   const syncGrant = new SyncGrant({ serviceSid: streamMapItem.data.sync_service_sid });
@@ -229,6 +235,8 @@ module.exports.handler = async (context, event, callback) => {
       raised_hands_map: `raised_hands`,
       user_document: `user-${user_identity}`,
     },
+    room_sid: room.sid,
+    chat_enabled: DISABLE_CHAT !== 'true',
   });
   return callback(null, response);
 };

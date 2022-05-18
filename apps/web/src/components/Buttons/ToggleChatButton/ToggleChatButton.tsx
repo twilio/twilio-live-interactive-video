@@ -78,7 +78,6 @@ export default function ToggleChatButton() {
       setTimeout(() => setShouldAnimate(false), ANIMATION_DURATION);
     }
   }, [shouldAnimate]);
-
   useEffect(() => {
     if (conversation && !isChatWindowOpen) {
       const handleNewMessage = () => setShouldAnimate(true);

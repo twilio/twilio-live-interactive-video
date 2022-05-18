@@ -7,6 +7,7 @@ const ChatGrant = AccessToken.ChatGrant;
 const MAX_ALLOWED_SESSION_DURATION = 14400;
 
 module.exports.handler = async (context, event, callback) => {
+  const { DISABLE_CHAT } = context;
   const authHandler = require(Runtime.getAssets()['/auth.js'].path);
   authHandler(context, event, callback);
 
@@ -183,38 +184,40 @@ module.exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  const conversationsClient = client.conversations.services(context.CONVERSATIONS_SERVICE_SID);
+  if (DISABLE_CHAT !== 'true') {
+    const conversationsClient = client.conversations.services(context.CONVERSATIONS_SERVICE_SID);
 
-  try {
-    // Find conversation
-    conversation = await conversationsClient.conversations(room.sid).fetch();
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error finding conversation',
-        explanation: 'Something went wrong when finding a conversation.',
-      },
-    });
-    return callback(null, response);
-  }
-
-  try {
-    // Add participant to conversation
-    await conversationsClient.conversations(room.sid).participants.create({ identity: user_identity });
-  } catch (e) {
-    // Ignore "Participant already exists" error (50433)
-    if (e.code !== 50433) {
+    try {
+      // Find conversation
+      conversation = await conversationsClient.conversations(room.sid).fetch();
+    } catch (e) {
       console.error(e);
       response.setStatusCode(500);
       response.setBody({
         error: {
-          message: 'error creating conversation participant',
-          explanation: 'Something went wrong when creating a conversation participant.',
+          message: 'error finding conversation',
+          explanation: 'Something went wrong when finding a conversation.',
         },
       });
       return callback(null, response);
+    }
+
+    try {
+      // Add participant to conversation
+      await conversationsClient.conversations(room.sid).participants.create({ identity: user_identity });
+    } catch (e) {
+      // Ignore "Participant already exists" error (50433)
+      if (e.code !== 50433) {
+        console.error(e);
+        response.setStatusCode(500);
+        response.setBody({
+          error: {
+            message: 'error creating conversation participant',
+            explanation: 'Something went wrong when creating a conversation participant.',
+          },
+        });
+        return callback(null, response);
+      }
     }
   }
 
@@ -239,10 +242,10 @@ module.exports.handler = async (context, event, callback) => {
   });
 
   // Add chat grant to token
-  const chatGrant = new ChatGrant({
-    serviceSid: context.CONVERSATIONS_SERVICE_SID,
-  });
-  token.addGrant(chatGrant);
+  if (DISABLE_CHAT !== 'true') {
+    const chatGrant = new ChatGrant({ serviceSid: context.CONVERSATIONS_SERVICE_SID });
+    token.addGrant(chatGrant);
+  }
 
   // Add participant's identity to token
   token.identity = event.user_identity;
@@ -269,6 +272,7 @@ module.exports.handler = async (context, event, callback) => {
       user_document: `user-${user_identity}`,
     },
     room_sid: room.sid,
+    chat_enabled: DISABLE_CHAT !== 'true',
   });
 
   callback(null, response);
