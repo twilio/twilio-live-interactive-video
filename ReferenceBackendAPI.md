@@ -4,7 +4,7 @@
 
 The reference backend is deployed to [Twilio Functions](https://www.twilio.com/docs/runtime/functions), a serverless environment.
 
-Twilio Functions does not utilize HTTP method so you can just use `POST` for all requests.
+Twilio Functions does not utilize HTTP methods so you can just use `POST` for all requests.
 
 ## Authentication
 
