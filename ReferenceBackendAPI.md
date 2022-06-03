@@ -89,7 +89,7 @@ Example response:
 
 ### /join-stream-as-viewer
 
-This endpoint adds the user to the Twilio conversation and adds some user state to some sync objects. The endpoint returns a [Twilio access token](https://www.twilio.com/docs/iam/access-tokens). The token includes grants that allow the client to connect to the live stream, sync objects, and conversation. 
+This endpoint adds the user to the Twilio conversation and adds some user state to some sync objects. The endpoint returns a [Twilio access token](https://www.twilio.com/docs/iam/access-tokens). The token includes grants that allow the client to connect to the Twilio Live Player SDK, Twilio Sync SDK, and Twilio Conversations SDK. 
 The endpoint should be called when a user initially joins the stream as a viewer or when a user transitions from speaker to viewer.
 
 Request parameters:
