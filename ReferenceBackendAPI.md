@@ -68,7 +68,7 @@ Example response:
 
 ### /join-stream-as-speaker
 
-This endpoint adds the user to the Twilio conversation and adds some user state to the sync objects. The endpoint returns a [Twilio access token](https://www.twilio.com/docs/iam/access-tokens). The token includes grants that allow the client to connect to the video room, sync objects, and conversation. The endpoint should be called when a user initially joins the stream as a speaker or when a user transitions from viewer to speaker.
+This endpoint adds the user to the Twilio conversation and adds some user state to the sync objects. The endpoint returns a [Twilio access token](https://www.twilio.com/docs/iam/access-tokens). The token includes grants that allow the client to connect to the Twilio Video SDK, Twilio Sync SDK, and Twilio Conversations SDK. The endpoint should be called when a user initially joins the stream as a speaker or when a user transitions from viewer to speaker.
 
 Request parameters:
 
