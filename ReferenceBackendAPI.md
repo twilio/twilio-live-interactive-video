@@ -10,6 +10,8 @@ Twilio Functions does not utilize HTTP methods so you can just use `POST` for al
 
 All requests must set the `Authorization` header to the correct [passcode](README.md#deploy-the-app-to-twilio). The backend will validate the passcode before processing each request.
 
+If you encounter a `401` error, it may be caused by an incorrect passcode. In addition to using the passcode to authenticate each request, the client also derives part of the backend URL from the passcode. 
+
 ## Errors
 
 All error responses have this shape:
@@ -45,7 +47,7 @@ Example response:
 
 ### /create-stream
 
-This endpoint creates a Twilio video room, Twilio Live player streamer, Twilio Live media processor, Twilio sync service, and Twilio conversation. The user is added to the conversation and some user state is updated in sync objects. The endpoint returns a [Twilio access token](https://www.twilio.com/docs/iam/access-tokens). The token includes grants that allow the client to connect to the Twilio Video SDK, Twilio Sync SDK, and Twilio Conversations SDK. The user that creates the stream is the host for that stream.
+This endpoint creates a Twilio video [room](https://www.twilio.com/docs/video/api/rooms-resource), Twilio Live [player streamer](https://www.twilio.com/docs/live/api/playerstreamers), Twilio Live [media processor](https://www.twilio.com/docs/live/api/mediaprocessors), Twilio [sync service](https://www.twilio.com/docs/sync/api/service), and Twilio [conversation](https://www.twilio.com/docs/conversations/api/conversation-resource). The user is added to the conversation and some user state is updated in sync objects. The endpoint returns a [Twilio access token](https://www.twilio.com/docs/iam/access-tokens). The token includes grants that allow the client to connect to the Twilio Video SDK, Twilio Sync SDK, and Twilio Conversations SDK. The user that creates the stream is the host for that stream.
 
 Request parameters:
 
@@ -152,7 +154,7 @@ Example response:
 
 ### /remove-speaker
 
-This endpoint removes a user from the video room. The endpoint should be called when a host wants to remove a speaker that causing shenanigans.
+This endpoint removes a user from the video room. The endpoint should be called when a host wants to remove a speaker that is causing shenanigans.
 
 Request parameters:
 
