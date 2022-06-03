@@ -45,7 +45,7 @@ Example response:
 
 ### /create-stream
 
-This endpoint creates a Twilio video room, Twilio Live player streamer, Twilio Live media processor, Twilio sync service, and Twilio conversation. The user is added to the conversation and some user state is updated in sync objects. The endpoint returns a [Twilio access token](https://www.twilio.com/docs/iam/access-tokens). The token includes grants that allow the client to connect to the video room, sync objects, and conversation. The user that creates the stream is the host for that stream.
+This endpoint creates a Twilio video room, Twilio Live player streamer, Twilio Live media processor, Twilio sync service, and Twilio conversation. The user is added to the conversation and some user state is updated in sync objects. The endpoint returns a [Twilio access token](https://www.twilio.com/docs/iam/access-tokens). The token includes grants that allow the client to connect to the Twilio Video SDK, Twilio Sync SDK, and Twilio Conversations SDK. The user that creates the stream is the host for that stream.
 
 Request parameters:
 
