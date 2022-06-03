@@ -152,7 +152,7 @@ Example response:
 
 ### /remove-speaker
 
-This endpoint removes a user from the video room. The endpoint should be called when a host wants to remove a speaker that is misbehaving.
+This endpoint removes a user from the video room. The endpoint should be called when a host wants to remove a speaker that causing shenanigans.
 
 Request parameters:
 
