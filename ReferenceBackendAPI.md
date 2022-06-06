@@ -12,7 +12,7 @@ All requests must set the `Authorization` header to the correct [passcode](READM
 
 If you encounter a `401` error, it may be caused by either an incorrect passcode, or an expired passcode (passcodes expire after one week). Clients should use the `error.explanation` property from the response to inform users about why their passcode was rejected. 
 
-In addition to using the passcode to authenticate each request, the client also derives part of the backend URL from the passcode. 
+If you encounter a `404` error, it may be caused by an incorrect passcode. In addition to using the passcode to authenticate each request, the client also derives part of the backend URL from the passcode. 
 
 ## Errors
 
@@ -32,6 +32,8 @@ All error responses have this shape:
 ### /verify-passcode
 
 Verifies that the passcode in the request header is correct. The client can call this endpoint to validate a passcode the user has entered.
+
+Invalid or expired passcodes will return a `401` error code with an accompanying error object as described [above](#authentication).
 
 Request parameters:
 
