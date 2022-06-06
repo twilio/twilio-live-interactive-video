@@ -10,7 +10,9 @@ Twilio Functions does not utilize HTTP methods so you can just use `POST` for al
 
 All requests must set the `Authorization` header to the correct [passcode](README.md#deploy-the-app-to-twilio). The backend will validate the passcode before processing each request.
 
-If you encounter a `401` error, it may be caused by an incorrect passcode. In addition to using the passcode to authenticate each request, the client also derives part of the backend URL from the passcode. 
+If you encounter a `401` error, it may be caused by either an incorrect passcode, or an expired passcode (passcodes expire after one week). Clients should use the `error.explanation` property from the response to inform users about why their passcode was rejected. 
+
+In addition to using the passcode to authenticate each request, the client also derives part of the backend URL from the passcode. 
 
 ## Errors
 
