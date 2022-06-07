@@ -59,7 +59,8 @@ secrets/
 .vagrant
 depot_tools
 
-.idea
+.idea/
+.idea/*
 build
 sdk/target/*
 sdk/libs/
