@@ -1,0 +1,66 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+
+sdk/local.properties
+sdk/libs/armeabi-v7a
+sdk/obj
+sdk/gen
+sdk/.settings
+sdk/bin
+output
+
+dist/
+target/
+docs/
+
+# Files for the Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+
+
+# CI Secrets
+secrets.tar.gz
+secrets.tar
+secrets/
+
+
+# CXX directories
+**/.cxx/
+
+
+# Cmake
+**/.externalNativeBuild
+
+
+# Screenshots
+.gradletasknamecache
+
+
+.vagrant
+depot_tools
+
+.idea/
+.idea/*
+build
+sdk/target/*
+sdk/libs/
