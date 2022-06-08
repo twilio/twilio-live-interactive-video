@@ -84,6 +84,10 @@ If you want to edit the functions that have been deployed to Twilio Serverless, 
 1. Enter passcode from the [backend deploy](#deploy-the-app-to-twilio) and tap `Continue`.
 1. Tap `Create Event` to host a new stream or `Join Event` to join a stream as a viewer or a speaker.
 
+## Reference Backend
+
+The API for the reference backend used by the clients is specified [here](ReferenceBackendAPI.md).
+
 ## Services Used
 
 This application uses Twilio Functions, Twilio Conversations, and Twilio Sync in addition to Twilio Video Rooms and Twilio Live resources. Note that by deploying and using this application, your will be incurring usage for these services and will be billed for usage.
