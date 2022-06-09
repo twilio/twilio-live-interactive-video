@@ -11,7 +11,7 @@ module.exports.handler = async (context, event, callback) => {
   authHandler(context, event, callback);
 
   const common = require(Runtime.getAssets()['/common.js'].path);
-  const { getPlaybackGrant, getStreamMapItem } = common(context, event, callback);
+  const { getPlaybackGrant, getStreamMapItem, createErrorHandler } = common(context, event, callback);
 
   const { user_identity, stream_name } = event;
 
@@ -44,155 +44,75 @@ module.exports.handler = async (context, event, callback) => {
 
   const client = context.getTwilioClient();
 
-  try {
-    // See if a room already exists
-    room = await client.video.rooms(stream_name).fetch();
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error finding room',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+  // See if a room already exists
+  room = await client.video.rooms(stream_name).fetch().catch(createErrorHandler('error finding room'));
 
   // Fetch stream map item
-  try {
-    streamMapItem = await getStreamMapItem(room.sid);
-  } catch (e) {
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error fetching stream map item',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+  streamMapItem = await getStreamMapItem(room.sid).catch(createErrorHandler('error finding stream map item'));
 
   const streamSyncClient = client.sync.services(streamMapItem.data.sync_service_sid);
 
+  // Give user read access to stream document
+  await streamSyncClient
+    .documents('stream')
+    .documentPermissions(user_identity)
+    .update({ read: true, write: false, manage: false })
+    .catch(createErrorHandler('error adding read access to stream document.'));
+
   const userDocumentName = `user-${user_identity}`;
   // Create user document
-  try {
-    userDocument = await streamSyncClient.documents.create({
+  userDocument = await streamSyncClient.documents
+    .create({
       uniqueName: userDocumentName,
+    })
+    .catch((error) => {
+      // Ignore "Unique name already exists" error
+      if (error.code !== 54301) {
+        createErrorHandler('error creating user document');
+      }
     });
-  } catch (e) {
-    // Ignore "Unique name already exists" error
-    if (e.code !== 54301) {
-      console.error(e);
-      response.setStatusCode(500);
-      response.setBody({
-        error: {
-          message: 'error creating user document',
-          explanation: e.message,
-        },
-      });
-      return callback(null, response);
-    }
-  }
 
   // Update user document to set speaker_invite to false.
   // This is done outside of the user document creation to account
   // for users that may already have a user document
-  try {
-    await streamSyncClient.documents(userDocumentName).update({
+  await streamSyncClient
+    .documents(userDocumentName)
+    .update({
       data: { speaker_invite: false },
-    });
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error updating user  document',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+    })
+    .catch(createErrorHandler('error updating user document'));
 
   // Give user read access to user document
-  try {
-    await streamSyncClient.documents(userDocumentName)
-      .documentPermissions(user_identity)
-      .update({ read: true, write: false, manage: false });
-  } catch (e) {
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error adding read access to user document',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+  await streamSyncClient
+    .documents(userDocumentName)
+    .documentPermissions(user_identity)
+    .update({ read: true, write: false, manage: false })
+    .catch(createErrorHandler('error adding read access to user document'));
 
   // Give user read access to speakers map
-  try {
-    await streamSyncClient.syncMaps('speakers')
-      .syncMapPermissions(user_identity)
-      .update({ read: true, write: false, manage: false })
-  } catch (e) {
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error adding read access to speakers map',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
-  
+  await streamSyncClient
+    .syncMaps('speakers')
+    .syncMapPermissions(user_identity)
+    .update({ read: true, write: false, manage: false })
+    .catch(createErrorHandler('error adding read access to speakers map'));
+
   // Give user read access to raised hands map
-  try {
-    await streamSyncClient.syncMaps(`raised_hands`)
-      .syncMapPermissions(user_identity)
-      .update({ read: true, write: false, manage: false });
-  } catch (e) {
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error adding read access to raised hands map',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+  await streamSyncClient
+    .syncMaps('raised_hands')
+    .syncMapPermissions(user_identity)
+    .update({ read: true, write: false, manage: false })
+    .catch(createErrorHandler('error adding read access to raised hands map'));
 
   // Give user read access to viewers map
-  try {
-    await streamSyncClient.syncMaps('viewers')
-      .syncMapPermissions(user_identity)
-      .update({ read: true, write: false, manage: false })
-  } catch (e) {
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error adding read access to viewers map',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
-  
-  let playbackGrant;
-  try {
-    playbackGrant = await getPlaybackGrant(streamMapItem.data.player_streamer_sid);
-  } catch (e) {
-    console.error(e);
-    response.setStatusCode(500);
-    response.setBody({
-      error: {
-        message: 'error getting playback grant',
-        explanation: e.message,
-      },
-    });
-    return callback(null, response);
-  }
+  await streamSyncClient
+    .syncMaps('viewers')
+    .syncMapPermissions(user_identity)
+    .update({ read: true, write: false, manage: false })
+    .catch(createErrorHandler('error adding read access to viewers map'));
+
+  const playbackGrant = await getPlaybackGrant(streamMapItem.data.player_streamer_sid).catch(
+    createErrorHandler('error getting playback grant')
+  );
 
   // Create token
   const token = new AccessToken(context.ACCOUNT_SID, context.TWILIO_API_KEY_SID, context.TWILIO_API_KEY_SECRET, {
@@ -223,12 +143,6 @@ module.exports.handler = async (context, event, callback) => {
   response.setStatusCode(200);
   response.setBody({
     token: token.toJwt(),
-    sync_object_names: {
-      speakers_map: 'speakers',
-      viewers_map: 'viewers',
-      raised_hands_map: `raised_hands`,
-      user_document: `user-${user_identity}`,
-    },
     room_sid: room.sid,
   });
 

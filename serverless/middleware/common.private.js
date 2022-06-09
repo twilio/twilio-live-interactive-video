@@ -7,7 +7,7 @@ module.exports = (context, event, callback) => {
   response.appendHeader('Content-Type', 'application/json');
 
   const client = context.getTwilioClient();
-  const region = client.region;  
+  const region = client.region;
 
   const axiosClient = axios.create({
     headers: {
@@ -32,10 +32,27 @@ module.exports = (context, event, callback) => {
     return mapItem;
   }
 
+  function createErrorHandler(errorMessage) {
+    return (error) => {
+      let response = new Twilio.Response();
+      response.appendHeader('Content-Type', 'application/json');
+      console.error(error);
+      response.setStatusCode(500);
+      response.setBody({
+        error: {
+          message: errorMessage,
+          explanation: error.message,
+        },
+      });
+      return callback(null, response);
+    };
+  }
+
   return {
     axiosClient,
     response,
     getPlaybackGrant,
-    getStreamMapItem
+    getStreamMapItem,
+    createErrorHandler,
   };
 };
