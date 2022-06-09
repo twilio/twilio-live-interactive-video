@@ -5,6 +5,7 @@ import { useAppState } from '../../state';
 
 type SyncContextType = {
   connect: (token: string) => void;
+  disconnect: () => void;
   registerUserDocument: (userDocumentName: string) => Promise<void>;
   raisedHandsMap: SyncMap | undefined;
   speakersMap: SyncMap | undefined;
@@ -32,6 +33,16 @@ export const SyncProvider: React.FC = ({ children }) => {
       syncOptions = { region: `${process.env.REACT_APP_TWILIO_ENVIRONMENT}-us1` };
     }
     syncClientRef.current = new SyncClient(token, syncOptions);
+  }
+
+  function disconnect() {
+    if (syncClientRef.current) {
+      setRaisedHandsMap(undefined);
+      setSpeakersMap(undefined);
+      setViewersMap(undefined);
+      setUserDocument(undefined);
+      syncClientRef.current.shutdown();
+    }
   }
 
   function registerUserDocument(userDocumentName: string) {
@@ -66,6 +77,7 @@ export const SyncProvider: React.FC = ({ children }) => {
     <SyncContext.Provider
       value={{
         connect,
+        disconnect,
         registerUserDocument,
         raisedHandsMap,
         speakersMap,
