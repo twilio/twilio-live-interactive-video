@@ -1,0 +1,111 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    compileSdk 32
+
+    defaultConfig {
+        applicationId "com.twilio.livevideo.app"
+        minSdk 21
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "BASE_URL", "\"https://twilio-live-interactive-video-passcode-dev.twil.io\"")
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+            signingConfig signingConfigs.debug
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        dataBinding true
+    }
+}
+
+kapt {
+    correctErrorTypes = true
+}
+
+dependencies {
+    def versions = rootProject.ext.versions
+
+    // Defaults
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // Testing
+    testImplementation "androidx.test:core:$versions.androidXTest"
+    testImplementation "androidx.test.espresso:espresso-core:$versions.espresso"
+    testImplementation "androidx.test.ext:junit-ktx:$versions.andoridXJunit"
+    testImplementation 'org.mockito.kotlin:mockito-kotlin:3.2.0'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito.kotlin:mockito-kotlin:3.2.0'
+
+    androidTestImplementation "androidx.test:core:$versions.androidXTest"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espresso"
+    androidTestImplementation "androidx.test.ext:junit-ktx:$versions.andoridXJunit"
+    androidTestImplementation "androidx.test:runner:$versions.androidXTest"
+    androidTestImplementation "androidx.test:rules:$versions.androidXTest"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$versions.espresso"
+    androidTestImplementation "androidx.test.ext:junit:$versions.andoridXJunit"
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    androidTestUtil "androidx.test:orchestrator:$versions.androidXTest"
+
+    implementation "com.jakewharton.timber:timber:$versions.timber"
+
+    ////
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
+
+    // Java language implementation
+    implementation("androidx.navigation:navigation-fragment:$versions.navigation")
+    implementation("androidx.navigation:navigation-ui:$versions.navigation")
+
+    // Kotlin
+    implementation("androidx.navigation:navigation-fragment-ktx:$versions.navigation")
+    implementation("androidx.navigation:navigation-ui-ktx:$versions.navigation")
+
+    // Feature module Support
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:$versions.navigation")
+
+    // Jetpack Compose Integration
+    implementation("androidx.navigation:navigation-compose:$versions.navigation")
+
+    //Hilt
+    implementation("com.google.dagger:hilt-android:$versions.hilt")
+    kapt("com.google.dagger:hilt-android-compiler:$versions.hilt")
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
+
+    //Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$versions.retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$versions.retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-scalars:$versions.retrofitVersion"
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+
+    //Twilio
+    implementation "com.twilio:video-android-ktx:${versions.twilioVideoSdk}"
+}
