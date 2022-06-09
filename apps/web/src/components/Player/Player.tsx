@@ -8,6 +8,8 @@ import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import { useAppState } from '../../state';
 import { useEnqueueSnackbar } from '../../hooks/useSnackbar/useSnackbar';
 import { usePlayerState } from '../../hooks/usePlayerState/usePlayerState';
+import useIsRecording from '../../hooks/useIsRecording/useIsRecording';
+import { Tooltip, Typography } from '@material-ui/core';
 
 TwilioPlayer.telemetry.subscribe(data => {
   const method = data.name === 'error' ? 'error' : 'log';
@@ -29,6 +31,31 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       height: '100%',
     },
+    recordingIndicator: {
+      position: 'absolute',
+      bottom: theme.footerHeight + 'px',
+      display: 'flex',
+      alignItems: 'center',
+      background: 'rgba(0, 0, 0, 0.5)',
+      color: 'white',
+      padding: '0.1em 0.3em 0.1em 0',
+      fontSize: '1.2rem',
+      height: '28px',
+      zIndex: 10,
+      [theme.breakpoints.down('sm')]: {
+        bottom: 'auto',
+        right: 0,
+        top: 0,
+      },
+    },
+    circle: {
+      height: '12px',
+      width: '12px',
+      background: 'red',
+      borderRadius: '100%',
+      margin: '0 0.6em',
+      animation: `1.25s $pulsate ease-out infinite`,
+    },
   })
 );
 
@@ -40,6 +67,7 @@ function Player() {
   const { appState, appDispatch } = useAppState();
   const enqueueSnackbar = useEnqueueSnackbar();
   const [welcomeMessageDisplayed, setWelcomeMessageDisplayed] = useState(false);
+  const { isRecording } = useIsRecording();
 
   useLayoutEffect(() => {
     if (player && state === 'ready') {
@@ -69,6 +97,16 @@ function Player() {
           [classes.rightDrawerOpen]: appState.isParticipantWindowOpen,
         })}
       >
+        {isRecording && (
+          <Tooltip title="This live stream is being recorded by the host." placement="top">
+            <div className={classes.recordingIndicator}>
+              <div className={classes.circle}></div>
+              <Typography variant="body1" color="inherit" data-cy-recording-indicator>
+                Recording
+              </Typography>
+            </div>
+          </Tooltip>
+        )}
         <video className={classes.video} ref={videoElRef} playsInline></video>
         <ParticipantWindow />
       </div>

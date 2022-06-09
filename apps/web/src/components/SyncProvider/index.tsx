@@ -9,13 +9,8 @@ type SyncContextType = {
   raisedHandsMap: SyncMap | undefined;
   speakersMap: SyncMap | undefined;
   viewersMap: SyncMap | undefined;
-  registerSyncMaps: (syncObjectNames: SyncObjectNames) => void;
-};
-
-type SyncObjectNames = {
-  speakers_map: string;
-  viewers_map: string;
-  raised_hands_map: string;
+  registerSyncMaps: () => void;
+  streamDocument: SyncDocument | undefined;
 };
 
 export const SyncContext = createContext<SyncContextType>(null!);
@@ -27,6 +22,7 @@ export const SyncProvider: React.FC = ({ children }) => {
   const [speakersMap, setSpeakersMap] = useState<SyncMap>();
   const [viewersMap, setViewersMap] = useState<SyncMap>();
   const [userDocument, setUserDocument] = useState<SyncDocument>();
+  const [streamDocument, setStreamDocument] = useState<SyncDocument>();
 
   const syncClientRef = useRef<SyncClient>();
 
@@ -42,11 +38,12 @@ export const SyncProvider: React.FC = ({ children }) => {
     return syncClientRef.current!.document(userDocumentName).then(document => setUserDocument(document));
   }
 
-  function registerSyncMaps({ speakers_map, viewers_map, raised_hands_map }: SyncObjectNames) {
+  function registerSyncMaps() {
     const syncClient = syncClientRef.current!;
-    syncClient.map(raised_hands_map).then(map => setRaisedHandsMap(map));
-    syncClient.map(speakers_map).then(map => setSpeakersMap(map));
-    syncClient.map(viewers_map).then(map => setViewersMap(map));
+    syncClient.map('raised_hands').then(map => setRaisedHandsMap(map));
+    syncClient.map('speakers').then(map => setSpeakersMap(map));
+    syncClient.map('viewers').then(map => setViewersMap(map));
+    syncClient.document('stream').then(doc => setStreamDocument(doc));
   }
 
   useEffect(() => {
@@ -74,6 +71,7 @@ export const SyncProvider: React.FC = ({ children }) => {
         speakersMap,
         viewersMap,
         registerSyncMaps,
+        streamDocument,
       }}
     >
       {children}

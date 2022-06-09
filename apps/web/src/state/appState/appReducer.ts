@@ -17,7 +17,8 @@ export type appActionTypes =
   | { type: 'set-is-loading'; isLoading: boolean }
   | { type: 'set-has-speaker-invite'; hasSpeakerInvite: boolean }
   | { type: 'reset-state' }
-  | { type: 'set-is-participant-window-open'; isParticipantWindowOpen: boolean };
+  | { type: 'set-is-participant-window-open'; isParticipantWindowOpen: boolean }
+  | { type: 'set-record-stream'; recordStream: boolean };
 
 export interface appStateTypes {
   activeScreen: ActiveScreen;
@@ -28,6 +29,7 @@ export interface appStateTypes {
   isLoading: boolean;
   hasSpeakerInvite: boolean;
   isParticipantWindowOpen: boolean;
+  recordStream: boolean;
 }
 
 export const initialAppState: appStateTypes = {
@@ -39,6 +41,7 @@ export const initialAppState: appStateTypes = {
   isLoading: false,
   hasSpeakerInvite: false,
   isParticipantWindowOpen: false,
+  recordStream: false,
 };
 
 export const appReducer = produce((draft: appStateTypes, action: appActionTypes) => {
@@ -57,6 +60,10 @@ export const appReducer = produce((draft: appStateTypes, action: appActionTypes)
 
     case 'set-is-loading':
       draft.isLoading = action.isLoading;
+      break;
+
+    case 'set-record-stream':
+      draft.recordStream = action.recordStream;
       break;
 
     case 'set-has-speaker-invite':

@@ -141,7 +141,7 @@ export default function MainParticipantInfo({ participant, children }: MainParti
   const isVideoSwitchedOff = useIsTrackSwitchedOff(videoTrack as LocalVideoTrack | RemoteVideoTrack);
   const isParticipantReconnecting = useParticipantIsReconnecting(participant);
 
-  const isRecording = useIsRecording();
+  const { isRecording } = useIsRecording();
 
   return (
     <div
@@ -164,10 +164,7 @@ export default function MainParticipantInfo({ participant, children }: MainParti
           <NetworkQualityLevel participant={participant} />
         </div>
         {isRecording && (
-          <Tooltip
-            title="All participants' audio and video is currently being recorded. Visit the app settings to stop recording."
-            placement="top"
-          >
+          <Tooltip title="All participants' audio and video is currently being recorded." placement="top">
             <div className={classes.recordingIndicator}>
               <div className={classes.circle}></div>
               <Typography variant="body1" color="inherit" data-cy-recording-indicator>
