@@ -8,26 +8,19 @@ struct CreateOrJoinStreamRequest: APIRequest {
     struct Parameters: Encodable {
         let userIdentity: String
         let streamName: String
+        let recordStream: Bool?
     }
 
     struct Response: Decodable {
-        struct SyncObjectNames: Decodable {
-            let speakersMap: String
-            let viewersMap: String
-            let raisedHandsMap: String
-            let userDocument: String?
-        }
-        
         let token: String
-        let syncObjectNames: SyncObjectNames
     }
 
     let path: String
     let parameters: Parameters
     let responseType = Response.self
     
-    init(userIdentity: String, streamName: String, role: StreamConfig.Role) {
-        parameters = Parameters(userIdentity: userIdentity, streamName: streamName)
+    init(userIdentity: String, streamName: String, role: StreamConfig.Role, recordStream: Bool?) {
+        parameters = Parameters(userIdentity: userIdentity, streamName: streamName, recordStream: recordStream)
         path = role.path
     }
 }

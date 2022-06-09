@@ -87,8 +87,8 @@ class LocalParticipantManager: NSObject {
     private(set) var micTrack: LocalAudioTrack?
     private(set) var cameraTrack: LocalVideoTrack?
     private let app = UIApplication.shared
+    private let authManager: AuthManager
     private var cameraSource: CameraSource?
-    private var authManager: AuthManager
     
     init(authManager: AuthManager) {
         self.authManager = authManager
