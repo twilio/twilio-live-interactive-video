@@ -122,6 +122,7 @@ module.exports.handler = async (context, event, callback) => {
           ]
         }
       }),
+      StatusCallback: 'https://' + DOMAIN_NAME + '/media-processor-webhook'
     }),
   }).catch(createErrorHandler('error creating MediaProcessor.'));
 
