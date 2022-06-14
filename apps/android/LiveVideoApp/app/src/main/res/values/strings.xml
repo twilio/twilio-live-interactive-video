@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Twilio Live Video</string>
+    <string name="sign_in_welcome_to">Welcome to:</string>
+    <string name="sign_in_intro_question">What’s your name?</string>
+    <string name="sign_in_full_name_label">Full Name</string>
+    <string name="continue_label">Continue</string>
+    <string name="sign_in_passcode_label">Passcode</string>
+
+    <string name="title_home_screen">Create or join?</string>
+    <string name="title_sign_in_passcode_screen">Enter passcode</string>
+    <string name="title_sign_in_screen">Sign In</string>
+    <string name="sign_in_passcode_description">This is a number you or someone on your team was sent during setup.</string>
 </resources>

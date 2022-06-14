@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.twilio.livevideo.app.viewmodel.SignInViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/twilio_background_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_twilio_icon_3" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/twilio_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sign_in_horizontal_margin"
+            android:layout_marginTop="@dimen/sign_in_top_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_twilio_icon_2" />
+
+        <TextView
+            android:id="@+id/title_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/sign_in_welcome_to"
+            android:textColor="@color/gray_text"
+            android:textSize="@dimen/sign_in_subtitle_text"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/twilio_icon"
+            app:layout_constraintTop_toBottomOf="@id/twilio_icon" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="@dimen/sign_in_horizontal_margin"
+            android:text="Twilio Live Video\nEvents"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sign_in_title_text"
+            android:textStyle="bold"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@id/twilio_icon"
+            app:layout_constraintTop_toBottomOf="@id/title_label" />
+
+        <TextView
+            android:id="@+id/name_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sign_in_between_distance"
+            android:text="@string/sign_in_intro_question"
+            android:textColor="@color/gray_text"
+            android:textSize="@dimen/sign_in_description_text"
+            app:layout_constraintStart_toStartOf="@id/title"
+            app:layout_constraintTop_toBottomOf="@id/title" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/full_name_input_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/sign_in_horizontal_margin"
+            android:layout_marginTop="@dimen/sign_in_between_distance"
+            android:hint="@string/sign_in_full_name_label"
+            app:layout_constraintTop_toBottomOf="@id/name_label">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/full_name_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@={viewModel.userName}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/button_wide_horizontal_margin"
+            android:layout_marginTop="@dimen/button_top_margin"
+            android:enabled="@{viewModel.continueNameEnabled}"
+            android:minHeight="@dimen/sign_in_button_height"
+            android:onClick="@{() -> viewModel.onContinueName()}"
+            android:text="@string/continue_label"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/full_name_input_layout" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
