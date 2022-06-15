@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.twilio.livevideo.app.viewmodel.HomeEventNameViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/new_event_layout"
+            layout="@layout/fragment_home_new_event"
+            app:ViewModel="@{viewModel}" />
+
+        <include
+            android:id="@+id/join_event_layout"
+            layout="@layout/fragment_home_join_event"
+            app:ViewModel="@{viewModel}" />
+
+    </FrameLayout>
+
+</layout>

@@ -6,12 +6,16 @@
 
         <variable
             name="viewModel"
-            type="com.twilio.livevideo.app.viewmodel.SignInViewModel" />
+            type="com.twilio.livevideo.app.viewmodel.HomeEventNameViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        app:visibleOrGone="@{!viewModel.isNewEvent}">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/description"
@@ -19,32 +23,33 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/sign_in_horizontal_margin"
             android:layout_marginTop="20dp"
-            android:text="@string/sign_in_passcode_description"
+            android:text="@string/home_join_event_description"
             android:textColor="@color/gray_text"
             android:textSize="@dimen/sign_in_passcode_description_text"
             app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/passcode_input_layout"
+            android:id="@+id/event_name_input_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/sign_in_horizontal_margin"
             android:layout_marginTop="@dimen/sign_in_between_distance"
-            android:hint="@string/sign_in_passcode_label"
+            android:hint="@string/home_event_name_label"
             app:layout_constraintTop_toBottomOf="@id/description">
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/passcode_input"
+                android:id="@+id/event_name_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
+                android:inputType="text"
                 android:lines="1"
                 android:maxLines="1"
-                android:text="@={viewModel.passcode}" />
+                android:text="@={viewModel.joinEventName}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -54,14 +59,13 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/button_wide_horizontal_margin"
             android:layout_marginTop="@dimen/button_top_margin"
-            android:enabled="@{viewModel.continuePasscodeEnabled}"
+            android:enabled="@{viewModel.continueJoinEventEnabled}"
             android:minHeight="@dimen/sign_in_button_height"
-            android:onClick="@{() -> viewModel.onContinuePasscode()}"
             android:text="@string/continue_label"
             android:textAllCaps="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/passcode_input_layout" />
+            app:layout_constraintTop_toBottomOf="@id/event_name_input_layout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

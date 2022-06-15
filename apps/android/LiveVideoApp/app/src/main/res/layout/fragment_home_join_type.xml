@@ -6,8 +6,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="false">
+        android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/description"
@@ -15,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/sign_in_horizontal_margin"
             android:layout_marginTop="20dp"
-            android:text="@string/home_description"
+            android:text="@string/home_join_type_description"
             android:textColor="@color/gray_text"
             android:textSize="@dimen/sign_in_passcode_description_text"
             app:layout_constrainedWidth="true"
@@ -24,33 +23,31 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <include
-            android:id="@+id/create_event_button"
+            android:id="@+id/join_as_speaker_button"
             layout="@layout/custom_home_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:buttonIcon="@{@drawable/ic_create_event}"
-            app:buttonText="@{@string/home_create_new_event_button}"
+            app:buttonDescription="@{@string/home_join_speaker_description}"
+            app:buttonIcon="@{@drawable/ic_speaker_icon}"
+            app:buttonText="@{@string/home_join_speaker_button}"
+            app:showDescription="@{true}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/description"
-            app:showDescription="@{false}" />
+            app:layout_constraintTop_toBottomOf="@id/description" />
 
         <include
-            android:id="@+id/join_event_button"
+            android:id="@+id/join_as_viewer_button"
             layout="@layout/custom_home_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            app:buttonIcon="@{@drawable/ic_join_event}"
-            app:buttonText="@{@string/home_join_event_button}"
+            app:buttonDescription="@{@string/home_join_viewer_description}"
+            app:buttonIcon="@{@drawable/ic_viewer_icon}"
+            app:buttonText="@{@string/home_join_viewer_button}"
+            app:showDescription="@{true}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/create_event_button"
-            app:showDescription="@{false}" />
+            app:layout_constraintTop_toBottomOf="@id/join_as_speaker_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

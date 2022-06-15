@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    lateinit var toolbar: Toolbar
     private var activityScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupToolbar() {
         val navController = findNavController(R.id.nav_host_fragment)
         val appBarConfig = AppBarConfiguration(TOP_LEVEL_SCREENS)
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        toolbar = findViewById(R.id.toolbar)
         toolbar.setupWithNavController(navController, appBarConfig)
     }
 
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         //TODO: Remove once the design is approved.
         activityScope.launch {
-            delay(1000)
+            delay(1500)
             dataReady = true
         }
 
