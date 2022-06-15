@@ -7,11 +7,12 @@
     android:fitsSystemWindows="true"
     tools:context=".view.MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.twilio.livevideo.app.custom.FixedToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="4dp"
+        android:animateLayoutChanges="true"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/Theme.LiveVideoApp.Toolbar"
         app:layout_constraintTop_toTopOf="parent" />
