@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.twilio.livevideo.app.databinding.FragmentSignInPasscodeBinding
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class SignInPasscodeFragment : SignInBaseFragment() {
@@ -26,7 +25,6 @@ class SignInPasscodeFragment : SignInBaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Timber.d("SignInPasscodeFragment onViewCreated")
         registerSignInPasscodeStringObserver()
     }
 

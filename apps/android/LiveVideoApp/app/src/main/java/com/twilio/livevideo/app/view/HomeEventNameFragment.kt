@@ -52,14 +52,14 @@ class HomeEventNameFragment : Fragment() {
 
     private fun registerOnContinueNewEventClickListener() {
         viewDataBinding.newEventLayout.button1.setOnClickListener {
-            Timber.d("register OnContinueNewEventClickListener")
+            Timber.d("OnContinueNewEventClickListener")
             //TODO:Validate if the Room Name is valid then proceed to the Room Screen
         }
     }
 
     private fun registerOnContinueJoinEventClickListener() {
         viewDataBinding.joinEventLayout.button1.setOnClickListener {
-            Timber.d("register OnContinueJoinEventClickListener")
+            Timber.d("OnContinueJoinEventClickListener")
             val navController = findNavController()
             navController.navigate(HomeEventNameFragmentDirections.actionHomeEventNameFragmentToHomeJoinTypeFragment())
         }

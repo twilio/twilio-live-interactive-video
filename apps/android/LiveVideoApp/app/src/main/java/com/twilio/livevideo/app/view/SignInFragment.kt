@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.twilio.livevideo.app.databinding.FragmentSignInBinding
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class SignInFragment : SignInBaseFragment() {
@@ -27,7 +26,6 @@ class SignInFragment : SignInBaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Timber.d("SignInFragment onViewCreated")
         registerSignInNameStringObserver()
     }
 
