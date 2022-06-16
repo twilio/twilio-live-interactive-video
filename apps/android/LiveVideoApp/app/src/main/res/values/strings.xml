@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">Twilio Live Video</string>
+    <string name="sign_in_welcome_to">Welcome to:</string>
+    <string name="sign_in_intro_question">What’s your name?</string>
+    <string name="sign_in_full_name_label">Full Name</string>
+    <string name="continue_label">Continue</string>
+    <string name="sign_in_passcode_label">Passcode</string>
+
+    <string name="title_home_screen">Create or join?</string>
+    <string name="title_sign_in_passcode_screen">Enter passcode</string>
+    <string name="title_sign_in_screen">Sign In</string>
+    <string name="sign_in_passcode_description">This is a number you or someone on your team was sent during setup.</string>
+    <string name="home_create_new_event_button">Create new event</string>
+    <string name="home_join_event_button">Join event</string>
+    <string name="home_description">Create your own event or join one that’s already happening.</string>
+    <string name="home_event_name_label">Event name</string>
+    <string name="home_join_event_description">Enter the event name.</string>
+    <string name="home_new_event_description">Tip: give your event a name that’s related to the topic you’ll be talking about.</string>
+    <string name="home_join_type_description">Do you plan on chatting up the room or are you more of the quiet, mysterious audience type?</string>
+    <string name="home_join_speaker_button">Join as speaker</string>
+    <string name="home_join_speaker_description">Your audio and video will be shared by default.</string>
+    <string name="home_join_viewer_button">Join as viewer</string>
+    <string name="home_join_viewer_description">Your audio and video will not be shareable. To share, you’ll have to raise your hand and the host will accept or deny.</string>
+    <string name="home_join_type_screen_title">Speaker or viewer?</string>
 </resources>

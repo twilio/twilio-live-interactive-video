@@ -3,12 +3,58 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
-    app:startDestination="@id/splashFragment">
+    app:startDestination="@id/signInFragment">
 
     <fragment
-        android:id="@+id/splashFragment"
-        android:name="com.twilio.livevideo.app.view.SplashFragment"
-        android:label="Splash Fragment"
-        tools:layout="@layout/fragment_splash" />
+        android:id="@+id/signInFragment"
+        android:name="com.twilio.livevideo.app.view.SignInFragment"
+        android:label="@string/title_sign_in_screen"
+        tools:layout="@layout/fragment_sign_in">
+        <action
+            android:id="@+id/action_signInFragment_to_signInPasscodeFragment"
+            app:destination="@id/signInPasscodeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signInPasscodeFragment"
+        android:name="com.twilio.livevideo.app.view.SignInPasscodeFragment"
+        android:label="@string/title_sign_in_passcode_screen"
+        tools:layout="@layout/fragment_sign_in_passcode">
+        <action
+            android:id="@+id/action_signInPasscodeFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/main_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.twilio.livevideo.app.view.HomeFragment"
+        android:label="@string/title_home_screen"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_homeEvenNameFragment"
+            app:destination="@id/homeEventNameFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/homeEventNameFragment"
+        android:name="com.twilio.livevideo.app.view.HomeEventNameFragment"
+        tools:layout="@layout/fragment_home_event_name">
+        <argument
+            android:name="isNewEvent"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_homeEventNameFragment_to_homeJoinTypeFragment"
+            app:destination="@id/homeJoinTypeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/homeJoinTypeFragment"
+        android:name="com.twilio.livevideo.app.view.HomeJoinEventTypeFragment"
+        android:label="@string/home_join_type_screen_title"
+        tools:layout="@layout/fragment_home_join_type" />
 
 </navigation>

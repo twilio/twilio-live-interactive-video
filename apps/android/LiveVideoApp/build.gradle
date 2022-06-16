@@ -20,6 +20,7 @@ buildscript {
     dependencies {
         // other plugins...
         classpath "com.google.dagger:hilt-android-gradle-plugin:${versions.hilt}"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:${versions.navigation}"
     }
 }
 

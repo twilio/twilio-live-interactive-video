@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -14,6 +15,8 @@ android {
         targetSdk 32
         versionCode 1
         versionName "1.0"
+
+        vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -56,13 +59,17 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
+    // Compatibility
+    implementation "androidx.vectordrawable:vectordrawable:1.1.0" // VectorDrawableCompat
+    implementation "androidx.vectordrawable:vectordrawable-animated:1.1.0" // AnimatedVectorDrawableCompat
+    implementation 'androidx.core:core-splashscreen:1.0.0-rc01'
+
     // Testing
     testImplementation "androidx.test:core:$versions.androidXTest"
     testImplementation "androidx.test.espresso:espresso-core:$versions.espresso"
     testImplementation "androidx.test.ext:junit-ktx:$versions.andoridXJunit"
     testImplementation 'org.mockito.kotlin:mockito-kotlin:3.2.0'
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito.kotlin:mockito-kotlin:3.2.0'
 
     androidTestImplementation "androidx.test:core:$versions.androidXTest"
     androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espresso"

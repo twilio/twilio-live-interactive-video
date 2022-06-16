@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="splash_bottom_logo_margin">90dp</dimen>
+    <dimen name="splash_top_logo_margin">111dp</dimen>
+    <dimen name="sign_in_horizontal_margin">40dp</dimen>
+    <dimen name="sign_in_top_margin">20dp</dimen>
+    <dimen name="sign_in_between_distance">32dp</dimen>
+    <dimen name="sign_in_button_height">51dp</dimen>
+    <dimen name="button_wide_horizontal_margin">32dp</dimen>
+    <dimen name="button_top_margin">50dp</dimen>
+    <dimen name="sign_in_passcode_description_text">14sp</dimen>
+    <dimen name="sign_in_description_text">16sp</dimen>
+    <dimen name="sign_in_title_text">28sp</dimen>
+    <dimen name="sign_in_subtitle_text">22sp</dimen>
+</resources>
