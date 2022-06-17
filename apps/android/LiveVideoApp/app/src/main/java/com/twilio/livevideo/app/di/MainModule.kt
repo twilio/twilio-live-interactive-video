@@ -1,10 +1,18 @@
 package com.twilio.livevideo.app.di
 
+import android.content.Context
 import com.twilio.livevideo.app.BuildConfig
+import com.twilio.livevideo.app.manager.AuthenticatorManager
 import com.twilio.livevideo.app.network.LiveAppInterceptor
+import com.twilio.livevideo.app.repository.TwilioLiveRepository
+import com.twilio.livevideo.app.repository.datasource.local.LocalStorage
+import com.twilio.livevideo.app.repository.datasource.local.LocalStorageImpl
+import com.twilio.livevideo.app.repository.datasource.remote.RemoteStorage
+import com.twilio.livevideo.app.repository.datasource.remote.TwilioLiveService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -36,5 +44,33 @@ class MainModule {
             .client(okHttpClient)
             .build()
     }
+
+    @Singleton
+    @Provides
+    fun provideTwilioLiveService(retrofit: Retrofit): TwilioLiveService {
+        return retrofit.create(TwilioLiveService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideLocalStorage(@ApplicationContext context: Context): LocalStorage =
+        LocalStorageImpl(context)
+
+    @Singleton
+    @Provides
+    fun provideRemoteStorage(twilioLiveService: TwilioLiveService): RemoteStorage =
+        RemoteStorage(twilioLiveService)
+
+    @Provides
+    fun provideAuthenticatorManager(
+        localStorage: LocalStorage,
+        remoteStorage: RemoteStorage
+    ): AuthenticatorManager = AuthenticatorManager(localStorage, remoteStorage)
+
+    @Provides
+    fun provideTwilioLiveRepository(
+        remoteStorage: RemoteStorage,
+        authenticatorManager: AuthenticatorManager
+    ): TwilioLiveRepository = TwilioLiveRepository(remoteStorage, authenticatorManager)
 
 }

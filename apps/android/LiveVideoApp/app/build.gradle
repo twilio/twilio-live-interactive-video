@@ -85,6 +85,10 @@ dependencies {
 
     ////
 
+    // Security
+    implementation("androidx.security:security-crypto:1.1.0-alpha03")
+
+    // Android
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
 
@@ -96,10 +100,8 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:$versions.navigation")
     implementation("androidx.navigation:navigation-ui-ktx:$versions.navigation")
 
-    // Feature module Support
+    // Navigation - Jetpack
     implementation("androidx.navigation:navigation-dynamic-features-fragment:$versions.navigation")
-
-    // Jetpack Compose Integration
     implementation("androidx.navigation:navigation-compose:$versions.navigation")
 
     //Hilt

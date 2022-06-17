@@ -37,6 +37,7 @@ class SignInViewModel @Inject constructor() : ViewModel() {
     }
 
     fun enablePasscodeContinue(value: Boolean?) {
+        //TODO: Verify Passcode with the API call
         _continuePasscodeEnabled.value = value ?: false
     }
 
