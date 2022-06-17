@@ -84,6 +84,10 @@ If you want to edit the functions that have been deployed to Twilio Serverless, 
 1. Enter passcode from the [backend deploy](#deploy-the-app-to-twilio) and tap `Continue`.
 1. Tap `Create Event` to host a new stream or `Join Event` to join a stream as a viewer or a speaker.
 
+## Recordings
+
+The event host has the option to enable recording when they create the event. A recording will be available shortly after the event ends. To view a list of all recordings, run `npm run recordings`. 
+
 ## Reference Backend
 
 The API for the reference backend used by the clients is specified [here](ReferenceBackendAPI.md).
