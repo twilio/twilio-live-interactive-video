@@ -22,9 +22,10 @@ const axiosClient = axios.create({
 
   recordings.forEach((recording) => {
     const recordingUrl = recording.links.media;
+    const dateUpdated = Date(recording.date_updated).toLocaleString();
     const room = rooms.find((room) => room.sid === recording.source_sid);
 
-    console.log(`Event Name: ${room.uniqueName} | Recording URL: ${recordingUrl}`);
+    console.log(`Event Name: ${room.uniqueName} | Date Updated: ${dateUpdated} | Recording URL: ${recordingUrl}`);
   });
 
   console.log(
