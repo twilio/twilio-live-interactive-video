@@ -4,9 +4,11 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import { Button } from '@material-ui/core';
 
-import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../../state';
 import { deleteStream } from '../../../state/api/api';
+import useChatContext from '../../../hooks/useChatContext/useChatContext';
+import useSyncContext from '../../../hooks/useSyncContext/useSyncContext';
+import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,11 +25,15 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function EndCallButton(props: { className?: string }) {
   const classes = useStyles();
   const { room } = useVideoContext();
+  const { disconnect: chatDisconnect } = useChatContext();
+  const { disconnect: syncDisconnect } = useSyncContext();
   const { appState, appDispatch } = useAppState();
 
   async function disconnect() {
     room!.emit('setPreventAutomaticJoinStreamAsViewer');
     room!.disconnect();
+    chatDisconnect();
+    syncDisconnect();
     appDispatch({ type: 'reset-state' });
     await deleteStream(appState.eventName);
   }

@@ -33,7 +33,10 @@ export default function PreJoinScreens() {
       if (appState.hasSpeakerInvite) {
         const { data } = await joinStreamAsSpeaker(appState.participantName, appState.eventName);
         await videoConnect(data.token);
-        chatConnect(data.token, data.room_sid);
+        if (data.chat_enabled) {
+          chatConnect(data.token, data.room_sid);
+          appDispatch({ type: 'set-is-chat-enabled', isChatEnabled: true });
+        }
         registerSyncMaps(data.sync_object_names);
         playerDisconnect();
         appDispatch({ type: 'set-is-loading', isLoading: false });
@@ -46,7 +49,10 @@ export default function PreJoinScreens() {
           syncConnect(data.token);
           await videoConnect(data.token);
           registerSyncMaps(data.sync_object_names);
-          chatConnect(data.token, data.room_sid);
+          if (data.chat_enabled) {
+            chatConnect(data.token, data.room_sid);
+            appDispatch({ type: 'set-is-chat-enabled', isChatEnabled: true });
+          }
           break;
         }
         case 'speaker': {
@@ -54,7 +60,10 @@ export default function PreJoinScreens() {
           syncConnect(data.token);
           await videoConnect(data.token);
           registerSyncMaps(data.sync_object_names);
-          chatConnect(data.token, data.room_sid);
+          if (data.chat_enabled) {
+            chatConnect(data.token, data.room_sid);
+            appDispatch({ type: 'set-is-chat-enabled', isChatEnabled: true });
+          }
           break;
         }
         case 'viewer': {

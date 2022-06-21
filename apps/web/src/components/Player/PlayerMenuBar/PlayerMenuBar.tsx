@@ -9,6 +9,7 @@ import RaiseHandIcon from '../../../icons/RaiseHandIcon';
 import ParticipantIcon from '../../../icons/ParticipantIcon';
 import ChatIcon from '../../../icons/ChatIcon';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
+import useSyncContext from '../../../hooks/useSyncContext/useSyncContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,6 +45,8 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
   const [isHandRaised, setIsHandRaised] = useState(false);
   const lastClickTimeRef = useRef(0);
   const enqueueSnackbar = useEnqueueSnackbar();
+  const { disconnect: chatDisconnect } = useChatContext();
+  const { disconnect: syncDisconnect } = useSyncContext();
 
   const handleRaiseHand = useCallback(() => {
     if (Date.now() - lastClickTimeRef.current > 500) {
@@ -77,6 +80,13 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
     });
   };
 
+  const disconnectFromEvent = () => {
+    disconnect();
+    appDispatch({ type: 'reset-state' });
+    chatDisconnect();
+    syncDisconnect();
+  };
+
   return (
     <footer className={classes.container}>
       <Grid container justifyContent="space-around" alignItems="center">
@@ -98,13 +108,7 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
         </Grid>
         <Grid style={{ flex: 1 }}>
           <Grid container justifyContent="flex-end">
-            <Button
-              onClick={() => {
-                disconnect();
-                appDispatch({ type: 'reset-state' });
-              }}
-              className={classes.button}
-            >
+            <Button onClick={disconnectFromEvent} className={classes.button}>
               Leave Stream
             </Button>
           </Grid>
