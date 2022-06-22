@@ -29,13 +29,12 @@ export default function PreJoinScreens() {
 
   async function connect() {
     appDispatch({ type: 'set-is-loading', isLoading: true });
-
     try {
       if (appState.hasSpeakerInvite) {
         const { data } = await joinStreamAsSpeaker(appState.participantName, appState.eventName);
         await videoConnect(data.token);
         if (data.chat_enabled) {
-          chatConnect(data.token);
+          chatConnect(data.token, data.room_sid);
           appDispatch({ type: 'set-is-chat-enabled', isChatEnabled: true });
         }
         registerSyncMaps(data.sync_object_names);
@@ -44,7 +43,6 @@ export default function PreJoinScreens() {
         appDispatch({ type: 'set-has-speaker-invite', hasSpeakerInvite: false });
         return;
       }
-
       switch (appState.participantType) {
         case 'host': {
           const { data } = await createStream(appState.participantName, appState.eventName);
@@ -52,24 +50,22 @@ export default function PreJoinScreens() {
           await videoConnect(data.token);
           registerSyncMaps(data.sync_object_names);
           if (data.chat_enabled) {
-            chatConnect(data.token);
+            chatConnect(data.token, data.room_sid);
             appDispatch({ type: 'set-is-chat-enabled', isChatEnabled: true });
           }
           break;
         }
-
         case 'speaker': {
           const { data } = await joinStreamAsSpeaker(appState.participantName, appState.eventName);
           syncConnect(data.token);
           await videoConnect(data.token);
           registerSyncMaps(data.sync_object_names);
           if (data.chat_enabled) {
-            chatConnect(data.token);
+            chatConnect(data.token, data.room_sid);
             appDispatch({ type: 'set-is-chat-enabled', isChatEnabled: true });
           }
           break;
         }
-
         case 'viewer': {
           const { data } = await joinStreamAsViewer(appState.participantName, appState.eventName);
           syncConnect(data.token);
@@ -77,7 +73,9 @@ export default function PreJoinScreens() {
           registerUserDocument(data.sync_object_names.user_document);
           registerSyncMaps(data.sync_object_names);
           await connectViewerToPlayer(appState.participantName, appState.eventName);
-          // chatConnect(data.token);
+          if (data.chat_enabled) {
+            chatConnect(data.token, data.room_sid);
+          }
           break;
         }
       }
@@ -85,7 +83,6 @@ export default function PreJoinScreens() {
     } catch (e) {
       console.log('Error connecting: ', e.toJSON ? e.toJSON() : e);
       appDispatch({ type: 'set-is-loading', isLoading: false });
-
       if (e.response?.data?.error?.explanation === 'Room exists') {
         enqueueSnackbar({
           headline: 'Error',
@@ -121,7 +118,6 @@ export default function PreJoinScreens() {
   return (
     <IntroContainer transparentBackground={appState.hasSpeakerInvite}>
       <MediaErrorSnackbar error={mediaError} />
-
       {appState.isLoading ? (
         <LoadingScreen state={appState} />
       ) : (

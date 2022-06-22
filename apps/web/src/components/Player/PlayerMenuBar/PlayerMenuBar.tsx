@@ -7,6 +7,7 @@ import { useEnqueueSnackbar } from '../../../hooks/useSnackbar/useSnackbar';
 import LowerHandIcon from '../../../icons/LowerHandIcon';
 import RaiseHandIcon from '../../../icons/RaiseHandIcon';
 import ParticipantIcon from '../../../icons/ParticipantIcon';
+import ChatIcon from '../../../icons/ChatIcon';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useSyncContext from '../../../hooks/useSyncContext/useSyncContext';
 
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: string; disconnect: () => void }) {
   const classes = useStyles();
   const { appState, appDispatch } = useAppState();
+  const { setIsChatWindowOpen, isChatWindowOpen } = useChatContext();
   const [isHandRaised, setIsHandRaised] = useState(false);
   const lastClickTimeRef = useRef(0);
   const enqueueSnackbar = useEnqueueSnackbar();
@@ -63,9 +65,18 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
   }, [isHandRaised, appState.participantName, appState.eventName, enqueueSnackbar]);
 
   const toggleParticipantWindow = () => {
+    setIsChatWindowOpen(false);
     appDispatch({
       type: 'set-is-participant-window-open',
       isParticipantWindowOpen: !appState.isParticipantWindowOpen,
+    });
+  };
+
+  const toggleChatWindow = () => {
+    setIsChatWindowOpen(!isChatWindowOpen);
+    appDispatch({
+      type: 'set-is-participant-window-open',
+      isParticipantWindowOpen: false,
     });
   };
 
@@ -90,9 +101,13 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
             <Button onClick={() => toggleParticipantWindow()} startIcon={<ParticipantIcon />}>
               Participants
             </Button>
+            {appState.isChatEnabled && (
+              <Button onClick={() => toggleChatWindow()} startIcon={<ChatIcon />}>
+                Chat
+              </Button>
+            )}
           </Grid>
         </Grid>
-
         <Grid style={{ flex: 1 }}>
           <Grid container justifyContent="flex-end">
             <Button onClick={disconnectFromEvent} className={classes.button}>
