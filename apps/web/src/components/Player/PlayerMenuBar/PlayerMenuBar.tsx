@@ -101,9 +101,11 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
             <Button onClick={() => toggleParticipantWindow()} startIcon={<ParticipantIcon />}>
               Participants
             </Button>
-            <Button onClick={() => toggleChatWindow()} startIcon={<ChatIcon />}>
-              Chat
-            </Button>
+            {appState.isChatEnabled && (
+              <Button onClick={() => toggleChatWindow()} startIcon={<ChatIcon />}>
+                Chat
+              </Button>
+            )}
           </Grid>
         </Grid>
         <Grid style={{ flex: 1 }}>
