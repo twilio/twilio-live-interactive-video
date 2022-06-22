@@ -24,10 +24,10 @@ data class GenericResponse(
 data class ErrorResponse(
 
     @SerializedName("message")
-    val message: String? = null,
+    val message: String,
 
     @SerializedName("explanation")
-    val explanation: String? = null
+    val explanation: String
 
 )
 

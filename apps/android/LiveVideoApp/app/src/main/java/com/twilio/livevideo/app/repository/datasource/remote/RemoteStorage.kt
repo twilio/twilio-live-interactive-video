@@ -6,13 +6,13 @@ import com.twilio.livevideo.app.repository.model.GenericResponse
 import timber.log.Timber
 import javax.inject.Inject
 
-class RemoteStorage @Inject constructor(private var twilioLiveService: TwilioLiveService) {
+class RemoteStorage @Inject constructor(private var liveVideoAPIService: LiveVideoAPIService) {
 
     private val gson = Gson()
 
     suspend fun verifyPasscode(passcode: String): GenericResponse {
         var result = GenericResponse()
-        twilioLiveService.verifyPasscode(passcode)?.let { it ->
+        liveVideoAPIService.verifyPasscode(passcode)?.let { it ->
             if (!it.isSuccessful) {
                 try {
                     gson.fromJson(it.errorBody()?.charStream(), GenericResponse::class.java)

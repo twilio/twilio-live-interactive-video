@@ -3,12 +3,12 @@ package com.twilio.livevideo.app.di
 import android.content.Context
 import com.twilio.livevideo.app.BuildConfig
 import com.twilio.livevideo.app.manager.AuthenticatorManager
-import com.twilio.livevideo.app.network.LiveAppInterceptor
-import com.twilio.livevideo.app.repository.TwilioLiveRepository
+import com.twilio.livevideo.app.network.LiveVideoRequestInterceptor
+import com.twilio.livevideo.app.repository.LiveVideoRepository
 import com.twilio.livevideo.app.repository.datasource.local.LocalStorage
 import com.twilio.livevideo.app.repository.datasource.local.LocalStorageImpl
 import com.twilio.livevideo.app.repository.datasource.remote.RemoteStorage
-import com.twilio.livevideo.app.repository.datasource.remote.TwilioLiveService
+import com.twilio.livevideo.app.repository.datasource.remote.LiveVideoAPIService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,16 +25,16 @@ import javax.inject.Singleton
 class MainModule {
 
     @Provides
-    fun provideLiveAppInterceptor(authenticatorManager: AuthenticatorManager): LiveAppInterceptor =
-        LiveAppInterceptor(authenticatorManager)
+    fun provideLiveAppInterceptor(authenticatorManager: AuthenticatorManager): LiveVideoRequestInterceptor =
+        LiveVideoRequestInterceptor(authenticatorManager)
 
     @Provides
-    fun provideOkHttpClient(liveAppInterceptor: LiveAppInterceptor): OkHttpClient {
+    fun provideOkHttpClient(liveVideoRequestInterceptor: LiveVideoRequestInterceptor): OkHttpClient {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
-            .addInterceptor(liveAppInterceptor)
+            .addInterceptor(liveVideoRequestInterceptor)
             .cache(null)
             .build()
     }
@@ -48,8 +48,8 @@ class MainModule {
         .build()
 
     @Provides
-    fun provideTwilioLiveService(retrofit: Retrofit): TwilioLiveService =
-        retrofit.create(TwilioLiveService::class.java)
+    fun provideTwilioLiveService(retrofit: Retrofit): LiveVideoAPIService =
+        retrofit.create(LiveVideoAPIService::class.java)
 
     @Singleton
     @Provides
@@ -58,8 +58,8 @@ class MainModule {
 
     @Singleton
     @Provides
-    fun provideRemoteStorage(twilioLiveService: TwilioLiveService): RemoteStorage =
-        RemoteStorage(twilioLiveService)
+    fun provideRemoteStorage(liveVideoAPIService: LiveVideoAPIService): RemoteStorage =
+        RemoteStorage(liveVideoAPIService)
 
     @Provides
     fun provideAuthenticatorManager(
@@ -70,6 +70,6 @@ class MainModule {
     fun provideTwilioLiveRepository(
         remoteStorage: RemoteStorage,
         authenticatorManager: AuthenticatorManager
-    ): TwilioLiveRepository = TwilioLiveRepository(remoteStorage, authenticatorManager)
+    ): LiveVideoRepository = LiveVideoRepository(remoteStorage, authenticatorManager)
 
 }

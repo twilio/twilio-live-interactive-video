@@ -1,12 +1,13 @@
 package com.twilio.livevideo.app.network
 
 import com.twilio.livevideo.app.manager.AuthenticatorManager
+import com.twilio.livevideo.app.util.PasscodeUtil
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
 
-class LiveAppInterceptor @Inject constructor(private val authenticatorManager: AuthenticatorManager) :
+class LiveVideoRequestInterceptor @Inject constructor(private val authenticatorManager: AuthenticatorManager) :
     Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -14,7 +15,7 @@ class LiveAppInterceptor @Inject constructor(private val authenticatorManager: A
         val builder = request.newBuilder()
         val passcode = request.header(HEADER_AUTHORIZATION_KEY)
         val passcodeUrl = passcode?.let {
-            authenticatorManager.extractPasscodeUrl(passcode)
+            PasscodeUtil.extractPasscodeUrl(passcode)
         } ?: run {
             val authorizationValue = authenticatorManager.getPasscode()
             builder.addHeader(HEADER_AUTHORIZATION_KEY, authorizationValue)

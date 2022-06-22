@@ -2,6 +2,7 @@ package com.twilio.livevideo.app.manager
 
 import com.twilio.livevideo.app.BuildConfig
 import com.twilio.livevideo.app.repository.datasource.local.LocalStorage
+import com.twilio.livevideo.app.util.PasscodeUtil
 
 class AuthenticatorManager(
     private val localStorage: LocalStorage
@@ -9,7 +10,7 @@ class AuthenticatorManager(
 
     fun storePasscode(passcode: String) {
         localStorage.putStringData(FULL_PASSCODE_KEY, passcode)
-        localStorage.putStringData(URL_PASSCODE_KEY, extractPasscodeUrl(passcode))
+        localStorage.putStringData(URL_PASSCODE_KEY, PasscodeUtil.extractPasscodeUrl(passcode))
     }
 
     fun getPasscode(): String = localStorage.getStringData(FULL_PASSCODE_KEY) ?: ""
@@ -17,13 +18,6 @@ class AuthenticatorManager(
     fun getPasscodeURL(): String = localStorage.getStringData(URL_PASSCODE_KEY) ?: ""
 
     fun isPasscodeValid(): Boolean = getPasscode().isNotEmpty()
-
-    fun extractPasscodeUrl(passcode: String): String {
-        var passcodeUrl = passcode.substring(passcode.length - 8)
-        passcodeUrl =
-            "${passcodeUrl.substring(0, 4)}-${passcodeUrl.substring(4, passcodeUrl.length)}"
-        return passcodeUrl.trim()
-    }
 
     fun getBaseURL(passcodeUrl: String): String =
         BuildConfig.BASE_URL.replace("passcode", passcodeUrl).trim()

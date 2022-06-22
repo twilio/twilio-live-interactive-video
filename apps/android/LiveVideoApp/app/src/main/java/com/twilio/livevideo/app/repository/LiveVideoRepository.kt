@@ -6,7 +6,7 @@ import com.twilio.livevideo.app.repository.model.GenericResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class TwilioLiveRepository(
+class LiveVideoRepository(
     private val remoteStorage: RemoteStorage,
     private val authenticator: AuthenticatorManager
 ) {
