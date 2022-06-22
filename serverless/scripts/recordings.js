@@ -20,17 +20,19 @@ const axiosClient = axios.create({
   console.log('\nAvailable Twilio Live Recordings');
   console.log('--------------------------------\n');
 
-  recordings.filter(recording => recording.status == 'COMPLETED').forEach(recording => {
-    const recordingUrl = recording.links.media;
-    const dateUpdated = Date(recording.date_updated).toLocaleString();
+  recordings
+    .filter(recording => recording.status == 'COMPLETED')
+    .forEach(recording => {
+      const recordingUrl = recording.links.media;
+      const dateUpdated = Date(recording.date_updated).toLocaleString();
 
-    // If we don't find the room in the first page of rooms, use SID instead of name
-    const room = rooms.find((room) => room.sid === recording.source_sid)?.uniqueName ?? recording.source_sid;
+      // If we don't find the room in the first page of rooms, use SID instead of name
+      const room = rooms.find((room) => room.sid === recording.source_sid)?.uniqueName ?? recording.source_sid;
 
-    console.log(`Event Name: ${room} | Date updated: ${dateUpdated} | Recording URL: ${recordingUrl}`);
+      console.log(`Event Name: ${room}\nDate Updated: ${dateUpdated}\nRecording URL: ${recordingUrl}\n`);
   });
 
   console.log(
-    '\nPlease remember to use your Twilio Account SID and Auth Token when accessing the recording URLs in the browser.\n'
+    'Please remember to use your Twilio Account SID and Auth Token when accessing the recording URLs in the browser.\n'
   );
 })();
