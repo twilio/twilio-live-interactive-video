@@ -73,7 +73,9 @@ export default function PreJoinScreens() {
           registerUserDocument(data.sync_object_names.user_document);
           registerSyncMaps(data.sync_object_names);
           await connectViewerToPlayer(appState.participantName, appState.eventName);
-          chatConnect(data.token, data.room_sid);
+          if (data.chat_enabled) {
+            chatConnect(data.token, data.room_sid);
+          }
           break;
         }
       }
