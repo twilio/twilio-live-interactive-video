@@ -9,9 +9,8 @@ class PasscodeUtil {
             SHORT_PASSCODE_LENGTH + APP_ID_LENGTH + SERVERLESS_ID_MIN_LENGTH
 
         fun extractPasscodeUrl(fullPasscode: String): String {
-            val passcode = fullPasscode.substring(0, SHORT_PASSCODE_LENGTH)
             val appId =
-                fullPasscode.substring(SHORT_PASSCODE_LENGTH, passcode.length + APP_ID_LENGTH)
+                fullPasscode.substring(SHORT_PASSCODE_LENGTH, SHORT_PASSCODE_LENGTH + APP_ID_LENGTH)
             val serverlessId =
                 fullPasscode.substring(SHORT_PASSCODE_LENGTH + APP_ID_LENGTH, fullPasscode.length)
             return "$appId-$serverlessId"
