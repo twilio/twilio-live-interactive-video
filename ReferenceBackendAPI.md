@@ -58,7 +58,8 @@ Request parameters:
 ```json
 {
   "user_identity": "Bob",
-  "stream_name": "demo"
+  "stream_name": "demo",
+  "record_stream": true
 }
 ```
 

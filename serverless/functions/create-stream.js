@@ -113,7 +113,16 @@ module.exports.handler = async (context, event, callback) => {
         room: { name: room.sid },
         outputs: [playerStreamer.data.sid],
         resolution: '1920x1080',
+        ...record_stream && {
+          recordings: [
+            {
+              containerFormat: "mp4",
+              hostedByTwilio: true
+            }
+          ]
+        }
       }),
+      StatusCallback: 'https://' + DOMAIN_NAME + '/media-processor-webhook'
     }),
   }).catch(createErrorHandler('error creating MediaProcessor.'));
 
