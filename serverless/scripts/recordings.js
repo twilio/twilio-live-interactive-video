@@ -20,12 +20,14 @@ const axiosClient = axios.create({
   console.log('\nAvailable Twilio Live Recordings');
   console.log('--------------------------------\n');
 
-  recordings.forEach((recording) => {
+  recordings.filter(recording => recording.status == 'COMPLETED').forEach(recording => {
     const recordingUrl = recording.links.media;
     const dateUpdated = Date(recording.date_updated).toLocaleString();
-    const room = rooms.find((room) => room.sid === recording.source_sid);
 
-    console.log(`Event Name: ${room.uniqueName} | Date Updated: ${dateUpdated} | Recording URL: ${recordingUrl}`);
+    // If we don't find the room in the first page of rooms, use SID instead of name
+    const room = rooms.find((room) => room.sid === recording.source_sid)?.uniqueName ?? recording.source_sid;
+
+    console.log(`Event Name: ${room} | Date updated: ${dateUpdated} | Recording URL: ${recordingUrl}`);
   });
 
   console.log(
