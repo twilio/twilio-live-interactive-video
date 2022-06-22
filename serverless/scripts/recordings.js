@@ -21,8 +21,8 @@ const axiosClient = axios.create({
   console.log('--------------------------------\n');
 
   recordings
-    .filter(recording => recording.status == 'COMPLETED')
-    .forEach(recording => {
+    .filter((recording) => recording.status == 'COMPLETED')
+    .forEach((recording) => {
       const recordingUrl = recording.links.media;
       const dateUpdated = Date(recording.date_updated).toLocaleString();
 
