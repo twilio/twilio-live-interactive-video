@@ -15,7 +15,7 @@ class TwilioLiveRepository(
         return withContext(Dispatchers.IO) {
             val response = remoteStorage.verifyPasscode(passcode)
             if (response.isApiResponseSuccess) {
-                authenticator.storeCredentials(passcode)
+                authenticator.storePasscode(passcode)
             }
             response
         }

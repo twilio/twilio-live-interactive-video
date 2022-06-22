@@ -17,7 +17,6 @@ class SignInFragment : SignInBaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        //TODO: Add logic to check user credentials then skip signIn flow.
         viewDataBinding = FragmentSignInBinding.inflate(inflater, container, false)
         viewDataBinding.viewModel = viewModel
         viewDataBinding.lifecycleOwner = this

@@ -1,24 +1,34 @@
 package com.twilio.livevideo.app.repository.datasource.remote
 
-import com.twilio.livevideo.app.repository.model.ErrorResponse
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.twilio.livevideo.app.repository.model.GenericResponse
+import timber.log.Timber
+import javax.inject.Inject
 
-class RemoteStorage(private val twilioLiveService: TwilioLiveService) {
+class RemoteStorage @Inject constructor(private var twilioLiveService: TwilioLiveService) {
+
+    private val gson = Gson()
 
     suspend fun verifyPasscode(passcode: String): GenericResponse {
-        val apiResponse = twilioLiveService.verifyPasscode()
-        apiResponse.let { responseData ->
-            responseData.body()?.apply {
-                if (!responseData.isSuccessful) {
-                    if (this.error == null) {
-                        this.error = ErrorResponse()
-                    }
+        var result = GenericResponse()
+        twilioLiveService.verifyPasscode(passcode)?.let { it ->
+            if (!it.isSuccessful) {
+                try {
+                    gson.fromJson(it.errorBody()?.charStream(), GenericResponse::class.java)
+                        ?.apply {
+                            result.error = this.error
+                        }
+                } catch (ex: JsonSyntaxException) {
+                    Timber.e(ex.message)
                 }
-                this.code = responseData.code()
-                this.isApiResponseSuccess = responseData.errorBody() != null
+            } else {
+                result = it.body() ?: result
             }
+            result.code = it.code()
+            result.isApiResponseSuccess = it.errorBody() == null
         }
-        return apiResponse.body() ?: GenericResponse()
+        return result
     }
 
 }

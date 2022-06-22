@@ -24,7 +24,10 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class MainModule {
 
-    @Singleton
+    @Provides
+    fun provideLiveAppInterceptor(authenticatorManager: AuthenticatorManager): LiveAppInterceptor =
+        LiveAppInterceptor(authenticatorManager)
+
     @Provides
     fun provideOkHttpClient(liveAppInterceptor: LiveAppInterceptor): OkHttpClient {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
@@ -32,24 +35,21 @@ class MainModule {
         return OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
             .addInterceptor(liveAppInterceptor)
+            .cache(null)
             .build()
     }
 
     @Singleton
     @Provides
-    fun provideRetrofitClient(okHttpClient: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(BuildConfig.BASE_URL)
-            .client(okHttpClient)
-            .build()
-    }
+    fun provideRetrofitClient(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
+        .addConverterFactory(GsonConverterFactory.create())
+        .baseUrl(BuildConfig.BASE_URL)
+        .client(okHttpClient)
+        .build()
 
-    @Singleton
     @Provides
-    fun provideTwilioLiveService(retrofit: Retrofit): TwilioLiveService {
-        return retrofit.create(TwilioLiveService::class.java)
-    }
+    fun provideTwilioLiveService(retrofit: Retrofit): TwilioLiveService =
+        retrofit.create(TwilioLiveService::class.java)
 
     @Singleton
     @Provides
@@ -63,9 +63,8 @@ class MainModule {
 
     @Provides
     fun provideAuthenticatorManager(
-        localStorage: LocalStorage,
-        remoteStorage: RemoteStorage
-    ): AuthenticatorManager = AuthenticatorManager(localStorage, remoteStorage)
+        localStorage: LocalStorage
+    ): AuthenticatorManager = AuthenticatorManager(localStorage)
 
     @Provides
     fun provideTwilioLiveRepository(

@@ -29,6 +29,6 @@ class SignInPasscodeFragment : SignInBaseFragment() {
     }
 
     private fun registerSignInPasscodeStringObserver() {
-        viewModel.passcode.observe(viewLifecycleOwner) { viewModel.enablePasscodeContinue(it.isNotEmpty()) }
+        viewModel.passcode.observe(viewLifecycleOwner) { viewModel.enablePasscodeContinue(it.isNotEmpty() && it.length >= 8) }
     }
 }

@@ -1,34 +1,35 @@
 package com.twilio.livevideo.app.manager
 
+import com.twilio.livevideo.app.BuildConfig
 import com.twilio.livevideo.app.repository.datasource.local.LocalStorage
-import com.twilio.livevideo.app.repository.datasource.remote.RemoteStorage
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class AuthenticatorManager(
-    private val localStorage: LocalStorage,
-    private val remoteStorage: RemoteStorage
+    private val localStorage: LocalStorage
 ) {
 
-    fun storeCredentials(passcode: String) {
-        localStorage.putStringData(PASSCODE_KEY, passcode)
+    fun storePasscode(passcode: String) {
+        localStorage.putStringData(FULL_PASSCODE_KEY, passcode)
+        localStorage.putStringData(URL_PASSCODE_KEY, extractPasscodeUrl(passcode))
     }
 
-    fun getCredentials(): String {
-        return localStorage.getStringData(PASSCODE_KEY) ?: ""
+    fun getPasscode(): String = localStorage.getStringData(FULL_PASSCODE_KEY) ?: ""
+
+    fun getPasscodeURL(): String = localStorage.getStringData(URL_PASSCODE_KEY) ?: ""
+
+    fun isPasscodeValid(): Boolean = getPasscode().isNotEmpty()
+
+    fun extractPasscodeUrl(passcode: String): String {
+        var passcodeUrl = passcode.substring(passcode.length - 8)
+        passcodeUrl =
+            "${passcodeUrl.substring(0, 4)}-${passcodeUrl.substring(4, passcodeUrl.length)}"
+        return passcodeUrl.trim()
     }
 
-    suspend fun isPasscodeValid(): Boolean {
-        val passcode = localStorage.getStringData(PASSCODE_KEY)
-        if (passcode != null) {
-            return withContext(Dispatchers.IO) {
-                remoteStorage.verifyPasscode(passcode).isVerified ?: false
-            }
-        }
-        return false
-    }
+    fun getBaseURL(passcodeUrl: String): String =
+        BuildConfig.BASE_URL.replace("passcode", passcodeUrl).trim()
 
     companion object {
-        private const val PASSCODE_KEY = "USER-PASSCODE"
+        private const val FULL_PASSCODE_KEY = "FULL-PASSCODE"
+        private const val URL_PASSCODE_KEY = "URL-PASSCODE"
     }
 }

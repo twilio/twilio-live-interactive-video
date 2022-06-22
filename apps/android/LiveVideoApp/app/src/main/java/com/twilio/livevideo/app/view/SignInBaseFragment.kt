@@ -2,9 +2,13 @@ package com.twilio.livevideo.app.view
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.twilio.livevideo.app.repository.model.ErrorResponse
 import com.twilio.livevideo.app.viewmodel.SignInViewEvent
 import com.twilio.livevideo.app.viewmodel.SignInViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,10 +29,26 @@ open class SignInBaseFragment : Fragment() {
             Timber.d("SignInFragment view event $event")
             event?.apply {
                 when (this) {
-                    SignInViewEvent.OnContinueName -> goToSignInPasscodeScreen()
-                    SignInViewEvent.OnContinuePasscode -> goToHomeScreenScreen()
+                    is SignInViewEvent.OnContinueName -> goToSignInPasscodeScreen()
+                    is SignInViewEvent.OnContinuePasscode -> goToHomeScreenScreen()
+                    is SignInViewEvent.OnSignInError -> showErrorAlert(this.error)
                 }
             }
+        }
+    }
+
+    private fun showErrorAlert(error: ErrorResponse?) {
+        context?.apply {
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            builder.setMessage(error?.explanation?.capitalize(Locale.current) ?: "Passcode incorrect")
+            builder.setTitle(error?.message?.capitalize(Locale.current) ?: "Error")
+            builder.setCancelable(false)
+            builder.setPositiveButton("Ok") { p0, p1 ->
+                p0.cancel()
+            }
+
+            val alertDialog = builder.create()
+            alertDialog.show()
         }
     }
 

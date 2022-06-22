@@ -6,19 +6,28 @@ import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.findNavController
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.twilio.livevideo.app.R
+import com.twilio.livevideo.app.manager.AuthenticatorManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var authenticatorManager: AuthenticatorManager
+
+    private lateinit var navController: NavController
+
     lateinit var toolbar: Toolbar
     private var activityScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -26,11 +35,25 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setupStartDestination()
+        setupToolbar()
         delaySplash()
     }
 
+
+    private fun setupStartDestination() {
+        val navHost =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHost.navController
+
+        if (authenticatorManager.isPasscodeValid()) {
+            val newGraph = navController.navInflater.inflate(R.navigation.main_graph)
+            newGraph.setStartDestination(R.id.homeFragment)
+            navController.graph = newGraph
+        }
+    }
+
     private fun setupToolbar() {
-        val navController = findNavController(R.id.nav_host_fragment)
         val appBarConfig = AppBarConfiguration(TOP_LEVEL_SCREENS)
         toolbar = findViewById(R.id.toolbar)
         toolbar.setupWithNavController(navController, appBarConfig)
@@ -52,7 +75,6 @@ class MainActivity : AppCompatActivity() {
                     // Check if the initial data is ready.
                     return if (dataReady) {
                         content.viewTreeObserver.removeOnPreDrawListener(this)
-                        setupToolbar()
                         true
                     } else {
                         false
