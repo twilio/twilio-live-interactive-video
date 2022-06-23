@@ -4,51 +4,50 @@ import com.google.gson.annotations.SerializedName
 
 data class VerifyPasscodeResponse(
     @SerializedName("verified")
-    val isVerified: Boolean? = null
+    val isVerified: Boolean
 ) : BaseResponse()
 
 data class CreateStreamResponse(
     @SerializedName("token")
-    val token: String? = null
+    val token: String
 ) : BaseResponse()
 
 data class JoinStreamAsSpeakerResponse(
     @SerializedName("token")
-    val token: String? = null
+    val token: String
 ) : BaseResponse()
 
 data class ViewerConnectedToPlayerResponse(
     @SerializedName("success")
-    val isSuccess: Boolean? = null
+    val isSuccess: Boolean
 ) : BaseResponse()
 
 data class RaiseHandResponse(
     @SerializedName("sent")
-    val isSent: Boolean? = null
+    val isSent: Boolean
 ) : BaseResponse()
 
 data class RemoveSpeakerResponse(
     @SerializedName("removed")
-    val isRemoved: Boolean? = null
+    val isRemoved: Boolean
 ) : BaseResponse()
 
 data class SendSpeakerInviteResponse(
     @SerializedName("sent")
-    val isSent: Boolean? = null
+    val isSent: Boolean
 ) : BaseResponse()
 
 data class ErrorResponse(
 
     @SerializedName("message")
-    val message: String,
+    var message: String,
 
     @SerializedName("explanation")
-    val explanation: String
+    var explanation: String
 
 )
 
 abstract class BaseResponse(
-
     @SerializedName("error")
     var error: ErrorResponse? = null,
 

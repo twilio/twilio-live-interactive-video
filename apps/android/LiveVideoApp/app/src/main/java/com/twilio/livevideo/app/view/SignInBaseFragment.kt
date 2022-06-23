@@ -40,8 +40,22 @@ open class SignInBaseFragment : Fragment() {
     private fun showErrorAlert(error: ErrorResponse?) {
         context?.apply {
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-            builder.setMessage(error?.explanation?.capitalize(Locale.current) ?: "Passcode incorrect")
-            builder.setTitle(error?.message?.capitalize(Locale.current) ?: "Error")
+
+            val message = error?.explanation?.let {
+                if (it.isNotEmpty())
+                    it.capitalize(Locale.current)
+                else
+                    "Passcode incorrect"
+            }
+            builder.setMessage(message)
+
+            val title = error?.message?.let {
+                if (it.isNotEmpty())
+                    it.capitalize(Locale.current)
+                else
+                    "Error"
+            }
+            builder.setTitle(title)
             builder.setCancelable(false)
             builder.setPositiveButton("Ok") { p0, p1 ->
                 p0.cancel()
