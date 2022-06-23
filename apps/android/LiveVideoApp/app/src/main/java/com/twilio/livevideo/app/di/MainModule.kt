@@ -1,10 +1,18 @@
 package com.twilio.livevideo.app.di
 
+import android.content.Context
 import com.twilio.livevideo.app.BuildConfig
-import com.twilio.livevideo.app.network.LiveAppInterceptor
+import com.twilio.livevideo.app.manager.AuthenticatorManager
+import com.twilio.livevideo.app.network.LiveVideoRequestInterceptor
+import com.twilio.livevideo.app.repository.LiveVideoRepository
+import com.twilio.livevideo.app.repository.datasource.local.LocalStorage
+import com.twilio.livevideo.app.repository.datasource.local.LocalStorageImpl
+import com.twilio.livevideo.app.repository.datasource.remote.RemoteStorage
+import com.twilio.livevideo.app.repository.datasource.remote.LiveVideoAPIService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -16,25 +24,52 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class MainModule {
 
-    @Singleton
     @Provides
-    fun provideOkHttpClient(liveAppInterceptor: LiveAppInterceptor): OkHttpClient {
+    fun provideLiveAppInterceptor(authenticatorManager: AuthenticatorManager): LiveVideoRequestInterceptor =
+        LiveVideoRequestInterceptor(authenticatorManager)
+
+    @Provides
+    fun provideOkHttpClient(liveVideoRequestInterceptor: LiveVideoRequestInterceptor): OkHttpClient {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
-            .addInterceptor(liveAppInterceptor)
+            .addInterceptor(liveVideoRequestInterceptor)
+            .cache(null)
             .build()
     }
 
     @Singleton
     @Provides
-    fun provideRetrofitClient(okHttpClient: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(BuildConfig.BASE_URL)
-            .client(okHttpClient)
-            .build()
-    }
+    fun provideRetrofitClient(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
+        .addConverterFactory(GsonConverterFactory.create())
+        .baseUrl(BuildConfig.BASE_URL)
+        .client(okHttpClient)
+        .build()
+
+    @Provides
+    fun provideTwilioLiveService(retrofit: Retrofit): LiveVideoAPIService =
+        retrofit.create(LiveVideoAPIService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideLocalStorage(@ApplicationContext context: Context): LocalStorage =
+        LocalStorageImpl(context)
+
+    @Singleton
+    @Provides
+    fun provideRemoteStorage(liveVideoAPIService: LiveVideoAPIService): RemoteStorage =
+        RemoteStorage(liveVideoAPIService)
+
+    @Provides
+    fun provideAuthenticatorManager(
+        localStorage: LocalStorage
+    ): AuthenticatorManager = AuthenticatorManager(localStorage)
+
+    @Provides
+    fun provideTwilioLiveRepository(
+        remoteStorage: RemoteStorage,
+        authenticatorManager: AuthenticatorManager
+    ): LiveVideoRepository = LiveVideoRepository(remoteStorage, authenticatorManager)
 
 }

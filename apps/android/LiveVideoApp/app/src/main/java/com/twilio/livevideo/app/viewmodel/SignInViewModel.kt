@@ -3,11 +3,15 @@ package com.twilio.livevideo.app.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.twilio.livevideo.app.repository.LiveVideoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignInViewModel @Inject constructor() : ViewModel() {
+class SignInViewModel @Inject constructor(private val liveVideoRepository: LiveVideoRepository) :
+    ViewModel() {
 
     var userName: MutableLiveData<String> = MutableLiveData()
     var passcode: MutableLiveData<String> = MutableLiveData()
@@ -41,6 +45,15 @@ class SignInViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onContinuePasscode() {
-        _screenEvent.value = SignInViewEvent.OnContinuePasscode
+        passcode.value?.apply {
+            viewModelScope.launch {
+                val response = liveVideoRepository.verifyPasscode(this@apply)
+                if (response.isApiResponseSuccess && response.isVerified) {
+                    _screenEvent.value = SignInViewEvent.OnContinuePasscode
+                } else {
+                    _screenEvent.value = SignInViewEvent.OnSignInError(response.error)
+                }
+            }
+        }
     }
 }
