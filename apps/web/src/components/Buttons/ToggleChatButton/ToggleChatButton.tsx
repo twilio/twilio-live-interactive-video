@@ -57,7 +57,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ToggleChatButton() {
+export default function ToggleChatButton(props: { excludeLabel?: boolean }) {
   const classes = useStyles();
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const { isChatWindowOpen, setIsChatWindowOpen, conversation, hasUnreadMessages } = useChatContext();
@@ -101,7 +101,7 @@ export default function ToggleChatButton() {
         </div>
       }
     >
-      Chat
+      {!props.excludeLabel && 'Chat'}
     </Button>
   );
 }

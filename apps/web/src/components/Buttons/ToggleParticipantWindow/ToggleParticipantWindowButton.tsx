@@ -60,7 +60,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ToggleParticipantWindowButton() {
+export default function ToggleParticipantWindowButton(props: { excludeLabel?: boolean }) {
   const classes = useStyles();
   const { appState, appDispatch } = useAppState();
   const [shouldAnimate, setShouldAnimate] = useState(false);
@@ -109,7 +109,7 @@ export default function ToggleParticipantWindowButton() {
         </div>
       }
     >
-      Participants
+      {!props.excludeLabel && 'Participants'}
     </Button>
   );
 }

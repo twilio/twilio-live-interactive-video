@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function LeaveEventButton(props: { buttonClassName?: string }) {
+export default function LeaveEventButton(props: { buttonClassName?: string; excludeLabel?: boolean }) {
   const classes = useStyles();
   const [menuOpen, setMenuOpen] = useState(false);
   const { room } = useVideoContext();
@@ -54,7 +54,7 @@ export default function LeaveEventButton(props: { buttonClassName?: string }) {
   return (
     <>
       <Button onClick={() => setMenuOpen(isOpen => !isOpen)} ref={anchorRef} className={classes.button}>
-        Leave Event
+        {!props.excludeLabel && 'Leave Event'}
         <ExpandMoreIcon />
       </Button>
       <MenuContainer
