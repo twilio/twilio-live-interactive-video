@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Typography, Grid, Button } from '@material-ui/core';
+import { isMobile } from '../../../utils';
 import { useAppState } from '../../../state';
 import { raiseHand } from '../../../state/api/api';
 import { useEnqueueSnackbar } from '../../../hooks/useSnackbar/useSnackbar';
@@ -90,31 +91,40 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
   return (
     <footer className={classes.container}>
       <Grid container justifyContent="space-around" alignItems="center">
-        <Grid style={{ flex: 1 }}>
+        <Grid style={{ flex: isMobile ? 0 : 1 }}>
           <Typography variant="body1">{roomName}</Typography>
         </Grid>
         <Grid item>
           <Grid container justifyContent="center">
             <Button onClick={handleRaiseHand} startIcon={isHandRaised ? <LowerHandIcon /> : <RaiseHandIcon />}>
-              {isHandRaised ? 'Lower Hand' : 'Raise Hand'}
+              {!isMobile && (isHandRaised ? 'Lower Hand' : 'Raise Hand')}
             </Button>
             <Button onClick={() => toggleParticipantWindow()} startIcon={<ParticipantIcon />}>
-              Participants
+              {!isMobile && 'Participants'}
             </Button>
             {appState.isChatEnabled && (
               <Button onClick={() => toggleChatWindow()} startIcon={<ChatIcon />}>
-                Chat
+                {!isMobile && 'Chat'}
+              </Button>
+            )}
+            {isMobile && (
+              <Button onClick={disconnectFromEvent} className={classes.button}>
+                Leave Stream
               </Button>
             )}
           </Grid>
         </Grid>
-        <Grid style={{ flex: 1 }}>
-          <Grid container justifyContent="flex-end">
-            <Button onClick={disconnectFromEvent} className={classes.button}>
-              Leave Stream
-            </Button>
+
+        {/* Move 'Leave Stream' button all the way to the right if on Desktop */}
+        {!isMobile && (
+          <Grid style={{ flex: 1 }}>
+            <Grid container justifyContent="flex-end">
+              <Button onClick={disconnectFromEvent} className={classes.button}>
+                Leave Stream
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
+        )}
       </Grid>
     </footer>
   );
