@@ -75,6 +75,7 @@ export default function PreJoinScreens() {
           await connectViewerToPlayer(appState.participantName, appState.eventName);
           if (data.chat_enabled) {
             chatConnect(data.token, data.room_sid);
+            appDispatch({ type: 'set-is-chat-enabled', isChatEnabled: true });
           }
           break;
         }
