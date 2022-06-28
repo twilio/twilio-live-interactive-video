@@ -49,7 +49,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/button_passcode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/button_wide_horizontal_margin"

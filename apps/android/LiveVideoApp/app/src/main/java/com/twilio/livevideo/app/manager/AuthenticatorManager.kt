@@ -3,8 +3,9 @@ package com.twilio.livevideo.app.manager
 import com.twilio.livevideo.app.BuildConfig
 import com.twilio.livevideo.app.repository.datasource.local.LocalStorage
 import com.twilio.livevideo.app.util.PasscodeUtil
+import javax.inject.Inject
 
-class AuthenticatorManager(
+class AuthenticatorManager @Inject constructor(
     private val localStorage: LocalStorage
 ) {
 
