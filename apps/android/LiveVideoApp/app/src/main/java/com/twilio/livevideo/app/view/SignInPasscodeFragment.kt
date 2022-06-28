@@ -18,7 +18,6 @@ class SignInPasscodeFragment : SignInBaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        //TODO: Add Unit Test cases.
         viewDataBinding = FragmentSignInPasscodeBinding.inflate(inflater, container, false)
         viewDataBinding.viewModel = viewModel
         viewDataBinding.lifecycleOwner = this
