@@ -81,10 +81,10 @@ jobs:
       - checkout
       - run:
           name: Build All APKs
-          command: ./gradlew -q app:assemble app:assembleDebugAndroidTest
+          command: apps/android/LiveVideoApp/gradlew -q app:assemble app:assembleDebugAndroidTest
       - run:
           name: Unit Tests
-          command: ./gradlew app:testDebugUnitTest
+          command: apps/android/LiveVideoApp/gradlew app:testDebugUnitTest
 
 workflows:
   build-and-test-web-app:
