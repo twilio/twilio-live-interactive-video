@@ -1,9 +1,7 @@
 import React from 'react';
 import { styled, Theme } from '@material-ui/core/styles';
 
-import { isMobile } from './utils';
 import MenuBar from './components/MenuBar/MenuBar';
-import MobileBottomMenuBar from './components/MobileBottomMenuBar/MobileBottomMenuBar';
 import MobileTopMenuBar from './components/MobileTopMenuBar/MobileTopMenuBar';
 import Player from './components/Player/Player';
 import PreJoinScreens from './components/PreJoinScreens/PreJoinScreens';
@@ -52,7 +50,7 @@ export default function App() {
           <RecordingNotifications />
           <MobileTopMenuBar />
           <Room />
-          {isMobile ? <MobileBottomMenuBar /> : <MenuBar />}
+          <MenuBar />
         </Main>
       )}
 
