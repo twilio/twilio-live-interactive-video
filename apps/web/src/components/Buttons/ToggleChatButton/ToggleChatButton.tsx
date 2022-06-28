@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import ChatIcon from '../../../icons/ChatIcon';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Hidden } from '@material-ui/core';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../../state';
@@ -57,7 +57,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ToggleChatButton(props: { excludeLabel?: boolean }) {
+export default function ToggleChatButton() {
   const classes = useStyles();
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const { isChatWindowOpen, setIsChatWindowOpen, conversation, hasUnreadMessages } = useChatContext();
@@ -101,7 +101,7 @@ export default function ToggleChatButton(props: { excludeLabel?: boolean }) {
         </div>
       }
     >
-      {!props.excludeLabel && 'Chat'}
+      <Hidden smDown>Chat</Hidden>
     </Button>
   );
 }

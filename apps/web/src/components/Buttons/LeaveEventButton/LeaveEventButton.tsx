@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Button, Menu as MenuContainer, MenuItem, Typography } from '@material-ui/core';
+import { Button, Menu as MenuContainer, MenuItem, Typography, Hidden } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { joinStreamAsViewer, connectViewerToPlayer } from '../../../state/api/api';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function LeaveEventButton(props: { buttonClassName?: string; excludeLabel?: boolean }) {
+export default function LeaveEventButton(props: { buttonClassName?: string }) {
   const classes = useStyles();
   const [menuOpen, setMenuOpen] = useState(false);
   const { room } = useVideoContext();
@@ -54,7 +54,7 @@ export default function LeaveEventButton(props: { buttonClassName?: string; excl
   return (
     <>
       <Button onClick={() => setMenuOpen(isOpen => !isOpen)} ref={anchorRef} className={classes.button}>
-        {!props.excludeLabel && 'Leave Event'}
+        <Hidden smDown>Leave Event</Hidden>
         <ExpandMoreIcon />
       </Button>
       <MenuContainer

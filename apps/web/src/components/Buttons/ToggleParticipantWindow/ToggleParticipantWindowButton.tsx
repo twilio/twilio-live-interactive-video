@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core';
+import { Hidden, makeStyles } from '@material-ui/core';
 import ParticipantIcon from '../../../icons/ParticipantIcon';
 import { useAppState } from '../../../state';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
@@ -109,7 +109,7 @@ export default function ToggleParticipantWindowButton(props: { excludeLabel?: bo
         </div>
       }
     >
-      {!props.excludeLabel && 'Participants'}
+      <Hidden smDown>Participants</Hidden>
     </Button>
   );
 }

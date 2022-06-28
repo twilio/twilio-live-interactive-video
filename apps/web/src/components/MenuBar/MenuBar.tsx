@@ -95,9 +95,15 @@ export default function MenuBar() {
               <ToggleParticipantWindowButton />
               {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
               {appState.isChatEnabled && <ToggleChatButton />}
-              <Menu />
+              <Hidden smDown>
+                <Menu />
+              </Hidden>
+
+              <Hidden mdUp>{appState.participantType === 'host' ? <EndEventButton /> : <LeaveEventButton />}</Hidden>
             </Grid>
           </Grid>
+
+          {/* Move 'End/Leave Stream' button all the way to the right if on Desktop */}
           <Hidden smDown>
             <Grid style={{ flex: 1 }}>
               <Grid container justifyContent="flex-end">

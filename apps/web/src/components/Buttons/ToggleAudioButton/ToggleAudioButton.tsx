@@ -6,6 +6,7 @@ import MicOffIcon from '../../../icons/MicOffIcon';
 
 import useLocalAudioToggle from '../../../hooks/useLocalAudioToggle/useLocalAudioToggle';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import { Hidden } from '@material-ui/core';
 
 export default function ToggleAudioButton(props: { disabled?: boolean; className?: string; excludeLabel?: boolean }) {
   const [isAudioEnabled, toggleAudioEnabled] = useLocalAudioToggle();
@@ -20,7 +21,7 @@ export default function ToggleAudioButton(props: { disabled?: boolean; className
       startIcon={isAudioEnabled ? <MicIcon /> : <MicOffIcon />}
       data-cy-audio-toggle
     >
-      {!props.excludeLabel && (!hasAudioTrack ? 'No Audio' : isAudioEnabled ? 'Mute' : 'Unmute')}
+      <Hidden smDown>{!hasAudioTrack ? 'No Audio' : isAudioEnabled ? 'Mute' : 'Unmute'}</Hidden>
     </Button>
   );
 }

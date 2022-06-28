@@ -1,7 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { Typography, Grid, Button } from '@material-ui/core';
-import { isMobile } from '../../../utils';
+import { Typography, Grid, Button, useMediaQuery, Hidden } from '@material-ui/core';
 import { useAppState } from '../../../state';
 import { raiseHand } from '../../../state/api/api';
 import { useEnqueueSnackbar } from '../../../hooks/useSnackbar/useSnackbar';
@@ -41,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: string; disconnect: () => void }) {
   const classes = useStyles();
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
   const { appState, appDispatch } = useAppState();
   const { setIsChatWindowOpen, isChatWindowOpen } = useChatContext();
   const [isHandRaised, setIsHandRaised] = useState(false);
@@ -97,26 +97,27 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
         <Grid item>
           <Grid container justifyContent="center">
             <Button onClick={handleRaiseHand} startIcon={isHandRaised ? <LowerHandIcon /> : <RaiseHandIcon />}>
-              {!isMobile && (isHandRaised ? 'Lower Hand' : 'Raise Hand')}
+              <Hidden smDown>{isHandRaised ? 'Lower Hand' : 'Raise Hand'}</Hidden>
             </Button>
             <Button onClick={() => toggleParticipantWindow()} startIcon={<ParticipantIcon />}>
-              {!isMobile && 'Participants'}
+              <Hidden smDown>Participants</Hidden>
             </Button>
             {appState.isChatEnabled && (
               <Button onClick={() => toggleChatWindow()} startIcon={<ChatIcon />}>
-                {!isMobile && 'Chat'}
+                <Hidden smDown>Chat</Hidden>
               </Button>
             )}
-            {isMobile && (
+
+            <Hidden mdUp>
               <Button onClick={disconnectFromEvent} className={classes.button}>
                 Leave Stream
               </Button>
-            )}
+            </Hidden>
           </Grid>
         </Grid>
 
         {/* Move 'Leave Stream' button all the way to the right if on Desktop */}
-        {!isMobile && (
+        <Hidden smDown>
           <Grid style={{ flex: 1 }}>
             <Grid container justifyContent="flex-end">
               <Button onClick={disconnectFromEvent} className={classes.button}>
@@ -124,7 +125,7 @@ export default function PlayerMenuBar({ roomName, disconnect }: { roomName?: str
               </Button>
             </Grid>
           </Grid>
-        )}
+        </Hidden>
       </Grid>
     </footer>
   );
