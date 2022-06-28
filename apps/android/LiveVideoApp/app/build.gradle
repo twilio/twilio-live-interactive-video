@@ -44,6 +44,13 @@ android {
     buildFeatures {
         dataBinding true
     }
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+        animationsDisabled = true
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 kapt {
@@ -65,11 +72,16 @@ dependencies {
     implementation 'androidx.core:core-splashscreen:1.0.0-rc01'
 
     // Testing
+    debugImplementation "androidx.fragment:fragment-testing:$versions.fragmentAndroid"
     testImplementation "androidx.test:core:$versions.androidXTest"
     testImplementation "androidx.test.espresso:espresso-core:$versions.espresso"
     testImplementation "androidx.test.ext:junit-ktx:$versions.andoridXJunit"
-    testImplementation 'org.mockito.kotlin:mockito-kotlin:3.2.0'
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.mockito.kotlin:mockito-kotlin:$versions.mockito"
+    testImplementation "com.google.dagger:hilt-android-testing:$versions.hilt"
+    testImplementation "org.robolectric:robolectric:$versions.robolectric"
+    testImplementation "junit:junit:$versions.junit"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$versions.coroutinesTestAndroid"
+    testImplementation "androidx.arch.core:core-testing:$versions.androidCoreTesting"
 
     androidTestImplementation "androidx.test:core:$versions.androidXTest"
     androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espresso"
@@ -79,6 +91,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$versions.espresso"
     androidTestImplementation "androidx.test.ext:junit:$versions.andoridXJunit"
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    androidTestImplementation "androidx.arch.core:core-testing:$versions.androidCoreTesting"
     androidTestUtil "androidx.test:orchestrator:$versions.androidXTest"
 
     implementation "com.jakewharton.timber:timber:$versions.timber"
@@ -89,8 +102,9 @@ dependencies {
     implementation("androidx.security:security-crypto:1.1.0-alpha03")
 
     // Android
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
+    implementation "androidx.fragment:fragment:$versions.fragmentAndroid"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycleLiveData"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycleViewModel"
 
     // Java language implementation
     implementation("androidx.navigation:navigation-fragment:$versions.navigation")
@@ -99,6 +113,7 @@ dependencies {
     // Kotlin
     implementation("androidx.navigation:navigation-fragment-ktx:$versions.navigation")
     implementation("androidx.navigation:navigation-ui-ktx:$versions.navigation")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutinesAndroid")
 
     // Navigation - Jetpack
     implementation("androidx.navigation:navigation-dynamic-features-fragment:$versions.navigation")
@@ -106,8 +121,9 @@ dependencies {
 
     //Hilt
     implementation("com.google.dagger:hilt-android:$versions.hilt")
+    kaptTest("com.google.dagger:hilt-android-compiler:$versions.hilt")
     kapt("com.google.dagger:hilt-android-compiler:$versions.hilt")
-    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    kapt("androidx.hilt:hilt-compiler:$versions.hiltCompiler")
 
     //Retrofit
     implementation "com.squareup.retrofit2:retrofit:$versions.retrofitVersion"

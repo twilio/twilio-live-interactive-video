@@ -5,8 +5,9 @@ import com.twilio.livevideo.app.repository.datasource.remote.RemoteStorage
 import com.twilio.livevideo.app.repository.model.VerifyPasscodeResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class LiveVideoRepository(
+class LiveVideoRepository @Inject constructor(
     private val remoteStorage: RemoteStorage,
     private val authenticator: AuthenticatorManager
 ) {
