@@ -39,18 +39,17 @@ executors:
     macos:
       xcode: "13.1.0"
   android_executor:
-    build:
-      parameters:
-        resource-class:
-          description: "Build executor resource class"
-          default: "large"
-          type: string
-      working_directory: *androidWorkspace
-      docker:
-        - image: cimg/android:2021.10.2-node
-      environment:
-        _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseContainerSupport"
-      resource_class: << parameters.resource-class >>
+    parameters:
+      resource-class:
+        description: "Build executor resource class"
+        default: "large"
+        type: string
+    working_directory: *androidWorkspace
+    docker:
+      - image: cimg/android:2021.10.2-node
+    environment:
+      _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseContainerSupport"
+    resource_class: << parameters.resource-class >>
 
 jobs:
   build-and-test-ios-app:
