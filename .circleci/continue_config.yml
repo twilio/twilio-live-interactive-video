@@ -6,7 +6,7 @@ orbs:
 
 aliases:
   - &androidWorkspace
-      ~/apps/android/LiveVideoApp
+      apps/android/LiveVideoApp
 
   - &gradle-cache-key
     key: jars-{{ checksum "build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
@@ -81,10 +81,14 @@ jobs:
       - checkout
       - run:
           name: Build All APKs
-          command: apps/android/LiveVideoApp/gradlew -q app:assemble app:assembleDebugAndroidTest
+          command: |
+            cd "apps/android/LiveVideoApp"
+            ./gradlew -q app:assemble app:assembleDebugAndroidTest
       - run:
           name: Unit Tests
-          command: apps/android/LiveVideoApp/gradlew app:testDebugUnitTest
+          command: |
+            cd "apps/android/LiveVideoApp"
+            ./gradlew app:testDebugUnitTest
 
 workflows:
   build-and-test-web-app:
