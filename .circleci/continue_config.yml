@@ -7,14 +7,13 @@ orbs:
 aliases:
   - &androidWorkspace
       ~/apps/android/LiveVideoApp
-
-  - &gradle-cache-key
+  - &android-gradle-cache-key
     key: jars-{{ checksum "apps/android/LiveVideoApp/build.gradle" }}-{{ checksum "apps/android/LiveVideoApp/gradle/wrapper/gradle-wrapper.properties" }}
-  - &restore-cache-gradle
-    <<: *gradle-cache-key
+  - &android-restore-cache-gradle
+    <<: *android-gradle-cache-key
     name: Restore Gradle Cache
-  - &save-cache-gradle
-    <<: *gradle-cache-key
+  - &android-save-cache-gradle
+    <<: *android-gradle-cache-key
     name: Save Gradle Cache
     paths:
       - ~/apps/android/LiveVideoApp/.gradle/caches
@@ -79,7 +78,7 @@ jobs:
     executor: android_executor
     steps:
       - checkout
-      - restore_cache: *restore-cache-gradle
+      - restore_cache: *android-restore-cache-gradle
       - run:
           name: Build All APKs
           command: |
@@ -90,7 +89,7 @@ jobs:
           command: |
             cd "apps/android/LiveVideoApp"
             ./gradlew app:testDebugUnitTest
-      - save_cache: *save-cache-gradle
+      - save_cache: *android-save-cache-gradle
 
 workflows:
   build-and-test-web-app:
