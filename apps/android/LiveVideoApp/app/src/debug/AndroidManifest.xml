@@ -1,0 +1,10 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.twilio.livevideo.app">
+
+    <application>
+        <activity
+            android:name="com.twilio.livevideo.app.HiltTestActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"/>
+    </application>
+</manifest>

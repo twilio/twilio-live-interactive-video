@@ -9,6 +9,6 @@ import retrofit2.http.Header
 interface LiveVideoAPIService {
 
     @GET("/verify-passcode")
-    suspend fun verifyPasscode(@Header(LiveVideoRequestInterceptor.HEADER_AUTHORIZATION_KEY) passcode: String): Response<VerifyPasscodeResponse>?
+    suspend fun verifyPasscode(@Header(LiveVideoRequestInterceptor.HEADER_AUTHORIZATION_KEY) passcode: String): Response<VerifyPasscodeResponse>
 
 }
