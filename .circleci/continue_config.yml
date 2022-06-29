@@ -89,8 +89,14 @@ jobs:
           command: |
             cd "apps/android/LiveVideoApp"
             ./gradlew app:testDebugUnitTest
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/apps/android/LiveVideoApp/build/test-results/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/apps/android/LiveVideoApp/build/test-results/junit/ \;
+          when: always
       - store_test_results:
-          path: "~/apps/android/LiveVideoApp/build/test-results"
+          path: ~/apps/android/LiveVideoApp/build/test-results
       - save_cache: *android-save-cache-gradle
 
 workflows:
