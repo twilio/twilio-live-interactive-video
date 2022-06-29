@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
-import { Hidden, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import ParticipantIcon from '../../../icons/ParticipantIcon';
 import { useAppState } from '../../../state';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
@@ -60,7 +60,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ToggleParticipantWindowButton(props: { excludeLabel?: boolean }) {
+export default function ToggleParticipantWindowButton() {
   const classes = useStyles();
   const { appState, appDispatch } = useAppState();
   const [shouldAnimate, setShouldAnimate] = useState(false);
@@ -96,6 +96,7 @@ export default function ToggleParticipantWindowButton(props: { excludeLabel?: bo
 
   return (
     <Button
+      className="MuiButton-mobileBackground"
       onClick={toggleParticipantWindow}
       startIcon={
         <div className={classes.iconContainer}>
@@ -109,7 +110,7 @@ export default function ToggleParticipantWindowButton(props: { excludeLabel?: bo
         </div>
       }
     >
-      <Hidden smDown>Participants</Hidden>
+      <span className="MuiButton-textLabel">Participants</span>
     </Button>
   );
 }

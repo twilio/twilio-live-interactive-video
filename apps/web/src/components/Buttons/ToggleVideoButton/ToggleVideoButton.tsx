@@ -6,9 +6,8 @@ import VideoOnIcon from '../../../icons/VideoOnIcon';
 
 import useDevices from '../../../hooks/useDevices/useDevices';
 import useLocalVideoToggle from '../../../hooks/useLocalVideoToggle/useLocalVideoToggle';
-import { Hidden } from '@material-ui/core';
 
-export default function ToggleVideoButton(props: { disabled?: boolean; className?: string; excludeLabel?: boolean }) {
+export default function ToggleVideoButton(props: { disabled?: boolean; className?: string }) {
   const [isVideoEnabled, toggleVideoEnabled] = useLocalVideoToggle();
   const lastClickTimeRef = useRef(0);
   const { hasVideoInputDevices } = useDevices();
@@ -27,7 +26,9 @@ export default function ToggleVideoButton(props: { disabled?: boolean; className
       disabled={!hasVideoInputDevices || props.disabled}
       startIcon={isVideoEnabled ? <VideoOnIcon /> : <VideoOffIcon />}
     >
-      <Hidden smDown>{!hasVideoInputDevices ? 'No Video' : isVideoEnabled ? 'Stop Video' : 'Start Video'}</Hidden>
+      <span className="MuiButton-textLabel">
+        {!hasVideoInputDevices ? 'No Video' : isVideoEnabled ? 'Stop Video' : 'Start Video'}
+      </span>
     </Button>
   );
 }

@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
+import clsx from 'clsx';
 import { Button, Menu as MenuContainer, MenuItem, Typography, Hidden } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { joinStreamAsViewer, connectViewerToPlayer } from '../../../state/api/api';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useAppState } from '../../../state';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import usePlayerContext from '../../../hooks/usePlayerContext/usePlayerContext';
@@ -21,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function LeaveEventButton(props: { buttonClassName?: string }) {
+export default function LeaveEventButton() {
   const classes = useStyles();
   const [menuOpen, setMenuOpen] = useState(false);
   const { room } = useVideoContext();
@@ -53,9 +55,17 @@ export default function LeaveEventButton(props: { buttonClassName?: string }) {
 
   return (
     <>
-      <Button onClick={() => setMenuOpen(isOpen => !isOpen)} ref={anchorRef} className={classes.button}>
-        <Hidden smDown>Leave Event</Hidden>
-        <ExpandMoreIcon />
+      <Button
+        onClick={() => setMenuOpen(isOpen => !isOpen)}
+        ref={anchorRef}
+        className={clsx(classes.button, 'MuiButton-mobileBackground')}
+      >
+        <Hidden smDown>
+          Leave Event <ExpandMoreIcon />
+        </Hidden>
+        <Hidden mdUp>
+          <ExitToAppIcon />
+        </Hidden>
       </Button>
       <MenuContainer
         open={menuOpen}
