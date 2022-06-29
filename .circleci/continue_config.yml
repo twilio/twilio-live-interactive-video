@@ -99,7 +99,7 @@ jobs:
       - store_artifacts:
           path: apps/android/LiveVideoApp/build/test-results
       - store_test_results:
-          path: apps/android/LiveVideoApp/build/test-results"
+          path: apps/android/LiveVideoApp/build/test-results
       - save_cache: *android-save-cache-gradle
 
 workflows:
