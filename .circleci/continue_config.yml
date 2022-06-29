@@ -95,6 +95,8 @@ jobs:
             mkdir -p ~/apps/android/LiveVideoApp/build/test-results/junit/
             find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/apps/android/LiveVideoApp/build/test-results/junit/ \;
           when: always
+      - store_artifacts:
+          path: ~/apps/android/LiveVideoApp/build/test-results
       - store_test_results:
           path: ~/apps/android/LiveVideoApp/build/test-results
       - save_cache: *android-save-cache-gradle
