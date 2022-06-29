@@ -86,7 +86,7 @@ If you want to edit the functions that have been deployed to Twilio Serverless, 
 
 ## Recordings
 
-The event host has the option to enable recording when they create the event. A recording will be available shortly after the event ends. To view a list of all recordings, run `npm run recordings`. 
+The event host has the option to enable recording in the app UI when they create the event. A recording will be available shortly after the event ends. To view a list of all recordings, run `npm run recordings`. 
 
 ## Reference Backend
 
