@@ -37,7 +37,7 @@ export default function LeaveEventButton(props: { buttonClassName?: string }) {
     const { data } = await joinStreamAsViewer(appState.participantName, appState.eventName);
     await playerConnect(data.token);
     await connectViewerToPlayer(appState.participantName, appState.eventName);
-    registerUserDocument(data.sync_object_names.user_document);
+    registerUserDocument(`user-${appState.participantName}`);
     room!.emit('setPreventAutomaticJoinStreamAsViewer');
     room!.disconnect();
   }

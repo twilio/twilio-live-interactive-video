@@ -14,6 +14,7 @@ import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import useSyncContext from '../../hooks/useSyncContext/useSyncContext';
 import { useEnqueueSnackbar } from '../../hooks/useSnackbar/useSnackbar';
 import { Room as IRoom, TwilioError } from 'twilio-video';
+import useRecordingNotifications from '../../hooks/useRecordingNotifications/useRecordingNotifications';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
@@ -77,7 +78,7 @@ export default function Room() {
             const { data } = await joinStreamAsViewer(room.localParticipant.identity, room.name);
             await playerConnect(data.token);
             await connectViewerToPlayer(appState.participantName, appState.eventName);
-            registerUserDocument(data.sync_object_names.user_document);
+            registerUserDocument(`user-${room.localParticipant.identity}`);
             enqueueSnackbar({
               headline: 'Moved to viewers',
               message: 'You have been moved to viewers by the host.',
@@ -105,6 +106,8 @@ export default function Room() {
     appState.eventName,
     enqueueSnackbar,
   ]);
+
+  useRecordingNotifications();
 
   return (
     <div

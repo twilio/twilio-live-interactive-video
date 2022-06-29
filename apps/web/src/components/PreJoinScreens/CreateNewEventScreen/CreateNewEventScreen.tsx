@@ -1,5 +1,15 @@
 import React, { ChangeEvent, FormEvent } from 'react';
-import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } from '@material-ui/core';
+import {
+  Typography,
+  makeStyles,
+  TextField,
+  Grid,
+  Button,
+  InputLabel,
+  Theme,
+  FormControlLabel,
+  Checkbox,
+} from '@material-ui/core';
 import { appActionTypes, ActiveScreen, appStateTypes } from '../../../state/appState/appReducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -8,18 +18,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
   },
   inputContainer: {
-    display: 'flex',
     justifyContent: 'space-between',
-    margin: '1.5em 0 3.5em',
+    margin: '1.5em 0 1.3em',
     '& div:not(:last-child)': {
       marginRight: '1em',
     },
     [theme.breakpoints.down('sm')]: {
-      margin: '1.5em 0 2em',
+      margin: '1.5em 0 1.2em',
     },
   },
   textFieldContainer: {
     width: '100%',
+    marginBottom: '1em',
   },
   continueButton: {
     [theme.breakpoints.down('sm')]: {
@@ -38,6 +48,10 @@ export default function CreateNewEventScreen({ state, dispatch }: CreateNewEvent
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: 'set-event-name', eventName: event.target.value });
+  };
+
+  const handleRecordChange = (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: 'set-record-stream', recordStream: event.target.checked });
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -67,6 +81,19 @@ export default function CreateNewEventScreen({ state, dispatch }: CreateNewEvent
               size="small"
               value={state.eventName}
               onChange={handleNameChange}
+            />
+          </div>
+          <div>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={state.recordStream}
+                  onChange={handleRecordChange}
+                  name="record-stream"
+                  color="primary"
+                />
+              }
+              label="Record Stream"
             />
           </div>
         </div>

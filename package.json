@@ -7,6 +7,7 @@
     "postinstall": "npm install --prod --prefix apps/web",
     "test": "true",
     "preserverless:deploy": "npm run build --prefix apps/web",
+    "recordings": "node serverless/scripts/recordings.js",
     "serverless:deploy": "node serverless/scripts/deploy.js",
     "serverless:list": "node serverless/scripts/list.js",
     "serverless:remove": "node serverless/scripts/remove.js",

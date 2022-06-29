@@ -9,6 +9,7 @@ class StreamConfigFlowModel: ObservableObject {
         var userIdentity: String?
         var streamName: String?
         var role: StreamConfig.Role?
+        var shouldRecord: Bool?
     }
 
     @Published var isShowing = false
@@ -23,6 +24,11 @@ class StreamConfigFlowModel: ObservableObject {
             return nil
         }
         
-        return StreamConfig(streamName: streamName, userIdentity: userIdentity, role: role)
+        return StreamConfig(
+            streamName: streamName,
+            userIdentity: userIdentity,
+            shouldRecord: parameters.shouldRecord,
+            role: role
+        )
     }
 }

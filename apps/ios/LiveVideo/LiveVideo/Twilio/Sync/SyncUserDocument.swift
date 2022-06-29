@@ -5,7 +5,7 @@
 import Combine
 import TwilioSyncClient
 
-class SyncUserDocument: NSObject, SyncObjectConnecting, ObservableObject {
+class SyncUserDocument: NSObject, SyncObjectConnecting {
     let speakerInvitePublisher = PassthroughSubject<Void, Never>()
     var uniqueName: String!
     var errorHandler: ((Error) -> Void)?

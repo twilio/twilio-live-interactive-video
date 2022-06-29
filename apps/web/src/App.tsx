@@ -6,7 +6,6 @@ import MobileTopMenuBar from './components/MobileTopMenuBar/MobileTopMenuBar';
 import Player from './components/Player/Player';
 import PreJoinScreens from './components/PreJoinScreens/PreJoinScreens';
 import ReconnectingNotification from './components/ReconnectingNotification/ReconnectingNotification';
-import RecordingNotifications from './components/RecordingNotifications/RecordingNotifications';
 import Room from './components/Room/Room';
 
 import useHeight from './hooks/useHeight/useHeight';
@@ -47,7 +46,6 @@ export default function App() {
       {roomState !== 'disconnected' && (
         <Main>
           <ReconnectingNotification />
-          <RecordingNotifications />
           <MobileTopMenuBar />
           <Room />
           <MenuBar />

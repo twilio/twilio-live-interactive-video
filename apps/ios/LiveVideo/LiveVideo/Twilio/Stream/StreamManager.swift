@@ -109,33 +109,31 @@ class StreamManager: ObservableObject {
         let request = CreateOrJoinStreamRequest(
             userIdentity: config.userIdentity,
             streamName: config.streamName,
-            role: config.role
+            role: config.role,
+            recordStream: config.shouldRecord
         )
         
         api.request(request) { [weak self] result in
             switch result {
             case let .success(response):
-                let objectNames = SyncManager.ObjectNames(
-                    speakersMap: response.syncObjectNames.speakersMap,
-                    viewersMap: response.syncObjectNames.viewersMap,
-                    raisedHandsMap: response.syncObjectNames.raisedHandsMap,
-                    userDocument: response.syncObjectNames.userDocument
-                )
-                
-                self?.connectSync(accessToken: response.token, objectNames: objectNames)
+                self?.connectSync(accessToken: response.token)
             case let .failure(error):
                 self?.handleError(error)
             }
         }
     }
     
-    private func connectSync(accessToken: String, objectNames: SyncManager.ObjectNames) {
+    private func connectSync(accessToken: String) {
         guard !syncManager.isConnected else {
             connectRoomOrPlayer(accessToken: accessToken)
             return
         }
 
-        syncManager.connect(token: accessToken, objectNames: objectNames) { [weak self] error in
+        syncManager.connect(
+            token: accessToken,
+            userIdentity: config.userIdentity,
+            hasUserDocument: config.hasUserDocument
+        ) { [weak self] error in
             if let error = error {
                 self?.handleError(error)
                 return

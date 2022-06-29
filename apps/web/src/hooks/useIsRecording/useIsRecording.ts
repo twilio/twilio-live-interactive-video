@@ -1,26 +1,30 @@
 import { useEffect, useState } from 'react';
+import { StreamDocument } from '../../types';
+import useSyncContext from '../useSyncContext/useSyncContext';
 import useVideoContext from '../useVideoContext/useVideoContext';
 
 export default function useIsRecording() {
   const { room } = useVideoContext();
   const [isRecording, setIsRecording] = useState(Boolean(room?.isRecording));
+  const [recordingError, setRecordingError] = useState<null | string>(null);
+  const { streamDocument } = useSyncContext();
 
   useEffect(() => {
-    if (room) {
-      setIsRecording(room.isRecording);
+    if (streamDocument) {
+      setIsRecording((streamDocument?.data as StreamDocument).recording.is_recording);
+      setRecordingError((streamDocument?.data as StreamDocument).recording.error);
 
-      const handleRecordingStarted = () => setIsRecording(true);
-      const handleRecordingStopped = () => setIsRecording(false);
+      const handleUpdate = (update: { data: StreamDocument }) => {
+        setIsRecording(update.data.recording.is_recording);
+        setRecordingError(update.data.recording.error);
+      };
 
-      room.on('recordingStarted', handleRecordingStarted);
-      room.on('recordingStopped', handleRecordingStopped);
-
+      streamDocument.on('updated', handleUpdate);
       return () => {
-        room.off('recordingStarted', handleRecordingStarted);
-        room.off('recordingStopped', handleRecordingStopped);
+        streamDocument.off('updated', handleUpdate);
       };
     }
-  }, [room]);
+  }, [streamDocument]);
 
-  return isRecording;
+  return { isRecording, recordingError };
 }
