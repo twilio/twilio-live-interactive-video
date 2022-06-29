@@ -88,7 +88,7 @@ class SignInPasscodeFragmentTest {
         val passcodeUrl = PasscodeUtil.extractPasscodeUrl(passcode)
 
         //THEN
-        Assert.assertEquals(passcodeUrl, "7890-1234567890")
+        Assert.assertEquals(passcodeUrl, "7890-123456789")
     }
 
 }
