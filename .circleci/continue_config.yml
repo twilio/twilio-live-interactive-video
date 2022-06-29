@@ -82,23 +82,24 @@ jobs:
       - run:
           name: Build All APKs
           command: |
-            cd *androidWorkspace
+            cd "apps/android/LiveVideoApp"
             ./gradlew -q app:assemble app:assembleDebugAndroidTest
       - run:
           name: Unit Tests
           command: |
-            cd *androidWorkspace
+            cd "apps/android/LiveVideoApp"
             ./gradlew app:testDebugUnitTest
       - run:
           name: Save test results
           command: |
-            mkdir -p *androidWorkspace/build/test-results/junit/
-            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} *androidWorkspace/build/test-results/junit/ \;
+            cd "apps/android/LiveVideoApp"
+            mkdir -p build/test-results/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} build/test-results/junit/ \;
           when: always
       - store_artifacts:
-          path: "*androidWorkspace/build/test-results"
+          path: apps/android/LiveVideoApp/build/test-results
       - store_test_results:
-          path: "*androidWorkspace/build/test-results"
+          path: apps/android/LiveVideoApp/build/test-results"
       - save_cache: *android-save-cache-gradle
 
 workflows:
