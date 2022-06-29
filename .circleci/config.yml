@@ -11,5 +11,6 @@ workflows:
             functions/.* backend-updated true
             apps/web/.* web-app-updated true
             apps/ios/.* ios-app-updated true
+            apps/android/.* android-app-updated true
           base-revision: main 
           config-path: .circleci/continue_config.yml

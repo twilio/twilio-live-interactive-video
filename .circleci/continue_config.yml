@@ -4,6 +4,21 @@ orbs:
   node: circleci/node@4.7.0
   ruby: circleci/ruby@1.1.4
 
+aliases:
+  - &androidWorkspace
+      ~/apps/android/LiveVideoApp
+  - &android-gradle-cache-key
+    key: jars-{{ checksum "apps/android/LiveVideoApp/build.gradle" }}-{{ checksum "apps/android/LiveVideoApp/gradle/wrapper/gradle-wrapper.properties" }}
+  - &android-restore-cache-gradle
+    <<: *android-gradle-cache-key
+    name: Restore Gradle Cache
+  - &android-save-cache-gradle
+    <<: *android-gradle-cache-key
+    name: Save Gradle Cache
+    paths:
+      - ~/apps/android/LiveVideoApp/.gradle/caches
+      - ~/apps/android/LiveVideoApp/.gradle/wrapper
+
 parameters:
   backend-updated:
     type: boolean
@@ -14,11 +29,26 @@ parameters:
   ios-app-updated:
     type: boolean
     default: false
+  android-app-updated:
+    type: boolean
+    default: false
 
 executors:
   macos_executor:
     macos:
       xcode: "13.1.0"
+  android_executor:
+    parameters:
+      resource-class:
+        description: "Build executor resource class"
+        default: "large"
+        type: string
+    working_directory: *androidWorkspace
+    docker:
+      - image: cimg/android:2021.10.2-node
+    environment:
+      _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseContainerSupport"
+    resource_class: << parameters.resource-class >>
 
 jobs:
   build-and-test-ios-app:
@@ -44,6 +74,34 @@ jobs:
             cd "apps/ios/LiveVideo"
             bundle exec fastlane tests
 
+  build-and-test-android-app:
+    executor: android_executor
+    steps:
+      - checkout
+      - restore_cache: *android-restore-cache-gradle
+      - run:
+          name: Build All APKs
+          command: |
+            cd "apps/android/LiveVideoApp"
+            ./gradlew -q app:assemble app:assembleDebugAndroidTest
+      - run:
+          name: Unit Tests
+          command: |
+            cd "apps/android/LiveVideoApp"
+            ./gradlew app:testDebugUnitTest
+      - run:
+          name: Save test results
+          command: |
+            cd "apps/android/LiveVideoApp"
+            mkdir -p build/test-results/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} build/test-results/junit/ \;
+          when: always
+      - store_artifacts:
+          path: apps/android/LiveVideoApp/build/test-results
+      - store_test_results:
+          path: apps/android/LiveVideoApp/build/test-results
+      - save_cache: *android-save-cache-gradle
+
 workflows:
   build-and-test-web-app:
     when:
@@ -57,6 +115,11 @@ workflows:
       or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.ios-app-updated >>]
     jobs:
       - build-and-test-ios-app
+  build-and-test-android-app:
+    when:
+      or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.android-app-updated >>]
+    jobs:
+      - build-and-test-android-app
   build-and-test-backend:
     when: << pipeline.parameters.backend-updated >>
     jobs:
