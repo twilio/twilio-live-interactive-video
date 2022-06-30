@@ -1,6 +1,7 @@
 package com.twilio.livevideo.app.view
 
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.compose.ui.text.capitalize
@@ -8,6 +9,7 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.twilio.livevideo.app.R
 import com.twilio.livevideo.app.repository.model.ErrorResponse
 import com.twilio.livevideo.app.viewmodel.SignInViewEvent
 import com.twilio.livevideo.app.viewmodel.SignInViewModel
@@ -21,7 +23,13 @@ open class SignInBaseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
         registerViewEventObserver()
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        val item = menu.findItem(R.id.settingsFragment)
+        item.isVisible = false
     }
 
     private fun registerViewEventObserver() {

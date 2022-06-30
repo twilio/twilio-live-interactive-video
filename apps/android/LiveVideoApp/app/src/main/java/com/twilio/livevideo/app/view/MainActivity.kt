@@ -1,14 +1,18 @@
 package com.twilio.livevideo.app.view
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.twilio.livevideo.app.R
 import com.twilio.livevideo.app.manager.AuthenticatorManager
@@ -40,6 +44,16 @@ class MainActivity : AppCompatActivity() {
         delaySplash()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.app_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
+    }
 
     private fun setupStartDestination() {
         val navHost =
@@ -56,6 +70,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupToolbar() {
         val appBarConfig = AppBarConfiguration(TOP_LEVEL_SCREENS)
         toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
         toolbar.setupWithNavController(navController, appBarConfig)
     }
 

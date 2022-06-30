@@ -57,4 +57,20 @@
         android:label="@string/home_join_type_screen_title"
         tools:layout="@layout/fragment_home_join_type" />
 
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.twilio.livevideo.app.view.SettingsFragment"
+        android:label="Settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_signInFragment"
+            app:destination="@id/signInFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/main_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_to_settingsFragment"
+        app:destination="@+id/settingsFragment" />
+
 </navigation>

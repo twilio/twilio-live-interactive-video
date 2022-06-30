@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:key="versions"
+        app:title="Versions">
+        <Preference
+            android:key="pref_version_name"
+            android:title="App Version"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="pref_player_library_version"
+            android:title="Player SDK Version"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="pref_video_library_version"
+            android:title="Video SDK Version"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="pref_sync_library_version"
+            android:title="Sync SDK Version"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <Preference
+        android:key="pref_logout"
+        android:title="Sign Out"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="false" />
+</PreferenceScreen>
