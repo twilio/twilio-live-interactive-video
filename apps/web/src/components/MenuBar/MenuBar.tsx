@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
           display: 'none',
         },
         '& .MuiButton-mobileBackground': {
-          marginRight: '1em',
+          margin: '0 0.5em',
           padding: '12px',
           borderRadius: '50%',
           minWidth: 0,
