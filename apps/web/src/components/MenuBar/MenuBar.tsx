@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
-import Button from '@material-ui/core/Button';
+import { Button } from '@material-ui/core';
 import EndEventButton from '../Buttons/EndEventButton/EndEventButton';
 import LeaveEventButton from '../Buttons/LeaveEventButton/LeaveEventButton';
 import { isMobile } from '../../utils';
@@ -31,6 +31,23 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         height: `${theme.mobileFooterHeight}px`,
         padding: 0,
+        '& .MuiButton-textLabel': {
+          display: 'none',
+        },
+        '& .MuiButton-mobileBackground': {
+          margin: '0 0.5em',
+          padding: '12px',
+          borderRadius: '50%',
+          minWidth: 0,
+          height: '40px',
+          width: '40px',
+          '&:not(:last-child)': {
+            background: '#E1E3EA',
+          },
+        },
+        '& .MuiButton-startIcon': {
+          margin: 0,
+        },
       },
     },
     screenShareBanner: {
@@ -90,14 +107,26 @@ export default function MenuBar() {
           </Hidden>
           <Grid item>
             <Grid container justifyContent="center">
-              <ToggleAudioButton disabled={isReconnecting} />
-              <ToggleVideoButton disabled={isReconnecting} />
+              <ToggleAudioButton disabled={isReconnecting} className="MuiButton-mobileBackground" />
+              <ToggleVideoButton disabled={isReconnecting} className="MuiButton-mobileBackground" />
               <ToggleParticipantWindowButton />
               {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
               {appState.isChatEnabled && <ToggleChatButton />}
-              <Menu />
+              <Hidden smDown>
+                <Menu />
+              </Hidden>
+
+              <Hidden mdUp>
+                {appState.participantType === 'host' ? (
+                  <EndEventButton className="MuiButton-mobileBackground" />
+                ) : (
+                  <LeaveEventButton />
+                )}
+              </Hidden>
             </Grid>
           </Grid>
+
+          {/* Move 'End/Leave Stream' button all the way to the right if on Desktop */}
           <Hidden smDown>
             <Grid style={{ flex: 1 }}>
               <Grid container justifyContent="flex-end">

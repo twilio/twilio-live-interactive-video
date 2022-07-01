@@ -26,7 +26,9 @@ export default function ToggleVideoButton(props: { disabled?: boolean; className
       disabled={!hasVideoInputDevices || props.disabled}
       startIcon={isVideoEnabled ? <VideoOnIcon /> : <VideoOffIcon />}
     >
-      {!hasVideoInputDevices ? 'No Video' : isVideoEnabled ? 'Stop Video' : 'Start Video'}
+      <span className="MuiButton-textLabel">
+        {!hasVideoInputDevices ? 'No Video' : isVideoEnabled ? 'Stop Video' : 'Start Video'}
+      </span>
     </Button>
   );
 }
