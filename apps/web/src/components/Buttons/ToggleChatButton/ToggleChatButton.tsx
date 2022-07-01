@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import ChatIcon from '../../../icons/ChatIcon';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Hidden } from '@material-ui/core';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../../state';
@@ -102,7 +102,7 @@ export default function ToggleChatButton() {
         </div>
       }
     >
-      <span className="MuiButton-textLabel">Chat</span>
+      <Hidden smDown>Chat</Hidden>
     </Button>
   );
 }
