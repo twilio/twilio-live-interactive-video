@@ -1,7 +1,6 @@
 package com.twilio.livevideo.app.view
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
@@ -27,13 +26,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
         setupPreferenceUI()
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        val item = menu.findItem(R.id.settingsFragment)
-        item.isVisible = false
     }
 
     private fun setupPreferenceUI() {
