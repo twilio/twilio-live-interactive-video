@@ -21,6 +21,7 @@ buildscript {
             junit                       : '4.13.2',
             androidCoreTesting          : '2.1.0',
             mockito                     : '3.2.0',
+            mockitoInline               : '2.8.47',
             androidPreference           : '1.2.0'
     ]
 
