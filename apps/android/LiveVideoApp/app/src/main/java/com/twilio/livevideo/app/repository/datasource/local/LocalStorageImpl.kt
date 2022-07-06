@@ -22,6 +22,13 @@ class LocalStorageImpl(context: Context) : LocalStorage {
         )
     }
 
+    override fun clearData() {
+        with(sharedPreferences.edit()) {
+            clear()
+            apply()
+        }
+    }
+
     override fun putStringData(key: String, value: String) {
         with(sharedPreferences.edit()) {
             putString(key, value)

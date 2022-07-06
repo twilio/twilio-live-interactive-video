@@ -105,6 +105,7 @@ dependencies {
     implementation "androidx.fragment:fragment:$versions.fragmentAndroid"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycleLiveData"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycleViewModel"
+    implementation "androidx.preference:preference-ktx:$versions.androidPreference"
 
     // Java language implementation
     implementation("androidx.navigation:navigation-fragment:$versions.navigation")
@@ -133,4 +134,6 @@ dependencies {
 
     //Twilio
     implementation "com.twilio:video-android-ktx:${versions.twilioVideoSdk}"
+    implementation "com.twilio:live-player-android:${versions.twilioPlayerSdk}"
+    implementation "com.twilio:sync-android:${versions.twilioSyncSdk}"
 }

@@ -6,4 +6,6 @@ interface LocalStorage {
 
     fun getStringData(key: String): String?
 
+    fun clearData()
+
 }

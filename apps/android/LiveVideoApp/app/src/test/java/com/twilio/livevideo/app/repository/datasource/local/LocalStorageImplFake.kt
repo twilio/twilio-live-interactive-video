@@ -10,4 +10,8 @@ class LocalStorageImplFake() : LocalStorage {
 
     override fun getStringData(key: String): String? = sharedPreferences[key]
 
+    override fun clearData() {
+        sharedPreferences.clear()
+    }
+
 }

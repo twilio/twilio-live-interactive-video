@@ -14,6 +14,10 @@ class AuthenticatorManager @Inject constructor(
         localStorage.putStringData(URL_PASSCODE_KEY, PasscodeUtil.extractPasscodeUrl(passcode))
     }
 
+    fun clearCredentials() {
+        localStorage.clearData()
+    }
+
     fun getPasscode(): String = localStorage.getStringData(FULL_PASSCODE_KEY) ?: ""
 
     fun getPasscodeURL(): String = localStorage.getStringData(URL_PASSCODE_KEY) ?: ""

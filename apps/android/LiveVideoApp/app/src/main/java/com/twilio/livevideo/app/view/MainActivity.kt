@@ -40,7 +40,6 @@ class MainActivity : AppCompatActivity() {
         delaySplash()
     }
 
-
     private fun setupStartDestination() {
         val navHost =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -56,6 +55,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupToolbar() {
         val appBarConfig = AppBarConfiguration(TOP_LEVEL_SCREENS)
         toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
         toolbar.setupWithNavController(navController, appBarConfig)
     }
 
