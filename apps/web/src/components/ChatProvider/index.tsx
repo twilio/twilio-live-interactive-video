@@ -4,6 +4,7 @@ import { Conversation } from '@twilio/conversations/lib/conversation';
 import { Message } from '@twilio/conversations/lib/message';
 import { isMobile } from '../../utils';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import { useAppState } from '../../state';
 
 type ChatContextType = {
   isChatWindowOpen: boolean;
@@ -19,8 +20,9 @@ export const ChatContext = createContext<ChatContextType>(null!);
 
 export const ChatProvider: React.FC = ({ children }) => {
   const { onError } = useVideoContext();
+  const { appState } = useAppState();
   const isChatWindowOpenRef = useRef(false);
-  const [isChatWindowOpen, setIsChatWindowOpen] = useState(isMobile ? false : true);
+  const [isChatWindowOpen, setIsChatWindowOpen] = useState(isMobile || !appState.isChatEnabled ? false : true);
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
