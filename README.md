@@ -25,7 +25,7 @@ Copy the `.env.example` file to `.env` and perform the following one-time steps 
 
 Update the ACCOUNT_SID and AUTH_TOKEN `.env` entries with the Account SID and Auth Token found on the [Twilio Console home page](https://twilio.com/console).
 
-**NOTE**: the use of Twilio Conversations is optional. If you wish to opt out, set the DISABLE_CHAT environment variable to true.
+**NOTE**: the use of Twilio Conversations is optional. If you wish to opt out, set the `DISABLE_CHAT` environment variable to true.
 
 #### Install Dependencies
 
