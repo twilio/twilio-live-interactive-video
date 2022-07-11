@@ -28,11 +28,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
 // In this component, we are toggling the visibility of the ChatWindow with CSS instead of
 // conditionally rendering the component in the DOM. This is done so that the ChatWindow is
 // not unmounted while a file upload is in progress.
-
 export default function ChatWindow() {
   const classes = useStyles();
   const { isChatWindowOpen, messages, conversation } = useChatContext();
