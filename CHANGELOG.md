@@ -6,7 +6,7 @@
 
 ### Bug Fixes
 
-- Fixes an issue where the host was erroneously creating more than one stream at a time. [#116](https://github.com/twilio/twilio-live-interactive-video/pull/116)
+- Fixes an issue where the host could not create more than one stream. [#116](https://github.com/twilio/twilio-live-interactive-video/pull/116)
 
 # 1.0.0 (February 28, 2022)
 
