@@ -17,6 +17,7 @@ struct LiveVideoApp: App {
     @StateObject private var presentationLayoutViewModel = PresentationLayoutViewModel()
     @StateObject private var api = API()
     @StateObject private var appSettingsManager = AppSettingsManager()
+    @StateObject private var chatManager = ChatManager()
 
     var body: some Scene {
         WindowGroup {
@@ -31,6 +32,7 @@ struct LiveVideoApp: App {
                 .environmentObject(hostControlsManager)
                 .environmentObject(api)
                 .environmentObject(appSettingsManager)
+                .environmentObject(chatManager)
                 .onAppear {
                     authManager.configure(api: api, appSettingsManager: appSettingsManager)
                     let localParticipant = LocalParticipantManager(authManager: authManager)
@@ -48,12 +50,14 @@ struct LiveVideoApp: App {
                         userDocument: userDocument,
                         appSettingsManager: appSettingsManager
                     )
+                    chatManager.configure(appSettingsManager: appSettingsManager)
                     streamManager.configure(
                         roomManager: roomManager,
                         playerManager: PlayerManager(),
                         syncManager: syncManager,
                         api: api,
-                        appSettingsManager: appSettingsManager
+                        appSettingsManager: appSettingsManager,
+                        chatManager: chatManager
                     )
                     streamViewModel.configure(
                         streamManager: streamManager,

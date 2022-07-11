@@ -8,6 +8,7 @@ struct StreamView: View {
     @EnvironmentObject var viewModel: StreamViewModel
     @EnvironmentObject var streamManager: StreamManager
     @EnvironmentObject var speakerSettingsManager: SpeakerSettingsManager
+    @EnvironmentObject var chatManager: ChatManager
     @EnvironmentObject var participantsViewModel: ParticipantsViewModel
     @EnvironmentObject var speakerGridViewModel: SpeakerGridViewModel
     @EnvironmentObject var presentationLayoutViewModel: PresentationLayoutViewModel
@@ -15,6 +16,7 @@ struct StreamView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @State private var isShowingParticipants = false
+    @State private var isShowingChat = false
     private let app = UIApplication.shared
     private let spacing: CGFloat = 6
     
@@ -102,6 +104,16 @@ struct StreamView: View {
                             isShowingParticipants = true
                         }
 
+                        /// The chat feature can be disabled from the backend
+                        if streamManager.isChatEnabled {
+                            StreamToolbarButton(
+                                image: Image(systemName: "message"),
+                                shouldShowBadge: chatManager.hasUnreadMessage
+                            ) {
+                                isShowingChat = true
+                            }
+                        }
+                        
                         if streamManager.config.role == .speaker {
                             Menu {
                                 Button("Move to Viewers") {
@@ -139,6 +151,9 @@ struct StreamView: View {
         }
         .sheet(isPresented: $isShowingParticipants) {
             ParticipantsView()
+        }
+        .sheet(isPresented: $isShowingChat) {
+            ChatView()
         }
         .alert(item: $viewModel.alertIdentifier) { alertIdentifier in
             switch alertIdentifier {

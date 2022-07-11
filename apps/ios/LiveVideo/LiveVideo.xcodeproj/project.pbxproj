@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC0A95F62819DB7500E7678C /* TwilioConversationsClient in Frameworks */ = {isa = PBXBuildFile; productRef = DC0A95F52819DB7500E7678C /* TwilioConversationsClient */; };
+		DC0A95F92819E1C800E7678C /* ChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0A95F82819E1C800E7678C /* ChatManager.swift */; };
+		DC0A96052819E2C600E7678C /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0A96042819E2C600E7678C /* ChatMessage.swift */; };
+		DC0A9607281B2F0F00E7678C /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0A9606281B2F0F00E7678C /* ChatView.swift */; };
 		DC175F2D270E232F00D9D1FE /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F2C270E232F00D9D1FE /* SyncManager.swift */; };
 		DC175F30270E238F00D9D1FE /* TwilioSyncClient in Frameworks */ = {isa = PBXBuildFile; productRef = DC175F2F270E238F00D9D1FE /* TwilioSyncClient */; };
 		DC175F32270E23F900D9D1FE /* SyncUserDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC175F31270E23F900D9D1FE /* SyncUserDocument.swift */; };
@@ -74,6 +78,10 @@
 		DCB1BE052756D954006CE9D1 /* EnterPasscodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BE042756D954006CE9D1 /* EnterPasscodeView.swift */; };
 		DCB1BE0827581BC6006CE9D1 /* Quick in Frameworks */ = {isa = PBXBuildFile; productRef = DCB1BE0727581BC6006CE9D1 /* Quick */; };
 		DCB1BE0B27581C11006CE9D1 /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = DCB1BE0A27581C11006CE9D1 /* Nimble */; };
+		DCB3DA34282193210020DE6C /* ChatBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB3DA33282193210020DE6C /* ChatBubbleView.swift */; };
+		DCB3DA36282195FC0020DE6C /* ChatHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB3DA35282195FC0020DE6C /* ChatHeaderView.swift */; };
+		DCB3DA382821BBDC0020DE6C /* ChatInputBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB3DA372821BBDC0020DE6C /* ChatInputBar.swift */; };
+		DCB3DA3A2821BE270020DE6C /* ChatMessageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB3DA392821BE270020DE6C /* ChatMessageList.swift */; };
 		DCB4497426F5496400B52774 /* SpeakerSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */; };
 		DCB4497626F65A7000B52774 /* SpeakerVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */; };
 		DCC1D62626D9396400892038 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC1D62526D9396400892038 /* StreamManager.swift */; };
@@ -115,6 +123,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DC0A95F82819E1C800E7678C /* ChatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatManager.swift; sourceTree = "<group>"; };
+		DC0A96042819E2C600E7678C /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		DC0A9606281B2F0F00E7678C /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		DC175F2C270E232F00D9D1FE /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		DC175F31270E23F900D9D1FE /* SyncUserDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncUserDocument.swift; sourceTree = "<group>"; };
 		DC175F33270E3FD200D9D1FE /* SyncUsersMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncUsersMap.swift; sourceTree = "<group>"; };
@@ -182,6 +193,10 @@
 		DCB1BDFD27568D70006CE9D1 /* VerifyPasscodeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyPasscodeRequest.swift; sourceTree = "<group>"; };
 		DCB1BDFF27568F5B006CE9D1 /* PasscodeComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeComponents.swift; sourceTree = "<group>"; };
 		DCB1BE042756D954006CE9D1 /* EnterPasscodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPasscodeView.swift; sourceTree = "<group>"; };
+		DCB3DA33282193210020DE6C /* ChatBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubbleView.swift; sourceTree = "<group>"; };
+		DCB3DA35282195FC0020DE6C /* ChatHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatHeaderView.swift; sourceTree = "<group>"; };
+		DCB3DA372821BBDC0020DE6C /* ChatInputBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBar.swift; sourceTree = "<group>"; };
+		DCB3DA392821BE270020DE6C /* ChatMessageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageList.swift; sourceTree = "<group>"; };
 		DCB4497326F5496400B52774 /* SpeakerSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerSettingsManager.swift; sourceTree = "<group>"; };
 		DCB4497526F65A7000B52774 /* SpeakerVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerVideoViewModel.swift; sourceTree = "<group>"; };
 		DCC1D62526D9396400892038 /* StreamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamManager.swift; sourceTree = "<group>"; };
@@ -209,6 +224,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC0A95F62819DB7500E7678C /* TwilioConversationsClient in Frameworks */,
 				DCC48F9826D828E500EE49EF /* Alamofire in Frameworks */,
 				DC4F45E7271F5A3700BE730B /* TwilioLivePlayer in Frameworks */,
 				DCB1BE032756A288006CE9D1 /* KeychainAccess in Frameworks */,
@@ -236,6 +252,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DC0A95F72819E19100E7678C /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				DC0A95F82819E1C800E7678C /* ChatManager.swift */,
+				DC0A96042819E2C600E7678C /* ChatMessage.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
 		DC14B78626FA385E003BDABC /* SpeakerSettings */ = {
 			isa = PBXGroup;
 			children = (
@@ -280,6 +305,7 @@
 		DC4AA65226D0118200E677D5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				DCB3DA3B2822F8820020DE6C /* Chat */,
 				DC175F35270E5B5700D9D1FE /* Participants */,
 				DC4AA65E26D03E0600E677D5 /* Home */,
 				DC4AA65C26D03DDF00E677D5 /* Settings */,
@@ -445,6 +471,18 @@
 			path = HostControls;
 			sourceTree = "<group>";
 		};
+		DCB3DA3B2822F8820020DE6C /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				DCB3DA33282193210020DE6C /* ChatBubbleView.swift */,
+				DCB3DA35282195FC0020DE6C /* ChatHeaderView.swift */,
+				DCB3DA372821BBDC0020DE6C /* ChatInputBar.swift */,
+				DCB3DA392821BE270020DE6C /* ChatMessageList.swift */,
+				DC0A9606281B2F0F00E7678C /* ChatView.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
 		DCC1D62426D9393900892038 /* Stream */ = {
 			isa = PBXGroup;
 			children = (
@@ -517,6 +555,7 @@
 		DCC48F9E26D830D300EE49EF /* Twilio */ = {
 			isa = PBXGroup;
 			children = (
+				DC0A95F72819E19100E7678C /* Chat */,
 				DCC48F9F26D830E300EE49EF /* Player */,
 				DC1ED0FE26E92D7C00FFA769 /* Room */,
 				DCC1D62426D9393900892038 /* Stream */,
@@ -575,6 +614,7 @@
 				DC175F2F270E238F00D9D1FE /* TwilioSyncClient */,
 				DC4F45E6271F5A3700BE730B /* TwilioLivePlayer */,
 				DCB1BE022756A288006CE9D1 /* KeychainAccess */,
+				DC0A95F52819DB7500E7678C /* TwilioConversationsClient */,
 			);
 			productName = LiveVideo;
 			productReference = DC5F453526CC061A009C5C79 /* LiveVideo.app */;
@@ -659,6 +699,7 @@
 				DCB1BE012756A288006CE9D1 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				DCB1BE0627581BC6006CE9D1 /* XCRemoteSwiftPackageReference "Quick" */,
 				DCB1BE0927581C11006CE9D1 /* XCRemoteSwiftPackageReference "Nimble" */,
+				DC0A95F42819DB7500E7678C /* XCRemoteSwiftPackageReference "conversations-ios" */,
 			);
 			productRefGroup = DC5F453626CC061A009C5C79 /* Products */;
 			projectDirPath = "";
@@ -709,6 +750,7 @@
 				DC5F458326CDBA0B009C5C79 /* EnterUserIdentityView.swift in Sources */,
 				DC44BB412703C8DD00DB656D /* SceneDelegate.swift in Sources */,
 				DCADF35027FE264E0093A9FE /* EnvironmentBadge.swift in Sources */,
+				DCB3DA36282195FC0020DE6C /* ChatHeaderView.swift in Sources */,
 				DC9E18392729DC740070F53F /* OffscreenSpeakersView.swift in Sources */,
 				DCADF34227FCF4950093A9FE /* SignInSettingsView.swift in Sources */,
 				DC50A57B273DBB2700E29580 /* JSONEncoderExtension.swift in Sources */,
@@ -718,6 +760,7 @@
 				DC6404D8271B68D4004730C6 /* ParticipantsViewModel.swift in Sources */,
 				DCB1BE0027568F5B006CE9D1 /* PasscodeComponents.swift in Sources */,
 				DC1ED0FD26E14D0B00FFA769 /* StreamToolbar.swift in Sources */,
+				DC0A96052819E2C600E7678C /* ChatMessage.swift in Sources */,
 				DC1ED0F926E1440200FFA769 /* StreamStatusView.swift in Sources */,
 				DC504A7726F1468E00C37EC9 /* SpeakerVideoView.swift in Sources */,
 				DC175F34270E3FD200D9D1FE /* SyncUsersMap.swift in Sources */,
@@ -753,8 +796,11 @@
 				DCCA727327B5C142006B0441 /* PresentationVideoView.swift in Sources */,
 				DCADF33727FC95DF0093A9FE /* GeneralSettingsView.swift in Sources */,
 				DC4AA65926D0133600E677D5 /* Color.swift in Sources */,
+				DCB3DA382821BBDC0020DE6C /* ChatInputBar.swift in Sources */,
+				DC0A9607281B2F0F00E7678C /* ChatView.swift in Sources */,
 				DCCA726D27B5890E006B0441 /* SpeakerVideoViewModelFactory.swift in Sources */,
 				DC3BB82527445F9A005D0327 /* ParticipantsHeader.swift in Sources */,
+				DCB3DA34282193210020DE6C /* ChatBubbleView.swift in Sources */,
 				DCC1D62826D9568700892038 /* StreamConfig.swift in Sources */,
 				DC1ED11C26E92DEA00FFA769 /* RemoteParticipantManager.swift in Sources */,
 				DC5F453B26CC061A009C5C79 /* HomeView.swift in Sources */,
@@ -762,6 +808,7 @@
 				DC6404D4271B3BF8004730C6 /* StreamViewModel.swift in Sources */,
 				DCB4497426F5496400B52774 /* SpeakerSettingsManager.swift in Sources */,
 				DC1ED0FB26E144AE00FFA769 /* StreamToolbarButton.swift in Sources */,
+				DC0A95F92819E1C800E7678C /* ChatManager.swift in Sources */,
 				DC5F453926CC061A009C5C79 /* LiveVideoApp.swift in Sources */,
 				DC175F37270E5B6F00D9D1FE /* ParticipantsView.swift in Sources */,
 				DC3BB82727480A9E005D0327 /* RemoveSpeakerRequest.swift in Sources */,
@@ -776,6 +823,7 @@
 				DC175F402718852B00D9D1FE /* DeleteStreamRequest.swift in Sources */,
 				DC1ED0F026DFCD3C00FFA769 /* LiveBadge.swift in Sources */,
 				DC50A57D273DBD6D00E29580 /* JSONDecoderExtension.swift in Sources */,
+				DCB3DA3A2821BE270020DE6C /* ChatMessageList.swift in Sources */,
 				DC4F45ED2728591900BE730B /* StreamConfigFlowModel.swift in Sources */,
 				DCC48FA126D8311700EE49EF /* PlayerManager.swift in Sources */,
 				DC4AA66026D047DD00E677D5 /* FormTextFieldStyle.swift in Sources */,
@@ -1120,6 +1168,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		DC0A95F42819DB7500E7678C /* XCRemoteSwiftPackageReference "conversations-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twilio/conversations-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.0;
+			};
+		};
 		DC175F2E270E238F00D9D1FE /* XCRemoteSwiftPackageReference "twilio-sync-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/twilio/twilio-sync-ios";
@@ -1179,6 +1235,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		DC0A95F52819DB7500E7678C /* TwilioConversationsClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC0A95F42819DB7500E7678C /* XCRemoteSwiftPackageReference "conversations-ios" */;
+			productName = TwilioConversationsClient;
+		};
 		DC175F2F270E238F00D9D1FE /* TwilioSyncClient */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DC175F2E270E238F00D9D1FE /* XCRemoteSwiftPackageReference "twilio-sync-ios" */;
