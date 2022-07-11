@@ -1,3 +1,13 @@
+# 1.1.0 (July 11, 2022)
+
+### New Feature
+
+- This release adds a chat feature for the host, speakers, and viewers. This feature allows all users to send and receive textual messages to each other while connected to a stream. This feature is powered by the [Twilio Conversations API](https://www.twilio.com/conversations-api) and is optional. See the [README.md](https://github.com/twilio/twilio-live-interactive-video/blob/feature/audience-chat/README.md#set-your-account-sid-and-auth-token) for more information on how to opt out.
+
+### Bug Fixes
+
+- Fixes an issue where the host was erroneously creating more than one stream at a time. [#116](https://github.com/twilio/twilio-live-interactive-video/pull/116)
+
 # 1.0.0 (February 28, 2022)
 
 This is the initial release of the Twilio Live Interactive Video iOS and web Apps. This project demonstrates an interactive live video streaming app that uses [Twilio Live](https://www.twilio.com/docs/live), [Twilio Video](https://www.twilio.com/docs/video) and [Twilio Sync](https://www.twilio.com/docs/sync).
