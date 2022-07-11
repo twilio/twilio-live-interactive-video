@@ -16,10 +16,11 @@ import { useEnqueueSnackbar } from '../../hooks/useSnackbar/useSnackbar';
 import usePlayerContext from '../../hooks/usePlayerContext/usePlayerContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useSyncContext from '../../hooks/useSyncContext/useSyncContext';
+import { isMobile } from '../../utils';
 
 export default function PreJoinScreens() {
   const { getAudioAndVideoTracks } = useVideoContext();
-  const { connect: chatConnect } = useChatContext();
+  const { connect: chatConnect, setIsChatWindowOpen } = useChatContext();
   const { connect: videoConnect } = useVideoContext();
   const { connect: playerConnect, disconnect: playerDisconnect } = usePlayerContext();
   const { connect: syncConnect, registerUserDocument, registerSyncMaps } = useSyncContext();
@@ -36,6 +37,7 @@ export default function PreJoinScreens() {
         if (data.chat_enabled) {
           chatConnect(data.token, data.room_sid);
           appDispatch({ type: 'set-is-chat-enabled', isChatEnabled: true });
+          if (!isMobile) setIsChatWindowOpen(true);
         }
         registerSyncMaps(data.sync_object_names);
         playerDisconnect();
@@ -52,6 +54,7 @@ export default function PreJoinScreens() {
           if (data.chat_enabled) {
             chatConnect(data.token, data.room_sid);
             appDispatch({ type: 'set-is-chat-enabled', isChatEnabled: true });
+            if (!isMobile) setIsChatWindowOpen(true);
           }
           break;
         }
@@ -63,6 +66,7 @@ export default function PreJoinScreens() {
           if (data.chat_enabled) {
             chatConnect(data.token, data.room_sid);
             appDispatch({ type: 'set-is-chat-enabled', isChatEnabled: true });
+            if (!isMobile) setIsChatWindowOpen(true);
           }
           break;
         }
@@ -76,6 +80,7 @@ export default function PreJoinScreens() {
           if (data.chat_enabled) {
             chatConnect(data.token, data.room_sid);
             appDispatch({ type: 'set-is-chat-enabled', isChatEnabled: true });
+            if (!isMobile) setIsChatWindowOpen(true);
           }
           break;
         }
