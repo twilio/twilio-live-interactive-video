@@ -20,7 +20,7 @@ class SignInPasscodeFragment : SignInBaseFragment() {
     ): View {
         viewDataBinding = FragmentSignInPasscodeBinding.inflate(inflater, container, false)
         viewDataBinding.viewModel = viewModel
-        viewDataBinding.lifecycleOwner = this
+        viewDataBinding.lifecycleOwner = viewLifecycleOwner
         return viewDataBinding.root
     }
 

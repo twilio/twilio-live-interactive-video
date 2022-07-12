@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.twilio.livevideo.app.databinding.FragmentHomeJoinTypeBinding
+import com.twilio.livevideo.app.viewstate.ViewRole
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -20,7 +22,7 @@ class HomeJoinEventTypeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         viewDataBinding = FragmentHomeJoinTypeBinding.inflate(inflater, container, false)
-        viewDataBinding.lifecycleOwner = this
+        viewDataBinding.lifecycleOwner = viewLifecycleOwner
         return viewDataBinding.root
     }
 
@@ -33,6 +35,11 @@ class HomeJoinEventTypeFragment : Fragment() {
     private fun registerOnViewerClickListener() {
         viewDataBinding.joinAsViewerButton.eventButton.setOnClickListener {
             Timber.d("register OnViewerClickListener")
+            findNavController().navigate(
+                HomeJoinEventTypeFragmentDirections.actionHomeJoinTypeFragmentToStreamFragment(
+                    ViewRole.Viewer
+                )
+            )
         }
     }
 

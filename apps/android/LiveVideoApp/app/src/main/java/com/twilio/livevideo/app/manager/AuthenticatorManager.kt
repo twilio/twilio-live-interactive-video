@@ -9,14 +9,17 @@ class AuthenticatorManager @Inject constructor(
     private val localStorage: LocalStorage
 ) {
 
-    fun storePasscode(passcode: String) {
+    fun storeCredentials(passcode: String, userName: String) {
         localStorage.putStringData(FULL_PASSCODE_KEY, passcode)
         localStorage.putStringData(URL_PASSCODE_KEY, PasscodeUtil.extractPasscodeUrl(passcode))
+        localStorage.putStringData(USER_NAME_KEY, userName)
     }
 
     fun clearCredentials() {
         localStorage.clearData()
     }
+
+    fun getUserName(): String = localStorage.getStringData(USER_NAME_KEY) ?: ""
 
     fun getPasscode(): String = localStorage.getStringData(FULL_PASSCODE_KEY) ?: ""
 
@@ -30,5 +33,6 @@ class AuthenticatorManager @Inject constructor(
     companion object {
         private const val FULL_PASSCODE_KEY = "FULL-PASSCODE"
         private const val URL_PASSCODE_KEY = "URL-PASSCODE"
+        private const val USER_NAME_KEY = "USER-NAME"
     }
 }

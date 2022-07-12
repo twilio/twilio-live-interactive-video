@@ -17,6 +17,11 @@ data class JoinStreamAsSpeakerResponse(
     val token: String
 ) : BaseResponse()
 
+data class JoinStreamAsViewerResponse(
+    @SerializedName("token")
+    val token: String
+) : BaseResponse()
+
 data class ViewerConnectedToPlayerResponse(
     @SerializedName("success")
     val isSuccess: Boolean

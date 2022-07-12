@@ -19,7 +19,7 @@ class SignInFragment : SignInBaseFragment() {
     ): View {
         viewDataBinding = FragmentSignInBinding.inflate(inflater, container, false)
         viewDataBinding.viewModel = viewModel
-        viewDataBinding.lifecycleOwner = this
+        viewDataBinding.lifecycleOwner = viewLifecycleOwner
         return viewDataBinding.root
     }
 
