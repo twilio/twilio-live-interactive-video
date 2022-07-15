@@ -9,15 +9,19 @@ import com.twilio.live.player.PlayerException
 import com.twilio.live.player.PlayerListener
 import com.twilio.live.player.PlayerState
 import com.twilio.live.player.PlayerView
+import com.twilio.livevideo.app.annotations.OpenForTesting
 import com.twilio.livevideo.app.custom.BaseLifeCycleComponent
 import com.twilio.livevideo.app.repository.model.ErrorResponse
 import timber.log.Timber
 import javax.inject.Inject
 
-class PlayerManager @Inject constructor(private var context: Context?) : BaseLifeCycleComponent(),
+@OpenForTesting
+class PlayerManager @Inject constructor(private var context: Context?) :
+    BaseLifeCycleComponent(),
     PlayerListener {
 
     private var player: Player? = null
+
     private val _onStateEvent: MutableLiveData<OnStateCallback?> =
         MutableLiveData<OnStateCallback?>(null)
     val onStateEvent: LiveData<OnStateCallback?>

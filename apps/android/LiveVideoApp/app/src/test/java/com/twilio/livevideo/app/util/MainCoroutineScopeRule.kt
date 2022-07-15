@@ -21,11 +21,13 @@ package com.twilio.livevideo.app.util
  * Since this isn't available as part of a library yet.
  */
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.rules.TestWatcher
@@ -68,10 +70,13 @@ import org.junit.runner.Description
  * @param dispatcher if provided, this [TestCoroutineDispatcher] will be used.
  */
 @ExperimentalCoroutinesApi
-class MainCoroutineScopeRule(val dispatcher: CoroutineDispatcher = TestCoroutineDispatcher()) :
-    TestWatcher(),
-    TestCoroutineScope by TestCoroutineScope(dispatcher) {
-    override fun starting(description: Description?) {
+class MainCoroutineScopeRule(
+    val dispatcher: TestDispatcher = UnconfinedTestDispatcher(
+        TestCoroutineScheduler()
+    )
+) : TestWatcher() {
+
+    override fun starting(description: Description) {
         super.starting(description)
         // If your codebase allows the injection of other dispatchers like
         // Dispatchers.Default and Dispatchers.IO, consider injecting all of them here
@@ -82,9 +87,9 @@ class MainCoroutineScopeRule(val dispatcher: CoroutineDispatcher = TestCoroutine
         Dispatchers.setMain(dispatcher)
     }
 
-    override fun finished(description: Description?) {
+    override fun finished(description: Description) {
         super.finished(description)
-        cleanupTestCoroutines()
         Dispatchers.resetMain()
     }
+
 }

@@ -17,13 +17,9 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @HiltAndroidTest
-@ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 @Config(application = HiltTestApplication::class, sdk = [28])
 class SignInPasscodeFragmentTest {
-
-    @get:Rule
-    val coroutineScope = MainCoroutineScopeRule()
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

@@ -7,13 +7,15 @@ import com.twilio.livevideo.app.network.LiveVideoRequestInterceptor
 import com.twilio.livevideo.app.repository.LiveVideoRepository
 import com.twilio.livevideo.app.repository.datasource.local.LocalStorage
 import com.twilio.livevideo.app.repository.datasource.local.LocalStorageImpl
-import com.twilio.livevideo.app.repository.datasource.remote.RemoteStorage
 import com.twilio.livevideo.app.repository.datasource.remote.LiveVideoAPIService
+import com.twilio.livevideo.app.repository.datasource.remote.RemoteStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -69,7 +71,10 @@ class MainModule {
     @Provides
     fun provideTwilioLiveRepository(
         remoteStorage: RemoteStorage,
-        authenticatorManager: AuthenticatorManager
-    ): LiveVideoRepository = LiveVideoRepository(remoteStorage, authenticatorManager)
+        authenticatorManager: AuthenticatorManager,
+        dispatcher: CoroutineDispatcher
+    ): LiveVideoRepository = LiveVideoRepository(remoteStorage, authenticatorManager, dispatcher)
 
+    @Provides
+    fun provideDispatcherIO(): CoroutineDispatcher = Dispatchers.IO
 }

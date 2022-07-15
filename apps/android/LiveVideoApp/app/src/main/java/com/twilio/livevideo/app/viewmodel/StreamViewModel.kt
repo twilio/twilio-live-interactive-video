@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.twilio.livevideo.app.annotations.OpenForTesting
 import com.twilio.livevideo.app.repository.LiveVideoRepository
 import com.twilio.livevideo.app.viewstate.StreamViewState
 import com.twilio.livevideo.app.viewstate.ViewRole
@@ -12,7 +13,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class StreamViewModel @Inject constructor(private val liveVideoRepository: LiveVideoRepository) :
+@OpenForTesting
+class StreamViewModel @Inject constructor(
+    private val liveVideoRepository: LiveVideoRepository
+) :
     ViewModel() {
 
     private val _viewState: MutableLiveData<StreamViewState> = MutableLiveData<StreamViewState>()

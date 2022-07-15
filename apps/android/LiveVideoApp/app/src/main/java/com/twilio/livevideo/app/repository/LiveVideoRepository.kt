@@ -4,13 +4,15 @@ import com.twilio.livevideo.app.manager.AuthenticatorManager
 import com.twilio.livevideo.app.repository.datasource.remote.RemoteStorage
 import com.twilio.livevideo.app.repository.model.JoinStreamAsViewerResponse
 import com.twilio.livevideo.app.repository.model.VerifyPasscodeResponse
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class LiveVideoRepository @Inject constructor(
     private val remoteStorage: RemoteStorage,
-    private val authenticator: AuthenticatorManager
+    private val authenticator: AuthenticatorManager,
+    private val dispatcher: CoroutineDispatcher
 ) {
 
     suspend fun verifyPasscode(passcode: String, userName: String): VerifyPasscodeResponse =
@@ -25,7 +27,7 @@ class LiveVideoRepository @Inject constructor(
     suspend fun joinStreamAsViewer(
         streamName: String
     ): JoinStreamAsViewerResponse {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             remoteStorage.joinStreamAsViewer(authenticator.getUserName(), streamName)
         }
     }

@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.twilio.livevideo.app.R
+import com.twilio.livevideo.app.annotations.OpenForTesting
 import com.twilio.livevideo.app.databinding.FragmentStreamBinding
 import com.twilio.livevideo.app.manager.PlayerManager
 import com.twilio.livevideo.app.repository.model.ErrorResponse
@@ -26,11 +27,12 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class StreamFragment : Fragment() {
+@OpenForTesting
+class StreamFragment internal constructor() : Fragment() {
 
-    private val commonViewModel: CommonStreamViewModel by activityViewModels()
-    private val viewModel: StreamViewModel by viewModels()
-    private val args: StreamFragmentArgs by navArgs()
+    val commonViewModel: CommonStreamViewModel by activityViewModels()
+    val viewModel: StreamViewModel by viewModels()
+    internal val args: StreamFragmentArgs by navArgs()
     lateinit var viewDataBinding: FragmentStreamBinding
 
     @Inject
@@ -59,14 +61,14 @@ class StreamFragment : Fragment() {
         viewDataBinding.unbind()
     }
 
-    private fun registerOnExitEventButton() {
+    protected fun registerOnExitEventButton() {
         viewDataBinding.exitEvent.setOnClickListener {
             playerManager.disconnect()
             navigateToHomeScreen()
         }
     }
 
-    private fun registerOnViewStateObserver() {
+    protected fun registerOnViewStateObserver() {
         viewModel.viewState.observe(viewLifecycleOwner) {
             onRender(it)
         }
@@ -85,7 +87,7 @@ class StreamFragment : Fragment() {
         }
     }
 
-    private fun onAction(event: StreamViewEvent) {
+    fun onAction(event: StreamViewEvent) {
         Timber.d("onAction StreamViewEvent $event")
         when (event) {
             is StreamViewEvent.OnConnectViewer -> connectPlayer(event.token)
@@ -126,7 +128,7 @@ class StreamFragment : Fragment() {
         findNavController().navigate(StreamFragmentDirections.actionStreamFragmentToHomeFragment())
     }
 
-    private fun setupViewModel() {
+    open fun setupViewModel() {
         viewModel.initViewState(args.viewRole)
         viewModel.joinStreamAsViewer(commonViewModel.eventName)
     }

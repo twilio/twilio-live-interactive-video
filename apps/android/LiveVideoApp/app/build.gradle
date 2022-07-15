@@ -1,10 +1,16 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-allopen'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
     id 'kotlin-parcelize'
+}
+
+allOpen {
+    // allows mocking for classes w/o directly opening them for release builds
+    annotation 'com.twilio.livevideo.app.annotations.OpenForTesting'
 }
 
 android {
@@ -62,6 +68,7 @@ dependencies {
     def versions = rootProject.ext.versions
 
     // Defaults
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlinVersion}"
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'com.google.android.material:material:1.6.1'

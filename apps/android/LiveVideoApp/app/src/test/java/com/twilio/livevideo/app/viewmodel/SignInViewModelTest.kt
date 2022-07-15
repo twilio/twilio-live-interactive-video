@@ -10,7 +10,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -56,12 +56,12 @@ class SignInViewModelTest {
     }
 
     @Test
-    fun `verify non-exist passcode`() {
-        coroutineScope.runBlockingTest {
+    fun `verify non-exist passcode`() = runTest {
             // GIVEN
             val passcode = "123456789012345"
-            val errorResponse = ErrorResponse("", "")
-            `when`(liveVideoRepository.verifyPasscode(passcode)).thenReturn(
+            val userName = "Bob"
+            val errorResponse = ErrorResponse("Error Title", "Error Description")
+            `when`(liveVideoRepository.verifyPasscode(passcode, userName)).thenReturn(
                 VerifyPasscodeResponse(
                     false
                 ).apply {
@@ -70,6 +70,7 @@ class SignInViewModelTest {
                     this.error = errorResponse
                 })
             viewModel.passcode.value = passcode
+            viewModel.userName.value = userName
 
             // WHEN
             verify(screenEventObserver).onChanged(null)
@@ -77,22 +78,21 @@ class SignInViewModelTest {
 
             // THEN
             verify(screenEventObserver).onChanged(SignInViewEvent.OnSignInError(errorResponse))
-        }
     }
 
     @Test
     fun `verify valid passcode`() {
-        coroutineScope.runBlockingTest {
+        runTest {
             // GIVEN
             val passcode = "123456789012345"
-            `when`(liveVideoRepository.verifyPasscode(passcode)).thenReturn(
-                VerifyPasscodeResponse(
-                    true
-                ).apply {
+            val userName = "Bob"
+            viewModel.passcode.value = passcode
+            viewModel.userName.value = userName
+            `when`(liveVideoRepository.verifyPasscode(passcode, userName)).thenReturn(
+                VerifyPasscodeResponse(true).apply {
                     this.isApiResponseSuccess = true
                     this.code = 202
                 })
-            viewModel.passcode.value = passcode
 
             // WHEN
             verify(screenEventObserver).onChanged(null)
