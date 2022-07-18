@@ -7,7 +7,8 @@ import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 type ChatContextType = {
   isChatWindowOpen: boolean;
   setIsChatWindowOpen: (isChatWindowOpen: boolean) => void;
-  connect: (token: string) => void;
+  connect: (token: string, roomSid: string) => void;
+  disconnect: () => void;
   hasUnreadMessages: boolean;
   messages: Message[];
   conversation: Conversation | null;
@@ -16,28 +17,43 @@ type ChatContextType = {
 export const ChatContext = createContext<ChatContextType>(null!);
 
 export const ChatProvider: React.FC = ({ children }) => {
-  const { room, onError } = useVideoContext();
+  const { onError } = useVideoContext();
   const isChatWindowOpenRef = useRef(false);
   const [isChatWindowOpen, setIsChatWindowOpen] = useState(false);
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
+  const [videoRoomSid, setVideoRoomSid] = useState('');
   const [chatClient, setChatClient] = useState<Client>();
 
   const connect = useCallback(
-    (token: string) => {
-      Client.create(token)
-        .then(client => {
-          //@ts-ignore
-          window.chatClient = client;
-          setChatClient(client);
-        })
-        .catch(() => {
-          onError(new Error("There was a problem connecting to Twilio's conversation service."));
-        });
+    (token: string, roomSid: string) => {
+      if (!chatClient) {
+        setVideoRoomSid(roomSid);
+        let conversationOptions;
+
+        if (process.env.REACT_APP_TWILIO_ENVIRONMENT) {
+          conversationOptions = { region: `${process.env.REACT_APP_TWILIO_ENVIRONMENT}-us1` };
+        }
+        Client.create(token, conversationOptions)
+          .then(client => {
+            //@ts-ignore
+            window.chatClient = client;
+            setChatClient(client);
+          })
+          .catch(e => {
+            console.error(e);
+            onError(new Error("There was a problem connecting to Twilio's conversation service."));
+          });
+      }
     },
-    [onError]
+    [onError, chatClient]
   );
+
+  const disconnect = useCallback(() => {
+    setChatClient(undefined);
+    chatClient?.shutdown();
+  }, [chatClient]);
 
   useEffect(() => {
     if (conversation) {
@@ -63,23 +79,24 @@ export const ChatProvider: React.FC = ({ children }) => {
   }, [isChatWindowOpen]);
 
   useEffect(() => {
-    if (room && chatClient) {
+    if (videoRoomSid && chatClient) {
       chatClient
-        .getConversationByUniqueName(room.sid)
+        .getConversationByUniqueName(videoRoomSid)
         .then(newConversation => {
           //@ts-ignore
           window.chatConversation = newConversation;
           setConversation(newConversation);
         })
-        .catch(() => {
+        .catch(e => {
+          console.error(e);
           onError(new Error('There was a problem getting the Conversation associated with this room.'));
         });
     }
-  }, [room, chatClient, onError]);
+  }, [chatClient, onError, videoRoomSid]);
 
   return (
     <ChatContext.Provider
-      value={{ isChatWindowOpen, setIsChatWindowOpen, connect, hasUnreadMessages, messages, conversation }}
+      value={{ isChatWindowOpen, setIsChatWindowOpen, connect, disconnect, hasUnreadMessages, messages, conversation }}
     >
       {children}
     </ChatContext.Provider>

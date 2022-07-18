@@ -19,26 +19,38 @@ class StreamManager: ObservableObject {
     let errorPublisher = PassthroughSubject<Error, Never>()
     @Published var state = State.disconnected
     @Published var player: Player?
+    @Published var isChatEnabled = true
     var config: StreamConfig!
     private var roomManager: RoomManager!
     private var playerManager: PlayerManager!
     private var syncManager: SyncManager!
+    private var chatManager: ChatManager!
     private var api: API!
+    private var appSettingsManager: AppSettingsManager!
+    private var accessToken: String?
+    private var roomSID: String?
     private var subscriptions = Set<AnyCancellable>()
 
     func configure(
         roomManager: RoomManager,
         playerManager: PlayerManager,
         syncManager: SyncManager,
-        api: API
+        api: API,
+        appSettingsManager: AppSettingsManager,
+        chatManager: ChatManager
     ) {
         self.roomManager = roomManager
         self.playerManager = playerManager
         self.syncManager = syncManager
         self.api = api
+        self.appSettingsManager = appSettingsManager
+        self.chatManager = chatManager
         
         roomManager.roomConnectPublisher
-            .sink { [weak self] in self?.state = .connected }
+            .sink { [weak self] in
+                self?.state = .connected
+                self?.connectChat() /// Chat is not essential so connect it separately
+            }
             .store(in: &subscriptions)
 
         roomManager.roomDisconnectPublisher
@@ -66,6 +78,10 @@ class StreamManager: ObservableObject {
         }
 
         state = .connecting
+
+        /// Set environment variable used by `TwilioVideo` and `TwilioLivePlayer`. This is only used by Twilio employees for internal testing.
+        setenv("TWILIO_ENVIRONMENT", appSettingsManager.environment.videoEnvironment, 1)
+
         fetchAccessToken()
     }
     
@@ -73,6 +89,7 @@ class StreamManager: ObservableObject {
         roomManager.disconnect()
         playerManager.disconnect()
         syncManager.disconnect()
+        chatManager.disconnect()
         player = nil
         state = .disconnected
         
@@ -108,6 +125,10 @@ class StreamManager: ObservableObject {
         api.request(request) { [weak self] result in
             switch result {
             case let .success(response):
+                self?.accessToken = response.token
+                self?.roomSID = response.roomSid
+                self?.isChatEnabled = response.chatEnabled
+                
                 let objectNames = SyncManager.ObjectNames(
                     speakersMap: response.syncObjectNames.speakersMap,
                     viewersMap: response.syncObjectNames.viewersMap,
@@ -147,6 +168,14 @@ class StreamManager: ObservableObject {
         }
     }
     
+    private func connectChat() {
+        guard isChatEnabled, !chatManager.isConnected, let accessToken = accessToken, let roomSID = roomSID else {
+            return
+        }
+        
+        chatManager.connect(accessToken: accessToken, conversationName: roomSID)
+    }
+    
     private func handleError(_ error: Error) {
         disconnect()
         errorPublisher.send(error)
@@ -168,6 +197,8 @@ extension StreamManager: PlayerManagerDelegate {
                 self?.handleError(error)
             }
         }
+
+        connectChat() /// Chat is not essential so connect it separately
     }
     
     func playerManager(_ playerManager: PlayerManager, didDisconnectWithError error: Error) {

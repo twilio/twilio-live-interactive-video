@@ -16,6 +16,8 @@ struct LiveVideoApp: App {
     @StateObject private var speakerGridViewModel = SpeakerGridViewModel()
     @StateObject private var presentationLayoutViewModel = PresentationLayoutViewModel()
     @StateObject private var api = API()
+    @StateObject private var appSettingsManager = AppSettingsManager()
+    @StateObject private var chatManager = ChatManager()
 
     var body: some Scene {
         WindowGroup {
@@ -29,8 +31,10 @@ struct LiveVideoApp: App {
                 .environmentObject(speakerSettingsManager)
                 .environmentObject(hostControlsManager)
                 .environmentObject(api)
+                .environmentObject(appSettingsManager)
+                .environmentObject(chatManager)
                 .onAppear {
-                    authManager.configure(api: api)
+                    authManager.configure(api: api, appSettingsManager: appSettingsManager)
                     let localParticipant = LocalParticipantManager(authManager: authManager)
                     let roomManager = RoomManager()
                     roomManager.configure(localParticipant: localParticipant)
@@ -43,13 +47,17 @@ struct LiveVideoApp: App {
                         speakersMap: speakersMap,
                         viewersMap: viewersMap,
                         raisedHandsMap: raisedHandsMap,
-                        userDocument: userDocument
+                        userDocument: userDocument,
+                        appSettingsManager: appSettingsManager
                     )
+                    chatManager.configure(appSettingsManager: appSettingsManager)
                     streamManager.configure(
                         roomManager: roomManager,
                         playerManager: PlayerManager(),
                         syncManager: syncManager,
-                        api: api
+                        api: api,
+                        appSettingsManager: appSettingsManager,
+                        chatManager: chatManager
                     )
                     streamViewModel.configure(
                         streamManager: streamManager,

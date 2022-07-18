@@ -7,6 +7,7 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject var authManager: AuthManager
     @EnvironmentObject var streamManager: StreamManager
+    @EnvironmentObject var appSettingsManager: AppSettingsManager
     @State private var showSettings = false
     @State private var showStream = false
     @State private var signOut = false
@@ -38,6 +39,10 @@ struct HomeView: View {
                         CardButtonLabel(title: "Join event", image: Image(systemName: "person.3"))
                     }
                 )
+                
+                if appSettingsManager.environment != .prod {
+                    EnvironmentBadge()
+                }
             }
             .toolbar {
                 Button(action: { showSettings.toggle() }) {
@@ -53,7 +58,7 @@ struct HomeView: View {
                     }
                 },
                 content: {
-                    SettingsView(signOut: $signOut)
+                    GeneralSettingsView(signOut: $signOut)
                 }
             )
             .sheet(
@@ -88,12 +93,19 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        return HomeView()
-            .environmentObject(AuthManager.stub(isSignedOut: false))
+        Group {
+            HomeView()
+                .previewDisplayName("Prod")
+                .environmentObject(AppSettingsManager.stub(environment: .prod))
+            HomeView()
+                .previewDisplayName("Stage")
+                .environmentObject(AppSettingsManager.stub(environment: .stage))
+        }
+        .environmentObject(AuthManager.stub(isSignedOut: false))
     }
 }
 
-private extension AuthManager {
+extension AuthManager {
     static func stub(userIdentity: String = "", isSignedOut: Bool = true) -> AuthManager {
         let authManager = AuthManager()
         authManager.userIdentity = userIdentity

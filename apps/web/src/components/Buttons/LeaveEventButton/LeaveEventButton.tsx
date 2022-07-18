@@ -1,9 +1,12 @@
 import React, { useState, useRef } from 'react';
-import { Button, Menu as MenuContainer, MenuItem, Typography } from '@material-ui/core';
+import clsx from 'clsx';
+import { Button, Menu as MenuContainer, MenuItem, Typography, Hidden } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { joinStreamAsViewer, connectViewerToPlayer } from '../../../state/api/api';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useAppState } from '../../../state';
+import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import usePlayerContext from '../../../hooks/usePlayerContext/usePlayerContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import useSyncContext from '../../../hooks/useSyncContext/useSyncContext';
@@ -20,13 +23,14 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function LeaveEventButton(props: { buttonClassName?: string }) {
+export default function LeaveEventButton() {
   const classes = useStyles();
   const [menuOpen, setMenuOpen] = useState(false);
   const { room } = useVideoContext();
   const { appState, appDispatch } = useAppState();
   const { connect: playerConnect } = usePlayerContext();
-  const { registerUserDocument } = useSyncContext();
+  const { registerUserDocument, disconnect: syncDisconnect } = useSyncContext();
+  const { disconnect: chatDisconnect } = useChatContext();
 
   const anchorRef = useRef<HTMLButtonElement>(null);
 
@@ -44,14 +48,24 @@ export default function LeaveEventButton(props: { buttonClassName?: string }) {
     setMenuOpen(false);
     room!.emit('setPreventAutomaticJoinStreamAsViewer');
     room!.disconnect();
+    syncDisconnect();
+    chatDisconnect();
     appDispatch({ type: 'reset-state' });
   }
 
   return (
     <>
-      <Button onClick={() => setMenuOpen(isOpen => !isOpen)} ref={anchorRef} className={classes.button}>
-        Leave Event
-        <ExpandMoreIcon />
+      <Button
+        onClick={() => setMenuOpen(isOpen => !isOpen)}
+        ref={anchorRef}
+        className={clsx(classes.button, 'MuiButton-mobileBackground')}
+      >
+        <Hidden smDown>
+          Leave Event <ExpandMoreIcon />
+        </Hidden>
+        <Hidden mdUp>
+          <ExitToAppIcon />
+        </Hidden>
       </Button>
       <MenuContainer
         open={menuOpen}

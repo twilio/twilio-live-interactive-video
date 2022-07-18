@@ -25,6 +25,8 @@ Copy the `.env.example` file to `.env` and perform the following one-time steps 
 
 Update the ACCOUNT_SID and AUTH_TOKEN `.env` entries with the Account SID and Auth Token found on the [Twilio Console home page](https://twilio.com/console).
 
+**NOTE**: the use of Twilio Conversations is optional. If you wish to opt out, set the `DISABLE_CHAT` environment variable to `true`.
+
 #### Install Dependencies
 
 Once you have setup all your environment variables, run `npm install` to install all dependencies from NPM.
@@ -83,6 +85,10 @@ If you want to edit the functions that have been deployed to Twilio Serverless, 
 1. Enter any unique name in the `Full name` field and tap `Continue`.
 1. Enter passcode from the [backend deploy](#deploy-the-app-to-twilio) and tap `Continue`.
 1. Tap `Create Event` to host a new stream or `Join Event` to join a stream as a viewer or a speaker.
+
+## Reference Backend
+
+The API for the reference backend used by the clients is specified [here](ReferenceBackendAPI.md).
 
 ## Services Used
 

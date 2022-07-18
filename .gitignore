@@ -15,3 +15,4 @@ xcuserdata/
 apps/ios/LiveVideo/fastlane/Preview.html
 apps/ios/LiveVideo/fastlane/screenshots/**/*.png
 apps/ios/LiveVideo/fastlane/test_output
+apps/ios/LiveVideo/fastlane/report.xml
