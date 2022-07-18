@@ -53,7 +53,7 @@ The passcode will expire after one week. To generate a new passcode, run `npm ru
 
 The app is configured to automatically end a stream after it has been running for 30 minutes. This limitation is in place to limit the [charges applied to your Twilio account](https://www.twilio.com/live/pricing) during early testing.
 
-Max duration is specified when the reference backend creates a `MediaProcessor`. To change the max duration, edit [this source code](serverless/functions/create-stream.js#L88) before deploying the app.
+Max duration is specified when the reference backend creates a `PlayerStreamer` and `MediaProcessor`. To change the max duration, edit [this source code](serverless/functions/create-stream.js#L78) before deploying the app.
 
 ### Use the web app
 

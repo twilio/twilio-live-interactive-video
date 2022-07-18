@@ -76,17 +76,22 @@ module.exports.handler = async (context, event, callback) => {
   }
 
   try {
+    const maxStreamDuration = 60 * 30; // 30 minutes
+
     // Create playerStreamer
     playerStreamer = await axiosClient('PlayerStreamers', {
       method: 'post',
-      data: 'Video=true',
+      data: querystring.stringify({
+        MaxDuration: maxStreamDuration,
+        Video: true,
+      }),
     });
 
     // Create mediaProcessor
     mediaProcessor = await axiosClient('MediaProcessors', {
       method: 'post',
       data: querystring.stringify({
-        MaxDuration: 60 * 30, // Set maxDuration to 30 minutes
+        MaxDuration: maxStreamDuration,
         Extension: context.MEDIA_EXTENSION,
         ExtensionContext: JSON.stringify({
           room: { name: room.sid },
