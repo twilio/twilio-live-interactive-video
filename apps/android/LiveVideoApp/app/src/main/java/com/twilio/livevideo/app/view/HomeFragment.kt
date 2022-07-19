@@ -25,7 +25,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         viewDataBinding = FragmentHomeBinding.inflate(inflater, container, false)
-        viewDataBinding.lifecycleOwner = this
+        viewDataBinding.lifecycleOwner = viewLifecycleOwner
         return viewDataBinding.root
     }
 

@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
             android:layout_marginEnd="@dimen/sign_in_horizontal_margin"
-            android:text="Twilio Live Video\nEvents"
+            android:text="@string/twilio_live_video_events"
             android:textColor="@color/black"
             android:textSize="@dimen/sign_in_title_text"
             android:textStyle="bold"

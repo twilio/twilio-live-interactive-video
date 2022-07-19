@@ -22,4 +22,7 @@
     <string name="home_join_viewer_button">Join as viewer</string>
     <string name="home_join_viewer_description">Your audio and video will not be shareable. To share, you’ll have to raise your hand and the host will accept or deny.</string>
     <string name="home_join_type_screen_title">Speaker or viewer?</string>
+    <string name="twilio_live_video_events">Twilio Live Video\nEvents</string>
+    <string name="twilio_join_event_ended_title">Event is not longer available</string>
+    <string name="twilio_join_event_ended_description">This event has been ended by the host.</string>
 </resources>

@@ -7,6 +7,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import org.mockito.kotlin.mock
 import javax.inject.Singleton
 
@@ -17,6 +19,7 @@ import javax.inject.Singleton
 )
 class MainModuleFake {
 
+    @Singleton
     @Provides
     fun provideTwilioLiveService(): LiveVideoAPIService = mock()
 
@@ -25,4 +28,6 @@ class MainModuleFake {
     fun provideLocalStorage(): LocalStorage =
         LocalStorageImplFake()
 
+    @Provides
+    fun provideDispatcherIO(): CoroutineDispatcher = Dispatchers.Main
 }

@@ -24,6 +24,10 @@ class SignInViewModel @Inject constructor(private val liveVideoRepository: LiveV
     val continueNameEnabled: LiveData<Boolean>
         get() = _continueNameEnabled
 
+    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
+
     private val _screenEvent: MutableLiveData<SignInViewEvent?> = MutableLiveData()
     val screenEvent: LiveData<SignInViewEvent?>
         get() {
@@ -45,13 +49,18 @@ class SignInViewModel @Inject constructor(private val liveVideoRepository: LiveV
     }
 
     fun onContinuePasscode() {
-        passcode.value?.apply {
-            viewModelScope.launch {
-                val response = liveVideoRepository.verifyPasscode(this@apply)
-                if (response.isApiResponseSuccess && response.isVerified) {
-                    _screenEvent.value = SignInViewEvent.OnContinuePasscode
-                } else {
-                    _screenEvent.value = SignInViewEvent.OnSignInError(response.error)
+        passcode.value?.let { passcodeString ->
+            userName.value?.let { userNameString ->
+                viewModelScope.launch {
+                    _isLoading.value = true
+                    val response =
+                        liveVideoRepository.verifyPasscode(passcodeString, userNameString)
+                    if (response.isApiResponseSuccess && response.isVerified) {
+                        _screenEvent.value = SignInViewEvent.OnContinuePasscode
+                    } else {
+                        _screenEvent.value = SignInViewEvent.OnSignInError(response.error)
+                    }
+                    _isLoading.value = false
                 }
             }
         }

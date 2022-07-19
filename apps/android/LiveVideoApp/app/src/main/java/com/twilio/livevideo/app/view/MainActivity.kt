@@ -37,7 +37,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setupStartDestination()
         setupToolbar()
+        registerDestinationChangedListener()
         delaySplash()
+    }
+
+    private fun registerDestinationChangedListener() {
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            toolbar.visibility = if (destination.id == R.id.streamFragment) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
+        }
     }
 
     private fun setupStartDestination() {
