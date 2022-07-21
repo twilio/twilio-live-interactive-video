@@ -2,6 +2,8 @@ package com.twilio.livevideo.app.repository.datasource.remote
 
 import com.google.gson.Gson
 import com.twilio.livevideo.app.repository.model.BaseResponse
+import com.twilio.livevideo.app.repository.model.CreateStreamResponse
+import com.twilio.livevideo.app.repository.model.DeleteStreamResponse
 import com.twilio.livevideo.app.repository.model.JoinStreamAsViewerResponse
 import com.twilio.livevideo.app.repository.model.VerifyPasscodeResponse
 import com.twilio.livevideo.app.util.ApiResponseUtil
@@ -18,10 +20,19 @@ class RemoteStorage @Inject constructor(private var liveVideoAPIService: LiveVid
     suspend fun joinStreamAsViewer(
         userIdentity: String,
         streamName: String
-    ): JoinStreamAsViewerResponse {
-        val respo = liveVideoAPIService.joinStreamAsViewer(userIdentity, streamName)
-        return processResponse(respo)
-    }
+    ): JoinStreamAsViewerResponse =
+        processResponse(liveVideoAPIService.joinStreamAsViewer(userIdentity, streamName))
+
+    suspend fun createStream(
+        userIdentity: String,
+        streamName: String
+    ): CreateStreamResponse =
+        processResponse(liveVideoAPIService.createStream(userIdentity, streamName))
+
+    suspend fun deleteStream(
+        streamName: String
+    ): DeleteStreamResponse =
+        processResponse(liveVideoAPIService.deleteStream(streamName))
 
     private inline fun <reified T : BaseResponse> processResponse(
         response: Response<T>,

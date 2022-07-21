@@ -31,15 +31,10 @@ class PlayerManager @Inject constructor(private var context: Context?) :
             return event
         }
 
-
-    override fun init(lifecycle: Lifecycle) {
-        lifecycle.addObserver(this)
-    }
-
     fun connect(
         lifecycle: Lifecycle,
         playerView: PlayerView,
-        accessToken: String,
+        accessToken: String
     ) {
         init(lifecycle)
         player = context?.let { Player.connect(it, accessToken, this) }

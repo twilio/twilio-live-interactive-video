@@ -70,6 +70,26 @@ Example response:
 }
 ```
 
+### /delete-stream
+
+This endpoint deletes all resources related to the stream. This will cause the stream to end for all users.
+
+Request parameters:
+
+```json
+{
+  "stream_name": "demo"
+}
+```
+
+Example response:
+
+```json
+{
+  "deleted": true
+}
+```
+
 ### /join-stream-as-speaker
 
 This endpoint adds the user to the Twilio conversation and adds some user state to the sync objects. The endpoint returns a [Twilio access token](https://www.twilio.com/docs/iam/access-tokens). The token includes grants that allow the client to connect to the Twilio Video SDK, Twilio Sync SDK, and Twilio Conversations SDK. The endpoint should be called when a user initially joins the stream as a speaker or when a user transitions from viewer to speaker.

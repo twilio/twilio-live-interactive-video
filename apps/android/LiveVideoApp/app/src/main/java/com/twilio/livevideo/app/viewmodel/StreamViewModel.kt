@@ -10,6 +10,7 @@ import com.twilio.livevideo.app.viewstate.StreamViewState
 import com.twilio.livevideo.app.viewstate.ViewRole
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,6 +36,10 @@ class StreamViewModel @Inject constructor(
         _viewState.value = StreamViewState(role)
     }
 
+    fun onLoadingFinish(isLiveActive: Boolean = false) {
+        _viewState.value = _viewState.value?.copy(isLoading = false, isLiveActive = isLiveActive)
+    }
+
     fun joinStreamAsViewer(eventName: String) {
         viewModelScope.launch {
             _viewState.value = _viewState.value?.copy(
@@ -46,13 +51,43 @@ class StreamViewModel @Inject constructor(
             if (response.isApiResponseSuccess && response.token.isNotEmpty()) {
                 _screenEvent.value = StreamViewEvent.OnConnectViewer(response.token)
             } else {
-                _screenEvent.value = StreamViewEvent.OnConnectViewerError(response.error)
+                _screenEvent.value = StreamViewEvent.OnStreamError(response.error)
                 _viewState.value = _viewState.value?.copy(isLoading = false, isLiveActive = false)
             }
         }
     }
 
-    fun onLoadingFinish(isLiveActive: Boolean = false) {
-        _viewState.value = _viewState.value?.copy(isLoading = false, isLiveActive = isLiveActive)
+    fun createStream(eventName: String) {
+        viewModelScope.launch {
+            _viewState.value = _viewState.value?.copy(
+                isLoading = true,
+                eventName = eventName,
+                isLiveActive = false
+            )
+            val response = liveVideoRepository.createStream(eventName)
+            if (response.isApiResponseSuccess && response.token.isNotEmpty()) {
+                _screenEvent.value = StreamViewEvent.OnCreateStream(response.token)
+            } else {
+                _screenEvent.value = StreamViewEvent.OnStreamError(response.error)
+                _viewState.value = _viewState.value?.copy(isLoading = false, isLiveActive = false)
+            }
+        }
+    }
+
+    fun deleteStream() {
+        viewState.value?.eventName?.let { streamName ->
+            viewModelScope.launch {
+                _viewState.value = _viewState.value?.copy(
+                    isLiveActive = false
+                )
+                val response = liveVideoRepository.deleteStream(streamName)
+                if (response.isApiResponseSuccess && response.deleted) {
+                    Timber.d("Delete Stream Successful")
+                } else {
+                    Timber.d("Delete Stream Failure")
+                }
+                _screenEvent.value = StreamViewEvent.OnDeleteStream
+            }
+        }
     }
 }

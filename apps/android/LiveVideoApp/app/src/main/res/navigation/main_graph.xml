@@ -49,6 +49,12 @@
         <action
             android:id="@+id/action_homeEventNameFragment_to_homeJoinTypeFragment"
             app:destination="@id/homeJoinTypeFragment" />
+        <action
+            android:id="@+id/action_homeEventNameFragment_to_streamFragment"
+            app:destination="@id/streamFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/main_graph"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment

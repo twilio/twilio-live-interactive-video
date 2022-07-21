@@ -7,7 +7,9 @@ import timber.log.Timber
 
 abstract class BaseLifeCycleComponent : DefaultLifecycleObserver {
 
-    abstract fun init(lifecycle: Lifecycle)
+    open fun init(lifecycle: Lifecycle) {
+        lifecycle.addObserver(this)
+    }
 
     override fun onCreate(owner: LifecycleOwner) {
         Timber.i("onCreateCallback")
