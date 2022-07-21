@@ -3,7 +3,6 @@ package com.twilio.livevideo.app.manager.room
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.twilio.livevideo.app.custom.BaseLifeCycleComponent
-import com.twilio.video.NetworkQualityLevel
 import com.twilio.video.Participant
 import com.twilio.video.VideoTrack
 
@@ -45,12 +44,6 @@ abstract class ParticipantWrapper<T : VideoTrack, V : Participant> : BaseLifeCyc
             _viewState.value?.isHost = value
         }
 
-    var networkQualityLevel: NetworkQualityLevel
-        get() = _viewState.value?.networkQualityLevel ?: NetworkQualityLevel.NETWORK_QUALITY_LEVEL_UNKNOWN
-        set(value) {
-            _viewState.value?.networkQualityLevel = value
-        }
-
     open var participant: V?
         get() = _viewState.value?.participant
         set(value) {
@@ -78,8 +71,6 @@ data class ParticipantViewState<T : VideoTrack, V : Participant>(
     var isVideoMuted: Boolean = false,
 
     var isHost: Boolean = false,
-
-    var networkQualityLevel: NetworkQualityLevel = NetworkQualityLevel.NETWORK_QUALITY_LEVEL_UNKNOWN
 )
 
 data class ParticipantStream(var wrapper: ParticipantWrapper<out VideoTrack, out Participant>)

@@ -11,7 +11,6 @@ import com.twilio.video.LocalParticipant
 import com.twilio.video.LocalTrackPublicationOptions
 import com.twilio.video.LocalVideoTrack
 import com.twilio.video.LocalVideoTrackPublication
-import com.twilio.video.NetworkQualityLevel
 import com.twilio.video.TrackPriority
 import com.twilio.video.TwilioException
 import com.twilio.video.ktx.createLocalAudioTrack
@@ -124,10 +123,6 @@ class LocalParticipantWrapper @Inject constructor(private val context: Context?)
             localAudioTrack.release()
             this.localAudioTrack = null
         }
-    }
-
-    override fun onNetworkQualityLevelChanged(localParticipant: LocalParticipant, networkQualityLevel: NetworkQualityLevel) {
-        this.networkQualityLevel = networkQualityLevel
     }
 
     override fun onAudioTrackPublished(

@@ -65,7 +65,7 @@ class RoomManager @Inject constructor(
                     this.mode(BandwidthProfileMode.GRID)
                     this.dominantSpeakerPriority(TrackPriority.HIGH)
                 })
-                preferVideoCodecs(listOf(Vp8Codec()))
+                preferVideoCodecs(listOf(Vp8Codec(true)))
                 preferAudioCodecs(listOf(OpusCodec()))
             }
             Video.connect(it, accessToken, this, connectOptions)

@@ -1,6 +1,5 @@
 package com.twilio.livevideo.app.manager.room
 
-import com.twilio.video.NetworkQualityLevel
 import com.twilio.video.RemoteAudioTrack
 import com.twilio.video.RemoteAudioTrackPublication
 import com.twilio.video.RemoteDataTrack
@@ -164,9 +163,5 @@ class RemoteParticipantWrapper constructor(remoteParticipant: RemoteParticipant?
         remoteVideoTrackPublication: RemoteVideoTrackPublication
     ) {
 
-    }
-
-    override fun onNetworkQualityLevelChanged(remoteParticipant: RemoteParticipant, networkQualityLevel: NetworkQualityLevel) {
-        this.networkQualityLevel = networkQualityLevel
     }
 }
