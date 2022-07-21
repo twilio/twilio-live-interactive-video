@@ -13,6 +13,7 @@ import com.twilio.livevideo.app.R
 import com.twilio.livevideo.app.databinding.FragmentHomeEventNameBinding
 import com.twilio.livevideo.app.viewmodel.CommonStreamViewModel
 import com.twilio.livevideo.app.viewmodel.HomeEventNameViewModel
+import com.twilio.livevideo.app.viewstate.ViewRole
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -56,6 +57,8 @@ class HomeEventNameFragment : Fragment() {
     private fun registerOnContinueNewEventClickListener() {
         viewDataBinding.newEventLayout.button1.setOnClickListener {
             Timber.d("OnContinueNewEventClickListener")
+            commonViewModel.eventName = viewModel.newEventName.value ?: ""
+            findNavController().navigate(HomeEventNameFragmentDirections.actionHomeEventNameFragmentToStreamFragment(ViewRole.Host))
         }
     }
 
@@ -63,8 +66,7 @@ class HomeEventNameFragment : Fragment() {
         viewDataBinding.joinEventLayout.button1.setOnClickListener {
             Timber.d("OnContinueJoinEventClickListener")
             commonViewModel.eventName = viewModel.joinEventName.value ?: ""
-            val navController = findNavController()
-            navController.navigate(HomeEventNameFragmentDirections.actionHomeEventNameFragmentToHomeJoinTypeFragment())
+            findNavController().navigate(HomeEventNameFragmentDirections.actionHomeEventNameFragmentToHomeJoinTypeFragment())
         }
     }
 

@@ -4,12 +4,17 @@ import com.google.gson.annotations.SerializedName
 
 data class VerifyPasscodeResponse(
     @SerializedName("verified")
-    val isVerified: Boolean
+    val isVerified: Boolean = false
 ) : BaseResponse()
 
 data class CreateStreamResponse(
     @SerializedName("token")
-    val token: String
+    val token: String = ""
+) : BaseResponse()
+
+data class DeleteStreamResponse(
+    @SerializedName("token")
+    val deleted: Boolean = false
 ) : BaseResponse()
 
 data class JoinStreamAsSpeakerResponse(
@@ -19,7 +24,7 @@ data class JoinStreamAsSpeakerResponse(
 
 data class JoinStreamAsViewerResponse(
     @SerializedName("token")
-    val token: String
+    val token: String = ""
 ) : BaseResponse()
 
 data class ViewerConnectedToPlayerResponse(

@@ -16,11 +16,12 @@ import com.twilio.livevideo.app.R
 import com.twilio.livevideo.app.annotations.OpenForTesting
 import com.twilio.livevideo.app.databinding.FragmentStreamBinding
 import com.twilio.livevideo.app.manager.PlayerManager
+import com.twilio.livevideo.app.manager.room.RoomManager
+import com.twilio.livevideo.app.manager.room.RoomViewEvent
 import com.twilio.livevideo.app.repository.model.ErrorResponse
 import com.twilio.livevideo.app.viewmodel.CommonStreamViewModel
 import com.twilio.livevideo.app.viewmodel.StreamViewEvent
 import com.twilio.livevideo.app.viewmodel.StreamViewModel
-import com.twilio.livevideo.app.viewstate.StreamViewState
 import com.twilio.livevideo.app.viewstate.ViewRole
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -37,6 +38,9 @@ class StreamFragment internal constructor() : Fragment() {
 
     @Inject
     lateinit var playerManager: PlayerManager
+
+    @Inject
+    lateinit var roomManager: RoomManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,22 +60,38 @@ class StreamFragment internal constructor() : Fragment() {
         registerOnExitEventButton()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewDataBinding.unbind()
+    private fun registerOnExitEventButton() {
+        viewDataBinding.exitEvent.setOnClickListener {
+            disconnectStream()
+        }
     }
 
-    protected fun registerOnExitEventButton() {
-        viewDataBinding.exitEvent.setOnClickListener {
-            playerManager.disconnect()
-            navigateToHomeScreen()
+    private fun disconnectStream() {
+        when (args.viewRole) {
+            ViewRole.Host -> disconnectHost()
+            ViewRole.Speaker -> disconnectSpeaker()
+            ViewRole.Viewer -> disconnectViewer()
         }
+    }
+
+    private fun disconnectViewer() {
+        playerManager.disconnect()
+        navigateToHomeScreen()
+    }
+
+    private fun disconnectHost() {
+        //TODO: Disconnect all the SDKs
+        roomManager.disconnect()
+        viewModel.deleteStream()
+    }
+
+    private fun disconnectSpeaker() {
+        //TODO: Disconnect all the SDKs
+        roomManager.disconnect()
+        navigateToHomeScreen()
     }
 
     protected fun registerOnViewStateObserver() {
-        viewModel.viewState.observe(viewLifecycleOwner) {
-            onRender(it)
-        }
         viewModel.screenEvent.observe(viewLifecycleOwner) {
             it?.apply {
                 onAction(this)
@@ -79,20 +99,38 @@ class StreamFragment internal constructor() : Fragment() {
         }
     }
 
-    private fun onRender(streamViewState: StreamViewState) {
-        Timber.d("onRender loadingStatus ${streamViewState.role}")
-        when (streamViewState.role) {
-            is ViewRole.Viewer -> {}
-            else -> {}
-        }
-    }
-
     fun onAction(event: StreamViewEvent) {
         Timber.d("onAction StreamViewEvent $event")
         when (event) {
             is StreamViewEvent.OnConnectViewer -> connectPlayer(event.token)
-            is StreamViewEvent.OnConnectViewerError -> showErrorAlert(event.error)
+            is StreamViewEvent.OnCreateStream -> {
+                connectRoom(event.token)
+                viewModel.onLoadingFinish(isLiveActive = true)
+            }
+            StreamViewEvent.OnDeleteStream -> navigateToHomeScreen()
+            is StreamViewEvent.OnStreamError -> showErrorAlert(event.error)
         }
+    }
+
+    private fun connectRoom(token: String) {
+        roomManager.onStateEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is RoomViewEvent.OnConnected -> {
+                    //TODO: change UI to render grid mode(Multiple VideoTracks)
+                    event.participants.first().participantWrapper.videoTrack?.addSink(viewDataBinding.localVideo)
+                }
+                is RoomViewEvent.OnDisconnect -> {
+                    //TODO: update only UI if it is required
+                }
+                is RoomViewEvent.OnDominantSpeakerUpdate -> {}
+                is RoomViewEvent.OnRemoteParticipantConnected -> {}
+                is RoomViewEvent.OnRemoteParticipantDisconnected -> {}
+                is RoomViewEvent.OnRemoteParticipantUpdate -> {}
+                is RoomViewEvent.OnNetworkQualityLevelChange -> {}
+                null -> {}
+            }
+        }
+        roomManager.connect(viewLifecycleOwner, commonViewModel.eventName, token, true)
     }
 
     private fun connectPlayer(token: String) {
@@ -128,9 +166,18 @@ class StreamFragment internal constructor() : Fragment() {
         findNavController().navigate(StreamFragmentDirections.actionStreamFragmentToHomeFragment())
     }
 
-    open fun setupViewModel() {
-        viewModel.initViewState(args.viewRole)
-        viewModel.joinStreamAsViewer(commonViewModel.eventName)
+    private fun setupViewModel() {
+        val role = args.viewRole
+        viewModel.initViewState(role)
+        initializedRole(role)
+    }
+
+    fun initializedRole(viewRole: ViewRole) {
+        when (viewRole) {
+            ViewRole.Host -> viewModel.createStream(commonViewModel.eventName)
+            ViewRole.Speaker -> {}
+            ViewRole.Viewer -> viewModel.joinStreamAsViewer(commonViewModel.eventName)
+        }
     }
 
     private fun showErrorAlert(error: ErrorResponse?) {

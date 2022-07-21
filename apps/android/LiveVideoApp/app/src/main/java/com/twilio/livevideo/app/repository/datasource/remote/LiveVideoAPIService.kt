@@ -1,6 +1,8 @@
 package com.twilio.livevideo.app.repository.datasource.remote
 
 import com.twilio.livevideo.app.network.LiveVideoRequestInterceptor
+import com.twilio.livevideo.app.repository.model.CreateStreamResponse
+import com.twilio.livevideo.app.repository.model.DeleteStreamResponse
 import com.twilio.livevideo.app.repository.model.JoinStreamAsViewerResponse
 import com.twilio.livevideo.app.repository.model.VerifyPasscodeResponse
 import retrofit2.Response
@@ -19,4 +21,14 @@ interface LiveVideoAPIService {
         @Query("stream_name") streamName: String
     ): Response<JoinStreamAsViewerResponse>
 
+    @GET("/create-stream")
+    suspend fun createStream(
+        @Query("user_identity") userIdentity: String,
+        @Query("stream_name") streamName: String
+    ): Response<CreateStreamResponse>
+
+    @GET("/delete-stream")
+    suspend fun deleteStream(
+        @Query("stream_name") streamName: String
+    ): Response<DeleteStreamResponse>
 }
