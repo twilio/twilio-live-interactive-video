@@ -117,7 +117,7 @@ class StreamFragment internal constructor() : Fragment() {
             when (event) {
                 is RoomViewEvent.OnConnected -> {
                     //TODO: change UI to render grid mode(Multiple VideoTracks)
-                    event.participants.first().participantWrapper.videoTrack?.addSink(viewDataBinding.localVideo)
+                    //event.participants.first().participantWrapper.videoTrack?.addSink(viewDataBinding.localVideo)
                 }
                 is RoomViewEvent.OnDisconnect -> {
                     //TODO: update only UI if it is required

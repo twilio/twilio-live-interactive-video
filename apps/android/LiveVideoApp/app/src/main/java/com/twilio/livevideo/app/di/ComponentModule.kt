@@ -15,7 +15,7 @@ import dagger.hilt.android.components.FragmentComponent
 class ComponentModule {
 
     @Provides
-    fun providePermissionManager(fragment: Fragment): PermissionManager = PermissionManager.from(fragment)
+    fun providePermissionManager(fragment: Fragment): PermissionManager = PermissionManager(fragment)
 
     @Provides
     fun providePlayerManager(fragment: Fragment) = PlayerManager(fragment.context)

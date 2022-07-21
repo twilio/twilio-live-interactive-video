@@ -9,20 +9,20 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import java.lang.ref.WeakReference
+import javax.inject.Inject
 
-class PermissionManager constructor(private val fragment: WeakReference<Fragment>) {
+class PermissionManager @Inject constructor(private val fragment: Fragment?) {
     private val requiredPermissions = mutableListOf<PermissionType>()
     private var rationale: String? = null
     private var callback: (Boolean, Int?, Intent?) -> Unit = { _, _, _ -> }
 
     private val permissionCheckMultiple =
-        fragment.get()
+        fragment
             ?.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grantResults ->
                 sendResultAndCleanUp(grantResults)
             }
 
-    private val permissionCheckSingle = fragment.get()
+    private val permissionCheckSingle = fragment
         ?.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             sendResultAndCleanUpSingle(
                 Activity.RESULT_OK == result.resultCode,
@@ -47,7 +47,7 @@ class PermissionManager constructor(private val fragment: WeakReference<Fragment
     }
 
     private fun handlePermissionRequest() {
-        fragment.get()?.let { fragment ->
+        fragment?.let { fragment ->
             when {
                 areAllPermissionsGranted(fragment) -> sendPositiveResult()
                 shouldShowPermissionRationale(fragment) -> displayRationale(fragment)
@@ -125,7 +125,4 @@ class PermissionManager constructor(private val fragment: WeakReference<Fragment
             permission
         ) == PackageManager.PERMISSION_GRANTED
 
-    companion object {
-        fun from(fragment: Fragment) = PermissionManager(WeakReference(fragment))
-    }
 }
