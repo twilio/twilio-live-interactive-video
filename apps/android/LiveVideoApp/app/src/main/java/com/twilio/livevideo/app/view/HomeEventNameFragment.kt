@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -11,11 +12,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.twilio.livevideo.app.R
 import com.twilio.livevideo.app.databinding.FragmentHomeEventNameBinding
+import com.twilio.livevideo.app.manager.permission.PermissionManager
+import com.twilio.livevideo.app.manager.permission.PermissionType
 import com.twilio.livevideo.app.viewmodel.CommonStreamViewModel
 import com.twilio.livevideo.app.viewmodel.HomeEventNameViewModel
 import com.twilio.livevideo.app.viewstate.ViewRole
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeEventNameFragment : Fragment() {
@@ -24,6 +28,9 @@ class HomeEventNameFragment : Fragment() {
     private val viewModel: HomeEventNameViewModel by viewModels()
     private val args: HomeEventNameFragmentArgs by navArgs()
     lateinit var viewDataBinding: FragmentHomeEventNameBinding
+
+    @Inject
+    lateinit var permissionManager: PermissionManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,7 +65,7 @@ class HomeEventNameFragment : Fragment() {
         viewDataBinding.newEventLayout.button1.setOnClickListener {
             Timber.d("OnContinueNewEventClickListener")
             commonViewModel.eventName = viewModel.newEventName.value ?: ""
-            findNavController().navigate(HomeEventNameFragmentDirections.actionHomeEventNameFragmentToStreamFragment(ViewRole.Host))
+            checkPermissions()
         }
     }
 
@@ -98,6 +105,28 @@ class HomeEventNameFragment : Fragment() {
                 getString(R.string.home_create_new_event_button)
             else
                 getString(R.string.home_join_event_button)
+        }
+    }
+
+    private fun navigateToStreamingScreen() {
+        findNavController().navigate(HomeEventNameFragmentDirections.actionHomeEventNameFragmentToStreamFragment(ViewRole.Host))
+    }
+
+    private fun checkPermissions() {
+        context?.apply {
+            permissionManager.request(PermissionType.CameraAudio)
+                .rationale("Camera and Audio Record permissions are needed")
+                .checkPermission { granted, resultCode, data ->
+                    if (granted) {
+                        navigateToStreamingScreen()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Camera and Audio Record permissions not granted",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
         }
     }
 }

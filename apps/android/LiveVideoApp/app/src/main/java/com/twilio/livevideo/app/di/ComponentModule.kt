@@ -2,6 +2,7 @@ package com.twilio.livevideo.app.di
 
 import androidx.fragment.app.Fragment
 import com.twilio.livevideo.app.manager.PlayerManager
+import com.twilio.livevideo.app.manager.permission.PermissionManager
 import com.twilio.livevideo.app.manager.room.LocalParticipantWrapper
 import com.twilio.livevideo.app.manager.room.RoomManager
 import dagger.Module
@@ -12,6 +13,9 @@ import dagger.hilt.android.components.FragmentComponent
 @Module
 @InstallIn(FragmentComponent::class)
 class ComponentModule {
+
+    @Provides
+    fun providePermissionManager(fragment: Fragment): PermissionManager = PermissionManager.from(fragment)
 
     @Provides
     fun providePlayerManager(fragment: Fragment) = PlayerManager(fragment.context)

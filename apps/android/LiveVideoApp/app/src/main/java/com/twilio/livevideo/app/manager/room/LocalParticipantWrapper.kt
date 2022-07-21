@@ -2,8 +2,6 @@ package com.twilio.livevideo.app.manager.room
 
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.twilio.livevideo.app.R
 import com.twilio.video.LocalAudioTrack
 import com.twilio.video.LocalAudioTrackPublication
@@ -35,21 +33,10 @@ class LocalParticipantWrapper @Inject constructor(private val context: Context?)
 
     private val localVideoTrackNames: MutableMap<String, String> = HashMap()
 
-    private var isAudioMuted = false
-    private var isVideoMuted = false
-
-    private val _onStateEvent: MutableLiveData<RoomViewEvent?> =
-        MutableLiveData<RoomViewEvent?>(null)
-    val onStateEvent: LiveData<RoomViewEvent?>
-        get() {
-            val event = _onStateEvent
-            _onStateEvent.value = null
-            return event
-        }
-
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
-        setupLocalVideoTrack()
+        if (!isAudioMuted) setupLocalAudioTrack()
+        if (!isVideoMuted) setupLocalVideoTrack()
     }
 
     override fun onPause(owner: LifecycleOwner) {

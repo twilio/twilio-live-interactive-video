@@ -1,7 +1,5 @@
 package com.twilio.livevideo.app.manager.room
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.twilio.video.NetworkQualityLevel
 import com.twilio.video.RemoteAudioTrack
 import com.twilio.video.RemoteAudioTrackPublication
@@ -14,15 +12,6 @@ import com.twilio.video.TwilioException
 
 class RemoteParticipantWrapper constructor(participant: RemoteParticipant?) : ParticipantWrapper<RemoteVideoTrack, RemoteParticipant>(),
     RemoteParticipant.Listener {
-
-    private val _onStateEvent: MutableLiveData<RoomViewEvent?> =
-        MutableLiveData<RoomViewEvent?>(null)
-    val onStateEvent: LiveData<RoomViewEvent?>
-        get() {
-            val event = _onStateEvent
-            _onStateEvent.value = null
-            return event
-        }
 
     override var participant: RemoteParticipant? = participant
         set(value) {

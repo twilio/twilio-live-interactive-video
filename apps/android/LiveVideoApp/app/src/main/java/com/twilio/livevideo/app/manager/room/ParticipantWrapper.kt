@@ -1,5 +1,7 @@
 package com.twilio.livevideo.app.manager.room
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.twilio.livevideo.app.custom.BaseLifeCycleComponent
 import com.twilio.video.NetworkQualityLevel
 import com.twilio.video.Participant
@@ -17,13 +19,24 @@ abstract class ParticipantWrapper<T : VideoTrack, V : Participant> : BaseLifeCyc
 
     var isDominantSpeaker: Boolean = false
 
-    var isMuted: Boolean = false
+    var isAudioMuted = false
+
+    var isVideoMuted = false
 
     var isHost: Boolean = false
 
     var networkQualityLevel: NetworkQualityLevel = NetworkQualityLevel.NETWORK_QUALITY_LEVEL_UNKNOWN
 
     open var participant: V? = null
+
+    protected val _onStateEvent: MutableLiveData<RoomViewEvent?> =
+        MutableLiveData<RoomViewEvent?>(null)
+    val onStateEvent: LiveData<RoomViewEvent?>
+        get() {
+            val event = _onStateEvent
+            _onStateEvent.value = null
+            return event
+        }
 
 }
 
