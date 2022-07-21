@@ -25,10 +25,11 @@ class LocalParticipantWrapper @Inject constructor(private val context: Context?)
 
     private var cameraCapturer: CameraCapturerCompat? = null
 
-    override var participant: LocalParticipant? = null
+    override var participant: LocalParticipant?
+        get() = super.participant
         set(value) {
             value?.setListener(this)
-            field = value
+            super.participant = value
         }
 
     private val localVideoTrackNames: MutableMap<String, String> = HashMap()
@@ -80,7 +81,7 @@ class LocalParticipantWrapper @Inject constructor(private val context: Context?)
                 LocalVideoTrack.create(it, true, capturer, null, CAMERA_TRACK_NAME)
             }?.apply {
                 localVideoTrackNames[name] = context.getString(R.string.camera_video_track)
-                publishCameraTrack(videoTrack)
+                publishCameraTrack(this)
             }
         }
     }
@@ -126,7 +127,7 @@ class LocalParticipantWrapper @Inject constructor(private val context: Context?)
     }
 
     override fun onNetworkQualityLevelChanged(localParticipant: LocalParticipant, networkQualityLevel: NetworkQualityLevel) {
-        _onStateEvent.value = RoomViewEvent.OnNetworkQualityLevelChange(ParticipantStream(this), networkQualityLevel)
+        this.networkQualityLevel = networkQualityLevel
     }
 
     override fun onAudioTrackPublished(

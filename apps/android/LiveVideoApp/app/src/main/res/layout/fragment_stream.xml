@@ -54,8 +54,8 @@
                 app:visibleOrGone="@{viewModel.viewState.isViewerRole}"
                 tools:visibility="visible" />
 
-            <!-- Commented because this is temporary for demo purposes. If it is enabled, then some test cases fail. This will be fixed once the grid mode is implemented
-            <com.twilio.video.VideoView
+            <!-- Commented because this is temporary for demo purposes. If it is enabled, then some test cases fail. This will be fixed once the grid mode is implemented-->
+            <!--<com.twilio.video.VideoView
                 android:id="@+id/local_video"
                 android:layout_width="0dp"
                 android:layout_height="0dp"

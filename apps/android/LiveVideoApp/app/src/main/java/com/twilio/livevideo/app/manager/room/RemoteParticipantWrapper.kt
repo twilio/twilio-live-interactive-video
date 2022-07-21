@@ -10,27 +10,32 @@ import com.twilio.video.RemoteVideoTrack
 import com.twilio.video.RemoteVideoTrackPublication
 import com.twilio.video.TwilioException
 
-class RemoteParticipantWrapper constructor(participant: RemoteParticipant?) : ParticipantWrapper<RemoteVideoTrack, RemoteParticipant>(),
+class RemoteParticipantWrapper constructor(remoteParticipant: RemoteParticipant?) : ParticipantWrapper<RemoteVideoTrack, RemoteParticipant>(),
     RemoteParticipant.Listener {
 
-    override var participant: RemoteParticipant? = participant
+    override var participant: RemoteParticipant?
+        get() = super.participant
         set(value) {
             value?.setListener(this)
-            field = value
+            super.participant = value
         }
+
+    init {
+        participant = remoteParticipant
+    }
 
     override fun onAudioTrackPublished(
         remoteParticipant: RemoteParticipant,
         remoteAudioTrackPublication: RemoteAudioTrackPublication
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onAudioTrackUnpublished(
         remoteParticipant: RemoteParticipant,
         remoteAudioTrackPublication: RemoteAudioTrackPublication
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onAudioTrackSubscribed(
@@ -38,7 +43,7 @@ class RemoteParticipantWrapper constructor(participant: RemoteParticipant?) : Pa
         remoteAudioTrackPublication: RemoteAudioTrackPublication,
         remoteAudioTrack: RemoteAudioTrack
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onAudioTrackSubscriptionFailed(
@@ -46,7 +51,7 @@ class RemoteParticipantWrapper constructor(participant: RemoteParticipant?) : Pa
         remoteAudioTrackPublication: RemoteAudioTrackPublication,
         twilioException: TwilioException
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onAudioTrackUnsubscribed(
@@ -54,21 +59,21 @@ class RemoteParticipantWrapper constructor(participant: RemoteParticipant?) : Pa
         remoteAudioTrackPublication: RemoteAudioTrackPublication,
         remoteAudioTrack: RemoteAudioTrack
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onVideoTrackPublished(
         remoteParticipant: RemoteParticipant,
         remoteVideoTrackPublication: RemoteVideoTrackPublication
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onVideoTrackUnpublished(
         remoteParticipant: RemoteParticipant,
         remoteVideoTrackPublication: RemoteVideoTrackPublication
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onVideoTrackSubscribed(
@@ -76,7 +81,7 @@ class RemoteParticipantWrapper constructor(participant: RemoteParticipant?) : Pa
         remoteVideoTrackPublication: RemoteVideoTrackPublication,
         remoteVideoTrack: RemoteVideoTrack
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+        videoTrack = remoteVideoTrack
     }
 
     override fun onVideoTrackSubscriptionFailed(
@@ -84,7 +89,7 @@ class RemoteParticipantWrapper constructor(participant: RemoteParticipant?) : Pa
         remoteVideoTrackPublication: RemoteVideoTrackPublication,
         twilioException: TwilioException
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onVideoTrackUnsubscribed(
@@ -92,21 +97,21 @@ class RemoteParticipantWrapper constructor(participant: RemoteParticipant?) : Pa
         remoteVideoTrackPublication: RemoteVideoTrackPublication,
         remoteVideoTrack: RemoteVideoTrack
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+        videoTrack = null
     }
 
     override fun onDataTrackPublished(
         remoteParticipant: RemoteParticipant,
         remoteDataTrackPublication: RemoteDataTrackPublication
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onDataTrackUnpublished(
         remoteParticipant: RemoteParticipant,
         remoteDataTrackPublication: RemoteDataTrackPublication
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onDataTrackSubscribed(
@@ -114,7 +119,7 @@ class RemoteParticipantWrapper constructor(participant: RemoteParticipant?) : Pa
         remoteDataTrackPublication: RemoteDataTrackPublication,
         remoteDataTrack: RemoteDataTrack
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onDataTrackSubscriptionFailed(
@@ -122,7 +127,7 @@ class RemoteParticipantWrapper constructor(participant: RemoteParticipant?) : Pa
         remoteDataTrackPublication: RemoteDataTrackPublication,
         twilioException: TwilioException
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onDataTrackUnsubscribed(
@@ -130,38 +135,38 @@ class RemoteParticipantWrapper constructor(participant: RemoteParticipant?) : Pa
         remoteDataTrackPublication: RemoteDataTrackPublication,
         remoteDataTrack: RemoteDataTrack
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onAudioTrackEnabled(
         remoteParticipant: RemoteParticipant,
         remoteAudioTrackPublication: RemoteAudioTrackPublication
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onAudioTrackDisabled(
         remoteParticipant: RemoteParticipant,
         remoteAudioTrackPublication: RemoteAudioTrackPublication
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onVideoTrackEnabled(
         remoteParticipant: RemoteParticipant,
         remoteVideoTrackPublication: RemoteVideoTrackPublication
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onVideoTrackDisabled(
         remoteParticipant: RemoteParticipant,
         remoteVideoTrackPublication: RemoteVideoTrackPublication
     ) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantUpdate(ParticipantStream(this))
+
     }
 
     override fun onNetworkQualityLevelChanged(remoteParticipant: RemoteParticipant, networkQualityLevel: NetworkQualityLevel) {
-        _onStateEvent.value = RoomViewEvent.OnNetworkQualityLevelChange(ParticipantStream(this), networkQualityLevel)
+        this.networkQualityLevel = networkQualityLevel
     }
 }
