@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Grid, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
-import { Conversation } from '@twilio/conversations/lib/conversation';
+import { Conversation } from '@twilio/conversations/';
 import { isMobile } from '../../../utils';
 import SendMessageIcon from '../../../icons/SendMessageIcon';
 import Snackbar from '../../Snackbar/Snackbar';
