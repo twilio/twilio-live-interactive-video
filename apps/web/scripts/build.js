@@ -19,7 +19,7 @@ You may serve it with a static server:
 
 Find out more about deployment here:
 
-  bit.ly/CRA-deploy
+https://cra.link/deployment
 
 `;
 
@@ -42,6 +42,7 @@ class Filter extends Transform {
 
 // Colors normally don't work when using spawn(), so here we re-enable colors.
 process.env.FORCE_COLOR = require('supports-color').stdout.level;
+process.env.REACT_APP_VERSION = require(__dirname + "/../package.json").version
 
 const buildProcess = spawn('node', [require.resolve('react-scripts/scripts/build')]);
 
