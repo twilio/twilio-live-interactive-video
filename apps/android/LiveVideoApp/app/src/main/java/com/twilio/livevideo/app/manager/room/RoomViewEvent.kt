@@ -8,5 +8,6 @@ sealed class RoomViewEvent {
     data class OnDisconnect(val error: ErrorResponse?) : RoomViewEvent()
     data class OnRemoteParticipantConnected(val participants: List<ParticipantStream>) : RoomViewEvent()
     data class OnRemoteParticipantDisconnected(val participants: List<ParticipantStream>) : RoomViewEvent()
+    data class OnRemoteParticipantOnClickMenu(val participant: RemoteParticipantWrapper) : RoomViewEvent()
 
 }

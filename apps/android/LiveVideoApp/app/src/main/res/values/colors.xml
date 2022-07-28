@@ -20,4 +20,7 @@
     <color name="app_background">#F4F4F6</color>
     <color name="toolbar_background">#EAEAEA</color>
     <color name="gray_text">#606B85</color>
+
+    <color name="dominant_speaker_selected">#36D576</color>
+    <color name="dominant_speaker_no_selected">#00000000</color>
 </resources>

@@ -35,17 +35,14 @@ class HomeJoinEventTypeFragment : Fragment() {
     private fun registerOnViewerClickListener() {
         viewDataBinding.joinAsViewerButton.eventButton.setOnClickListener {
             Timber.d("register OnViewerClickListener")
-            findNavController().navigate(
-                HomeJoinEventTypeFragmentDirections.actionHomeJoinTypeFragmentToStreamFragment(
-                    ViewRole.Viewer
-                )
-            )
+            findNavController().navigate(HomeJoinEventTypeFragmentDirections.actionHomeJoinTypeFragmentToStreamFragment(ViewRole.Viewer))
         }
     }
 
     private fun registerOnSpeakerClickListener() {
         viewDataBinding.joinAsSpeakerButton.eventButton.setOnClickListener {
             Timber.d("register OnSpeakerClickListener")
+            findNavController().navigate(HomeJoinEventTypeFragmentDirections.actionHomeJoinTypeFragmentToStreamFragment(ViewRole.Speaker))
         }
     }
 }

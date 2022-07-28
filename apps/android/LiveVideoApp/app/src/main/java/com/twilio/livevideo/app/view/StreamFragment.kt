@@ -60,6 +60,60 @@ class StreamFragment internal constructor() : Fragment() {
         registerOnExitEventButton()
     }
 
+    private fun setupViewModel() {
+        val role = args.viewRole
+        viewModel.initViewState(role)
+        initializedRole(role)
+    }
+
+    fun initializedRole(viewRole: ViewRole) {
+        when (viewRole) {
+            ViewRole.Host -> viewModel.createStream(commonViewModel.eventName)
+            ViewRole.Speaker -> {}
+            ViewRole.Viewer -> viewModel.joinStreamAsViewer(commonViewModel.eventName)
+        }
+    }
+
+    private fun navigateToHomeScreen() {
+        findNavController().navigate(StreamFragmentDirections.actionStreamFragmentToHomeFragment())
+    }
+
+    private fun setupBottomControllers() {
+        Timber.d("setupBottomControllers")
+        when (args.viewRole) {
+            ViewRole.Host -> {
+                setupInitialStateBottomControls()
+                registerOnSwitchCamEventButton()
+                registerOnSwitchMicEventButton()
+            }
+            ViewRole.Speaker -> {
+                setupInitialStateBottomControls()
+                registerOnSwitchCamEventButton()
+                registerOnSwitchMicEventButton()
+            }
+            ViewRole.Viewer -> {}
+        }
+    }
+
+    private fun setupInitialStateBottomControls() {
+        viewDataBinding.videoSwitchEvent.isEnabled = true
+        viewDataBinding.videoSwitchEvent.isChecked = roomManager.localParticipantWrapper.isCameraOn
+        viewDataBinding.micSwitchEvent.isEnabled = true
+        viewDataBinding.micSwitchEvent.isChecked = roomManager.localParticipantWrapper.isMicOn
+    }
+
+    private fun registerOnSwitchMicEventButton() {
+        viewDataBinding.micSwitchEvent.setOnCheckedChangeListener { _, b ->
+            roomManager.localParticipantWrapper.toggleLocalAudio(b)
+        }
+    }
+
+    private fun registerOnSwitchCamEventButton() {
+        viewDataBinding.videoSwitchEvent.setOnCheckedChangeListener { _, b ->
+            roomManager.localParticipantWrapper.toggleLocalVideo(b)
+        }
+    }
+
     private fun registerOnExitEventButton() {
         viewDataBinding.exitEvent.setOnClickListener {
             disconnectStream()
@@ -91,7 +145,7 @@ class StreamFragment internal constructor() : Fragment() {
         navigateToHomeScreen()
     }
 
-    protected fun registerOnViewStateObserver() {
+    private fun registerOnViewStateObserver() {
         viewModel.screenEvent.observe(viewLifecycleOwner) {
             it?.apply {
                 onAction(this)
@@ -99,7 +153,7 @@ class StreamFragment internal constructor() : Fragment() {
         }
     }
 
-    fun onAction(event: StreamViewEvent) {
+    private fun onAction(event: StreamViewEvent) {
         Timber.d("onAction StreamViewEvent $event")
         when (event) {
             is StreamViewEvent.OnConnectViewer -> connectPlayer(event.token)
@@ -116,14 +170,21 @@ class StreamFragment internal constructor() : Fragment() {
         roomManager.onStateEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
                 is RoomViewEvent.OnConnected -> {
-                    //TODO: change UI to render grid mode(Multiple VideoTracks)
-                    //event.participants.first().wrapper.videoTrack?.addSink(viewDataBinding.localVideo)
+                    setupBottomControllers()
+                    viewModel.updateParticipants(event.participants)
                 }
                 is RoomViewEvent.OnDisconnect -> {
                     //TODO: update only UI if it is required
                 }
-                is RoomViewEvent.OnRemoteParticipantConnected -> {}
-                is RoomViewEvent.OnRemoteParticipantDisconnected -> {}
+                is RoomViewEvent.OnRemoteParticipantConnected -> {
+                    viewModel.updateParticipants(event.participants)
+                }
+                is RoomViewEvent.OnRemoteParticipantDisconnected -> {
+                    viewModel.updateParticipants(event.participants)
+                }
+                is RoomViewEvent.OnRemoteParticipantOnClickMenu -> {
+                    Timber.d("RemoteParticipantWrapper OnRemoteParticipantOnClickMenu")
+                }
                 null -> {}
             }
         }
@@ -157,24 +218,6 @@ class StreamFragment internal constructor() : Fragment() {
             }
         }
         playerManager.connect(lifecycle, viewDataBinding.playerView, token)
-    }
-
-    private fun navigateToHomeScreen() {
-        findNavController().navigate(StreamFragmentDirections.actionStreamFragmentToHomeFragment())
-    }
-
-    private fun setupViewModel() {
-        val role = args.viewRole
-        viewModel.initViewState(role)
-        initializedRole(role)
-    }
-
-    fun initializedRole(viewRole: ViewRole) {
-        when (viewRole) {
-            ViewRole.Host -> viewModel.createStream(commonViewModel.eventName)
-            ViewRole.Speaker -> {}
-            ViewRole.Viewer -> viewModel.joinStreamAsViewer(commonViewModel.eventName)
-        }
     }
 
     private fun showErrorAlert(error: ErrorResponse?) {

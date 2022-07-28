@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.twilio.livevideo.app.custom.BaseLifeCycleComponent
 import com.twilio.livevideo.app.repository.model.ErrorResponse
 import com.twilio.video.BandwidthProfileMode
@@ -22,7 +21,7 @@ import javax.inject.Inject
 
 class RoomManager @Inject constructor(
     private val context: Context?,
-    private val localParticipantWrapper: LocalParticipantWrapper
+    val localParticipantWrapper: LocalParticipantWrapper
 ) : BaseLifeCycleComponent(),
     Room.Listener {
 
@@ -34,12 +33,6 @@ class RoomManager @Inject constructor(
             _onStateEvent.value = null
             return event
         }
-
-    private val participantsObserver: Observer<in RoomViewEvent?> = Observer {
-        it?.apply {
-            this@RoomManager._onStateEvent.value = this
-        }
-    }
 
     private var lifecycleOwner: LifecycleOwner? = null
     private var room: Room? = null
@@ -53,13 +46,10 @@ class RoomManager @Inject constructor(
     ) {
         this.lifecycleOwner = lifecycleOwner
         init(lifecycleOwner.lifecycle)
-        localParticipantWrapper.init(lifecycleOwner.lifecycle)
         localParticipantWrapper.isHost = isHost
         room = context?.let {
             val connectOptions: ConnectOptionsBuilder = {
                 this.roomName(roomName)
-                this.audioTracks(listOf(localParticipantWrapper.localAudioTrack))
-                this.videoTracks(listOf(localParticipantWrapper.videoTrack))
                 this.enableDominantSpeaker(true)
                 this.bandwidthProfile(createBandwidthProfileOptions {
                     this.mode(BandwidthProfileMode.GRID)
@@ -85,8 +75,11 @@ class RoomManager @Inject constructor(
     private fun cleanUp() {
         room?.disconnect()
         room = null
-        localParticipantWrapper.participant = null
         participants?.clear()
+    }
+
+    private fun remoteParticipantCallback(remoteParticipant: RemoteParticipantWrapper) {
+        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantOnClickMenu(remoteParticipant)
     }
 
     override fun onConnected(room: Room) {
@@ -94,15 +87,19 @@ class RoomManager @Inject constructor(
 
         room.localParticipant?.let { localParticipant ->
             participants = mutableListOf<ParticipantStream>().let { list ->
-                localParticipantWrapper.participant = localParticipant
+                localParticipantWrapper.localParticipant = localParticipant
+                lifecycleOwner?.lifecycle?.apply { localParticipantWrapper.init(this) }
                 list.add(ParticipantStream(localParticipantWrapper))
 
                 room.remoteParticipants.filter {
                     !it.isVideoComposer()
                 }.forEach {
-                    val newRemoteParticipant = RemoteParticipantWrapper(it)
+                    val newRemoteParticipant = RemoteParticipantWrapper(it, ::remoteParticipantCallback)
+                    lifecycleOwner?.lifecycle?.apply { newRemoteParticipant.init(this) }
+                    newRemoteParticipant.isLocalHost = localParticipantWrapper.isHost
                     list.add(ParticipantStream(newRemoteParticipant))
                 }
+                localParticipantWrapper.publishLocalTracks()
                 _onStateEvent.value = RoomViewEvent.OnConnected(list, room.name)
                 list
             }
@@ -129,8 +126,10 @@ class RoomManager @Inject constructor(
 
     override fun onParticipantConnected(room: Room, remoteParticipant: RemoteParticipant) {
         if (remoteParticipant.isVideoComposer()) return
-        val newParticipant = ParticipantStream(RemoteParticipantWrapper(remoteParticipant))
-        participants?.add(newParticipant)
+        val newParticipant = RemoteParticipantWrapper(remoteParticipant, ::remoteParticipantCallback)
+        lifecycleOwner?.lifecycle?.apply { newParticipant.init(this) }
+        newParticipant.isLocalHost = localParticipantWrapper.isHost
+        participants?.add(ParticipantStream(newParticipant))
         _onStateEvent.value = RoomViewEvent.OnRemoteParticipantConnected(participants ?: listOf())
     }
 
@@ -140,6 +139,10 @@ class RoomManager @Inject constructor(
     ) {
         participants?.first { it.wrapper.participant?.identity == remoteParticipant.identity }?.apply {
             participants?.remove(this)
+            lifecycleOwner?.lifecycle?.removeObserver(this.wrapper)
+            if (this.wrapper is RemoteParticipantWrapper) {
+                (this.wrapper as RemoteParticipantWrapper).clickCallback = null
+            }
             _onStateEvent.value = RoomViewEvent.OnRemoteParticipantDisconnected(participants ?: listOf())
         }
     }
@@ -154,10 +157,12 @@ class RoomManager @Inject constructor(
 
     override fun onDominantSpeakerChanged(room: Room, remoteParticipant: RemoteParticipant?) {
         super.onDominantSpeakerChanged(room, remoteParticipant)
-        participants?.first { it.wrapper.isDominantSpeaker }?.apply { this.wrapper.isDominantSpeaker = false }
-        participants?.first { it.wrapper.identity == remoteParticipant?.identity }?.apply {
-            this.wrapper.isDominantSpeaker = true
-        }
+        participants?.firstOrNull { it.wrapper.isDominantSpeaker }?.apply { this.wrapper.isDominantSpeaker = false }
+        participants?.firstOrNull { it.wrapper.identity == remoteParticipant?.identity }?.apply { this.wrapper.isDominantSpeaker = true }
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
+        Timber.i("onDestroyCallback")
     }
 
     private fun RemoteParticipant.isVideoComposer(): Boolean =
