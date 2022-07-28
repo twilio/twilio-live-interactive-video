@@ -24,6 +24,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
+                android:id="@+id/stream_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -33,9 +34,10 @@
                 app:visibleOrGone="@{viewModel.viewState.isLiveActive}" />
 
             <TextView
+                android:id="@+id/label_stream_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_margin="5dp"
                 android:gravity="end"
                 android:text="@{viewModel.viewState.eventName}"
                 android:textColor="@color/white"
@@ -47,33 +49,216 @@
                 android:id="@+id/playerView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                app:layout_constrainedHeight="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/stream_status"
                 app:visibleOrGone="@{viewModel.viewState.isViewerRole}"
                 tools:visibility="visible" />
 
-            <!-- Commented because this is temporary for demo purposes. If it is enabled, then some test cases fail. This will be fixed once the grid mode is implemented-->
-            <!--<com.twilio.video.VideoView
-                android:id="@+id/local_video"
+            <TableLayout
+                android:id="@+id/grid_container"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:weightSum="1"
+                app:layout_constrainedHeight="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:visibleOrGone="@{!viewModel.viewState.isViewerRole}"
-                tools:visibility="visible" />-->
+                app:layout_constraintTop_toBottomOf="@id/stream_status"
+                app:updateParticipants="@{viewModel.viewState.participants}" />
+
+            <TableLayout
+                android:id="@+id/grid_container_test"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="#4F000000"
+                android:stretchColumns="*"
+                android:visibility="gone"
+                android:weightSum="1"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/stream_status"
+                tools:visibility="gone">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.333333">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_span="1"
+                        android:text="Hello world"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Hello world"
+                        android:textColor="@color/white" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.333333">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/white">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Hello world"
+                            android:textColor="@color/white"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/white">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:text="Hello world"
+                            android:textColor="@color/white"
+                            app:layout_constrainedHeight="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.333333">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Hello world"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Hello world"
+                        android:textColor="@color/white" />
+                </TableRow>
+
+
+            </TableLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constrainedHeight="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/stream_status">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hello World"
+                            android:textColor="@color/white" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="Hello World"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="Hello World"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="Hello World"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="Hello World"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="Hello World"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/controlsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:gravity="center"
             android:minHeight="100dp"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <ImageView
@@ -81,12 +266,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
-                android:src="@drawable/ic_exit_event"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/raise_hand_event"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:src="@drawable/ic_exit_event" />
 
             <CheckBox
                 android:id="@+id/raise_hand_event"
@@ -96,23 +276,45 @@
                 android:background="@drawable/ic_raise_hand"
                 android:button="@null"
                 android:gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/participants_event"
-                app:layout_constraintStart_toEndOf="@id/exit_event"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:visibleOrGone="@{viewModel.viewState.isViewerRole}" />
+
+            <CheckBox
+                android:id="@+id/mic_switch_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
+                android:background="@drawable/ic_mic_switch"
+                android:button="@null"
+                android:enabled="false"
+                android:gravity="center"
+                app:visibleOrGone="@{!viewModel.viewState.isViewerRole}" />
+
+            <CheckBox
+                android:id="@+id/video_switch_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
+                android:background="@drawable/ic_cam_switch"
+                android:button="@null"
+                android:enabled="false"
+                android:gravity="center"
+                app:visibleOrGone="@{!viewModel.viewState.isViewerRole}" />
 
             <ImageView
                 android:id="@+id/participants_event"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
-                android:src="@drawable/ic_participants"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/raise_hand_event"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:src="@drawable/ic_participants" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/speaker_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
+                android:src="@drawable/ic_dots_menu"
+                app:visibleOrGone="@{viewModel.viewState.isSpeakerRole}" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <include
             layout="@layout/live_progress_indicator"

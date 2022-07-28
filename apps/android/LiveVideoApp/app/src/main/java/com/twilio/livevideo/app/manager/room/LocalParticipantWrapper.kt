@@ -18,25 +18,35 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class LocalParticipantWrapper @Inject constructor(private val context: Context?) :
-    ParticipantWrapper<LocalVideoTrack, LocalParticipant>(), LocalParticipant.Listener {
+    ParticipantWrapper(), LocalParticipant.Listener {
 
     internal var localAudioTrack: LocalAudioTrack? = null
 
     private var cameraCapturer: CameraCapturerCompat? = null
 
-    override var participant: LocalParticipant?
-        get() = super.participant
+    var localParticipant: LocalParticipant?
+        get() = super.participant as LocalParticipant
         set(value) {
             value?.setListener(this)
             super.participant = value
         }
 
+    var localVideoTrack: LocalVideoTrack?
+        get() = if (super.videoTrack is LocalVideoTrack) super.videoTrack as LocalVideoTrack else null
+        set(value) {
+            super.videoTrack = value
+        }
+
     private val localVideoTrackNames: MutableMap<String, String> = HashMap()
+
+    override fun onParticipantClick() {
+        //No OnClick event requirement for LocalParticipant.
+    }
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
-        if (!isAudioMuted) setupLocalAudioTrack()
-        if (!isVideoMuted) setupLocalVideoTrack()
+        if (isMicOn) setupLocalAudioTrack()
+        if (isCameraOn) setupLocalVideoTrack()
     }
 
     override fun onPause(owner: LifecycleOwner) {
@@ -44,30 +54,34 @@ class LocalParticipantWrapper @Inject constructor(private val context: Context?)
         removeCameraTrack()
     }
 
-    fun toggleLocalAudio() {
-        if (!isAudioMuted) {
-            isAudioMuted = true
-            removeAudioTrack()
-        } else {
-            isAudioMuted = false
+    fun toggleLocalAudio(value: Boolean = isMicOn) {
+        if (value) {
             setupLocalAudioTrack()
+        } else {
+            removeAudioTrack(value)
         }
     }
 
-    fun toggleLocalVideo() {
-        if (!isVideoMuted) {
-            isVideoMuted = true
-            removeCameraTrack()
-        } else {
-            isVideoMuted = false
+    fun toggleLocalVideo(value: Boolean = isCameraOn) {
+        if (value) {
             setupLocalVideoTrack()
+        } else {
+            removeCameraTrack(value)
         }
+    }
+
+    fun publishLocalTracks() {
+        setupLocalAudioTrack()
+        setupLocalVideoTrack()
     }
 
     private fun setupLocalAudioTrack() {
-        if (localAudioTrack == null && !isAudioMuted && context != null) {
+        if (localAudioTrack == null && context != null) {
             localAudioTrack = createLocalAudioTrack(context, true, MICROPHONE_TRACK_NAME)
-            localAudioTrack?.let { publishAudioTrack(it) }
+            localAudioTrack?.let {
+                isMicOn = true
+                publishAudioTrack(it)
+            }
                 ?: Timber.e(RuntimeException(), "Failed to create local audio track")
         }
     }
@@ -76,52 +90,51 @@ class LocalParticipantWrapper @Inject constructor(private val context: Context?)
         context?.let {
             cameraCapturer = CameraCapturerCompat.newInstance(it)
 
-            videoTrack = cameraCapturer?.let { capturer ->
+            cameraCapturer?.let { capturer ->
                 LocalVideoTrack.create(it, true, capturer, null, CAMERA_TRACK_NAME)
             }?.apply {
                 localVideoTrackNames[name] = context.getString(R.string.camera_video_track)
+                videoTrack = this
+                isCameraOn = true
                 publishCameraTrack(this)
             }
         }
     }
 
     private fun publishCameraTrack(localVideoTrack: LocalVideoTrack?) {
-        if (!isVideoMuted) {
+        if (isCameraOn) {
             localVideoTrack?.let {
-                participant?.publishTrack(
-                    it,
-                    LocalTrackPublicationOptions(TrackPriority.LOW)
-                )
+                localParticipant?.publishTrack(it, LocalTrackPublicationOptions(TrackPriority.LOW))
             }
         }
     }
 
     private fun publishAudioTrack(localAudioTrack: LocalAudioTrack?) {
-        if (!isAudioMuted) {
-            localAudioTrack?.let { participant?.publishTrack(it) }
+        if (isMicOn) {
+            localAudioTrack?.let { localParticipant?.publishTrack(it) }
         }
     }
 
-    private fun unPublishTrack(localVideoTrack: LocalVideoTrack?) =
-        localVideoTrack?.let { participant?.unpublishTrack(it) }
+    private fun unPublishTrack(localVideoTrack: LocalVideoTrack?) = localVideoTrack?.let { localParticipant?.unpublishTrack(it) }
 
-    private fun unPublishTrack(localAudioTrack: LocalAudioTrack?) =
-        localAudioTrack?.let { participant?.unpublishTrack(it) }
+    private fun unPublishTrack(localAudioTrack: LocalAudioTrack?) = localAudioTrack?.let { localParticipant?.unpublishTrack(it) }
 
-    private fun removeCameraTrack() {
-        videoTrack?.let { cameraVideoTrack ->
+    private fun removeCameraTrack(isCameraOn: Boolean = this.isCameraOn) {
+        localVideoTrack?.let { cameraVideoTrack ->
             unPublishTrack(cameraVideoTrack)
             localVideoTrackNames.remove(cameraVideoTrack.name)
             cameraVideoTrack.release()
-            this.videoTrack = null
+            localVideoTrack = null
+            this.isCameraOn = isCameraOn
         }
     }
 
-    private fun removeAudioTrack() {
+    private fun removeAudioTrack(isMicOn: Boolean = this.isMicOn) {
         localAudioTrack?.let { localAudioTrack ->
             unPublishTrack(localAudioTrack)
             localAudioTrack.release()
             this.localAudioTrack = null
+            this.isMicOn = isMicOn
         }
     }
 
@@ -129,7 +142,7 @@ class LocalParticipantWrapper @Inject constructor(private val context: Context?)
         localParticipant: LocalParticipant,
         localAudioTrackPublication: LocalAudioTrackPublication
     ) {
-        //TODO("Not yet implemented")
+        Timber.d("onAudioTrackPublished")
     }
 
     override fun onAudioTrackPublicationFailed(
@@ -137,14 +150,14 @@ class LocalParticipantWrapper @Inject constructor(private val context: Context?)
         localAudioTrack: LocalAudioTrack,
         twilioException: TwilioException
     ) {
-        //TODO("Not yet implemented")
+        Timber.d("onAudioTrackPublicationFailed ${twilioException.message}")
     }
 
     override fun onVideoTrackPublished(
         localParticipant: LocalParticipant,
         localVideoTrackPublication: LocalVideoTrackPublication
     ) {
-        //TODO("Not yet implemented")
+        Timber.d("onVideoTrackPublished")
     }
 
     override fun onVideoTrackPublicationFailed(
@@ -152,14 +165,14 @@ class LocalParticipantWrapper @Inject constructor(private val context: Context?)
         localVideoTrack: LocalVideoTrack,
         twilioException: TwilioException
     ) {
-        //TODO("Not yet implemented")
+        Timber.d("onVideoTrackPublicationFailed ${twilioException.message}")
     }
 
     override fun onDataTrackPublished(
         localParticipant: LocalParticipant,
         localDataTrackPublication: LocalDataTrackPublication
     ) {
-        //TODO("Not yet implemented")
+        Timber.d("onDataTrackPublished")
     }
 
     override fun onDataTrackPublicationFailed(
@@ -167,7 +180,7 @@ class LocalParticipantWrapper @Inject constructor(private val context: Context?)
         localDataTrack: LocalDataTrack,
         twilioException: TwilioException
     ) {
-        //TODO("Not yet implemented")
+        Timber.d("onDataTrackPublicationFailed ${twilioException.message}")
     }
 
     companion object {

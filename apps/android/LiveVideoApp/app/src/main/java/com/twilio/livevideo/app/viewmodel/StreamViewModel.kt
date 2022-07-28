@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.twilio.livevideo.app.annotations.OpenForTesting
+import com.twilio.livevideo.app.manager.room.ParticipantStream
 import com.twilio.livevideo.app.repository.LiveVideoRepository
 import com.twilio.livevideo.app.viewstate.StreamViewState
 import com.twilio.livevideo.app.viewstate.ViewRole
@@ -89,5 +90,9 @@ class StreamViewModel @Inject constructor(
                 _screenEvent.value = StreamViewEvent.OnDeleteStream
             }
         }
+    }
+
+    fun updateParticipants(participants: List<ParticipantStream>) {
+        _viewState.value = _viewState.value?.copy(participants = participants)
     }
 }
