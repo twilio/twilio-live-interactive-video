@@ -46,28 +46,30 @@ class RoomManager @Inject constructor(
     ) {
         this.lifecycleOwner = lifecycleOwner
         init(lifecycleOwner.lifecycle)
+        localParticipantWrapper.init(lifecycleOwner.lifecycle)
         localParticipantWrapper.isHost = isHost
         room = context?.let {
             val connectOptions: ConnectOptionsBuilder = {
                 this.roomName(roomName)
+                this.audioTracks(listOf(localParticipantWrapper.localAudioTrack))
+                this.videoTracks(listOf(localParticipantWrapper.localVideoTrack))
                 this.enableDominantSpeaker(true)
                 this.bandwidthProfile(createBandwidthProfileOptions {
                     this.mode(BandwidthProfileMode.GRID)
                     this.dominantSpeakerPriority(TrackPriority.HIGH)
                 })
-                preferVideoCodecs(listOf(Vp8Codec(true)))
-                preferAudioCodecs(listOf(OpusCodec()))
+                this.preferVideoCodecs(listOf(Vp8Codec(true)))
+                this.preferAudioCodecs(listOf(OpusCodec()))
             }
             Video.connect(it, accessToken, this, connectOptions)
         }
     }
 
     fun disconnect() {
-        cleanUp()
-        _onStateEvent.value = RoomViewEvent.OnDisconnect(null)
+        handleError(null)
     }
 
-    private fun handleError(errorResponse: ErrorResponse) {
+    private fun handleError(errorResponse: ErrorResponse?) {
         cleanUp()
         _onStateEvent.value = RoomViewEvent.OnDisconnect(errorResponse)
     }
@@ -88,7 +90,6 @@ class RoomManager @Inject constructor(
         room.localParticipant?.let { localParticipant ->
             participants = mutableListOf<ParticipantStream>().let { list ->
                 localParticipantWrapper.localParticipant = localParticipant
-                lifecycleOwner?.lifecycle?.apply { localParticipantWrapper.init(this) }
                 list.add(ParticipantStream(localParticipantWrapper))
 
                 room.remoteParticipants.filter {
@@ -99,7 +100,6 @@ class RoomManager @Inject constructor(
                     newRemoteParticipant.isLocalHost = localParticipantWrapper.isHost
                     list.add(ParticipantStream(newRemoteParticipant))
                 }
-                localParticipantWrapper.publishLocalTracks()
                 _onStateEvent.value = RoomViewEvent.OnConnected(list, room.name)
                 list
             }

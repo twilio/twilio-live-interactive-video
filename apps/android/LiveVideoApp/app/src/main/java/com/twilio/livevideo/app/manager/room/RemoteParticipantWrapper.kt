@@ -22,7 +22,7 @@ class RemoteParticipantWrapper constructor(remoteParticipantParam: RemotePartici
         }
 
     var remoteVideoTrack: RemoteVideoTrack?
-        get() = if(super.videoTrack is RemoteVideoTrack) super.videoTrack as RemoteVideoTrack else null
+        get() = if (super.videoTrack is RemoteVideoTrack) super.videoTrack as RemoteVideoTrack else null
         set(value) {
             super.videoTrack = value
         }

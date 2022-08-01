@@ -1,6 +1,7 @@
 package com.twilio.livevideo.app.manager.room
 
 import android.content.Context
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.twilio.livevideo.app.R
 import com.twilio.video.LocalAudioTrack
@@ -25,7 +26,7 @@ class LocalParticipantWrapper @Inject constructor(private val context: Context?)
     private var cameraCapturer: CameraCapturerCompat? = null
 
     var localParticipant: LocalParticipant?
-        get() = super.participant as LocalParticipant
+        get() = if (super.participant is LocalParticipant) super.participant as LocalParticipant else null
         set(value) {
             value?.setListener(this)
             super.participant = value
@@ -43,14 +44,21 @@ class LocalParticipantWrapper @Inject constructor(private val context: Context?)
         //No OnClick event requirement for LocalParticipant.
     }
 
+    override fun init(lifecycle: Lifecycle) {
+        super.init(lifecycle)
+        setupLocalTracks()
+    }
+
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
+        Timber.i("onResumeCallback $identity")
         if (isMicOn) setupLocalAudioTrack()
         if (isCameraOn) setupLocalVideoTrack()
     }
 
     override fun onPause(owner: LifecycleOwner) {
         super.onPause(owner)
+        Timber.i("onPauseCallback $identity")
         removeCameraTrack()
     }
 
@@ -70,19 +78,25 @@ class LocalParticipantWrapper @Inject constructor(private val context: Context?)
         }
     }
 
-    fun publishLocalTracks() {
-        setupLocalAudioTrack()
+    private fun setupLocalTracks() {
         setupLocalVideoTrack()
+        setupLocalAudioTrack()
+        isMicOn = true
+        isCameraOn = true
     }
 
     private fun setupLocalAudioTrack() {
         if (localAudioTrack == null && context != null) {
             localAudioTrack = createLocalAudioTrack(context, true, MICROPHONE_TRACK_NAME)
-            localAudioTrack?.let {
-                isMicOn = true
+            localAudioTrack?.also {
                 publishAudioTrack(it)
-            }
-                ?: Timber.e(RuntimeException(), "Failed to create local audio track")
+            } ?: Timber.e(RuntimeException(), "Failed to create local audio track")
+        }
+    }
+
+    private fun publishAudioTrack(localAudioTrack: LocalAudioTrack? = this.localAudioTrack) {
+        localAudioTrack?.let {
+            localParticipant?.publishTrack(it)?.also { isMicOn = true }
         }
     }
 
@@ -94,24 +108,17 @@ class LocalParticipantWrapper @Inject constructor(private val context: Context?)
                 LocalVideoTrack.create(it, true, capturer, null, CAMERA_TRACK_NAME)
             }?.apply {
                 localVideoTrackNames[name] = context.getString(R.string.camera_video_track)
-                videoTrack = this
-                isCameraOn = true
+                localVideoTrack = this
                 publishCameraTrack(this)
             }
         }
     }
 
-    private fun publishCameraTrack(localVideoTrack: LocalVideoTrack?) {
-        if (isCameraOn) {
-            localVideoTrack?.let {
-                localParticipant?.publishTrack(it, LocalTrackPublicationOptions(TrackPriority.LOW))
+    private fun publishCameraTrack(localVideoTrack: LocalVideoTrack? = this.localVideoTrack) {
+        localVideoTrack?.let {
+            localParticipant?.publishTrack(it, LocalTrackPublicationOptions(TrackPriority.LOW))?.also {
+                isCameraOn = true
             }
-        }
-    }
-
-    private fun publishAudioTrack(localAudioTrack: LocalAudioTrack?) {
-        if (isMicOn) {
-            localAudioTrack?.let { localParticipant?.publishTrack(it) }
         }
     }
 
@@ -119,13 +126,15 @@ class LocalParticipantWrapper @Inject constructor(private val context: Context?)
 
     private fun unPublishTrack(localAudioTrack: LocalAudioTrack?) = localAudioTrack?.let { localParticipant?.unpublishTrack(it) }
 
-    private fun removeCameraTrack(isCameraOn: Boolean = this.isCameraOn) {
+    private fun removeCameraTrack(isCameraOn: Boolean? = null) {
         localVideoTrack?.let { cameraVideoTrack ->
             unPublishTrack(cameraVideoTrack)
             localVideoTrackNames.remove(cameraVideoTrack.name)
             cameraVideoTrack.release()
             localVideoTrack = null
-            this.isCameraOn = isCameraOn
+            isCameraOn?.also {
+                this.isCameraOn = it
+            }
         }
     }
 
