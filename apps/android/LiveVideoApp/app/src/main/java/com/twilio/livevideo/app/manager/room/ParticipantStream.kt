@@ -8,7 +8,7 @@ import com.twilio.video.Participant
 import com.twilio.video.VideoTrack
 import timber.log.Timber
 
-abstract class ParticipantWrapper : BaseLifeCycleComponent() {
+abstract class ParticipantStream : BaseLifeCycleComponent() {
 
     private val mSid: MutableLiveData<String?> = MutableLiveData(null)
     val sidLiveData: LiveData<String?>
@@ -113,5 +113,3 @@ abstract class ParticipantWrapper : BaseLifeCycleComponent() {
         Timber.i("onDestroyCallback $identity object: $this")
     }
 }
-
-data class ParticipantStream(var wrapper: ParticipantWrapper)

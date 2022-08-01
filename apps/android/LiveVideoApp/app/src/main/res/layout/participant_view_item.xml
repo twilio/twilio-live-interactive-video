@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.twilio.livevideo.app.manager.room.ParticipantWrapper" />
+            type="com.twilio.livevideo.app.manager.room.ParticipantStream" />
     </data>
 
     <TableRow

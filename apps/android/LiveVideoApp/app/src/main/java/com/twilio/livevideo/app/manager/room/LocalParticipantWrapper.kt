@@ -18,8 +18,8 @@ import com.twilio.video.ktx.createLocalAudioTrack
 import timber.log.Timber
 import javax.inject.Inject
 
-class LocalParticipantWrapper @Inject constructor(private val context: Context?) :
-    ParticipantWrapper(), LocalParticipant.Listener {
+data class LocalParticipantWrapper @Inject constructor(private val context: Context?) :
+    ParticipantStream(), LocalParticipant.Listener {
 
     internal var localAudioTrack: LocalAudioTrack? = null
 

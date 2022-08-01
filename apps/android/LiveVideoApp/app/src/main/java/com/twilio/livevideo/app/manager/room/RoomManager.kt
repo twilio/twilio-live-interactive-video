@@ -90,7 +90,7 @@ class RoomManager @Inject constructor(
         room.localParticipant?.let { localParticipant ->
             participants = mutableListOf<ParticipantStream>().let { list ->
                 localParticipantWrapper.localParticipant = localParticipant
-                list.add(ParticipantStream(localParticipantWrapper))
+                list.add(localParticipantWrapper)
 
                 room.remoteParticipants.filter {
                     !it.isVideoComposer()
@@ -98,7 +98,7 @@ class RoomManager @Inject constructor(
                     val newRemoteParticipant = RemoteParticipantWrapper(it, ::remoteParticipantCallback)
                     lifecycleOwner?.lifecycle?.apply { newRemoteParticipant.init(this) }
                     newRemoteParticipant.isLocalHost = localParticipantWrapper.isHost
-                    list.add(ParticipantStream(newRemoteParticipant))
+                    list.add(newRemoteParticipant)
                 }
                 _onStateEvent.value = RoomViewEvent.OnConnected(list, room.name)
                 list
@@ -129,7 +129,7 @@ class RoomManager @Inject constructor(
         val newParticipant = RemoteParticipantWrapper(remoteParticipant, ::remoteParticipantCallback)
         lifecycleOwner?.lifecycle?.apply { newParticipant.init(this) }
         newParticipant.isLocalHost = localParticipantWrapper.isHost
-        participants?.add(ParticipantStream(newParticipant))
+        participants?.add(newParticipant)
         _onStateEvent.value = RoomViewEvent.OnRemoteParticipantConnected(participants ?: listOf())
     }
 
@@ -137,11 +137,11 @@ class RoomManager @Inject constructor(
         room: Room,
         remoteParticipant: RemoteParticipant
     ) {
-        participants?.first { it.wrapper.participant?.identity == remoteParticipant.identity }?.apply {
+        participants?.first { it.participant?.identity == remoteParticipant.identity }?.apply {
             participants?.remove(this)
-            lifecycleOwner?.lifecycle?.removeObserver(this.wrapper)
-            if (this.wrapper is RemoteParticipantWrapper) {
-                (this.wrapper as RemoteParticipantWrapper).clickCallback = null
+            lifecycleOwner?.lifecycle?.removeObserver(this)
+            if (this is RemoteParticipantWrapper) {
+                (this as RemoteParticipantWrapper).clickCallback = null
             }
             _onStateEvent.value = RoomViewEvent.OnRemoteParticipantDisconnected(participants ?: listOf())
         }
@@ -157,8 +157,8 @@ class RoomManager @Inject constructor(
 
     override fun onDominantSpeakerChanged(room: Room, remoteParticipant: RemoteParticipant?) {
         super.onDominantSpeakerChanged(room, remoteParticipant)
-        participants?.firstOrNull { it.wrapper.isDominantSpeaker }?.apply { this.wrapper.isDominantSpeaker = false }
-        participants?.firstOrNull { it.wrapper.identity == remoteParticipant?.identity }?.apply { this.wrapper.isDominantSpeaker = true }
+        participants?.firstOrNull { it.isDominantSpeaker }?.apply { this.isDominantSpeaker = false }
+        participants?.firstOrNull { it.identity == remoteParticipant?.identity }?.apply { this.isDominantSpeaker = true }
     }
 
     override fun onDestroy(owner: LifecycleOwner) {

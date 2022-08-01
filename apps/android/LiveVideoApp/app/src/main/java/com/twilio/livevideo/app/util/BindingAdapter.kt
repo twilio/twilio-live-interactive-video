@@ -49,7 +49,7 @@ fun TableLayout.updateParticipants(participants: List<ParticipantStream>?) {
             var participantViewBinding: ParticipantViewItemBinding? = null
 
             participantViewBinding = ParticipantViewItemBinding.inflate(inflater, this, false)
-            participantViewBinding.item = item.wrapper
+            participantViewBinding.item = item
             participantViewBinding.lifecycleOwner = lifecycleOwner
 
             rowList.add(participantViewBinding.tableRowItem)

@@ -11,8 +11,11 @@ import com.twilio.video.RemoteVideoTrackPublication
 import com.twilio.video.TwilioException
 import timber.log.Timber
 
-class RemoteParticipantWrapper constructor(remoteParticipantParam: RemoteParticipant?, var clickCallback: ((RemoteParticipantWrapper) -> Unit)?) :
-    ParticipantWrapper(), RemoteParticipant.Listener {
+data class RemoteParticipantWrapper constructor(
+    private val remoteParticipantParam: RemoteParticipant?,
+    var clickCallback: ((RemoteParticipantWrapper) -> Unit)?
+) :
+    ParticipantStream(), RemoteParticipant.Listener {
 
     var remoteParticipant: RemoteParticipant?
         get() = if (super.participant is RemoteParticipant) super.participant as RemoteParticipant else null
