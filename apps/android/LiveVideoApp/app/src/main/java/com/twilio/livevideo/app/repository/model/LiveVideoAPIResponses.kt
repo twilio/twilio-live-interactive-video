@@ -19,7 +19,7 @@ data class DeleteStreamResponse(
 
 data class JoinStreamAsSpeakerResponse(
     @SerializedName("token")
-    val token: String
+    val token: String = ""
 ) : BaseResponse()
 
 data class JoinStreamAsViewerResponse(

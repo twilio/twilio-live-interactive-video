@@ -69,7 +69,7 @@ class StreamFragment internal constructor() : Fragment() {
     fun initializedRole(viewRole: ViewRole) {
         when (viewRole) {
             ViewRole.Host -> viewModel.createStream(commonViewModel.eventName)
-            ViewRole.Speaker -> {}
+            ViewRole.Speaker -> viewModel.joinStreamAsSpeaker(commonViewModel.eventName)
             ViewRole.Viewer -> viewModel.joinStreamAsViewer(commonViewModel.eventName)
         }
     }
@@ -153,20 +153,33 @@ class StreamFragment internal constructor() : Fragment() {
         }
     }
 
+    private fun showDisconnectedRoomAlert() {
+        showErrorAlert(
+            ErrorResponse(
+                getString(R.string.twilio_join_event_ended_title),
+                getString(R.string.twilio_join_event_ended_description)
+            )
+        )
+    }
+
     private fun onAction(event: StreamViewEvent) {
         Timber.d("onAction StreamViewEvent $event")
         when (event) {
             is StreamViewEvent.OnConnectViewer -> connectPlayer(event.token)
             is StreamViewEvent.OnCreateStream -> {
-                connectRoom(event.token)
+                connectRoom(event.token, true)
                 viewModel.onLoadingFinish(isLiveActive = true)
             }
             StreamViewEvent.OnDeleteStream -> navigateToHomeScreen()
             is StreamViewEvent.OnStreamError -> showErrorAlert(event.error)
+            is StreamViewEvent.OnConnectSpeaker -> {
+                connectRoom(event.token)
+                viewModel.onLoadingFinish(isLiveActive = true)
+            }
         }
     }
 
-    private fun connectRoom(token: String) {
+    private fun connectRoom(token: String, isHost: Boolean = false) {
         roomManager.onStateEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
                 is RoomViewEvent.OnConnected -> {
@@ -174,7 +187,7 @@ class StreamFragment internal constructor() : Fragment() {
                     viewModel.updateParticipants(event.participants)
                 }
                 is RoomViewEvent.OnDisconnect -> {
-                    //TODO: update only UI if it is required
+                    if (args.viewRole == ViewRole.Speaker) showDisconnectedRoomAlert()
                 }
                 is RoomViewEvent.OnRemoteParticipantConnected -> {
                     viewModel.updateParticipants(event.participants)
@@ -188,7 +201,7 @@ class StreamFragment internal constructor() : Fragment() {
                 null -> {}
             }
         }
-        roomManager.connect(viewLifecycleOwner, commonViewModel.eventName, token, true)
+        roomManager.connect(viewLifecycleOwner, commonViewModel.eventName, token, isHost)
     }
 
     private fun connectPlayer(token: String) {
@@ -202,12 +215,7 @@ class StreamFragment internal constructor() : Fragment() {
                 PlayerManager.OnStateCallback.OnEnded -> {
                     Timber.d("OnStateCallback onEnded")
                     viewModel.onLoadingFinish(isLiveActive = false)
-                    showErrorAlert(
-                        ErrorResponse(
-                            getString(R.string.twilio_join_event_ended_title),
-                            getString(R.string.twilio_join_event_ended_description)
-                        )
-                    )
+                    showDisconnectedRoomAlert()
                 }
                 is PlayerManager.OnStateCallback.OnError -> {
                     Timber.d("OnStateCallback onError")

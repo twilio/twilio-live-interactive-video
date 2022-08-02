@@ -108,23 +108,26 @@ class RoomManager @Inject constructor(
     }
 
     override fun onConnectFailure(room: Room, twilioException: TwilioException) {
+        Timber.i("onConnectFailure -> room sid: %s", room.sid)
         this.localParticipantWrapper.participant = null
         handleError(ErrorResponse(twilioException.message ?: "Error", twilioException.explanation ?: "onConnectFailure"))
     }
 
     override fun onReconnecting(room: Room, twilioException: TwilioException) {
-
+        Timber.i("onReconnecting -> room sid: %s", room.sid)
     }
 
     override fun onReconnected(room: Room) {
-
+        Timber.i("onReconnected -> room sid: %s", room.sid)
     }
 
     override fun onDisconnected(room: Room, twilioException: TwilioException?) {
-
+        Timber.i("onDisconnected -> room sid: %s", room.sid)
+        disconnect()
     }
 
     override fun onParticipantConnected(room: Room, remoteParticipant: RemoteParticipant) {
+        Timber.i("onParticipantConnected -> room sid: %s", room.sid)
         if (remoteParticipant.isVideoComposer()) return
         val newParticipant = RemoteParticipantWrapper(remoteParticipant, ::remoteParticipantCallback)
         lifecycleOwner?.lifecycle?.apply { newParticipant.init(this) }
@@ -137,6 +140,7 @@ class RoomManager @Inject constructor(
         room: Room,
         remoteParticipant: RemoteParticipant
     ) {
+        Timber.i("onParticipantDisconnected -> room sid: %s", room.sid)
         participants?.first { it.participant?.identity == remoteParticipant.identity }?.apply {
             participants?.remove(this)
             lifecycleOwner?.lifecycle?.removeObserver(this)
@@ -148,15 +152,16 @@ class RoomManager @Inject constructor(
     }
 
     override fun onRecordingStarted(room: Room) {
-
+        Timber.i("onRecordingStarted -> room sid: %s", room.sid)
     }
 
     override fun onRecordingStopped(room: Room) {
-
+        Timber.i("onRecordingStopped -> room sid: %s", room.sid)
     }
 
     override fun onDominantSpeakerChanged(room: Room, remoteParticipant: RemoteParticipant?) {
         super.onDominantSpeakerChanged(room, remoteParticipant)
+        Timber.i("onDominantSpeakerChanged -> room sid: %s", room.sid)
         participants?.firstOrNull { it.isDominantSpeaker }?.apply { this.isDominantSpeaker = false }
         participants?.firstOrNull { it.identity == remoteParticipant?.identity }?.apply { this.isDominantSpeaker = true }
     }
