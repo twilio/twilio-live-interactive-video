@@ -37,6 +37,7 @@ class RoomManager @Inject constructor(
     private var lifecycleOwner: LifecycleOwner? = null
     private var room: Room? = null
     private var participants: MutableList<ParticipantStream>? = null
+    private var isDisconnectedFromUI: Boolean = false
 
     fun connect(
         lifecycleOwner: LifecycleOwner,
@@ -65,16 +66,20 @@ class RoomManager @Inject constructor(
         }
     }
 
-    fun disconnect() {
-        handleError(null)
+    fun disconnect(fromUI: Boolean = true) {
+        isDisconnectedFromUI = fromUI
+        cleanUp()
+        _onStateEvent.value = RoomViewEvent.OnDisconnected(!fromUI)
     }
 
     private fun handleError(errorResponse: ErrorResponse?) {
         cleanUp()
-        _onStateEvent.value = RoomViewEvent.OnDisconnect(errorResponse)
+        _onStateEvent.value = RoomViewEvent.OnError(errorResponse)
     }
 
     private fun cleanUp() {
+        localParticipantWrapper.isCameraOn = false
+        localParticipantWrapper.isMicOn = false
         room?.disconnect()
         room = null
         participants?.clear()
@@ -123,7 +128,9 @@ class RoomManager @Inject constructor(
 
     override fun onDisconnected(room: Room, twilioException: TwilioException?) {
         Timber.i("onDisconnected -> room sid: %s", room.sid)
-        disconnect()
+        if (!isDisconnectedFromUI) {
+            disconnect(false)
+        }
     }
 
     override fun onParticipantConnected(room: Room, remoteParticipant: RemoteParticipant) {
@@ -141,11 +148,11 @@ class RoomManager @Inject constructor(
         remoteParticipant: RemoteParticipant
     ) {
         Timber.i("onParticipantDisconnected -> room sid: %s", room.sid)
-        participants?.first { it.participant?.identity == remoteParticipant.identity }?.apply {
+        participants?.firstOrNull { it.participant?.identity == remoteParticipant.identity }?.apply {
             participants?.remove(this)
             lifecycleOwner?.lifecycle?.removeObserver(this)
             if (this is RemoteParticipantWrapper) {
-                (this as RemoteParticipantWrapper).clickCallback = null
+                this.clickCallback = null
             }
             _onStateEvent.value = RoomViewEvent.OnRemoteParticipantDisconnected(participants ?: listOf())
         }

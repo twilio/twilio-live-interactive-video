@@ -142,7 +142,6 @@ class StreamFragment internal constructor() : Fragment() {
     private fun disconnectSpeaker() {
         //TODO: Disconnect all the SDKs
         roomManager.disconnect()
-        navigateToHomeScreen()
     }
 
     private fun registerOnViewStateObserver() {
@@ -186,8 +185,12 @@ class StreamFragment internal constructor() : Fragment() {
                     setupBottomControllers()
                     viewModel.updateParticipants(event.participants)
                 }
-                is RoomViewEvent.OnDisconnect -> {
-                    if (args.viewRole == ViewRole.Speaker) showDisconnectedRoomAlert()
+                is RoomViewEvent.OnDisconnected -> {
+                    if (event.isDisconnectedByHost) {
+                        showDisconnectedRoomAlert()
+                    } else {
+                        navigateToHomeScreen()
+                    }
                 }
                 is RoomViewEvent.OnRemoteParticipantConnected -> {
                     viewModel.updateParticipants(event.participants)
@@ -197,6 +200,9 @@ class StreamFragment internal constructor() : Fragment() {
                 }
                 is RoomViewEvent.OnRemoteParticipantOnClickMenu -> {
                     Timber.d("RemoteParticipantWrapper OnRemoteParticipantOnClickMenu")
+                }
+                is RoomViewEvent.OnError -> {
+                    showErrorAlert(event.error)
                 }
                 null -> {}
             }
