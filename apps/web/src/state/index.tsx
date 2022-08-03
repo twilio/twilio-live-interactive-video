@@ -8,7 +8,7 @@ import usePasscodeAuth from './usePasscodeAuth/usePasscodeAuth';
 export interface StateContextType {
   error: TwilioError | Error | null;
   setError(error: TwilioError | Error | null): void;
-  user?: null | { displayName: string; photoURL: string; passcode?: string };
+  user?: null | { passcode?: string };
   signIn?(passcode?: string): Promise<void>;
   signOut?(): Promise<void>;
   isAuthReady?: boolean;
