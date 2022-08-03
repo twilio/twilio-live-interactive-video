@@ -50,7 +50,8 @@ workflows:
       or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.web-app-updated >>]
     jobs:
       - node/run:
-          npm-run: test:ci --prefix apps/web
+          npm-run: test:ci
+          app-dir: apps/web
   build-and-test-ios-app:
     when:
       or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.ios-app-updated >>]
