@@ -60,8 +60,8 @@ class MainModule {
 
     @Singleton
     @Provides
-    fun provideRemoteStorage(liveVideoAPIService: LiveVideoAPIService): RemoteStorage =
-        RemoteStorage(liveVideoAPIService)
+    fun provideRemoteStorage(liveVideoAPIService: LiveVideoAPIService, retrofit: Retrofit): RemoteStorage =
+        RemoteStorage(liveVideoAPIService, retrofit)
 
     @Provides
     fun provideAuthenticatorManager(
