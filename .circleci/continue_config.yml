@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@4.7.0
+  node: circleci/node@5.0.2
   ruby: circleci/ruby@1.1.4
 
 parameters:
@@ -18,7 +18,7 @@ parameters:
 executors:
   macos_executor:
     macos:
-      xcode: "13.3.1"
+      xcode: '13.3.1'
 
 jobs:
   build-and-test-ios-app:
@@ -26,7 +26,7 @@ jobs:
     steps:
       - checkout
       - ruby/install-deps
-      - run: 
+      - run:
           name: Configure Artifactory so private dependencies can be downloaded
           command: |
             chmod 600 .circleci/.netrc
@@ -51,7 +51,7 @@ workflows:
     jobs:
       - node/run:
           npm-run: test:ci
-          app-dir: 'apps/web'
+          app-dir: apps/web
   build-and-test-ios-app:
     when:
       or: [<< pipeline.parameters.backend-updated >>, << pipeline.parameters.ios-app-updated >>]

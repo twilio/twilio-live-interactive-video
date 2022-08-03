@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "npm install --prod --prefix apps/web",
+    "postinstall": "npm install --prefix apps/web",
     "test": "true",
     "preserverless:deploy": "npm run build --prefix apps/web",
     "serverless:deploy": "node serverless/scripts/deploy.js",

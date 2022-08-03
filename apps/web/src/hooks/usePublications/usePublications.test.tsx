@@ -7,7 +7,10 @@ describe('the usePublications hook', () => {
 
   beforeEach(() => {
     mockParticipant = new EventEmitter();
-    mockParticipant.tracks = new Map([[0, 'track1'], [1, 'track2']]);
+    mockParticipant.tracks = new Map([
+      [0, 'track1'],
+      [1, 'track2'],
+    ]);
   });
 
   it('should return an array of mockParticipant.tracks by default', () => {
@@ -37,7 +40,10 @@ describe('the usePublications hook', () => {
     });
     expect(result.current).toEqual(['track1', 'track2']);
     mockParticipant = new EventEmitter();
-    mockParticipant.tracks = new Map([[0, 'track3'], [1, 'track4']]);
+    mockParticipant.tracks = new Map([
+      [0, 'track3'],
+      [1, 'track4'],
+    ]);
     rerender({ participant: mockParticipant });
     expect(result.current).toEqual(['track3', 'track4']);
   });
