@@ -16,6 +16,7 @@ import com.twilio.livevideo.app.R
 import com.twilio.livevideo.app.annotations.OpenForTesting
 import com.twilio.livevideo.app.databinding.FragmentStreamBinding
 import com.twilio.livevideo.app.manager.PlayerManager
+import com.twilio.livevideo.app.manager.room.RoomDisconnectionType
 import com.twilio.livevideo.app.manager.room.RoomManager
 import com.twilio.livevideo.app.manager.room.RoomViewEvent
 import com.twilio.livevideo.app.repository.model.ErrorResponse
@@ -186,10 +187,9 @@ class StreamFragment internal constructor() : Fragment() {
                     viewModel.updateParticipants(event.participants)
                 }
                 is RoomViewEvent.OnDisconnected -> {
-                    if (event.isDisconnectedByHost) {
-                        showDisconnectedRoomAlert()
-                    } else {
-                        navigateToHomeScreen()
+                    when (event.disconnectionType) {
+                        RoomDisconnectionType.StreamEndedByHost -> showDisconnectedRoomAlert()
+                        null -> navigateToHomeScreen()
                     }
                 }
                 is RoomViewEvent.OnRemoteParticipantConnected -> {

@@ -37,7 +37,6 @@ class RoomManager @Inject constructor(
     private var lifecycleOwner: LifecycleOwner? = null
     private var room: Room? = null
     private var participants: MutableList<ParticipantStream>? = null
-    private var isDisconnectedFromUI: Boolean = false
 
     fun connect(
         lifecycleOwner: LifecycleOwner,
@@ -66,10 +65,9 @@ class RoomManager @Inject constructor(
         }
     }
 
-    fun disconnect(fromUI: Boolean = true) {
-        isDisconnectedFromUI = fromUI
+    fun disconnect(disconnectionType: RoomDisconnectionType? = null) {
         cleanUp()
-        _onStateEvent.value = RoomViewEvent.OnDisconnected(!fromUI)
+        _onStateEvent.value = RoomViewEvent.OnDisconnected(disconnectionType)
     }
 
     private fun handleError(errorResponse: ErrorResponse?) {
@@ -128,8 +126,10 @@ class RoomManager @Inject constructor(
 
     override fun onDisconnected(room: Room, twilioException: TwilioException?) {
         Timber.i("onDisconnected -> room sid: %s", room.sid)
-        if (!isDisconnectedFromUI) {
-            disconnect(false)
+        twilioException?.code?.apply {
+            if (this == TwilioException.ROOM_ROOM_COMPLETED_EXCEPTION) {
+                disconnect(RoomDisconnectionType.StreamEndedByHost)
+            }
         }
     }
 
