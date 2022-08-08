@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { Conversation } from '@twilio/conversations/';
 import { isMobile } from '../../../utils';
 import SendMessageIcon from '../../../icons/SendMessageIcon';
-import Snackbar from '../../Snackbar/Snackbar';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 
 const useStyles = makeStyles(theme => ({
@@ -55,7 +54,6 @@ interface ChatInputProps {
 export default function ChatInput({ conversation, isChatWindowOpen }: ChatInputProps) {
   const classes = useStyles();
   const [messageBody, setMessageBody] = useState('');
-  const [fileSendError, setFileSendError] = useState<string | null>(null);
   const isValidMessage = /\S/.test(messageBody);
   const textInputRef = useRef<HTMLTextAreaElement>(null);
   const [isTextareaFocused, setIsTextareaFocused] = useState(false);
@@ -87,15 +85,13 @@ export default function ChatInput({ conversation, isChatWindowOpen }: ChatInputP
     }
   };
 
+  const handleAddEmoji = (emoji: string) => {
+    setMessageBody(messageBody + emoji);
+    textInputRef.current?.focus();
+  };
+
   return (
     <div className={classes.chatInputContainer}>
-      <Snackbar
-        open={Boolean(fileSendError)}
-        headline="Error"
-        message={fileSendError || ''}
-        variant="error"
-        handleClose={() => setFileSendError(null)}
-      />
       <div className={clsx(classes.textAreaContainer, { [classes.isTextareaFocused]: isTextareaFocused })}>
         {/* 
         Here we add the "isTextareaFocused" class when the user is focused on the TextareaAutosize component.
@@ -120,6 +116,21 @@ export default function ChatInput({ conversation, isChatWindowOpen }: ChatInputP
 
       <Grid container alignItems="flex-end" justifyContent="flex-end" wrap="nowrap">
         <div className={classes.buttonContainer}>
+          <Button className={classes.button} onClick={() => handleAddEmoji('😀')}>
+            😀
+          </Button>
+          <Button className={classes.button} onClick={() => handleAddEmoji('👍')}>
+            👍
+          </Button>
+          <Button className={classes.button} onClick={() => handleAddEmoji('❤️')}>
+            ❤️
+          </Button>
+          <Button className={classes.button} onClick={() => handleAddEmoji('👏')}>
+            👏
+          </Button>
+          <Button className={classes.button} onClick={() => handleAddEmoji('😂')} style={{ marginRight: '1em' }}>
+            😂
+          </Button>
           <Button
             className={classes.button}
             onClick={() => handleSendMessage(messageBody)}
