@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Grid, makeStyles } from '@material-ui/core';
+import { Button, Grid, makeStyles, Hidden } from '@material-ui/core';
 import clsx from 'clsx';
 import { Conversation } from '@twilio/conversations/';
 import { isMobile } from '../../../utils';
@@ -116,21 +116,23 @@ export default function ChatInput({ conversation, isChatWindowOpen }: ChatInputP
 
       <Grid container alignItems="flex-end" justifyContent="flex-end" wrap="nowrap">
         <div className={classes.buttonContainer}>
-          <Button className={classes.button} onClick={() => handleAddEmoji('😀')}>
-            😀
-          </Button>
-          <Button className={classes.button} onClick={() => handleAddEmoji('👍')}>
-            👍
-          </Button>
-          <Button className={classes.button} onClick={() => handleAddEmoji('❤️')}>
-            ❤️
-          </Button>
-          <Button className={classes.button} onClick={() => handleAddEmoji('👏')}>
-            👏
-          </Button>
-          <Button className={classes.button} onClick={() => handleAddEmoji('😂')} style={{ marginRight: '1em' }}>
-            😂
-          </Button>
+          <Hidden smDown>
+            <Button className={classes.button} onClick={() => handleAddEmoji('😀')}>
+              😀
+            </Button>
+            <Button className={classes.button} onClick={() => handleAddEmoji('👍')}>
+              👍
+            </Button>
+            <Button className={classes.button} onClick={() => handleAddEmoji('❤️')}>
+              ❤️
+            </Button>
+            <Button className={classes.button} onClick={() => handleAddEmoji('👏')}>
+              👏
+            </Button>
+            <Button className={classes.button} onClick={() => handleAddEmoji('😂')} style={{ marginRight: '1em' }}>
+              😂
+            </Button>
+          </Hidden>
           <Button
             className={classes.button}
             onClick={() => handleSendMessage(messageBody)}
