@@ -3,6 +3,7 @@ package com.twilio.livevideo.app.repository.datasource.remote
 import com.twilio.livevideo.app.network.LiveVideoRequestInterceptor
 import com.twilio.livevideo.app.repository.model.CreateStreamResponse
 import com.twilio.livevideo.app.repository.model.DeleteStreamResponse
+import com.twilio.livevideo.app.repository.model.JoinStreamAsSpeakerResponse
 import com.twilio.livevideo.app.repository.model.JoinStreamAsViewerResponse
 import com.twilio.livevideo.app.repository.model.VerifyPasscodeResponse
 import retrofit2.Response
@@ -31,4 +32,10 @@ interface LiveVideoAPIService {
     suspend fun deleteStream(
         @Query("stream_name") streamName: String
     ): Response<DeleteStreamResponse>
+
+    @GET("/join-stream-as-speaker")
+    suspend fun joinStreamAsSpeaker(
+        @Query("user_identity") userIdentity: String,
+        @Query("stream_name") streamName: String
+    ): Response<JoinStreamAsSpeakerResponse>
 }

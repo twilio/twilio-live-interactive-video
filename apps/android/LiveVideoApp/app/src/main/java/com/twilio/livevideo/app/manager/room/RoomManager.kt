@@ -66,15 +66,22 @@ class RoomManager @Inject constructor(
     }
 
     fun disconnect() {
-        handleError(null)
+        disconnect(null)
+    }
+
+    private fun disconnect(disconnectionType: RoomDisconnectionType?) {
+        cleanUp()
+        _onStateEvent.value = RoomViewEvent.OnDisconnected(disconnectionType)
     }
 
     private fun handleError(errorResponse: ErrorResponse?) {
         cleanUp()
-        _onStateEvent.value = RoomViewEvent.OnDisconnect(errorResponse)
+        _onStateEvent.value = RoomViewEvent.OnError(errorResponse)
     }
 
     private fun cleanUp() {
+        localParticipantWrapper.isCameraOn = false
+        localParticipantWrapper.isMicOn = false
         room?.disconnect()
         room = null
         participants?.clear()
@@ -108,23 +115,30 @@ class RoomManager @Inject constructor(
     }
 
     override fun onConnectFailure(room: Room, twilioException: TwilioException) {
+        Timber.i("onConnectFailure -> room sid: %s", room.sid)
         this.localParticipantWrapper.participant = null
         handleError(ErrorResponse(twilioException.message ?: "Error", twilioException.explanation ?: "onConnectFailure"))
     }
 
     override fun onReconnecting(room: Room, twilioException: TwilioException) {
-
+        Timber.i("onReconnecting -> room sid: %s", room.sid)
     }
 
     override fun onReconnected(room: Room) {
-
+        Timber.i("onReconnected -> room sid: %s", room.sid)
     }
 
     override fun onDisconnected(room: Room, twilioException: TwilioException?) {
-
+        Timber.i("onDisconnected -> room sid: %s", room.sid)
+        twilioException?.code?.apply {
+            if (this == TwilioException.ROOM_ROOM_COMPLETED_EXCEPTION) {
+                disconnect(RoomDisconnectionType.StreamEndedByHost)
+            }
+        }
     }
 
     override fun onParticipantConnected(room: Room, remoteParticipant: RemoteParticipant) {
+        Timber.i("onParticipantConnected -> room sid: %s", room.sid)
         if (remoteParticipant.isVideoComposer()) return
         val newParticipant = RemoteParticipantWrapper(remoteParticipant, ::remoteParticipantCallback)
         lifecycleOwner?.lifecycle?.apply { newParticipant.init(this) }
@@ -137,26 +151,28 @@ class RoomManager @Inject constructor(
         room: Room,
         remoteParticipant: RemoteParticipant
     ) {
-        participants?.first { it.participant?.identity == remoteParticipant.identity }?.apply {
+        Timber.i("onParticipantDisconnected -> room sid: %s", room.sid)
+        participants?.firstOrNull { it.participant?.identity == remoteParticipant.identity }?.apply {
             participants?.remove(this)
             lifecycleOwner?.lifecycle?.removeObserver(this)
             if (this is RemoteParticipantWrapper) {
-                (this as RemoteParticipantWrapper).clickCallback = null
+                this.clickCallback = null
             }
             _onStateEvent.value = RoomViewEvent.OnRemoteParticipantDisconnected(participants ?: listOf())
         }
     }
 
     override fun onRecordingStarted(room: Room) {
-
+        Timber.i("onRecordingStarted -> room sid: %s", room.sid)
     }
 
     override fun onRecordingStopped(room: Room) {
-
+        Timber.i("onRecordingStopped -> room sid: %s", room.sid)
     }
 
     override fun onDominantSpeakerChanged(room: Room, remoteParticipant: RemoteParticipant?) {
         super.onDominantSpeakerChanged(room, remoteParticipant)
+        Timber.i("onDominantSpeakerChanged -> room sid: %s", room.sid)
         participants?.firstOrNull { it.isDominantSpeaker }?.apply { this.isDominantSpeaker = false }
         participants?.firstOrNull { it.identity == remoteParticipant?.identity }?.apply { this.isDominantSpeaker = true }
     }

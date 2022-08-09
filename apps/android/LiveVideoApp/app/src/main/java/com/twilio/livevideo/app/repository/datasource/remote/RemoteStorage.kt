@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.twilio.livevideo.app.repository.model.BaseResponse
 import com.twilio.livevideo.app.repository.model.CreateStreamResponse
 import com.twilio.livevideo.app.repository.model.DeleteStreamResponse
+import com.twilio.livevideo.app.repository.model.JoinStreamAsSpeakerResponse
 import com.twilio.livevideo.app.repository.model.JoinStreamAsViewerResponse
 import com.twilio.livevideo.app.repository.model.VerifyPasscodeResponse
 import com.twilio.livevideo.app.util.ApiResponseUtil
@@ -33,6 +34,12 @@ class RemoteStorage @Inject constructor(private var liveVideoAPIService: LiveVid
         streamName: String
     ): DeleteStreamResponse =
         processResponse(liveVideoAPIService.deleteStream(streamName))
+
+    suspend fun joinStreamAsSpeaker(
+        userIdentity: String,
+        streamName: String
+    ): JoinStreamAsSpeakerResponse =
+        processResponse(liveVideoAPIService.joinStreamAsSpeaker(userIdentity, streamName))
 
     private inline fun <reified T : BaseResponse> processResponse(
         response: Response<T>,

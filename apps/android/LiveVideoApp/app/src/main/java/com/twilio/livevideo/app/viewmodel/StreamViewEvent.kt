@@ -7,4 +7,5 @@ sealed class StreamViewEvent {
     data class OnCreateStream(val token: String) : StreamViewEvent()
     object OnDeleteStream : StreamViewEvent()
     data class OnStreamError(val error: ErrorResponse?) : StreamViewEvent()
+    data class OnConnectSpeaker(val token: String) : StreamViewEvent()
 }
