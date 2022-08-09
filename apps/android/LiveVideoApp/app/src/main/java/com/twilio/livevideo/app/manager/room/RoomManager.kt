@@ -65,7 +65,11 @@ class RoomManager @Inject constructor(
         }
     }
 
-    fun disconnect(disconnectionType: RoomDisconnectionType? = null) {
+    fun disconnect() {
+        disconnect(null)
+    }
+
+    private fun disconnect(disconnectionType: RoomDisconnectionType?) {
         cleanUp()
         _onStateEvent.value = RoomViewEvent.OnDisconnected(disconnectionType)
     }
