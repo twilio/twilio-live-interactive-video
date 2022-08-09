@@ -25,6 +25,7 @@
     "copyfiles": "2.4.1",
     "cross-env": "^7.0.2",
     "d3-timer": "^1.0.10",
+    "emoji-regex": "^10.1.0",
     "express": "^4.17.1",
     "http-proxy-middleware": "^2.0.1",
     "husky": "^3.1.0",
