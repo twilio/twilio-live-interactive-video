@@ -42,7 +42,7 @@ fun GridLayout.updateParticipants(gridManager: GridManager, participantList: Lis
 @BindingAdapter("participantsCount")
 fun TextView.participantsCount(offScreenParticipantsCount: Int) {
     visibility = if (offScreenParticipantsCount > 0) {
-        text = "+${offScreenParticipantsCount} more"
+        text = context.getString(R.string.off_screen_count, offScreenParticipantsCount)
         View.VISIBLE
     } else {
         View.GONE

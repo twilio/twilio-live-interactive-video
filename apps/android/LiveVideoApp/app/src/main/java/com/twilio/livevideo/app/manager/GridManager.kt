@@ -16,8 +16,8 @@ class GridManager {
     private val participants: MutableList<ParticipantStream> = mutableListOf()
     private val bindings: MutableList<ParticipantViewItemBinding> = mutableListOf()
 
-    fun getOffScreenCount(): Int {
-        return participants.size - GRID_MAX_PARTICIPANTS_LIMIT
+    fun getOffScreenCount(newListSize: Int): Int {
+        return newListSize - GRID_MAX_PARTICIPANTS_LIMIT
     }
 
     fun updateParticipants(context: Context, gridLayout: GridLayout, updatedParticipantList: List<ParticipantStream>) {
@@ -130,14 +130,14 @@ class GridManager {
     }
 
     companion object {
-        private const val GRID_MAX_PARTICIPANTS_LIMIT = 4
+        private const val GRID_MAX_PARTICIPANTS_LIMIT = 6
         private const val VERTICAL_MODE_LIMIT = 3
 
         fun switchParticipants(list: MutableList<ParticipantStream>, participant: ParticipantStream): Boolean {
             list.indexOf(participant).also { index ->
                 if (index + 1 > GRID_MAX_PARTICIPANTS_LIMIT) {
                     //Take the first N limit participants and skip the first element which is the local participant.
-                    list.take(GRID_MAX_PARTICIPANTS_LIMIT).drop(1).maxByOrNull {
+                    list.take(GRID_MAX_PARTICIPANTS_LIMIT).drop(1).minByOrNull {
                         it.dominantSpeakerStartTime
                     }?.also { oldestDominantSpeaker ->
                         val oldestDominantSpeakerIndex = list.indexOf(oldestDominantSpeaker)

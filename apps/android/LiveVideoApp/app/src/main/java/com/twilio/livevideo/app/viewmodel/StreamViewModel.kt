@@ -53,7 +53,7 @@ class StreamViewModel @Inject constructor(
     }
 
     fun updateParticipants(participants: List<ParticipantStream>) {
-        _offScreenParticipantsCount.value = gridManager.getOffScreenCount()
+        _offScreenParticipantsCount.value = gridManager.getOffScreenCount(participants.size)
         _participants.value = participants
     }
 
