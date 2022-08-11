@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
     borderColor: theme.palette.primary.main,
     borderRadius: '4px',
   },
-  singleEmoji: {
+  onlyEmojis: {
     fontSize: '2em',
   },
 }));
@@ -94,7 +94,7 @@ export default function ChatInput({ conversation, isChatWindowOpen }: ChatInputP
     textInputRef.current?.focus();
   };
 
-  const isSingleEmoji = messageBody.length === 2 && emojiRegex().test(messageBody);
+  const isOnlyEmojis = messageBody.match(emojiRegex())?.join('').length === messageBody.length;
 
   return (
     <div className={classes.chatInputContainer}>
@@ -107,7 +107,7 @@ export default function ChatInput({ conversation, isChatWindowOpen }: ChatInputP
         <TextareaAutosize
           minRows={1}
           maxRows={3}
-          className={clsx(classes.textArea, { [classes.singleEmoji]: isSingleEmoji })}
+          className={clsx(classes.textArea, { [classes.onlyEmojis]: isOnlyEmojis })}
           aria-label="chat input"
           placeholder="Write a message..."
           onKeyPress={handleReturnKeyPress}

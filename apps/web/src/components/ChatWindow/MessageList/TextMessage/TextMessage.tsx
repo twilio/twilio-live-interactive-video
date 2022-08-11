@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   isLocalParticipant: {
     backgroundColor: '#CCE4FF',
   },
-  singleEmoji: {
+  onlyEmojis: {
     fontSize: '2em',
   },
 });
@@ -55,7 +55,7 @@ function addLinks(text: string) {
 export default function TextMessage({ body, isLocalParticipant }: TextMessageProps) {
   const classes = useStyles();
 
-  const isSingleEmoji = body.length === 2 && emojiRegex().test(body);
+  const isOnlyEmojis = body.match(emojiRegex())?.join('').length === body.length;
 
   return (
     <div>
@@ -64,7 +64,7 @@ export default function TextMessage({ body, isLocalParticipant }: TextMessagePro
           [classes.isLocalParticipant]: isLocalParticipant,
         })}
       >
-        <div className={clsx({ [classes.singleEmoji]: isSingleEmoji })}>{addLinks(body)}</div>
+        <div className={clsx({ [classes.onlyEmojis]: isOnlyEmojis })}>{addLinks(body)}</div>
       </div>
     </div>
   );
