@@ -9,7 +9,6 @@ data class StreamViewState(
     val isLoading: Boolean = true,
     val eventName: String = "",
     val isLiveActive: Boolean = false,
-    val participants: List<ParticipantStream>? = null
 ) {
     fun isViewerRole() = role == ViewRole.Viewer
     fun isSpeakerRole() = role == ViewRole.Speaker

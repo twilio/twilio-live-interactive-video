@@ -5,6 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.twilio.livevideo.app.custom.BaseLifeCycleComponent
+import com.twilio.livevideo.app.manager.GridManager
 import com.twilio.livevideo.app.repository.model.ErrorResponse
 import com.twilio.video.BandwidthProfileMode
 import com.twilio.video.OpusCodec
@@ -47,6 +48,7 @@ class RoomManager @Inject constructor(
         this.lifecycleOwner = lifecycleOwner
         init(lifecycleOwner.lifecycle)
         localParticipantWrapper.init(lifecycleOwner.lifecycle)
+        localParticipantWrapper.setupLocalTracks()
         localParticipantWrapper.isHost = isHost
         room = context?.let {
             val connectOptions: ConnectOptionsBuilder = {
@@ -154,7 +156,6 @@ class RoomManager @Inject constructor(
         Timber.i("onParticipantDisconnected -> room sid: %s", room.sid)
         participants?.firstOrNull { it.participant?.identity == remoteParticipant.identity }?.apply {
             participants?.remove(this)
-            lifecycleOwner?.lifecycle?.removeObserver(this)
             if (this is RemoteParticipantWrapper) {
                 this.clickCallback = null
             }
@@ -174,7 +175,14 @@ class RoomManager @Inject constructor(
         super.onDominantSpeakerChanged(room, remoteParticipant)
         Timber.i("onDominantSpeakerChanged -> room sid: %s", room.sid)
         participants?.firstOrNull { it.isDominantSpeaker }?.apply { this.isDominantSpeaker = false }
-        participants?.firstOrNull { it.identity == remoteParticipant?.identity }?.apply { this.isDominantSpeaker = true }
+        participants?.firstOrNull { it.identity == remoteParticipant?.identity }?.apply {
+            participants?.also { list ->
+                if (GridManager.switchParticipants(list, this)) {
+                    _onStateEvent.value = RoomViewEvent.OnDominantSpeakerChanged(list)
+                }
+            }
+            this.isDominantSpeaker = true
+        }
     }
 
     override fun onDestroy(owner: LifecycleOwner) {

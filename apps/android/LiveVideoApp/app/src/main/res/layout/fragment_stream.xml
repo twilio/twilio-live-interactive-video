@@ -15,306 +15,168 @@
         android:layout_height="match_parent"
         android:animateLayoutChanges="true">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#121C2D"
+            android:orientation="vertical"
             app:layout_constrainedHeight="true"
-            app:layout_constraintBottom_toTopOf="@id/controlsContainer"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/stream_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:src="@drawable/ic_live_event"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:visibleOrGone="@{viewModel.viewState.isLiveActive}" />
-
-            <TextView
-                android:id="@+id/label_stream_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:gravity="end"
-                android:text="@{viewModel.viewState.eventName}"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Event Name" />
-
-            <com.twilio.live.player.PlayerView
-                android:id="@+id/playerView"
-                android:layout_width="0dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constrainedHeight="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/stream_status"
-                app:visibleOrGone="@{viewModel.viewState.isViewerRole}"
-                tools:visibility="visible" />
+                android:layout_weight="1"
+                app:layout_optimizationLevel="dimensions"
+                android:background="#121C2D">
 
-            <TableLayout
-                android:id="@+id/grid_container"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:weightSum="1"
-                app:layout_constrainedHeight="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/stream_status"
-                app:updateParticipants="@{viewModel.viewState.participants}" />
+                <ImageView
+                    android:id="@+id/stream_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:src="@drawable/ic_live_event"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:visibleOrGone="@{viewModel.viewState.isLiveActive}" />
 
-            <TableLayout
-                android:id="@+id/grid_container_test"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="#4F000000"
-                android:stretchColumns="*"
-                android:visibility="gone"
-                android:weightSum="1"
-                app:layout_constrainedHeight="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/stream_status"
-                tools:visibility="gone">
+                <TextView
+                    android:id="@+id/label_stream_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="end"
+                    android:text="@{viewModel.viewState.eventName}"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Event Name" />
 
-                <TableRow
+                <com.twilio.live.player.PlayerView
+                    android:id="@+id/playerView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constrainedHeight="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/stream_status"
+                    app:visibleOrGone="@{viewModel.viewState.isViewerRole}"
+                    tools:visibility="visible" />
+
+                <GridLayout
+                    android:id="@+id/gridLayoutContainer"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_centerHorizontal="true"
+                    android:alignmentMode="alignBounds"
+                    android:columnCount="2"
+                    android:columnOrderPreserved="false"
+                    android:orientation="horizontal"
+                    android:rowOrderPreserved="false"
+                    android:shrinkColumns="*"
+                    android:stretchColumns="*"
+                    android:useDefaultMargins="false"
+                    android:visibility="visible"
+                    app:gridManager="@{viewModel.gridManager}"
+                    app:layout_constrainedHeight="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/stream_status"
+                    app:layout_constraintVertical_bias="0"
+                    app:participantList="@{viewModel.participants}" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/offScreenCounter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.333333">
+                    android:layout_height="120dp"
+                    android:layout_marginHorizontal="9dp"
+                    android:layout_marginVertical="10dp"
+                    android:background="#394762"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:participantsCount="@{viewModel.offScreenParticipantsCount}"
+                    tools:text="+1 More" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_span="1"
-                        android:text="Hello world"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Hello world"
-                        android:textColor="@color/white" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.333333">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textColor="@color/white">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="Hello world"
-                            android:textColor="@color/white"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textColor="@color/white">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:text="Hello world"
-                            android:textColor="@color/white"
-                            app:layout_constrainedHeight="true"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.333333">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Hello world"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Hello world"
-                        android:textColor="@color/white" />
-                </TableRow>
-
-
-            </TableLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:orientation="vertical"
-                android:visibility="gone"
-                app:layout_constrainedHeight="true"
-                app:layout_constrainedWidth="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/stream_status">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Hello World"
-                            android:textColor="@color/white" />
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:text="Hello World"
-                        android:textColor="@color/white" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:text="Hello World"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:text="Hello World"
-                        android:textColor="@color/white" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:text="Hello World"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:text="Hello World"
-                        android:textColor="@color/white" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/controlsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:gravity="center"
-            android:minHeight="100dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <ImageView
-                android:id="@+id/exit_event"
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/controlsContainer"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
-                android:src="@drawable/ic_exit_event" />
-
-            <CheckBox
-                android:id="@+id/raise_hand_event"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
-                android:background="@drawable/ic_raise_hand"
-                android:button="@null"
+                android:background="@color/white"
                 android:gravity="center"
-                app:visibleOrGone="@{viewModel.viewState.isViewerRole}" />
+                android:minHeight="100dp"
+                android:orientation="horizontal">
 
-            <CheckBox
-                android:id="@+id/mic_switch_event"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
-                android:background="@drawable/ic_mic_switch"
-                android:button="@null"
-                android:enabled="false"
-                android:gravity="center"
-                app:visibleOrGone="@{!viewModel.viewState.isViewerRole}" />
+                <ImageView
+                    android:id="@+id/exit_event"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
+                    android:src="@drawable/ic_exit_event" />
 
-            <CheckBox
-                android:id="@+id/video_switch_event"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
-                android:background="@drawable/ic_cam_switch"
-                android:button="@null"
-                android:enabled="false"
-                android:gravity="center"
-                app:visibleOrGone="@{!viewModel.viewState.isViewerRole}" />
+                <CheckBox
+                    android:id="@+id/raise_hand_event"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
+                    android:background="@drawable/ic_raise_hand"
+                    android:button="@null"
+                    android:gravity="center"
+                    app:visibleOrGone="@{viewModel.viewState.isViewerRole}" />
 
-            <ImageView
-                android:id="@+id/participants_event"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
-                android:src="@drawable/ic_participants" />
+                <CheckBox
+                    android:id="@+id/mic_switch_event"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
+                    android:background="@drawable/ic_mic_switch"
+                    android:button="@null"
+                    android:enabled="false"
+                    android:gravity="center"
+                    app:visibleOrGone="@{!viewModel.viewState.isViewerRole}" />
 
-            <ImageView
-                android:id="@+id/speaker_menu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
-                android:src="@drawable/ic_dots_menu"
-                app:visibleOrGone="@{viewModel.viewState.isSpeakerRole}" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
+                <CheckBox
+                    android:id="@+id/video_switch_event"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
+                    android:background="@drawable/ic_cam_switch"
+                    android:button="@null"
+                    android:enabled="false"
+                    android:gravity="center"
+                    app:visibleOrGone="@{!viewModel.viewState.isViewerRole}" />
+
+                <ImageView
+                    android:id="@+id/participants_event"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
+                    android:src="@drawable/ic_participants" />
+
+                <ImageView
+                    android:id="@+id/speaker_menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
+                    android:src="@drawable/ic_dots_menu"
+                    app:visibleOrGone="@{viewModel.viewState.isSpeakerRole}" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </LinearLayout>
 
         <include
             layout="@layout/live_progress_indicator"

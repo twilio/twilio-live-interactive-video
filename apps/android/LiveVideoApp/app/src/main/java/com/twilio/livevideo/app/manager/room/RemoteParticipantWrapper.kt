@@ -14,8 +14,7 @@ import timber.log.Timber
 data class RemoteParticipantWrapper constructor(
     private val remoteParticipantParam: RemoteParticipant?,
     var clickCallback: ((RemoteParticipantWrapper) -> Unit)?
-) :
-    ParticipantStream(), RemoteParticipant.Listener {
+) : ParticipantStream(), RemoteParticipant.Listener {
 
     var remoteParticipant: RemoteParticipant?
         get() = if (super.participant is RemoteParticipant) super.participant as RemoteParticipant else null
@@ -36,7 +35,7 @@ data class RemoteParticipantWrapper constructor(
             isMicOn = value && isAudioTrackEnabled
         }
 
-    private var isAudioTrackEnabled: Boolean = false
+    private var isAudioTrackEnabled: Boolean = true
         set(value) {
             field = value
             isMicOn = value && isAudioTrackSubscribed

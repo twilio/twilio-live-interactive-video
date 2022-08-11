@@ -13,7 +13,7 @@ data class CreateStreamResponse(
 ) : BaseResponse()
 
 data class DeleteStreamResponse(
-    @SerializedName("token")
+    @SerializedName("deleted")
     val deleted: Boolean = false
 ) : BaseResponse()
 

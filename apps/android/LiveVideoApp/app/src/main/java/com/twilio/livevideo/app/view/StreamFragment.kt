@@ -189,13 +189,20 @@ class StreamFragment internal constructor() : Fragment() {
                 is RoomViewEvent.OnDisconnected -> {
                     when (event.disconnectionType) {
                         RoomDisconnectionType.StreamEndedByHost -> showDisconnectedRoomAlert()
-                        null -> {}
+                        null -> {
+                            if (args.viewRole == ViewRole.Speaker) {
+                                navigateToHomeScreen()
+                            }
+                        }
                     }
                 }
                 is RoomViewEvent.OnRemoteParticipantConnected -> {
                     viewModel.updateParticipants(event.participants)
                 }
                 is RoomViewEvent.OnRemoteParticipantDisconnected -> {
+                    viewModel.updateParticipants(event.participants)
+                }
+                is RoomViewEvent.OnDominantSpeakerChanged -> {
                     viewModel.updateParticipants(event.participants)
                 }
                 is RoomViewEvent.OnRemoteParticipantOnClickMenu -> {

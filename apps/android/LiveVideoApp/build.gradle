@@ -1,9 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext.versions = [
-            lifecycleLiveData           : '2.4.1',
+            lifecycleLiveData           : '2.5.1',
             lifecycleViewModel          : '2.5.0-rc02',
-            navigation                  : '2.5.0',
+            navigation                  : '2.5.1',
             hilt                        : '2.42',
             hiltCompiler                : '1.0.0-alpha01',
             twilioVideoSdk              : '7.1.1',
@@ -15,7 +15,7 @@ buildscript {
             androidXTest                : '1.4.0',
             timber                      : '5.0.1',
             coroutinesTestAndroid       : '1.4.3',
-            fragmentAndroid             : '1.5.0',
+            fragmentAndroid             : '1.5.1',
             coroutinesAndroid           : '1.6.1',
             robolectric                 : '4.4',
             junit                       : '4.13.2',

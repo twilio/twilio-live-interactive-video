@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.twilio.livevideo.app.annotations.OpenForTesting
+import com.twilio.livevideo.app.manager.GridManager
 import com.twilio.livevideo.app.manager.room.ParticipantStream
 import com.twilio.livevideo.app.repository.LiveVideoRepository
 import com.twilio.livevideo.app.viewstate.StreamViewState
@@ -25,6 +26,14 @@ class StreamViewModel @Inject constructor(
     val viewState: LiveData<StreamViewState>
         get() = _viewState
 
+    private val _participants: MutableLiveData<List<ParticipantStream>> = MutableLiveData<List<ParticipantStream>>(listOf())
+    val participants: LiveData<List<ParticipantStream>>
+        get() = _participants
+
+    private val _offScreenParticipantsCount: MutableLiveData<Int> = MutableLiveData<Int>(0)
+    val offScreenParticipantsCount: LiveData<Int>
+        get() = _offScreenParticipantsCount
+
     private val _screenEvent: MutableLiveData<StreamViewEvent?> = MutableLiveData()
     val screenEvent: LiveData<StreamViewEvent?>
         get() {
@@ -32,6 +41,8 @@ class StreamViewModel @Inject constructor(
             _screenEvent.value = null
             return event
         }
+
+    val gridManager: GridManager = GridManager()
 
     fun initViewState(role: ViewRole) {
         _viewState.value = StreamViewState(role)
@@ -42,7 +53,8 @@ class StreamViewModel @Inject constructor(
     }
 
     fun updateParticipants(participants: List<ParticipantStream>) {
-        _viewState.value = _viewState.value?.copy(participants = participants)
+        _offScreenParticipantsCount.value = gridManager.getOffScreenCount()
+        _participants.value = participants
     }
 
     fun joinStreamAsViewer(eventName: String) {
