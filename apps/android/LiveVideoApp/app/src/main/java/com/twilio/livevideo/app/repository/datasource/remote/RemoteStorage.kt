@@ -9,6 +9,7 @@ import com.twilio.livevideo.app.repository.model.JoinStreamAsViewerResponse
 import com.twilio.livevideo.app.repository.model.VerifyPasscodeResponse
 import retrofit2.Response
 import retrofit2.Retrofit
+import timber.log.Timber
 import javax.inject.Inject
 
 class RemoteStorage @Inject constructor(private val liveVideoAPIService: LiveVideoAPIService, private val retrofit: Retrofit) {
@@ -37,17 +38,20 @@ class RemoteStorage @Inject constructor(private val liveVideoAPIService: LiveVid
         response: Response<T>,
     ): T {
         val result: T = if (!response.isSuccessful) { // Failure case
+            var parsingException:  MalformedJsonException? = null
             response.errorBody()?.let { body ->
                 try {
                     retrofit.responseBodyConverter<T>(T::class.java, arrayOf()).convert(body)
                 } catch (e: MalformedJsonException) {
+                    parsingException = e
+                    Timber.e(e)
                     null
                 }
             } ?: T::class.java.newInstance().apply {
                 val explanation = if (code == 404)
                     ""
                 else
-                    "MalformedJsonException"
+                    parsingException?.message ?: "MalformedJsonException"
                 error = ErrorResponse("Error - ${response.code()}", explanation)
             }
         } else {
