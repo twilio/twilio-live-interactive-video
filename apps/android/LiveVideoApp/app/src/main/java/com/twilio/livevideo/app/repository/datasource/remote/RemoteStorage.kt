@@ -5,6 +5,7 @@ import com.twilio.livevideo.app.repository.model.BaseResponse
 import com.twilio.livevideo.app.repository.model.CreateStreamResponse
 import com.twilio.livevideo.app.repository.model.DeleteStreamResponse
 import com.twilio.livevideo.app.repository.model.ErrorResponse
+import com.twilio.livevideo.app.repository.model.JoinStreamAsSpeakerResponse
 import com.twilio.livevideo.app.repository.model.JoinStreamAsViewerResponse
 import com.twilio.livevideo.app.repository.model.VerifyPasscodeResponse
 import retrofit2.Response
@@ -34,11 +35,17 @@ class RemoteStorage @Inject constructor(private val liveVideoAPIService: LiveVid
     ): DeleteStreamResponse =
         validateResponse(liveVideoAPIService.deleteStream(streamName))
 
+    suspend fun joinStreamAsSpeaker(
+        userIdentity: String,
+        streamName: String
+    ): JoinStreamAsSpeakerResponse =
+        validateResponse(liveVideoAPIService.joinStreamAsSpeaker(userIdentity, streamName))
+
     private inline fun <reified T : BaseResponse> validateResponse(
         response: Response<T>,
     ): T {
         val result: T = if (!response.isSuccessful) { // Failure case
-            var parsingException:  MalformedJsonException? = null
+            var parsingException: MalformedJsonException? = null
             response.errorBody()?.let { body ->
                 try {
                     retrofit.responseBodyConverter<T>(T::class.java, arrayOf()).convert(body)

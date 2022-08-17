@@ -41,6 +41,10 @@ class StreamViewModel @Inject constructor(
         _viewState.value = _viewState.value?.copy(isLoading = false, isLiveActive = isLiveActive)
     }
 
+    fun updateParticipants(participants: List<ParticipantStream>) {
+        _viewState.value = _viewState.value?.copy(participants = participants)
+    }
+
     fun joinStreamAsViewer(eventName: String) {
         viewModelScope.launch {
             _viewState.value = _viewState.value?.copy(
@@ -92,7 +96,20 @@ class StreamViewModel @Inject constructor(
         }
     }
 
-    fun updateParticipants(participants: List<ParticipantStream>) {
-        _viewState.value = _viewState.value?.copy(participants = participants)
+    fun joinStreamAsSpeaker(eventName: String) {
+        viewModelScope.launch {
+            _viewState.value = _viewState.value?.copy(
+                isLoading = true,
+                eventName = eventName,
+                isLiveActive = false
+            )
+            val response = liveVideoRepository.joinStreamAsSpeaker(eventName)
+            if (response.isApiResponseSuccess && response.token.isNotEmpty()) {
+                _screenEvent.value = StreamViewEvent.OnConnectSpeaker(response.token)
+            } else {
+                _screenEvent.value = StreamViewEvent.OnStreamError(response.error)
+                _viewState.value = _viewState.value?.copy(isLoading = false, isLiveActive = false)
+            }
+        }
     }
 }
