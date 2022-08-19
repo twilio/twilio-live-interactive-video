@@ -19,7 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@twilio-labs/serverless-api": "^5.2.1",
+    "@twilio-labs/serverless-api": "^5.4.3",
     "axios": "^0.21.4",
     "cli-ux": "^5.6.3",
     "commander": "^8.2.0",
