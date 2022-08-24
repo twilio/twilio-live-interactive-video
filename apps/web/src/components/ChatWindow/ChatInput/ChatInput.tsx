@@ -32,8 +32,10 @@ const useStyles = makeStyles(theme => ({
     },
   },
   buttonContainer: {
-    margin: '1em 0 0 1em',
+    margin: '1em 0 0 0.5em',
     display: 'flex',
+    width: '100%',
+    justifyContent: 'space-between',
   },
   textAreaContainer: {
     display: 'flex',
@@ -122,21 +124,23 @@ export default function ChatInput({ conversation, isChatWindowOpen }: ChatInputP
 
       <Grid container alignItems="flex-end" justifyContent="flex-end" wrap="nowrap">
         <div className={classes.buttonContainer}>
-          <Button className={classes.button} onClick={() => handleAddEmoji('😀')}>
-            😀
-          </Button>
-          <Button className={classes.button} onClick={() => handleAddEmoji('👍')}>
-            👍
-          </Button>
-          <Button className={classes.button} onClick={() => handleAddEmoji('❤️')}>
-            ❤️
-          </Button>
-          <Button className={classes.button} onClick={() => handleAddEmoji('👏')}>
-            👏
-          </Button>
-          <Button className={classes.button} onClick={() => handleAddEmoji('😂')} style={{ marginRight: '1em' }}>
-            😂
-          </Button>
+          <div>
+            <Button className={classes.button} onClick={() => handleAddEmoji('😀')}>
+              😀
+            </Button>
+            <Button className={classes.button} onClick={() => handleAddEmoji('👍')}>
+              👍
+            </Button>
+            <Button className={classes.button} onClick={() => handleAddEmoji('❤️')}>
+              ❤️
+            </Button>
+            <Button className={classes.button} onClick={() => handleAddEmoji('👏')}>
+              👏
+            </Button>
+            <Button className={classes.button} onClick={() => handleAddEmoji('😂')}>
+              😂
+            </Button>
+          </div>
           <Button
             className={classes.button}
             onClick={() => handleSendMessage(messageBody)}
