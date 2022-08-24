@@ -78,7 +78,7 @@
     "install:video-processors": "copyfiles -f node_modules/@twilio/video-processors/dist/build/* public/virtualbackground",
     "install:player": "copyfiles -f node_modules/@twilio/live-player-sdk/dist/build/* public/player",
     "postinstall": "concurrently npm:install:player npm:install:video-processors",
-    "start": "npx cross-env REACT_APP_VERSION=$(node -e \"console.log(require('./package.json').version)\") react-scripts start",
+    "start": "react-scripts start",
     "build": "node ./scripts/build.js",
     "test": "cross-env TZ=utc jest",
     "eject": "react-scripts eject",
