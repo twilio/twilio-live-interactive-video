@@ -1,0 +1,216 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`the messageList component should render correctly 1`] = `
+<div>
+  <div
+    class="MessageListScrollContainer-outerContainer-1"
+  >
+    <div
+      class="MessageListScrollContainer-innerScrollContainer-2"
+      data-cy-message-list-inner-scroll="true"
+    >
+      <div
+        class="MessageListScrollContainer-messageListContainer-3"
+      >
+        <div
+          class="makeStyles-messageInfoContainer-6"
+        >
+          <div>
+            olivia (You)
+          </div>
+          <div>
+            9:48 pm
+          </div>
+        </div>
+        <div>
+          <div
+            class="makeStyles-messageContainer-7 makeStyles-isLocalParticipant-8"
+          >
+            <div
+              class=""
+            >
+              This is a message
+            </div>
+          </div>
+        </div>
+        <div
+          class="makeStyles-messageInfoContainer-6"
+        >
+          <div>
+            tim
+          </div>
+          <div>
+            9:48 pm
+          </div>
+        </div>
+        <div>
+          <div
+            class="makeStyles-messageContainer-7"
+          >
+            <div
+              class=""
+            >
+              Hi Olivia!
+            </div>
+          </div>
+        </div>
+        <div>
+          <div
+            class="makeStyles-messageContainer-7"
+          >
+            <div
+              class=""
+            >
+              That is pretty rad double line message! How did you do that?
+            </div>
+          </div>
+        </div>
+        <div
+          class="makeStyles-messageInfoContainer-6"
+        >
+          <div>
+            tim
+          </div>
+          <div>
+            9:49 pm
+          </div>
+        </div>
+        <div>
+          <div
+            class="makeStyles-messageContainer-7"
+          >
+            <div
+              class="makeStyles-onlyEmojis-9"
+            >
+              😉
+            </div>
+          </div>
+        </div>
+        <div
+          class="makeStyles-messageInfoContainer-6"
+        >
+          <div>
+            olivia (You)
+          </div>
+          <div>
+            9:49 pm
+          </div>
+        </div>
+        <div>
+          <div
+            class="makeStyles-messageContainer-7 makeStyles-isLocalParticipant-8"
+          >
+            <div
+              class=""
+            >
+              Magic
+            </div>
+          </div>
+        </div>
+        <div
+          class="makeStyles-messageInfoContainer-6"
+        >
+          <div>
+            olivia (You)
+          </div>
+          <div>
+            9:50 pm
+          </div>
+        </div>
+        <div>
+          <div
+            class="makeStyles-messageContainer-7 makeStyles-isLocalParticipant-8"
+          >
+            <div
+              class=""
+            >
+              lots of magic
+            </div>
+          </div>
+        </div>
+        <div
+          class="makeStyles-messageInfoContainer-6"
+        >
+          <div>
+            tim
+          </div>
+          <div>
+            9:50 pm
+          </div>
+        </div>
+        <div>
+          <div
+            class="makeStyles-messageContainer-7"
+          >
+            <div
+              class=""
+            >
+              look at this app: 
+              <a
+                class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+                href="http://github.com/twilio/twilio-video-app-react"
+                rel="noreferrer"
+                target="_blank"
+              >
+                github.com/twilio/twilio-video-app-react
+              </a>
+              . Neat huh?
+            </div>
+          </div>
+        </div>
+        <div
+          class="makeStyles-messageInfoContainer-6"
+        >
+          <div>
+            olivia (You)
+          </div>
+          <div>
+            9:50 pm
+          </div>
+        </div>
+        <div>
+          <div
+            class="makeStyles-messageContainer-7 makeStyles-isLocalParticipant-8"
+          >
+            <div
+              class="makeStyles-onlyEmojis-9"
+            >
+              👏👏👏👏👏👏👏👏👏👏👏👏👏👏👏👏👏👏
+            </div>
+          </div>
+        </div>
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MessageListScrollContainer-button-4 MuiButton-containedPrimary"
+          data-cy-new-message-button="true"
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            <span
+              class="MuiButton-startIcon MuiButton-iconSizeMedium"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
+                />
+              </svg>
+            </span>
+            0
+             new message
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
