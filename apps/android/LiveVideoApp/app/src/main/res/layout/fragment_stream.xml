@@ -72,22 +72,20 @@
                     android:layout_centerHorizontal="true"
                     android:alignmentMode="alignBounds"
                     android:columnCount="2"
-                    android:columnOrderPreserved="false"
+                    android:columnOrderPreserved="true"
                     android:orientation="horizontal"
-                    android:rowOrderPreserved="false"
+                    android:rowOrderPreserved="true"
                     android:shrinkColumns="*"
                     android:stretchColumns="*"
                     android:useDefaultMargins="false"
                     android:visibility="visible"
-                    app:gridManager="@{viewModel.gridManager}"
                     app:layout_constrainedHeight="true"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/stream_status"
-                    app:layout_constraintVertical_bias="0"
-                    app:participantList="@{viewModel.participants}" />
+                    app:layout_constraintVertical_bias="0" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

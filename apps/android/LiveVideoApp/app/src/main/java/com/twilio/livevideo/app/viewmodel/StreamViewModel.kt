@@ -5,8 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.twilio.livevideo.app.annotations.OpenForTesting
-import com.twilio.livevideo.app.manager.GridManager
-import com.twilio.livevideo.app.manager.room.ParticipantStream
 import com.twilio.livevideo.app.repository.LiveVideoRepository
 import com.twilio.livevideo.app.viewstate.StreamViewState
 import com.twilio.livevideo.app.viewstate.ViewRole
@@ -19,16 +17,11 @@ import javax.inject.Inject
 @OpenForTesting
 class StreamViewModel @Inject constructor(
     private val liveVideoRepository: LiveVideoRepository
-) :
-    ViewModel() {
+) : ViewModel() {
 
     private val _viewState: MutableLiveData<StreamViewState> = MutableLiveData<StreamViewState>()
     val viewState: LiveData<StreamViewState>
         get() = _viewState
-
-    private val _participants: MutableLiveData<List<ParticipantStream>> = MutableLiveData<List<ParticipantStream>>(listOf())
-    val participants: LiveData<List<ParticipantStream>>
-        get() = _participants
 
     private val _offScreenParticipantsCount: MutableLiveData<Int> = MutableLiveData<Int>(0)
     val offScreenParticipantsCount: LiveData<Int>
@@ -42,8 +35,6 @@ class StreamViewModel @Inject constructor(
             return event
         }
 
-    val gridManager: GridManager = GridManager()
-
     fun initViewState(role: ViewRole) {
         _viewState.value = StreamViewState(role)
     }
@@ -52,9 +43,8 @@ class StreamViewModel @Inject constructor(
         _viewState.value = _viewState.value?.copy(isLoading = false, isLiveActive = isLiveActive)
     }
 
-    fun updateParticipants(participants: List<ParticipantStream>) {
-        _offScreenParticipantsCount.value = gridManager.getOffScreenCount(participants.size)
-        _participants.value = participants
+    fun updateOffScreenParticipants(offScreenParticipantCount: Int) {
+        _offScreenParticipantsCount.value = offScreenParticipantCount
     }
 
     fun joinStreamAsViewer(eventName: String) {

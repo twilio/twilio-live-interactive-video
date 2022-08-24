@@ -33,12 +33,6 @@ fun ViewGroup.selectDominantSpeaker(isDominantSpeaker: Boolean) {
     }
 }
 
-@BindingAdapter("gridManager", "participantList", requireAll = true)
-fun GridLayout.updateParticipants(gridManager: GridManager, participantList: List<ParticipantStream>) {
-    Timber.d("gridView updateParticipants - New Participants Count ${participantList.size}")
-    gridManager.updateParticipants(context, this, participantList)
-}
-
 @BindingAdapter("participantsCount")
 fun TextView.participantsCount(offScreenParticipantsCount: Int) {
     visibility = if (offScreenParticipantsCount > 0) {
