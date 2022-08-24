@@ -26,4 +26,5 @@
     <string name="twilio_join_event_ended_title">Event is not longer available</string>
     <string name="twilio_join_event_ended_description">This event has been ended by the host.</string>
     <string name="camera_video_track">Camera Video Track</string>
+    <string name="off_screen_count">+%d more</string>
 </resources>

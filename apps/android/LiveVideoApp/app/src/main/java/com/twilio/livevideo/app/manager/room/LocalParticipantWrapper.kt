@@ -78,7 +78,7 @@ data class LocalParticipantWrapper @Inject constructor(private val context: Cont
         }
     }
 
-    private fun setupLocalTracks() {
+    fun setupLocalTracks() {
         setupLocalVideoTrack()
         setupLocalAudioTrack()
         isMicOn = true

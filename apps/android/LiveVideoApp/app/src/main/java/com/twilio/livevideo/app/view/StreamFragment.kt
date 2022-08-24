@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
@@ -15,6 +16,7 @@ import androidx.navigation.fragment.navArgs
 import com.twilio.livevideo.app.R
 import com.twilio.livevideo.app.annotations.OpenForTesting
 import com.twilio.livevideo.app.databinding.FragmentStreamBinding
+import com.twilio.livevideo.app.manager.GridManager
 import com.twilio.livevideo.app.manager.PlayerManager
 import com.twilio.livevideo.app.manager.room.RoomDisconnectionType
 import com.twilio.livevideo.app.manager.room.RoomManager
@@ -43,6 +45,8 @@ class StreamFragment internal constructor() : Fragment() {
     @Inject
     lateinit var roomManager: RoomManager
 
+    val gridManager: GridManager = GridManager()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -56,9 +60,15 @@ class StreamFragment internal constructor() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setupViewModel()
         registerOnViewStateObserver()
         registerOnExitEventButton()
+    }
+
+    override fun onDestroy() {
+        activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        super.onDestroy()
     }
 
     private fun setupViewModel() {
@@ -181,22 +191,32 @@ class StreamFragment internal constructor() : Fragment() {
 
     private fun connectRoom(token: String, isHost: Boolean = false) {
         roomManager.onStateEvent.observe(viewLifecycleOwner) { event ->
+
             when (event) {
                 is RoomViewEvent.OnConnected -> {
                     setupBottomControllers()
-                    viewModel.updateParticipants(event.participants)
+                    gridManager.addParticipant(viewDataBinding.gridLayoutContainer, event.participants)
                 }
                 is RoomViewEvent.OnDisconnected -> {
                     when (event.disconnectionType) {
                         RoomDisconnectionType.StreamEndedByHost -> showDisconnectedRoomAlert()
-                        null -> {}
+                        null -> {
+                            if (args.viewRole == ViewRole.Speaker) {
+                                navigateToHomeScreen()
+                            }
+                        }
                     }
                 }
                 is RoomViewEvent.OnRemoteParticipantConnected -> {
-                    viewModel.updateParticipants(event.participants)
+                    gridManager.addParticipant(viewDataBinding.gridLayoutContainer, event.participant)
+                    viewModel.updateOffScreenParticipants(gridManager.getOffScreenCount())
                 }
                 is RoomViewEvent.OnRemoteParticipantDisconnected -> {
-                    viewModel.updateParticipants(event.participants)
+                    gridManager.removeParticipant(viewDataBinding.gridLayoutContainer, event.participantIdentity)
+                    viewModel.updateOffScreenParticipants(gridManager.getOffScreenCount())
+                }
+                is RoomViewEvent.OnDominantSpeakerChanged -> {
+                    gridManager.updateDominantSpeaker(viewDataBinding.gridLayoutContainer, event.participantIdentity)
                 }
                 is RoomViewEvent.OnRemoteParticipantOnClickMenu -> {
                     Timber.d("RemoteParticipantWrapper OnRemoteParticipantOnClickMenu")
@@ -206,6 +226,7 @@ class StreamFragment internal constructor() : Fragment() {
                 }
                 null -> {}
             }
+
         }
         roomManager.connect(viewLifecycleOwner, commonViewModel.eventName, token, isHost)
     }

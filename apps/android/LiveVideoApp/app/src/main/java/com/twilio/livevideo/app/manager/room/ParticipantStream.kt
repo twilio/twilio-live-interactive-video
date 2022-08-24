@@ -7,6 +7,9 @@ import com.twilio.livevideo.app.custom.BaseLifeCycleComponent
 import com.twilio.video.Participant
 import com.twilio.video.VideoTrack
 import timber.log.Timber
+import java.util.Calendar
+import java.util.Date
+
 
 abstract class ParticipantStream : BaseLifeCycleComponent() {
 
@@ -15,6 +18,8 @@ abstract class ParticipantStream : BaseLifeCycleComponent() {
         get() = mSid
     val sid: String?
         get() = mSid.value
+
+    var dominantSpeakerStartTime: Date = Calendar.getInstance().time
 
     private val mIdentity: MutableLiveData<String?> = MutableLiveData(null)
     val identityLiveData: LiveData<String?>
@@ -37,6 +42,7 @@ abstract class ParticipantStream : BaseLifeCycleComponent() {
     var isDominantSpeaker: Boolean
         get() = mIsDominantSpeaker.value ?: false
         set(value) {
+            dominantSpeakerStartTime = Calendar.getInstance().time
             mIsDominantSpeaker.value = value
         }
 
