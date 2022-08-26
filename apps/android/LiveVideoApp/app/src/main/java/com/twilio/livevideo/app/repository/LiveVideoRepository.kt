@@ -6,6 +6,7 @@ import com.twilio.livevideo.app.repository.model.CreateStreamResponse
 import com.twilio.livevideo.app.repository.model.DeleteStreamResponse
 import com.twilio.livevideo.app.repository.model.JoinStreamAsSpeakerResponse
 import com.twilio.livevideo.app.repository.model.JoinStreamAsViewerResponse
+import com.twilio.livevideo.app.repository.model.RemoveSpeakerResponse
 import com.twilio.livevideo.app.repository.model.VerifyPasscodeResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -49,6 +50,13 @@ class LiveVideoRepository @Inject constructor(
         streamName: String
     ): JoinStreamAsSpeakerResponse = withContext(dispatcher) {
         remoteStorage.joinStreamAsSpeaker(authenticator.getUserName(), streamName)
+    }
+
+    suspend fun removeSpeaker(
+        userIdentity: String,
+        roomName: String
+    ): RemoveSpeakerResponse = withContext(dispatcher) {
+        remoteStorage.removeSpeaker(userIdentity, roomName)
     }
 
 }

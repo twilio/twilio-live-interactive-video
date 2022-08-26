@@ -28,8 +28,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                app:layout_optimizationLevel="dimensions"
-                android:background="#121C2D">
+                android:background="#121C2D"
+                app:layout_optimizationLevel="dimensions">
 
                 <ImageView
                     android:id="@+id/stream_status"
@@ -85,14 +85,16 @@
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/stream_status"
-                    app:layout_constraintVertical_bias="0" />
+                    app:layout_constraintVertical_bias="0"
+                    app:visibleOrGone="@{!viewModel.viewState.isViewerRole}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/offScreenCounter"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:visibleOrGone="@{!viewModel.viewState.isViewerRole}">
 
                 <TextView
                     android:layout_width="match_parent"

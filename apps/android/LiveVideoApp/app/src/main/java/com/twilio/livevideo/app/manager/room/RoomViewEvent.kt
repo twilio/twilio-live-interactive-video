@@ -10,10 +10,10 @@ sealed class RoomViewEvent {
     data class OnDominantSpeakerChanged(val participantIdentity: String?) : RoomViewEvent()
     data class OnRemoteParticipantConnected(val participant: ParticipantStream) : RoomViewEvent()
     data class OnRemoteParticipantDisconnected(val participantIdentity: String) : RoomViewEvent()
-    data class OnRemoteParticipantOnClickMenu(val participant: RemoteParticipantWrapper) : RoomViewEvent()
 
 }
 
 sealed class RoomDisconnectionType {
     object StreamEndedByHost : RoomDisconnectionType()
+    object SpeakerMovedToViewersByHost : RoomDisconnectionType()
 }

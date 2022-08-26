@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.PopupMenu
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.fragment.app.Fragment
@@ -45,7 +46,8 @@ class StreamFragment internal constructor() : Fragment() {
     @Inject
     lateinit var roomManager: RoomManager
 
-    val gridManager: GridManager = GridManager()
+    @Inject
+    lateinit var gridManager: GridManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,7 +93,7 @@ class StreamFragment internal constructor() : Fragment() {
 
     private fun setupBottomControllers() {
         Timber.d("setupBottomControllers")
-        when (args.viewRole) {
+        when (viewModel.viewState.value?.role) {
             ViewRole.Host -> {
                 setupInitialStateBottomControls()
                 registerOnSwitchCamEventButton()
@@ -101,9 +103,31 @@ class StreamFragment internal constructor() : Fragment() {
                 setupInitialStateBottomControls()
                 registerOnSwitchCamEventButton()
                 registerOnSwitchMicEventButton()
+                registerOnClickMenuEventButton()
             }
             ViewRole.Viewer -> {}
+            else -> {}
         }
+    }
+
+    private fun registerOnClickMenuEventButton() {
+        val popup = PopupMenu(viewDataBinding.speakerMenu.context, viewDataBinding.speakerMenu)
+        popup.menuInflater.inflate(R.menu.speaker_menu, popup.menu)
+
+        popup.setOnMenuItemClickListener {
+            transitionSpeakerToViewer()
+            true
+        }
+
+        viewDataBinding.speakerMenu.setOnClickListener {
+            popup.show()
+        }
+    }
+
+    private fun transitionSpeakerToViewer() {
+        roomManager.disconnect()
+        gridManager.clean()
+        viewModel.transitionToViewer()
     }
 
     private fun setupInitialStateBottomControls() {
@@ -132,10 +156,11 @@ class StreamFragment internal constructor() : Fragment() {
     }
 
     private fun disconnectStream() {
-        when (args.viewRole) {
+        when (viewModel.viewState.value?.role) {
             ViewRole.Host -> disconnectHost()
             ViewRole.Speaker -> disconnectSpeaker()
             ViewRole.Viewer -> disconnectViewer()
+            else -> {}
         }
     }
 
@@ -145,14 +170,23 @@ class StreamFragment internal constructor() : Fragment() {
     }
 
     private fun disconnectHost() {
-        //TODO: Disconnect all the SDKs
-        roomManager.disconnect()
-        viewModel.deleteStream()
+        showErrorAlert(
+            ErrorResponse(
+                getString(R.string.twilio_host_disconnect_stream_title),
+                getString(R.string.twilio_host_disconnect_stream_description)
+            ), positiveCallback = {
+                gridManager.clean()
+                roomManager.disconnect()
+                viewModel.deleteStream()
+            }, positiveButtonText = "End event",
+            negativeButtonText = "Never mind"
+        )
     }
 
     private fun disconnectSpeaker() {
-        //TODO: Disconnect all the SDKs
+        gridManager.clean()
         roomManager.disconnect()
+        navigateToHomeScreen()
     }
 
     private fun registerOnViewStateObserver() {
@@ -168,7 +202,8 @@ class StreamFragment internal constructor() : Fragment() {
             ErrorResponse(
                 getString(R.string.twilio_join_event_ended_title),
                 getString(R.string.twilio_join_event_ended_description)
-            )
+            ),
+            positiveCallback = { navigateToHomeScreen() }
         )
     }
 
@@ -180,12 +215,13 @@ class StreamFragment internal constructor() : Fragment() {
                 connectRoom(event.token, true)
                 viewModel.onLoadingFinish(isLiveActive = true)
             }
-            StreamViewEvent.OnDeleteStream -> navigateToHomeScreen()
-            is StreamViewEvent.OnStreamError -> showErrorAlert(event.error)
             is StreamViewEvent.OnConnectSpeaker -> {
                 connectRoom(event.token)
                 viewModel.onLoadingFinish(isLiveActive = true)
             }
+            StreamViewEvent.OnDeleteStream -> navigateToHomeScreen()
+            is StreamViewEvent.OnStreamError -> showErrorAlert(event.error, positiveCallback = { navigateToHomeScreen() })
+            is StreamViewEvent.OnSpeakerDisconnected -> {}
         }
     }
 
@@ -194,41 +230,57 @@ class StreamFragment internal constructor() : Fragment() {
 
             when (event) {
                 is RoomViewEvent.OnConnected -> {
+                    registerGridManagerStateEvent()
                     setupBottomControllers()
-                    gridManager.addParticipant(viewDataBinding.gridLayoutContainer, event.participants)
+                    gridManager.addParticipant(event.participants)
                 }
                 is RoomViewEvent.OnDisconnected -> {
                     when (event.disconnectionType) {
                         RoomDisconnectionType.StreamEndedByHost -> showDisconnectedRoomAlert()
-                        null -> {
-                            if (args.viewRole == ViewRole.Speaker) {
-                                navigateToHomeScreen()
-                            }
-                        }
+                        RoomDisconnectionType.SpeakerMovedToViewersByHost -> createSpeakerMovedToViewersByHostDialog()
+                        null -> {}
                     }
                 }
                 is RoomViewEvent.OnRemoteParticipantConnected -> {
-                    gridManager.addParticipant(viewDataBinding.gridLayoutContainer, event.participant)
+                    gridManager.addParticipant(event.participant)
                     viewModel.updateOffScreenParticipants(gridManager.getOffScreenCount())
                 }
                 is RoomViewEvent.OnRemoteParticipantDisconnected -> {
-                    gridManager.removeParticipant(viewDataBinding.gridLayoutContainer, event.participantIdentity)
+                    gridManager.removeParticipant(event.participantIdentity)
                     viewModel.updateOffScreenParticipants(gridManager.getOffScreenCount())
                 }
                 is RoomViewEvent.OnDominantSpeakerChanged -> {
-                    gridManager.updateDominantSpeaker(viewDataBinding.gridLayoutContainer, event.participantIdentity)
-                }
-                is RoomViewEvent.OnRemoteParticipantOnClickMenu -> {
-                    Timber.d("RemoteParticipantWrapper OnRemoteParticipantOnClickMenu")
+                    gridManager.updateDominantSpeaker(event.participantIdentity)
                 }
                 is RoomViewEvent.OnError -> {
-                    showErrorAlert(event.error)
+                    showErrorAlert(event.error, positiveCallback = { navigateToHomeScreen() })
                 }
                 null -> {}
             }
 
         }
         roomManager.connect(viewLifecycleOwner, commonViewModel.eventName, token, isHost)
+    }
+
+    private fun createSpeakerMovedToViewersByHostDialog() {
+        transitionSpeakerToViewer()
+        showErrorAlert(
+            ErrorResponse(
+                getString(R.string.twilio_transition_moved_to_viewers_title),
+                getString(R.string.twilio_transition_moved_to_viewers_description)
+            ), positiveCallback = {})
+    }
+
+    private fun registerGridManagerStateEvent() {
+        gridManager.init(lifecycle, viewDataBinding.gridLayoutContainer)
+        gridManager.onStateEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is GridManager.GridManagerEvent.OnTransitionHostMoveSpeakerAsViewer -> {
+                    viewModel.removeSpeaker(event.identity)
+                }
+                null -> {}
+            }
+        }
     }
 
     private fun connectPlayer(token: String) {
@@ -247,7 +299,7 @@ class StreamFragment internal constructor() : Fragment() {
                 is PlayerManager.OnStateCallback.OnError -> {
                     Timber.d("OnStateCallback onError")
                     viewModel.onLoadingFinish(isLiveActive = false)
-                    showErrorAlert(it.error)
+                    showErrorAlert(it.error, positiveCallback = { navigateToHomeScreen() })
                 }
                 null -> {}
             }
@@ -255,7 +307,13 @@ class StreamFragment internal constructor() : Fragment() {
         playerManager.connect(lifecycle, viewDataBinding.playerView, token)
     }
 
-    private fun showErrorAlert(error: ErrorResponse?) {
+    private fun showErrorAlert(
+        error: ErrorResponse?,
+        positiveCallback: (() -> Unit),
+        positiveButtonText: String = "Ok",
+        negativeCallback: (() -> Unit)? = null,
+        negativeButtonText: String? = null
+    ) {
         context?.apply {
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
 
@@ -275,9 +333,15 @@ class StreamFragment internal constructor() : Fragment() {
             }
             builder.setTitle(title)
             builder.setCancelable(false)
-            builder.setPositiveButton("Ok") { p0, p1 ->
+            builder.setPositiveButton(positiveButtonText) { p0, p1 ->
                 p0.cancel()
-                navigateToHomeScreen()
+                positiveCallback.invoke()
+            }
+            negativeButtonText?.apply {
+                builder.setNegativeButton(this) { p0, p1 ->
+                    p0.cancel()
+                    negativeCallback?.invoke()
+                }
             }
 
             val alertDialog = builder.create()

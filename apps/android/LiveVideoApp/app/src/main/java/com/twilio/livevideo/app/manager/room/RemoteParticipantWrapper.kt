@@ -12,8 +12,7 @@ import com.twilio.video.TwilioException
 import timber.log.Timber
 
 data class RemoteParticipantWrapper constructor(
-    private val remoteParticipantParam: RemoteParticipant?,
-    var clickCallback: ((RemoteParticipantWrapper) -> Unit)?
+    private val remoteParticipantParam: RemoteParticipant
 ) : ParticipantStream(), RemoteParticipant.Listener {
 
     var remoteParticipant: RemoteParticipant?
@@ -45,13 +44,8 @@ data class RemoteParticipantWrapper constructor(
         remoteParticipant = remoteParticipantParam
     }
 
-    override fun onParticipantClick() {
-        clickCallback?.invoke(this)
-    }
-
     override fun onDestroy(owner: LifecycleOwner) {
         Timber.d("onDestroy")
-        clickCallback = null
     }
 
     override fun onAudioTrackPublished(

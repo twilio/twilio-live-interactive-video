@@ -93,8 +93,6 @@ abstract class ParticipantStream : BaseLifeCycleComponent() {
             mIdentity.value = value?.identity
         }
 
-    abstract fun onParticipantClick()
-
     override fun onCreate(owner: LifecycleOwner) {
         Timber.i("onCreateCallback $identity")
     }

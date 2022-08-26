@@ -7,6 +7,7 @@ import com.twilio.livevideo.app.repository.model.DeleteStreamResponse
 import com.twilio.livevideo.app.repository.model.ErrorResponse
 import com.twilio.livevideo.app.repository.model.JoinStreamAsSpeakerResponse
 import com.twilio.livevideo.app.repository.model.JoinStreamAsViewerResponse
+import com.twilio.livevideo.app.repository.model.RemoveSpeakerResponse
 import com.twilio.livevideo.app.repository.model.VerifyPasscodeResponse
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -40,6 +41,12 @@ class RemoteStorage @Inject constructor(private val liveVideoAPIService: LiveVid
         streamName: String
     ): JoinStreamAsSpeakerResponse =
         validateResponse(liveVideoAPIService.joinStreamAsSpeaker(userIdentity, streamName))
+
+    suspend fun removeSpeaker(
+        userIdentity: String,
+        roomName: String
+    ): RemoveSpeakerResponse =
+        validateResponse(liveVideoAPIService.removeSpeaker(userIdentity, roomName))
 
     private inline fun <reified T : BaseResponse> validateResponse(
         response: Response<T>,
