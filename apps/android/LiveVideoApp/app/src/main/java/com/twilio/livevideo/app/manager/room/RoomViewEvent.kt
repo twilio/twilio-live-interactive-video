@@ -1,6 +1,7 @@
 package com.twilio.livevideo.app.manager.room
 
 import com.twilio.livevideo.app.repository.model.ErrorResponse
+import com.twilio.video.TwilioException
 
 sealed class RoomViewEvent {
 
@@ -16,4 +17,5 @@ sealed class RoomViewEvent {
 sealed class RoomDisconnectionType {
     object StreamEndedByHost : RoomDisconnectionType()
     object SpeakerMovedToViewersByHost : RoomDisconnectionType()
+    data class UnknownDisconnection(val twilioException: TwilioException) : RoomDisconnectionType()
 }

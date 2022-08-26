@@ -238,6 +238,7 @@ class StreamFragment internal constructor() : Fragment() {
                     when (event.disconnectionType) {
                         RoomDisconnectionType.StreamEndedByHost -> showDisconnectedRoomAlert()
                         RoomDisconnectionType.SpeakerMovedToViewersByHost -> createSpeakerMovedToViewersByHostDialog()
+                        is RoomDisconnectionType.UnknownDisconnection -> {}
                         null -> {}
                     }
                 }

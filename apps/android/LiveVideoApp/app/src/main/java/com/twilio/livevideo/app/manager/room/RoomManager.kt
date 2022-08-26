@@ -135,6 +135,7 @@ class RoomManager @Inject constructor(
             when (this) {
                 TwilioException.ROOM_ROOM_COMPLETED_EXCEPTION -> disconnect(RoomDisconnectionType.StreamEndedByHost)
                 TwilioException.PARTICIPANT_NOT_FOUND_EXCEPTION -> disconnect(RoomDisconnectionType.SpeakerMovedToViewersByHost)
+                else -> disconnect(RoomDisconnectionType.UnknownDisconnection(twilioException))
             }
         } ?: run {
             disconnect(RoomDisconnectionType.SpeakerMovedToViewersByHost)
