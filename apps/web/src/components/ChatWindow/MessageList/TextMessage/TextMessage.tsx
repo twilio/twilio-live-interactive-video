@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { Link } from '@material-ui/core';
 import linkify from 'linkify-it';
 import { makeStyles } from '@material-ui/core/styles';
+import emojiRegex from 'emoji-regex';
 
 const useStyles = makeStyles({
   messageContainer: {
@@ -18,6 +19,9 @@ const useStyles = makeStyles({
   },
   isLocalParticipant: {
     backgroundColor: '#CCE4FF',
+  },
+  onlyEmojis: {
+    fontSize: '2em',
   },
 });
 
@@ -51,6 +55,8 @@ function addLinks(text: string) {
 export default function TextMessage({ body, isLocalParticipant }: TextMessageProps) {
   const classes = useStyles();
 
+  const isOnlyEmojis = body.match(emojiRegex())?.join('').length === body.length;
+
   return (
     <div>
       <div
@@ -58,7 +64,7 @@ export default function TextMessage({ body, isLocalParticipant }: TextMessagePro
           [classes.isLocalParticipant]: isLocalParticipant,
         })}
       >
-        <div>{addLinks(body)}</div>
+        <div className={clsx({ [classes.onlyEmojis]: isOnlyEmojis })}>{addLinks(body)}</div>
       </div>
     </div>
   );
