@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   buttonContainer: {
-    margin: '1em 0 0 0.5em',
+    margin: '1em 0 0',
     display: 'flex',
     width: '100%',
     justifyContent: 'space-between',
