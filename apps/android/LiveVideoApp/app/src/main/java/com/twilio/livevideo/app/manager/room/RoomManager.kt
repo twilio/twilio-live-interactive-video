@@ -66,12 +66,13 @@ class RoomManager @Inject constructor(
     }
 
     fun disconnect() {
-        disconnect(null)
+        disconnect(null, false)
     }
 
-    private fun disconnect(disconnectionType: RoomDisconnectionType?) {
+    private fun disconnect(disconnectionType: RoomDisconnectionType?, notifyStateEvent: Boolean = true) {
         cleanUp()
-        _onStateEvent.value = RoomViewEvent.OnDisconnected(disconnectionType)
+        if (notifyStateEvent)
+            _onStateEvent.value = RoomViewEvent.OnDisconnected(disconnectionType)
     }
 
     private fun handleError(errorResponse: ErrorResponse?) {
@@ -86,10 +87,6 @@ class RoomManager @Inject constructor(
         room = null
     }
 
-    private fun remoteParticipantCallback(remoteParticipant: RemoteParticipantWrapper) {
-        _onStateEvent.value = RoomViewEvent.OnRemoteParticipantOnClickMenu(remoteParticipant)
-    }
-
     override fun onConnected(room: Room) {
         Timber.i("onConnected -> room sid: %s", room.sid)
 
@@ -101,7 +98,7 @@ class RoomManager @Inject constructor(
             room.remoteParticipants.filter {
                 !it.isVideoComposer()
             }.forEach {
-                val newRemoteParticipant = RemoteParticipantWrapper(it, ::remoteParticipantCallback)
+                val newRemoteParticipant = RemoteParticipantWrapper(it)
                 lifecycleOwner?.lifecycle?.apply { newRemoteParticipant.init(this) }
                 newRemoteParticipant.isLocalHost = localParticipantWrapper.isHost
                 list.add(newRemoteParticipant)
@@ -126,18 +123,29 @@ class RoomManager @Inject constructor(
     }
 
     override fun onDisconnected(room: Room, twilioException: TwilioException?) {
-        Timber.i("onDisconnected -> room sid: %s", room.sid)
+        Timber.i("onDisconnected -> room sid: ${room.sid}")
+        Timber.i("onDisconnected -> room exception message: ${twilioException?.message}")
+        Timber.i("onDisconnected -> room exception code: ${twilioException?.code}")
+        Timber.i("onDisconnected -> Lifecycle state: ${lifecycleOwner?.lifecycle?.currentState}")
+
+        // This condition is most when the room is disconnected by the local participant. In example, clicking the UI to disconnect the room.
+        if (this.room == null) return
+
         twilioException?.code?.apply {
-            if (this == TwilioException.ROOM_ROOM_COMPLETED_EXCEPTION) {
-                disconnect(RoomDisconnectionType.StreamEndedByHost)
+            when (this) {
+                TwilioException.ROOM_ROOM_COMPLETED_EXCEPTION -> disconnect(RoomDisconnectionType.StreamEndedByHost)
+                TwilioException.PARTICIPANT_NOT_FOUND_EXCEPTION -> disconnect(RoomDisconnectionType.SpeakerMovedToViewersByHost)
+                else -> disconnect(RoomDisconnectionType.UnknownDisconnection(twilioException))
             }
+        } ?: run {
+            disconnect(RoomDisconnectionType.SpeakerMovedToViewersByHost)
         }
     }
 
     override fun onParticipantConnected(room: Room, remoteParticipant: RemoteParticipant) {
         Timber.i("onParticipantConnected -> room sid: %s", room.sid)
         if (remoteParticipant.isVideoComposer()) return
-        val newParticipant = RemoteParticipantWrapper(remoteParticipant, ::remoteParticipantCallback)
+        val newParticipant = RemoteParticipantWrapper(remoteParticipant)
         lifecycleOwner?.lifecycle?.apply { newParticipant.init(this) }
         newParticipant.isLocalHost = localParticipantWrapper.isHost
         _onStateEvent.value = RoomViewEvent.OnRemoteParticipantConnected(newParticipant)

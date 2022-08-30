@@ -39,7 +39,7 @@ data class RaiseHandResponse(
 
 data class RemoveSpeakerResponse(
     @SerializedName("removed")
-    val isRemoved: Boolean
+    val isRemoved: Boolean = false
 ) : BaseResponse()
 
 data class SendSpeakerInviteResponse(

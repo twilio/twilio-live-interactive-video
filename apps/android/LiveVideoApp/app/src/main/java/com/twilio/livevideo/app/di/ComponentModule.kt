@@ -1,6 +1,7 @@
 package com.twilio.livevideo.app.di
 
 import androidx.fragment.app.Fragment
+import com.twilio.livevideo.app.manager.GridManager
 import com.twilio.livevideo.app.manager.PlayerManager
 import com.twilio.livevideo.app.manager.permission.PermissionManager
 import com.twilio.livevideo.app.manager.room.LocalParticipantWrapper
@@ -26,5 +27,8 @@ class ComponentModule {
 
     @Provides
     fun provideLocalParticipantManager(fragment: Fragment): LocalParticipantWrapper = LocalParticipantWrapper(fragment.context)
+
+    @Provides
+    fun provideGridManager(): GridManager = GridManager()
 
 }

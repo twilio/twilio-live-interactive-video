@@ -2,13 +2,10 @@ package com.twilio.livevideo.app.util
 
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.twilio.livevideo.app.R
-import com.twilio.livevideo.app.manager.GridManager
-import com.twilio.livevideo.app.manager.room.ParticipantStream
 import com.twilio.video.VideoTextureView
 import com.twilio.video.VideoTrack
 import timber.log.Timber

@@ -5,6 +5,7 @@ import com.twilio.livevideo.app.repository.model.CreateStreamResponse
 import com.twilio.livevideo.app.repository.model.DeleteStreamResponse
 import com.twilio.livevideo.app.repository.model.JoinStreamAsSpeakerResponse
 import com.twilio.livevideo.app.repository.model.JoinStreamAsViewerResponse
+import com.twilio.livevideo.app.repository.model.RemoveSpeakerResponse
 import com.twilio.livevideo.app.repository.model.VerifyPasscodeResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -38,4 +39,10 @@ interface LiveVideoAPIService {
         @Query("user_identity") userIdentity: String,
         @Query("stream_name") streamName: String
     ): Response<JoinStreamAsSpeakerResponse>
+
+    @GET("/remove-speaker")
+    suspend fun removeSpeaker(
+        @Query("user_identity") userIdentity: String,
+        @Query("room_name") roomName: String
+    ): Response<RemoveSpeakerResponse>
 }

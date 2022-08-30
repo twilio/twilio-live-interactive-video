@@ -47,6 +47,13 @@ class StreamViewModel @Inject constructor(
         _offScreenParticipantsCount.value = offScreenParticipantCount
     }
 
+    fun transitionToViewer() {
+        viewState.value?.apply {
+            _viewState.value = this.copy(role = ViewRole.Viewer)
+            joinStreamAsViewer(eventName)
+        }
+    }
+
     fun joinStreamAsViewer(eventName: String) {
         viewModelScope.launch {
             _viewState.value = _viewState.value?.copy(
@@ -111,6 +118,20 @@ class StreamViewModel @Inject constructor(
             } else {
                 _screenEvent.value = StreamViewEvent.OnStreamError(response.error)
                 _viewState.value = _viewState.value?.copy(isLoading = false, isLiveActive = false)
+            }
+        }
+    }
+
+    fun removeSpeaker(participantIdentity: String) {
+        viewModelScope.launch {
+            _viewState.value?.also {
+                val response = liveVideoRepository.removeSpeaker(participantIdentity, it.eventName)
+                if (response.isApiResponseSuccess && response.isRemoved) {
+                    _screenEvent.value = StreamViewEvent.OnSpeakerDisconnected(participantIdentity)
+                } else {
+                    _screenEvent.value = StreamViewEvent.OnStreamError(response.error)
+                    _viewState.value = _viewState.value?.copy(isLoading = false, isLiveActive = false)
+                }
             }
         }
     }

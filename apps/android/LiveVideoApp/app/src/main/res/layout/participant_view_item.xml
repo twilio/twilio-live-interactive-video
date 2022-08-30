@@ -72,11 +72,11 @@
             app:visibleOrInvisible="@{!item.isMicOnLiveData}" />
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/participantMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:contentDescription="@null"
-            android:onClick="@{() -> item.onParticipantClick()}"
             android:padding="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

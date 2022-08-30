@@ -1,6 +1,7 @@
 package com.twilio.livevideo.app.manager.room
 
 import com.twilio.livevideo.app.repository.model.ErrorResponse
+import com.twilio.video.TwilioException
 
 sealed class RoomViewEvent {
 
@@ -10,10 +11,11 @@ sealed class RoomViewEvent {
     data class OnDominantSpeakerChanged(val participantIdentity: String?) : RoomViewEvent()
     data class OnRemoteParticipantConnected(val participant: ParticipantStream) : RoomViewEvent()
     data class OnRemoteParticipantDisconnected(val participantIdentity: String) : RoomViewEvent()
-    data class OnRemoteParticipantOnClickMenu(val participant: RemoteParticipantWrapper) : RoomViewEvent()
 
 }
 
 sealed class RoomDisconnectionType {
     object StreamEndedByHost : RoomDisconnectionType()
+    object SpeakerMovedToViewersByHost : RoomDisconnectionType()
+    data class UnknownDisconnection(val twilioException: TwilioException) : RoomDisconnectionType()
 }

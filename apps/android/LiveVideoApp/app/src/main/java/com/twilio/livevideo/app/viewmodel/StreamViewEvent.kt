@@ -8,4 +8,5 @@ sealed class StreamViewEvent {
     object OnDeleteStream : StreamViewEvent()
     data class OnStreamError(val error: ErrorResponse?) : StreamViewEvent()
     data class OnConnectSpeaker(val token: String) : StreamViewEvent()
+    data class OnSpeakerDisconnected(val identity: String) : StreamViewEvent()
 }

@@ -40,10 +40,6 @@ data class LocalParticipantWrapper @Inject constructor(private val context: Cont
 
     private val localVideoTrackNames: MutableMap<String, String> = HashMap()
 
-    override fun onParticipantClick() {
-        //No OnClick event requirement for LocalParticipant.
-    }
-
     override fun init(lifecycle: Lifecycle) {
         super.init(lifecycle)
         setupLocalTracks()
