@@ -136,6 +136,7 @@
                     android:layout_marginHorizontal="@dimen/bottom_icons_horizontal_margin"
                     android:background="@drawable/ic_raise_hand"
                     android:button="@null"
+                    android:enabled="false"
                     android:gravity="center"
                     app:visibleOrGone="@{viewModel.viewState.isViewerRole}" />
 

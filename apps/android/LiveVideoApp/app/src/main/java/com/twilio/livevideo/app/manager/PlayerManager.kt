@@ -46,7 +46,7 @@ class PlayerManager @Inject constructor(private var context: Context?) :
     }
 
     fun disconnect() {
-        player?.pause()
+        player?.disconnect()
         player = null
     }
 

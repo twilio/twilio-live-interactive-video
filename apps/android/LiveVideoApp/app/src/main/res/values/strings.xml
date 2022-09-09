@@ -32,4 +32,6 @@
     <string name="camera_video_track">Camera Video Track</string>
     <string name="off_screen_count">+%d more</string>
     <string name="move_to_viewers">Move to viewers</string>
+    <string name="permissions_rationale_camera_audio">Camera and Audio Record permissions are needed</string>
+    <string name="permissions_not_allowed_camera_audio">Camera and Audio Record permissions not granted</string>
 </resources>

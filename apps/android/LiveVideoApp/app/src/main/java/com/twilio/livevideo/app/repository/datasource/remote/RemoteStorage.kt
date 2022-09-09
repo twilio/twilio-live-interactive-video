@@ -7,8 +7,12 @@ import com.twilio.livevideo.app.repository.model.DeleteStreamResponse
 import com.twilio.livevideo.app.repository.model.ErrorResponse
 import com.twilio.livevideo.app.repository.model.JoinStreamAsSpeakerResponse
 import com.twilio.livevideo.app.repository.model.JoinStreamAsViewerResponse
+import com.twilio.livevideo.app.repository.model.RaiseHandParameters
+import com.twilio.livevideo.app.repository.model.RaiseHandResponse
 import com.twilio.livevideo.app.repository.model.RemoveSpeakerResponse
+import com.twilio.livevideo.app.repository.model.SendSpeakerInviteResponse
 import com.twilio.livevideo.app.repository.model.VerifyPasscodeResponse
+import com.twilio.livevideo.app.repository.model.ViewerConnectedToPlayerResponse
 import retrofit2.Response
 import retrofit2.Retrofit
 import timber.log.Timber
@@ -48,9 +52,26 @@ class RemoteStorage @Inject constructor(private val liveVideoAPIService: LiveVid
     ): RemoveSpeakerResponse =
         validateResponse(liveVideoAPIService.removeSpeaker(userIdentity, roomName))
 
-    private inline fun <reified T : BaseResponse> validateResponse(
-        response: Response<T>,
-    ): T {
+    suspend fun raiseHand(
+        userIdentity: String,
+        streamName: String,
+        handRaised: Boolean
+    ): RaiseHandResponse =
+        validateResponse(liveVideoAPIService.raiseHand(RaiseHandParameters(userIdentity, streamName, handRaised)))
+
+    suspend fun sendSpeakerInvite(
+        userIdentity: String,
+        roomSid: String
+    ): SendSpeakerInviteResponse =
+        validateResponse(liveVideoAPIService.sendSpeakerInvite(userIdentity, roomSid))
+
+    suspend fun viewerConnectedToPlayer(
+        userIdentity: String,
+        streamName: String
+    ): ViewerConnectedToPlayerResponse =
+        validateResponse(liveVideoAPIService.viewerConnectedToPlayer(userIdentity, streamName))
+
+    private inline fun <reified T : BaseResponse> validateResponse(response: Response<T>): T {
         val result: T = if (!response.isSuccessful) { // Failure case
             var parsingException: MalformedJsonException? = null
             response.errorBody()?.let { body ->

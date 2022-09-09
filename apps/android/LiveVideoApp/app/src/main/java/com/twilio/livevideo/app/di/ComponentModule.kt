@@ -6,6 +6,7 @@ import com.twilio.livevideo.app.manager.PlayerManager
 import com.twilio.livevideo.app.manager.permission.PermissionManager
 import com.twilio.livevideo.app.manager.room.LocalParticipantWrapper
 import com.twilio.livevideo.app.manager.room.RoomManager
+import com.twilio.livevideo.app.manager.sync.SyncManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,6 +25,9 @@ class ComponentModule {
     @Provides
     fun provideRoomManager(fragment: Fragment, localParticipantWrapper: LocalParticipantWrapper): RoomManager =
         RoomManager(fragment.context, localParticipantWrapper)
+
+    @Provides
+    fun provideSyncManager(fragment: Fragment): SyncManager = SyncManager(fragment.context)
 
     @Provides
     fun provideLocalParticipantManager(fragment: Fragment): LocalParticipantWrapper = LocalParticipantWrapper(fragment.context)

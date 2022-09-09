@@ -9,4 +9,5 @@ sealed class StreamViewEvent {
     data class OnStreamError(val error: ErrorResponse?) : StreamViewEvent()
     data class OnConnectSpeaker(val token: String) : StreamViewEvent()
     data class OnSpeakerDisconnected(val identity: String) : StreamViewEvent()
+    data class OnViewerRaiseHand(val error: ErrorResponse?) : StreamViewEvent()
 }

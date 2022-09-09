@@ -3,6 +3,7 @@ package com.twilio.livevideo.app.base
 import android.app.Application
 import com.twilio.livevideo.app.BuildConfig
 import com.twilio.livevideo.app.util.log.DebugTree
+import com.twilio.sync.SyncClient
 import com.twilio.video.LogLevel
 import com.twilio.video.Video
 import dagger.hilt.android.HiltAndroidApp
@@ -15,6 +16,7 @@ class LiveVideoApplication : Application() {
         super.onCreate()
 
         if (BuildConfig.DEBUG) {
+            SyncClient.setLogLevel(SyncClient.LogLevel.VERBOSE)
             Video.setLogLevel(LogLevel.ALL)
             Timber.plant(DebugTree())
         }
