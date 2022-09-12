@@ -99,7 +99,7 @@ class SignInViewModelTest {
             viewModel.onContinuePasscode()
 
             // THEN
-            verify(screenEventObserver).onChanged(SignInViewEvent.OnContinuePasscode)
+            verify(screenEventObserver).onChanged(SignInViewEvent.OnContinuePasscode(userName))
         }
     }
 }

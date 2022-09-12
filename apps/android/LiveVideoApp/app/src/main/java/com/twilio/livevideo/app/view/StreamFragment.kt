@@ -35,7 +35,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 @OpenForTesting
-class StreamFragment internal constructor() : Fragment() {
+class StreamFragment : Fragment() {
 
     val commonViewModel: CommonStreamViewModel by activityViewModels()
     val viewModel: StreamViewModel by viewModels()

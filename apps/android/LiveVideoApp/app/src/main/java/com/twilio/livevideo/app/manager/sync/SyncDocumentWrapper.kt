@@ -12,7 +12,7 @@ import com.twilio.sync.SyncOptions
 import org.json.JSONObject
 import timber.log.Timber
 
-class SyncDocumentWrapper constructor(var uniqueName: String = "") : SyncDocumentObserver(), SyncObject {
+class SyncDocumentWrapper constructor(var uniqueName: String = "") : SyncObject {
 
     private var document: SyncDocument? = null
 
@@ -25,9 +25,30 @@ class SyncDocumentWrapper constructor(var uniqueName: String = "") : SyncDocumen
             return event
         }
 
+    private val syncDocumentObserver: SyncDocumentObserver = object : SyncDocumentObserver() {
+        override fun onUpdated(context: EventContext?, data: JSONObject?, previousData: JSONObject?) {
+            super.onUpdated(context, data, previousData)
+
+            data?.apply {
+                val inviteKey = "speaker_invite"
+                if (has(inviteKey)) {
+                    data.getBoolean(inviteKey).also {
+                        Timber.d("onUpdated $it")
+                        if (it) _onStateEvent.postValue(SyncViewEvent.OnDocumentSpeakerInvite)
+                    }
+                }
+            }
+        }
+
+        override fun onErrorOccurred(error: ErrorInfo?) {
+            disconnect()
+            error?.apply { _onStateEvent.postValue(SyncViewEvent.OnError(this)) }
+        }
+    }
+
     override fun connect(client: SyncClient, completion: ((ErrorInfo?) -> Unit)) {
 
-        client.openDocument(SyncOptions.create().withUniqueName(uniqueName), this, object : SuccessListener<SyncDocument> {
+        client.openDocument(SyncOptions.create().withUniqueName(uniqueName), syncDocumentObserver, object : SuccessListener<SyncDocument> {
             override fun onSuccess(result: SyncDocument?) {
                 document = result
                 completion.invoke(null)
@@ -42,24 +63,5 @@ class SyncDocumentWrapper constructor(var uniqueName: String = "") : SyncDocumen
 
     override fun disconnect() {
         document = null
-    }
-
-    override fun onUpdated(context: EventContext?, data: JSONObject?, previousData: JSONObject?) {
-        super.onUpdated(context, data, previousData)
-
-        data?.apply {
-            val inviteKey = "speaker_invite"
-            if (has(inviteKey)) {
-                data.getBoolean(inviteKey).also {
-                    Timber.d("onUpdated $it")
-                    if (it) _onStateEvent.postValue(SyncViewEvent.OnDocumentSpeakerInvite)
-                }
-            }
-        }
-    }
-
-    override fun onErrorOccurred(error: ErrorInfo?) {
-        disconnect()
-        error?.apply { _onStateEvent.postValue(SyncViewEvent.OnError(this)) }
     }
 }

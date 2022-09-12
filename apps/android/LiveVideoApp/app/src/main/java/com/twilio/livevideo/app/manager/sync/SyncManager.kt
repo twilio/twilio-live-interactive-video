@@ -3,23 +3,24 @@ package com.twilio.livevideo.app.manager.sync
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
+import com.twilio.livevideo.app.annotations.OpenForTesting
 import com.twilio.livevideo.app.custom.BaseLifeCycleComponent
 import com.twilio.sync.ErrorInfo
 import com.twilio.sync.SyncClient
 import javax.inject.Inject
 
+@OpenForTesting
 class SyncManager @Inject constructor(
-    private val context: Context?
+    private val context: Context?,
+    private var userDocument: SyncDocumentWrapper = SyncDocumentWrapper(),
+    private var speakersMap: SyncMapWrapper = SyncMapWrapper("speakers"),
+    private var viewersMap: SyncMapWrapper = SyncMapWrapper("viewers"),
+    private var raisedHandsMap: SyncMapWrapper = SyncMapWrapper("raised_hands")
 ) : BaseLifeCycleComponent(), SyncClient.SyncClientListener {
 
     private var syncObjects: MutableList<out SyncObject>? = null
 
     private var syncClient: SyncClient? = null
-
-    private var userDocument: SyncDocumentWrapper = SyncDocumentWrapper()
-    private var speakersMap: SyncMapWrapper = SyncMapWrapper("speakers")
-    private var viewersMap: SyncMapWrapper = SyncMapWrapper("viewers")
-    private var raisedHandsMap: SyncMapWrapper = SyncMapWrapper("raised_hands")
 
     val isConnected: Boolean
         get() = syncClient != null
