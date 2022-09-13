@@ -27,7 +27,7 @@ class ComponentModule {
         RoomManager(fragment.context, localParticipantWrapper)
 
     @Provides
-    fun provideSyncManager(fragment: Fragment): SyncManager = SyncManager(fragment.context)
+    fun provideSyncManager(fragment: Fragment): SyncManager = SyncManager(context = fragment.context)
 
     @Provides
     fun provideLocalParticipantManager(fragment: Fragment): LocalParticipantWrapper = LocalParticipantWrapper(fragment.context)
