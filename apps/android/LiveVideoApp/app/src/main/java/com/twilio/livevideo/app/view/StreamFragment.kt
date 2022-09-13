@@ -1,5 +1,7 @@
 package com.twilio.livevideo.app.view
 
+import android.content.Context
+import android.media.AudioManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -68,9 +70,19 @@ class StreamFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        setupSpeakerAudio()
         setupViewModel()
         registerOnViewStateObserver()
         registerOnExitEventButton()
+    }
+
+    private fun setupSpeakerAudio() {
+        activity?.apply {
+            (getSystemService(Context.AUDIO_SERVICE) as? AudioManager)?.also { audioService ->
+                audioService.mode = AudioManager.MODE_IN_CALL
+                audioService.isSpeakerphoneOn = true
+            }
+        }
     }
 
     override fun onDestroy() {
