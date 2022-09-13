@@ -6,7 +6,7 @@ buildscript {
             navigation                  : '2.5.1',
             hilt                        : '2.42',
             hiltCompiler                : '1.0.0-alpha01',
-            twilioVideoSdk              : '7.1.1',
+            twilioVideoSdk              : '7.3.1',
             twilioSyncSdk               : '1.1.0',
             twilioPlayerSdk             : '1.0.1',
             retrofitVersion             : '2.9.0',

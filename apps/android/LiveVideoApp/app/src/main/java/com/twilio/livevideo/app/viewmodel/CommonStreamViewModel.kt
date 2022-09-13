@@ -8,5 +8,6 @@ import javax.inject.Inject
 class CommonStreamViewModel @Inject constructor() : ViewModel() {
 
     var eventName: String = ""
+    var userIdentity: String = ""
 
 }

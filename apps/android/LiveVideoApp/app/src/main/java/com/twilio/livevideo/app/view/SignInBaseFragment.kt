@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.twilio.livevideo.app.repository.model.ErrorResponse
+import com.twilio.livevideo.app.viewmodel.CommonStreamViewModel
 import com.twilio.livevideo.app.viewmodel.SignInViewEvent
 import com.twilio.livevideo.app.viewmodel.SignInViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,6 +19,7 @@ import timber.log.Timber
 open class SignInBaseFragment : Fragment() {
 
     protected val viewModel: SignInViewModel by activityViewModels()
+    private val commonViewModel: CommonStreamViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,7 +32,10 @@ open class SignInBaseFragment : Fragment() {
             event?.apply {
                 when (this) {
                     is SignInViewEvent.OnContinueName -> goToSignInPasscodeScreen()
-                    is SignInViewEvent.OnContinuePasscode -> goToHomeScreenScreen()
+                    is SignInViewEvent.OnContinuePasscode -> {
+                        commonViewModel.userIdentity = this.userIdentity
+                        goToHomeScreenScreen()
+                    }
                     is SignInViewEvent.OnSignInError -> showErrorAlert(this.error)
                 }
             }

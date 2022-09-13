@@ -7,14 +7,19 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.twilio.livevideo.app.databinding.FragmentHomeJoinTypeBinding
+import com.twilio.livevideo.app.manager.permission.PermissionManager
 import com.twilio.livevideo.app.viewstate.ViewRole
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeJoinEventTypeFragment : Fragment() {
 
     lateinit var viewDataBinding: FragmentHomeJoinTypeBinding
+
+    @Inject
+    lateinit var permissionManager: PermissionManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,14 +40,24 @@ class HomeJoinEventTypeFragment : Fragment() {
     private fun registerOnViewerClickListener() {
         viewDataBinding.joinAsViewerButton.eventButton.setOnClickListener {
             Timber.d("register OnViewerClickListener")
-            findNavController().navigate(HomeJoinEventTypeFragmentDirections.actionHomeJoinTypeFragmentToStreamFragment(ViewRole.Viewer))
+            checkPermissions {
+                findNavController().navigate(HomeJoinEventTypeFragmentDirections.actionHomeJoinTypeFragmentToStreamFragment(ViewRole.Viewer))
+            }
         }
     }
 
     private fun registerOnSpeakerClickListener() {
         viewDataBinding.joinAsSpeakerButton.eventButton.setOnClickListener {
             Timber.d("register OnSpeakerClickListener")
-            findNavController().navigate(HomeJoinEventTypeFragmentDirections.actionHomeJoinTypeFragmentToStreamFragment(ViewRole.Speaker))
+            checkPermissions {
+                findNavController().navigate(HomeJoinEventTypeFragmentDirections.actionHomeJoinTypeFragmentToStreamFragment(ViewRole.Speaker))
+            }
+        }
+    }
+
+    private fun checkPermissions(grantedCallback: () -> Unit) {
+        context?.apply {
+            permissionManager.checkCameraAudioPermissions(this, grantedCallback)
         }
     }
 }

@@ -29,12 +29,12 @@ data class JoinStreamAsViewerResponse(
 
 data class ViewerConnectedToPlayerResponse(
     @SerializedName("success")
-    val isSuccess: Boolean
+    val isSuccess: Boolean = false
 ) : BaseResponse()
 
 data class RaiseHandResponse(
     @SerializedName("sent")
-    val isSent: Boolean
+    val isSent: Boolean = false
 ) : BaseResponse()
 
 data class RemoveSpeakerResponse(
@@ -44,7 +44,7 @@ data class RemoveSpeakerResponse(
 
 data class SendSpeakerInviteResponse(
     @SerializedName("sent")
-    val isSent: Boolean
+    val isSent: Boolean = false
 ) : BaseResponse()
 
 data class ErrorResponse(

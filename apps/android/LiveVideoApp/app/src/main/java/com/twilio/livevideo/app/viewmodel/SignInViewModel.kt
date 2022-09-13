@@ -56,7 +56,7 @@ class SignInViewModel @Inject constructor(private val liveVideoRepository: LiveV
                     val response =
                         liveVideoRepository.verifyPasscode(passcodeString, userNameString)
                     if (response.isApiResponseSuccess && response.isVerified) {
-                        _screenEvent.value = SignInViewEvent.OnContinuePasscode
+                        _screenEvent.value = SignInViewEvent.OnContinuePasscode(userNameString)
                     } else {
                         _screenEvent.value = SignInViewEvent.OnSignInError(response.error)
                     }

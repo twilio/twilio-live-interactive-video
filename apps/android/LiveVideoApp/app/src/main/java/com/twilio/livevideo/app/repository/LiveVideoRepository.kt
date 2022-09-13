@@ -6,8 +6,11 @@ import com.twilio.livevideo.app.repository.model.CreateStreamResponse
 import com.twilio.livevideo.app.repository.model.DeleteStreamResponse
 import com.twilio.livevideo.app.repository.model.JoinStreamAsSpeakerResponse
 import com.twilio.livevideo.app.repository.model.JoinStreamAsViewerResponse
+import com.twilio.livevideo.app.repository.model.RaiseHandResponse
 import com.twilio.livevideo.app.repository.model.RemoveSpeakerResponse
+import com.twilio.livevideo.app.repository.model.SendSpeakerInviteResponse
 import com.twilio.livevideo.app.repository.model.VerifyPasscodeResponse
+import com.twilio.livevideo.app.repository.model.ViewerConnectedToPlayerResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -57,6 +60,27 @@ class LiveVideoRepository @Inject constructor(
         roomName: String
     ): RemoveSpeakerResponse = withContext(dispatcher) {
         remoteStorage.removeSpeaker(userIdentity, roomName)
+    }
+
+    suspend fun raiseHand(
+        streamName: String,
+        raisedHand: Boolean
+    ): RaiseHandResponse = withContext(dispatcher) {
+        remoteStorage.raiseHand(authenticator.getUserName(), streamName, raisedHand)
+    }
+
+    suspend fun sendSpeakerInvite(
+        userIdentity: String,
+        roomSid: String
+    ): SendSpeakerInviteResponse = withContext(dispatcher) {
+        remoteStorage.sendSpeakerInvite(userIdentity, roomSid)
+    }
+
+    suspend fun viewerConnectedToPlayer(
+        userIdentity: String,
+        streamName: String
+    ): ViewerConnectedToPlayerResponse = withContext(dispatcher) {
+        remoteStorage.viewerConnectedToPlayer(userIdentity, streamName)
     }
 
 }

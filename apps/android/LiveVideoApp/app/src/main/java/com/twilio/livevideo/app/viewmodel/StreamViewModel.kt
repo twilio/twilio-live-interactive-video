@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.twilio.livevideo.app.annotations.OpenForTesting
 import com.twilio.livevideo.app.repository.LiveVideoRepository
+import com.twilio.livevideo.app.repository.model.ErrorResponse
 import com.twilio.livevideo.app.viewstate.StreamViewState
 import com.twilio.livevideo.app.viewstate.ViewRole
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,6 +52,13 @@ class StreamViewModel @Inject constructor(
         viewState.value?.apply {
             _viewState.value = this.copy(role = ViewRole.Viewer)
             joinStreamAsViewer(eventName)
+        }
+    }
+
+    fun transitionToSpeaker() {
+        viewState.value?.apply {
+            _viewState.value = this.copy(role = ViewRole.Speaker)
+            joinStreamAsSpeaker(eventName)
         }
     }
 
@@ -131,6 +139,44 @@ class StreamViewModel @Inject constructor(
                 } else {
                     _screenEvent.value = StreamViewEvent.OnStreamError(response.error)
                     _viewState.value = _viewState.value?.copy(isLoading = false, isLiveActive = false)
+                }
+            }
+        }
+    }
+
+    fun raiseHand(raisedHand: Boolean) {
+        viewModelScope.launch {
+            _viewState.value?.also {
+                val response = liveVideoRepository.raiseHand(it.eventName, raisedHand)
+                if (response.isApiResponseSuccess && response.isSent) {
+                    _screenEvent.value = StreamViewEvent.OnViewerRaiseHand(null)
+                } else {
+                    _screenEvent.value =
+                        StreamViewEvent.OnViewerRaiseHand(response.error ?: ErrorResponse("Error", "Unknown error - OnViewerRaiseHand"))
+                }
+            }
+        }
+    }
+
+    fun sendSpeakerInvite(userIdentity: String, roomSid: String) {
+        viewModelScope.launch {
+            val response = liveVideoRepository.sendSpeakerInvite(userIdentity, roomSid)
+            if (response.isApiResponseSuccess && response.isSent) {
+                Timber.d("sendSpeakerInvite Success")
+            } else {
+                Timber.d("sendSpeakerInvite Failure")
+            }
+        }
+    }
+
+    fun viewerConnectedToPlayer(userIdentity: String) {
+        viewModelScope.launch {
+            _viewState.value?.eventName?.also { eventName ->
+                val response = liveVideoRepository.viewerConnectedToPlayer(userIdentity, eventName)
+                if (response.isApiResponseSuccess && response.isSuccess) {
+                    Timber.d("viewerConnectedToPlayer Success")
+                } else {
+                    Timber.d("viewerConnectedToPlayer Error ${response.error}")
                 }
             }
         }

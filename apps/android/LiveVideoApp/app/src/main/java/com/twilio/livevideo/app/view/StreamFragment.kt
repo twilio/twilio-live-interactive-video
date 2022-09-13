@@ -22,6 +22,8 @@ import com.twilio.livevideo.app.manager.PlayerManager
 import com.twilio.livevideo.app.manager.room.RoomDisconnectionType
 import com.twilio.livevideo.app.manager.room.RoomManager
 import com.twilio.livevideo.app.manager.room.RoomViewEvent
+import com.twilio.livevideo.app.manager.sync.SyncManager
+import com.twilio.livevideo.app.manager.sync.SyncViewEvent
 import com.twilio.livevideo.app.repository.model.ErrorResponse
 import com.twilio.livevideo.app.viewmodel.CommonStreamViewModel
 import com.twilio.livevideo.app.viewmodel.StreamViewEvent
@@ -33,7 +35,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 @OpenForTesting
-class StreamFragment internal constructor() : Fragment() {
+class StreamFragment : Fragment() {
 
     val commonViewModel: CommonStreamViewModel by activityViewModels()
     val viewModel: StreamViewModel by viewModels()
@@ -45,6 +47,9 @@ class StreamFragment internal constructor() : Fragment() {
 
     @Inject
     lateinit var roomManager: RoomManager
+
+    @Inject
+    lateinit var syncManager: SyncManager
 
     @Inject
     lateinit var gridManager: GridManager
@@ -95,18 +100,27 @@ class StreamFragment internal constructor() : Fragment() {
         Timber.d("setupBottomControllers")
         when (viewModel.viewState.value?.role) {
             ViewRole.Host -> {
-                setupInitialStateBottomControls()
+                setupInitialStateBottomControls(false)
                 registerOnSwitchCamEventButton()
                 registerOnSwitchMicEventButton()
             }
             ViewRole.Speaker -> {
-                setupInitialStateBottomControls()
+                setupInitialStateBottomControls(false)
                 registerOnSwitchCamEventButton()
                 registerOnSwitchMicEventButton()
                 registerOnClickMenuEventButton()
             }
-            ViewRole.Viewer -> {}
+            ViewRole.Viewer -> {
+                setupInitialStateBottomControls(true)
+                registerOnRaiseHandEventButton()
+            }
             else -> {}
+        }
+    }
+
+    private fun registerOnRaiseHandEventButton() {
+        viewDataBinding.raiseHandEvent.setOnCheckedChangeListener { _, b ->
+            viewModel.raiseHand(b)
         }
     }
 
@@ -130,11 +144,20 @@ class StreamFragment internal constructor() : Fragment() {
         viewModel.transitionToViewer()
     }
 
-    private fun setupInitialStateBottomControls() {
-        viewDataBinding.videoSwitchEvent.isEnabled = true
-        viewDataBinding.videoSwitchEvent.isChecked = roomManager.localParticipantWrapper.isCameraOn
-        viewDataBinding.micSwitchEvent.isEnabled = true
-        viewDataBinding.micSwitchEvent.isChecked = roomManager.localParticipantWrapper.isMicOn
+    private fun transitionViewerToSpeaker() {
+        playerManager.disconnect()
+        viewModel.transitionToSpeaker()
+    }
+
+    private fun setupInitialStateBottomControls(isViewer: Boolean) {
+        if (isViewer) {
+            viewDataBinding.raiseHandEvent.isEnabled = true
+        } else {
+            viewDataBinding.videoSwitchEvent.isEnabled = true
+            viewDataBinding.videoSwitchEvent.isChecked = roomManager.localParticipantWrapper.isCameraOn
+            viewDataBinding.micSwitchEvent.isEnabled = true
+            viewDataBinding.micSwitchEvent.isChecked = roomManager.localParticipantWrapper.isMicOn
+        }
     }
 
     private fun registerOnSwitchMicEventButton() {
@@ -155,9 +178,9 @@ class StreamFragment internal constructor() : Fragment() {
         }
     }
 
-    private fun disconnectStream() {
+    private fun disconnectStream(fromAlertDialog: Boolean = false) {
         when (viewModel.viewState.value?.role) {
-            ViewRole.Host -> disconnectHost()
+            ViewRole.Host -> disconnectHost(fromAlertDialog)
             ViewRole.Speaker -> disconnectSpeaker()
             ViewRole.Viewer -> disconnectViewer()
             else -> {}
@@ -165,25 +188,35 @@ class StreamFragment internal constructor() : Fragment() {
     }
 
     private fun disconnectViewer() {
+        syncManager.disconnect()
         playerManager.disconnect()
         navigateToHomeScreen()
     }
 
-    private fun disconnectHost() {
-        showErrorAlert(
-            ErrorResponse(
-                getString(R.string.twilio_host_disconnect_stream_title),
-                getString(R.string.twilio_host_disconnect_stream_description)
-            ), positiveCallback = {
-                gridManager.clean()
-                roomManager.disconnect()
-                viewModel.deleteStream()
-            }, positiveButtonText = "End event",
-            negativeButtonText = "Never mind"
-        )
+    private fun disconnectHost(fromAlertDialog: Boolean) {
+        fun disconnectProcess() {
+            syncManager.disconnect()
+            gridManager.clean()
+            roomManager.disconnect()
+            viewModel.deleteStream()
+        }
+        if (fromAlertDialog) {
+            disconnectProcess()
+        } else {
+            showErrorAlert(
+                ErrorResponse(
+                    getString(R.string.twilio_host_disconnect_stream_title),
+                    getString(R.string.twilio_host_disconnect_stream_description)
+                ), positiveCallback = {
+                    disconnectProcess()
+                }, positiveButtonText = "End event",
+                negativeButtonText = "Never mind"
+            )
+        }
     }
 
     private fun disconnectSpeaker() {
+        syncManager.disconnect()
         gridManager.clean()
         roomManager.disconnect()
         navigateToHomeScreen()
@@ -203,25 +236,110 @@ class StreamFragment internal constructor() : Fragment() {
                 getString(R.string.twilio_join_event_ended_title),
                 getString(R.string.twilio_join_event_ended_description)
             ),
-            positiveCallback = { navigateToHomeScreen() }
+            positiveCallback = { disconnectStream(true) }
         )
     }
 
     private fun onAction(event: StreamViewEvent) {
         Timber.d("onAction StreamViewEvent $event")
         when (event) {
-            is StreamViewEvent.OnConnectViewer -> connectPlayer(event.token)
+            is StreamViewEvent.OnConnectViewer -> {
+                connectSync(event.token, true)
+                connectPlayer(event.token)
+                viewModel.viewerConnectedToPlayer(commonViewModel.userIdentity)
+            }
             is StreamViewEvent.OnCreateStream -> {
                 connectRoom(event.token, true)
+                connectSync(event.token, false)
                 viewModel.onLoadingFinish(isLiveActive = true)
             }
             is StreamViewEvent.OnConnectSpeaker -> {
+                connectSync(event.token, true)
                 connectRoom(event.token)
                 viewModel.onLoadingFinish(isLiveActive = true)
             }
             StreamViewEvent.OnDeleteStream -> navigateToHomeScreen()
             is StreamViewEvent.OnStreamError -> showErrorAlert(event.error, positiveCallback = { navigateToHomeScreen() })
             is StreamViewEvent.OnSpeakerDisconnected -> {}
+            is StreamViewEvent.OnViewerRaiseHand -> {
+                Timber.d("OnViewerRaiseHand event error ${event.error}")
+            }
+        }
+    }
+
+    private fun registerSyncObjects() {
+        syncManager.documentLiveData.observe(viewLifecycleOwner) { event ->
+            Timber.d("documentLiveData event: $event")
+            when (event) {
+                SyncViewEvent.OnDocumentSpeakerInvite -> {
+                    showErrorAlert(
+                        ErrorResponse(
+                            "It's your time to shine!",
+                            "The host has invited you to join as a Speaker. Your audio and video will be shared."
+                        ),
+                        { transitionViewerToSpeaker() }, "Join now",
+                        {}, "Never mind"
+                    )
+                }
+                else -> {}
+            }
+        }
+
+        syncManager.raisedHandsMapLiveData.observe(viewLifecycleOwner) { event ->
+            Timber.d("raisedHandsMapLiveData event: $event")
+            when (event) {
+                is SyncViewEvent.OnMapItemAdded -> {
+                    //TODO: Implement/Update participants UI List
+                    /*event.syncUser.identity?.also { identity ->
+                        roomManager.sid?.apply {
+                            Timber.d("raisedHandsMapLiveData room sid: $this")
+                            viewModel.sendSpeakerInvite(identity, roomSid = this)
+                        }
+                    }*/
+                }
+                is SyncViewEvent.OnMapItemRemoved -> {}
+                is SyncViewEvent.OnError -> {}
+                else -> {}
+            }
+        }
+
+        syncManager.viewersMapLiveData.observe(viewLifecycleOwner) { event ->
+            Timber.d("viewerMapLiveData event: $event")
+            when (event) {
+                is SyncViewEvent.OnMapItemAdded -> {}
+                is SyncViewEvent.OnMapItemRemoved -> {}
+                is SyncViewEvent.OnError -> {}
+                else -> {}
+            }
+        }
+
+        syncManager.speakersMapLiveData.observe(viewLifecycleOwner) { event ->
+            Timber.d("speakerMapLiveData event: $event")
+            when (event) {
+                is SyncViewEvent.OnMapItemAdded -> {}
+                is SyncViewEvent.OnMapItemRemoved -> {}
+                is SyncViewEvent.OnError -> {}
+                else -> {}
+            }
+        }
+    }
+
+    private fun connectSync(token: String, hasUserDocument: Boolean) {
+        Timber.e("connectSync Exception - syncManager.isConnected:${syncManager.isConnected}")
+        if (syncManager.isConnected) return
+
+        syncManager.connect(viewLifecycleOwner, token, commonViewModel.userIdentity, hasUserDocument) { error ->
+            error?.apply {
+                Timber.d("connectSync With Error ${error.message}")
+                showErrorAlert(
+                    ErrorResponse(
+                        "Sync Completion Error - ${this.code}",
+                        this.message
+                    ), positiveCallback = { disconnectStream(true) })
+            } ?: run {
+                Timber.d("connectSync Success")
+                registerSyncObjects()
+            }
         }
     }
 
@@ -290,6 +408,7 @@ class StreamFragment internal constructor() : Fragment() {
             when (it) {
                 PlayerManager.OnStateCallback.OnPlaying -> {
                     Timber.d("OnStateCallback onPlaying")
+                    setupBottomControllers()
                     viewModel.onLoadingFinish(isLiveActive = true)
                 }
                 PlayerManager.OnStateCallback.OnEnded -> {

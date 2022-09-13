@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -13,7 +12,6 @@ import androidx.navigation.fragment.navArgs
 import com.twilio.livevideo.app.R
 import com.twilio.livevideo.app.databinding.FragmentHomeEventNameBinding
 import com.twilio.livevideo.app.manager.permission.PermissionManager
-import com.twilio.livevideo.app.manager.permission.PermissionType
 import com.twilio.livevideo.app.viewmodel.CommonStreamViewModel
 import com.twilio.livevideo.app.viewmodel.HomeEventNameViewModel
 import com.twilio.livevideo.app.viewstate.ViewRole
@@ -114,19 +112,9 @@ class HomeEventNameFragment : Fragment() {
 
     private fun checkPermissions() {
         context?.apply {
-            permissionManager.request(PermissionType.CameraAudio)
-                .rationale("Camera and Audio Record permissions are needed")
-                .checkPermission { granted, resultCode, data ->
-                    if (granted) {
-                        navigateToStreamingScreen()
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Camera and Audio Record permissions not granted",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
+            permissionManager.checkCameraAudioPermissions(this) {
+                navigateToStreamingScreen()
+            }
         }
     }
 }

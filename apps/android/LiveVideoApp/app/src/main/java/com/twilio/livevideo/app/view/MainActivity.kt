@@ -3,6 +3,7 @@ package com.twilio.livevideo.app.view
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -12,6 +13,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.twilio.livevideo.app.R
 import com.twilio.livevideo.app.manager.AuthenticatorManager
+import com.twilio.livevideo.app.viewmodel.CommonStreamViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +27,8 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var authenticatorManager: AuthenticatorManager
+
+    private val commonViewModel: CommonStreamViewModel by viewModels()
 
     private lateinit var navController: NavController
 
@@ -52,8 +56,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupStartDestination() {
-        val navHost =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHost.navController
 
         if (authenticatorManager.isPasscodeValid()) {
@@ -77,6 +80,7 @@ class MainActivity : AppCompatActivity() {
         //TODO: Remove once the design is approved.
         activityScope.launch {
             delay(1500)
+            commonViewModel.userIdentity = authenticatorManager.getUserName()
             dataReady = true
         }
 

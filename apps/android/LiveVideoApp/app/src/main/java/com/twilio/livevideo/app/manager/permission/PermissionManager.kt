@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.twilio.livevideo.app.R
 import javax.inject.Inject
 
 class PermissionManager @Inject constructor(private val fragment: Fragment?) {
@@ -125,4 +126,19 @@ class PermissionManager @Inject constructor(private val fragment: Fragment?) {
             permission
         ) == PackageManager.PERMISSION_GRANTED
 
+    fun checkCameraAudioPermissions(context: Context, grantedCallback: () -> Unit) {
+        request(PermissionType.CameraAudio)
+            .rationale(context.getString(R.string.permissions_rationale_camera_audio))
+            .checkPermission { granted, resultCode, data ->
+                if (granted) {
+                    grantedCallback.invoke()
+                } else {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.permissions_not_allowed_camera_audio),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+    }
 }

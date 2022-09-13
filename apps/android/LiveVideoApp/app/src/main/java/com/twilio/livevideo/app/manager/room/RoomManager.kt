@@ -25,6 +25,9 @@ class RoomManager @Inject constructor(
 ) : BaseLifeCycleComponent(),
     Room.Listener {
 
+    val sid: String?
+        get() = room?.sid
+
     private val _onStateEvent: MutableLiveData<RoomViewEvent?> =
         MutableLiveData<RoomViewEvent?>(null)
     val onStateEvent: LiveData<RoomViewEvent?>
