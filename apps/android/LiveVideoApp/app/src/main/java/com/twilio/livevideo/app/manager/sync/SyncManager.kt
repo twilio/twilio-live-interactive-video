@@ -12,10 +12,10 @@ import javax.inject.Inject
 @OpenForTesting
 class SyncManager @Inject constructor(
     private val context: Context?,
-    private var userDocument: SyncDocumentWrapper = SyncDocumentWrapper(),
-    private var speakersMap: SyncMapWrapper = SyncMapWrapper("speakers"),
-    private var viewersMap: SyncMapWrapper = SyncMapWrapper("viewers"),
-    private var raisedHandsMap: SyncMapWrapper = SyncMapWrapper("raised_hands")
+    private var userDocument: SyncUserDocumentWrapper = SyncUserDocumentWrapper(),
+    private var speakersMap: SyncUserMapWrapper = SyncUserMapWrapper("speakers"),
+    private var viewersMap: SyncUserMapWrapper = SyncUserMapWrapper("viewers"),
+    private var raisedHandsMap: SyncUserMapWrapper = SyncUserMapWrapper("raised_hands")
 ) : BaseLifeCycleComponent(), SyncClient.SyncClientListener {
 
     private var syncObjects: MutableList<out SyncObject>? = null

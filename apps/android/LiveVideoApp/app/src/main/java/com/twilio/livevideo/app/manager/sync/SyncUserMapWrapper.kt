@@ -12,7 +12,7 @@ import com.twilio.sync.SyncMapPaginator
 import com.twilio.sync.SyncOptions
 import org.json.JSONObject
 
-class SyncMapWrapper constructor(private var uniqueName: String = "") : SyncObject {
+class SyncUserMapWrapper constructor(private var uniqueName: String = "") : SyncObject {
 
     private var userList: MutableList<SyncUser>? = null
 

@@ -12,7 +12,7 @@ import com.twilio.sync.SyncOptions
 import org.json.JSONObject
 import timber.log.Timber
 
-class SyncDocumentWrapper constructor(var uniqueName: String = "") : SyncObject {
+class SyncUserDocumentWrapper constructor(var uniqueName: String = "") : SyncObject {
 
     private var document: SyncDocument? = null
 
