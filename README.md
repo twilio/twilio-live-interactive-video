@@ -1,6 +1,9 @@
 # Twilio Live Interactive Video
 
-This project demonstrates an interactive live video streaming app that uses [Twilio Live](https://www.twilio.com/docs/live), [Twilio Video](https://www.twilio.com/docs/video), and [Twilio Sync](https://www.twilio.com/docs/sync). Check out [this blog post](https://www.twilio.com/blog/interactive-live-streaming-app-programmable-video-live-sync) for more details about the app's features and how it was built. The project is setup as a monorepo that contains the frontend reference applications for the Web and iOS (Android coming soon).
+:warning: We are no longer allowing new customers to onboard to Twilio Live. Effective November 30, 2023, Twilio Live will End of Life. If you are an existing Live customers, we have created this [Migration Guide](https://support.twilio.com/hc/en-us/articles/10623861544987-Twilio-Live-Migration-Guide) to help you identify an alternative solution for your use case.
+
+## What is it
+This project demonstrates an interactive live video streaming app that uses [Twilio Live](https://www.twilio.com/docs/live), [Twilio Video](https://www.twilio.com/docs/video), and [Twilio Sync](https://www.twilio.com/docs/sync). Check out [this blog post](https://www.twilio.com/blog/interactive-live-streaming-app-programmable-video-live-sync) for more details about the app's features and how it was built. The project is setup as a monorepo that contains the frontend reference applications for the Web and iOS.
 
 ## Features
 
