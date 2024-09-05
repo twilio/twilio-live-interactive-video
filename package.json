@@ -20,12 +20,12 @@
   "license": "ISC",
   "dependencies": {
     "@twilio-labs/serverless-api": "^5.4.3",
-    "axios": "^0.21.4",
+    "axios": "^1.6.8",
     "cli-ux": "^5.6.3",
     "commander": "^8.2.0",
     "dotenv": "^10.0.0",
     "nanoid": "^3.1.28",
-    "twilio": "^3.71.1"
+    "twilio": "^5.0.4"
   },
   "bugs": {
     "url": "https://github.com/twilio/twilio-live-interactive-video/issues"
