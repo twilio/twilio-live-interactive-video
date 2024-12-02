@@ -21,7 +21,7 @@
   "dependencies": {
     "@twilio-labs/serverless-api": "^5.4.3",
     "axios": "^0.21.4",
-    "cli-ux": "^5.6.3",
+    "cli-ux": "^6.0.9",
     "commander": "^8.2.0",
     "dotenv": "^10.0.0",
     "nanoid": "^3.1.28",
